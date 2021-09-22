@@ -73,7 +73,7 @@ namespace Spring.Util
                 settings.Schemas.XmlResolver = xmlResolver;
                 settings.Schemas.Add(schemas);
                 settings.ValidationType = ValidationType.Schema;
-                if (eventHandler is object)
+                if (eventHandler is not null)
                 {
                     settings.ValidationEventHandler += eventHandler;
                 }

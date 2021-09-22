@@ -26,7 +26,7 @@ namespace Sys.Workflow
 
         public static ConcurrentDictionary<TKey, TValue> PutAll<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> target, ConcurrentDictionary<TKey, TValue> source)
         {
-            if (source is object)
+            if (source is not null)
             {
                 foreach (var key in source.Keys)
                 {

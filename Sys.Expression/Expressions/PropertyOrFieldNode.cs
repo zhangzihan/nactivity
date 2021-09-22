@@ -90,7 +90,7 @@ namespace Spring.Expressions
                 }
 
                 // initialize this node if necessary
-                if (contextType is object && accessor is null)
+                if (contextType is not null && accessor is null)
                 {
                     accessor = ValueAccessorResolver.GetValueAccessor(contextType, memberName);
                     if (accessor is object)
@@ -102,7 +102,7 @@ namespace Spring.Expressions
                     if (contextType == typeof(ExpandoObject))
                     {
                         Type type = TypeRegistry.ResolveType(memberName);
-                        if (type is object)
+                        if (type is not null)
                         {
                             accessor = new TypeValueAccessor(TypeResolutionUtils.ResolveType(memberName));
                         }
@@ -149,7 +149,7 @@ namespace Spring.Expressions
                         {
                             accessor = new IDictionaryValueAccessor(memberName);
                         }
-                        else if (evalContext is object && evalContext.Variables is object && evalContext.Variables.ContainsKey(memberName))
+                        else if (evalContext is not null && evalContext.Variables is object && evalContext.Variables.ContainsKey(memberName))
                         {
                             accessor = new IDictionaryValueAccessor(memberName);
                         }
@@ -157,13 +157,10 @@ namespace Spring.Expressions
                         {
                             accessor = new ValueTypeAccessor();
                         }
-                        else
+                        else if (accessor is null)
                         {
-                            if (accessor is null)
-                            {
-                                var targetType = TypeResolutionUtils.ResolveType(memberName);
-                                accessor = new TypeValueAccessor(targetType);
-                            }
+                            var targetType = TypeResolutionUtils.ResolveType(memberName);
+                            accessor = new TypeValueAccessor(targetType);
                         }
                     }
                     catch (TypeLoadException)
@@ -208,7 +205,7 @@ namespace Spring.Expressions
                 if (pi is null)
                 {
                     FieldInfo fi = contextType.GetField(memberName, bindingFlags);
-                    if (fi is object)
+                    if (fi is not null)
                     {
                         return new FieldValueAccessor(fi);
                     }
@@ -228,7 +225,7 @@ namespace Spring.Expressions
                     if (pi is null)
                     {
                         FieldInfo fi = contextType.GetField(memberName, bindingFlags | BindingFlags.DeclaredOnly);
-                        if (fi is object)
+                        if (fi is not null)
                         {
                             return new FieldValueAccessor(fi);
                         }

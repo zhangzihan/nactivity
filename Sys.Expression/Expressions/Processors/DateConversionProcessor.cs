@@ -31,16 +31,13 @@ namespace Spring.Expressions.Processors
     {
         public object Process(object context, object[] args)
         {
-            int argc = args is object ? args.Length : 0;
-            switch (argc)
+            int argc = args is not null ? args.Length : 0;
+            return argc switch
             {
-                case 1:
-                    return DateTime.Parse((string)args[0]);
-                case 2:
-                    return DateTime.ParseExact((string)args[0], (string)args[1], CultureInfo.InvariantCulture);
-                default:
-                    throw new ArgumentException("date(<date> [,<format>]) expects 1 or 2 arguments");
-            }
+                1 => DateTime.Parse((string)args[0]),
+                2 => DateTime.ParseExact((string)args[0], (string)args[1], CultureInfo.InvariantCulture),
+                _ => throw new ArgumentException("date(<date> [,<format>]) expects 1 or 2 arguments"),
+            };
         }
     }
 }

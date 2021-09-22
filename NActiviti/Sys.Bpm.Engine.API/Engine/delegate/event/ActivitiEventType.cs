@@ -409,7 +409,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
         public static ActivitiEventType[] GetTypesFromString(string @string)
         {
             IList<ActivitiEventType> result = new List<ActivitiEventType>();
-            if (@string is object && @string.Length > 0)
+            if (@string is not null && @string.Length > 0)
             {
                 string[] split = @string.Split(',');
                 foreach (string typeName in split)

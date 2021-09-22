@@ -113,8 +113,8 @@ namespace SmartSql.DyRepository
         private string PreScoe(Type interfaceType)
         {
             var sqlmapAttr = interfaceType.GetCustomAttribute<SqlMapAttribute>();
-            string scope = String.Empty;
-            if (sqlmapAttr is object)
+            string scope;
+            if (sqlmapAttr is not null)
             {
                 scope = !String.IsNullOrEmpty(sqlmapAttr.Scope) ? sqlmapAttr.Scope : GetScope(interfaceType.Name);
             }
@@ -290,7 +290,7 @@ namespace SmartSql.DyRepository
                 methodName = methodName.Substring(0, methodName.Length - 5);
             }
 
-            if (statementAttr is object)
+            if (statementAttr is not null)
             {
                 statementAttr.Id = !String.IsNullOrEmpty(statementAttr.Id) ? statementAttr.Id
                     : methodName;

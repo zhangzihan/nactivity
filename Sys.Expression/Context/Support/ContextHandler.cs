@@ -239,18 +239,16 @@ namespace Spring.Context.Support
         /// </returns>
         public object Create(object parent, object configContext, XmlNode section)
         {
-            XmlElement contextElement = section as XmlElement;
-
             #region Sanity Checks
 
-            if (contextElement is null)
+            if (section is not XmlElement contextElement)
             {
                 throw ConfigurationUtils.CreateConfigurationException(
                     "Context configuration section must be an XmlElement.");
             }
 
             // sanity check on parent
-            if ((parent is object) && !(parent is IApplicationContext))
+            if ((parent is not null) && parent is not IApplicationContext)
             {
                 throw ConfigurationUtils.CreateConfigurationException(
                     String.Format("Parent context must be of type IApplicationContext, but was '{0}'", parent.GetType().FullName));
@@ -267,9 +265,10 @@ namespace Spring.Context.Support
 
             #region Instrumentation
             if (Log.IsEnabled(LogLevel.Debug)) Log.LogDebug(string.Format("creating context '{0}'", contextName));
-            #endregion
 
-            IApplicationContext context = null;
+            IApplicationContext context;
+
+            #endregion
             try
             {
                 IApplicationContext parentContext = parent as IApplicationContext;
@@ -451,7 +450,7 @@ namespace Spring.Context.Support
             foreach (XmlNode possibleResourceNode in contextElement.ChildNodes)
             {
                 XmlElement possibleResourceElement = possibleResourceNode as XmlElement;
-                if (possibleResourceElement is object &&
+                if (possibleResourceElement is not null &&
                    possibleResourceElement.LocalName == ContextSchema.ResourceElement)
                 {
                     string resourceName = possibleResourceElement.GetAttribute(ContextSchema.URIAttribute);
@@ -473,7 +472,7 @@ namespace Spring.Context.Support
             foreach (XmlNode possibleContextNode in contextElement.ChildNodes)
             {
                 XmlElement possibleContextElement = possibleContextNode as XmlElement;
-                if (possibleContextElement is object &&
+                if (possibleContextElement is not null &&
                    possibleContextElement.LocalName == ContextSchema.ContextElement)
                 {
                     contextNodes.Add(possibleContextElement);
@@ -532,10 +531,10 @@ namespace Spring.Context.Support
                 get { return _resources; }
             }
 
-            private Type _contextType;
-            private string _contextName;
-            private bool _caseSensitive;
-            private IList<string> _resources;
+            private readonly Type _contextType;
+            private readonly string _contextName;
+            private readonly bool _caseSensitive;
+            private readonly IList<string> _resources;
         }
 
         #endregion
@@ -588,7 +587,7 @@ namespace Spring.Context.Support
                 return (IApplicationContext)(new SafeConstructor(ctor).Invoke(new object[] { ContextName, CaseSensitive, this.parentContext, Resources }));
             }
 
-            private IApplicationContext parentContext;
+            private readonly IApplicationContext parentContext;
         }
 
         #endregion

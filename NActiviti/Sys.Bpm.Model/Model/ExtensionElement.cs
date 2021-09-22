@@ -83,7 +83,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddChildElement(ExtensionElement childElement)
         {
-            if (childElement is object && !string.IsNullOrWhiteSpace(childElement.Name))
+            if (childElement is not null && !string.IsNullOrWhiteSpace(childElement.Name))
             {
                 if (!this.childElements.ContainsKey(childElement.Name))
                 {

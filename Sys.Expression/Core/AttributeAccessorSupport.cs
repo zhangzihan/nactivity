@@ -38,8 +38,8 @@ namespace Spring.Core
 
 	    public virtual void SetAttribute(string name, object value)
         {
-		    Trace.Assert(name is object, "Name must not be null");
-		    if (value is object) {
+		    Trace.Assert(name is not null, "Name must not be null");
+		    if (value is not null) {
 			    _attributes.Add(name, value);
 		    }
 		    else {
@@ -49,14 +49,14 @@ namespace Spring.Core
 
 	    public virtual object GetAttribute(string name)
         {
-		    Trace.Assert(name is object, "Name must not be null");
+		    Trace.Assert(name is not null, "Name must not be null");
             if (_attributes.ContainsKey(name))
                 return _attributes[name];
 	        return null;
         }
 
 	    public virtual object RemoveAttribute(string name) {
-            Trace.Assert(name is object, "Name must not be null");
+            Trace.Assert(name is not null, "Name must not be null");
             if (_attributes.ContainsKey(name))
                 return _attributes.Remove(name);
 	        return false;
@@ -64,7 +64,7 @@ namespace Spring.Core
 
 	    public bool HasAttribute(string name)
         {
-            Trace.Assert(name is object, "Name must not be null");
+            Trace.Assert(name is not null, "Name must not be null");
 		    return _attributes.ContainsKey(name);
 	    }
 
@@ -95,7 +95,7 @@ namespace Spring.Core
 		    if (this == other) {
 			    return true;
 		    }
-		    if (!(other is AttributeAccessorSupport)) {
+		    if (other is not AttributeAccessorSupport) {
 			    return false;
 		    }
 		    var that = (AttributeAccessorSupport) other;

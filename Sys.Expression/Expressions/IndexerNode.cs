@@ -165,7 +165,7 @@ namespace Spring.Expressions
             }
         }
 
-        private object syncRoot = new();
+        private readonly object syncRoot = new();
 
         /// <summary>
         /// Utility method that is needed by ObjectWrapper and AbstractAutowireCapableObjectFactory.
@@ -266,7 +266,7 @@ namespace Spring.Expressions
                         Type[] argTypes = ReflectionUtils.GetTypes(indices);
                         string defaultMember = "Item";
                         object[] atts = contextType.GetCustomAttributes(typeof(DefaultMemberAttribute), true);
-                        if (atts is object && atts.Length > 0)
+                        if (atts is not null && atts.Length > 0)
                         {
                             defaultMember = ((DefaultMemberAttribute)atts[0]).MemberName;
                         }

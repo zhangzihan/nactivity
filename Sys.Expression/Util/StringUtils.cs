@@ -478,7 +478,7 @@ namespace Spring.Util
         /// <returns>The stripped string.</returns>
         public static string StripFirstAndLastCharacter(string text)
         {
-            if (text is object
+            if (text is not null
                 && text.Length > 2)
             {
                 return text.Substring(1, text.Length - 2);

@@ -266,7 +266,7 @@ namespace Spring.Objects.Factory.Config
         protected virtual void LoadProperties(NameValueCollection properties)
         {
             string[] configSections = ConfigSections;
-            if (_locations is object)
+            if (_locations is not null)
             {
                 ValidateConfigSections(configSections);
                 bool usingMultipleConfigSections = configSections.Length > 1;
@@ -384,7 +384,7 @@ namespace Spring.Objects.Factory.Config
         /// </param>
         private void InitializeWithDefaultProperties(NameValueCollection properties)
         {
-            if (Properties is object)
+            if (Properties is not null)
             {
                 properties.Add(Properties);
             }

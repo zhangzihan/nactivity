@@ -72,13 +72,13 @@ namespace Spring.Objects
 	    public override object GetAttribute(string name)
 	    {
 	        var attribute = (ObjectMetadataAttribute) base.GetAttribute(name);
-		    return (attribute is object ? attribute.Value : null);
+		    return (attribute is not null ? attribute.Value : null);
 	    }
 
 	    public override object RemoveAttribute(string name)
 	    {
 	        var attribute = (ObjectMetadataAttribute) base.RemoveAttribute(name);
-		    return (attribute is object ? attribute.Value : null);
+		    return (attribute is not null ? attribute.Value : null);
 	    }
 
     }

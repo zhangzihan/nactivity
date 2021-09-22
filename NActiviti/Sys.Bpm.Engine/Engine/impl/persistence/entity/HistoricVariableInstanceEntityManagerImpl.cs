@@ -19,6 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
     using Sys.Workflow.Engine.History;
     using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow.Engine.Impl.Histories;
     using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
     using Sys.Workflow.Engine.Impl.Variable;
@@ -83,7 +84,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual IVariableInstanceEntity RecordHistoricTaskVariableInstance(ITaskEntity taskEntity, string variableName, object value)
         {
-            var pec = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+            var pec = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
             IVariableTypes variableTypes = pec.VariableTypes;
 
             IVariableType type = variableTypes.FindVariableType(value);

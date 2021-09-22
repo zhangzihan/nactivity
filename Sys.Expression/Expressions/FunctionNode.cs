@@ -62,14 +62,14 @@ namespace Spring.Expressions
 
             // delegate?
             Delegate callback = function as Delegate;
-            if (callback is object)
+            if (callback is not null)
             {
                 return InvokeDelegate(callback, argValues);
             }
 
             // lambda?
             LambdaExpressionNode lambda = function as LambdaExpressionNode;
-            if (lambda is object)
+            if (lambda is not null)
             {
                 try
                 {

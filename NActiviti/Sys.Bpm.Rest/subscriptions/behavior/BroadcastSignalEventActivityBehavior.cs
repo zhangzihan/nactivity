@@ -39,7 +39,7 @@ namespace Sys.Workflow.Services.Subscriptions.Behavior
             base.Execute(execution);
             _ = Context.CommandContext;
             string eventSubscriptionName;
-            if (signalEventName is object)
+            if (signalEventName is not null)
             {
                 eventSubscriptionName = signalEventName;
             }

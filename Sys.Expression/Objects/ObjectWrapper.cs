@@ -401,15 +401,12 @@ namespace Spring.Objects
         public Type GetPropertyType(string propertyName)
         {
             MemberInfo memberInfo = this.GetPropertyOrFieldInfo(propertyName);
-            switch (memberInfo.MemberType)
+            return memberInfo.MemberType switch
             {
-                case MemberTypes.Property:
-                    return ((PropertyInfo)memberInfo).PropertyType;
-                case MemberTypes.Field:
-                    return ((FieldInfo)memberInfo).FieldType;
-                default:
-                    throw new FatalObjectException("'" + propertyName + "' is not a valid property expression.");
-            }
+                MemberTypes.Property => ((PropertyInfo)memberInfo).PropertyType,
+                MemberTypes.Field => ((FieldInfo)memberInfo).FieldType,
+                _ => throw new FatalObjectException("'" + propertyName + "' is not a valid property expression."),
+            };
         }
 
         /// <summary>
@@ -428,17 +425,17 @@ namespace Spring.Objects
             try
             {
                 IExpression propertyExpression = GetPropertyExpression(propertyOrFieldName);
-                if (propertyExpression is PropertyOrFieldNode)
+                if (propertyExpression is PropertyOrFieldNode node)
                 {
-                    return ((PropertyOrFieldNode)propertyExpression).GetMemberInfo(this.wrappedObject);
+                    return node.GetMemberInfo(this.wrappedObject);
                 }
-                else if (propertyExpression is IndexerNode)
+                else if (propertyExpression is IndexerNode idxNode)
                 {
-                    return ((IndexerNode)propertyExpression).GetPropertyInfo(this.wrappedObject, null);
+                    return idxNode.GetPropertyInfo(this.wrappedObject, null);
                 }
-                else if (propertyExpression is Expression)
+                else if (propertyExpression is Expression exprNode)
                 {
-                    return ((Expression)propertyExpression).GetPropertyInfo(this.wrappedObject, null);
+                    return exprNode.GetPropertyInfo(this.wrappedObject, null);
                 }
                 else
                 {
@@ -493,7 +490,7 @@ namespace Spring.Objects
                 foreach (PropertyDescriptor p in PropertyDescriptors)
                 {
                     object val = GetPropertyValue(p.Name);
-                    string valStr = (val is object) ? val.ToString() : "null";
+                    string valStr = (val is not null) ? val.ToString() : "null";
                     sb.Append(p.Name).Append("={").Append(valStr).Append("}");
                 }
             }
@@ -516,7 +513,7 @@ namespace Spring.Objects
         /// <returns>Parsed proeprty expression.</returns>
         internal static IExpression GetPropertyExpression(string propertyName)
         {
-            IExpression propertyExpression = null;
+            IExpression propertyExpression;
             if (propertyName.IndexOfAny(new char[] { '.', '[', '(', ' ', '{' }) < 0)
             {
                 try

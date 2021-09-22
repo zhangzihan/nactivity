@@ -90,7 +90,7 @@ namespace Spring.Objects.Factory.Config
         /// </param>
         public void AddAll(EventValues other)
         {
-            if (other?._eventHandlers is object)
+            if (other?._eventHandlers is not null)
             {
                 foreach (var pair in other._eventHandlers)
                 {
@@ -109,7 +109,7 @@ namespace Spring.Objects.Factory.Config
         /// <param name="handler">The handler to be added.</param>
         public void AddHandler(IEventHandlerValue handler)
         {
-            _eventHandlers = _eventHandlers ?? new Dictionary<string, List<IEventHandlerValue>>();
+            _eventHandlers ??= new Dictionary<string, List<IEventHandlerValue>>();
 
             if (!_eventHandlers.TryGetValue(handler.EventName, out var handlers))
             {

@@ -53,7 +53,7 @@ namespace Spring.Objects
 	{
 		#region Constants
 
-		private static PropertyAccessException[] EmptyPropertyAccessExceptions
+		private static readonly PropertyAccessException[] EmptyPropertyAccessExceptions
 			= new PropertyAccessException[] {};
 
 		#endregion
@@ -181,7 +181,7 @@ namespace Spring.Objects
 					sb.Append(pae.GetType().FullName);
 					sb.Append(": ");
 					sb.Append(pae.Message);
-					if (pae.InnerException is object) 
+					if (pae.InnerException is not null) 
 					{
 						sb.Append(", Inner Exception: ");
 						sb.Append(pae.InnerException.ToString());
@@ -219,10 +219,10 @@ namespace Spring.Objects
 		/// <summary>
 		/// The IObjectWrapper wrapping the target object at the root of the exception.
 		/// </summary>
-		private IObjectWrapper _objectWrapper;
+		private readonly IObjectWrapper _objectWrapper;
 
 		/// <summary>The list of PropertyAccessException objects.</summary>
-		private PropertyAccessException[] _propertyAccessExceptions
+		private readonly PropertyAccessException[] _propertyAccessExceptions
 			= EmptyPropertyAccessExceptions;
 
 		/// <summary>

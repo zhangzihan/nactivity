@@ -155,7 +155,7 @@ namespace SmartSql.Cahce
 
         public bool TryGet<T>(RequestContext context, out T cachedResult)
         {
-            cachedResult = default(T);
+            cachedResult = default;
             if (context.Statement is null) { return false; }
             var cachedType = typeof(T);
             string fullSqlId = context.FullSqlId;
@@ -165,7 +165,7 @@ namespace SmartSql.Cahce
             var cache = statement.Cache.Provider[cacheKey, cachedType];
             if (_logger.IsEnabled(LogLevel.Debug))
             {
-                _logger.LogDebug($"CacheManager GetCache FullSqlId:{fullSqlId}，Success:{cache is object} !");
+                _logger.LogDebug($"CacheManager GetCache FullSqlId:{fullSqlId}，Success:{cache is not null} !");
             }
             if (cache is null) { return false; }
             cachedResult = (T)cache;

@@ -59,20 +59,20 @@ namespace Spring.Objects.Factory.Xml
         {
             ObjectDefinitionBuilder builder = ObjectDefinitionBuilder.GenericObjectDefinition();
             string parentName = GetParentName(element);
-            if (parentName is object)
+            if (parentName is not null)
             {
                 builder.RawObjectDefinition.ParentName = parentName;
             }
 
             Type objectType = GetObjectType(element);
-            if (objectType is object)
+            if (objectType is not null)
             {
                 builder.RawObjectDefinition.ObjectType = objectType;
             }
             else
             {
                 string objectTypeName = GetObjectTypeName(element);
-                if (objectTypeName is object)
+                if (objectTypeName is not null)
                 {
                     builder.RawObjectDefinition.ObjectTypeName = objectTypeName;
                 }

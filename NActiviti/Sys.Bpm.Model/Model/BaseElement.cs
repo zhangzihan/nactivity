@@ -85,7 +85,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddExtensionElement(ExtensionElement extensionElement)
         {
-            if (extensionElement is object && !string.IsNullOrWhiteSpace(extensionElement.Name))
+            if (extensionElement is not null && !string.IsNullOrWhiteSpace(extensionElement.Name))
             {
                 if (!this.extensionElements.ContainsKey(extensionElement.Name))
                 {
@@ -126,7 +126,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddAttribute(ExtensionAttribute attribute)
         {
-            if (attribute is object && !string.IsNullOrWhiteSpace(attribute.Name))
+            if (attribute is not null && !string.IsNullOrWhiteSpace(attribute.Name))
             {
                 if (!this.attributes.ContainsKey(attribute.Name))
                 {
@@ -191,7 +191,7 @@ namespace Sys.Workflow.Bpmn.Models
                 return true;
             }
 
-            if ((objA is null && objB is object) || (objA is object && objB is null))
+            if ((objA is null && objB is not null) || (objA is not null && objB is null))
             {
                 return false;
             }

@@ -1,21 +1,19 @@
-﻿using System;
+﻿using SmartSql.Configuration;
+using SmartSql.Configuration.Maps;
+using SmartSql.Configuration.Statements;
+using System;
 using System.Collections.Generic;
-using System.Text;
-
 using System.IO;
 using System.Xml;
-using System.Xml.Serialization;
-using SmartSql.Configuration;
-using SmartSql.Configuration.Statements;
-using SmartSql.Configuration.Maps;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using System.Xml.XPath;
 
 namespace SmartSql.Abstractions.Config
 {
     public abstract class ConfigLoader : IConfigLoader
     {
-        private StatementFactory _statementFactory = new StatementFactory();
+        private readonly StatementFactory _statementFactory = new();
 
         public SmartSqlMapConfig SqlMapConfig { get; set; }
 
@@ -34,11 +32,11 @@ namespace SmartSql.Abstractions.Config
         {
             using (configStream.Stream)
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(SmartSqlMapConfig));
+                XmlSerializer xmlSerializer = new(typeof(SmartSqlMapConfig));
                 SqlMapConfig = xmlSerializer.Deserialize(configStream.Stream) as SmartSqlMapConfig;
                 SqlMapConfig.Path = configStream.Path;
                 SqlMapConfig.SmartSqlMaps = new List<SmartSqlMap> { };
-                if (SqlMapConfig.TypeHandlers is object)
+                if (SqlMapConfig.TypeHandlers is not null)
                 {
                     foreach (var typeHandler in SqlMapConfig.TypeHandlers)
                     {
@@ -66,7 +64,7 @@ namespace SmartSql.Abstractions.Config
 
                     XDocument xmlDoc = XDocument.Load(configStream.Stream, LoadOptions.SetLineInfo);
                     var nametable = xmlDoc.Root.CreateReader().NameTable;
-                    XmlNamespaceManager xmlNsM = new XmlNamespaceManager(nametable);
+                    XmlNamespaceManager xmlNsM = new(nametable);
                     xmlNsM.AddNamespace("ns", "http://SmartSql.net/schemas/SmartSqlMap.xsd");
                     sqlMap.Scope = xmlDoc.Root.XPathSelectElement("//ns:SmartSqlMap", xmlNsM)
                         .Attribute("Scope").Value;

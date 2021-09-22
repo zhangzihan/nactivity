@@ -56,7 +56,7 @@ namespace Sys.Workflow.Cloud.Services.Api
         {
             string request = null;
             var req = context.Request;
-            if (context.Request.Body is object)
+            if (context.Request.Body is not null)
             {
                 context.Request.EnableBuffering();
 
@@ -69,7 +69,7 @@ namespace Sys.Workflow.Cloud.Services.Api
 
             string message = $"服务发生异常{Environment.NewLine}" +
                 $"Url={req.Scheme}://{req.Host}{req.Path}{req.QueryString}," +
-                $"{(request is object ? $"参数={request}" : "")}" +
+                $"{(request is not null ? $"参数={request}" : "")}" +
                 $"{(ex is WorkflowDebugException ? ex.InnerException.Message : ex.Message)}{Environment.NewLine}" +
                 $"{ex.StackTrace}";
 

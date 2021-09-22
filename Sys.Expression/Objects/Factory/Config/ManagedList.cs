@@ -122,7 +122,7 @@ namespace Spring.Objects.Factory.Config
                 object resolvedElement =
                         resolver(objectName, definition, String.Format(CultureInfo.InvariantCulture, "{0}[{1}]", propertyName, i), element);
 
-                if (elementType is object)
+                if (elementType is not null)
                 {
                     try
                     {
@@ -178,8 +178,7 @@ namespace Spring.Objects.Factory.Config
             {
                 return this;
             }
-            IList plist = parent as IList;
-            if (plist is null)
+            if (parent is not IList plist)
             {
                 throw new InvalidOperationException("Cannot merge with object of type [" + parent.GetType() + "]");
             }

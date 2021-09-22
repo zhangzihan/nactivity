@@ -116,7 +116,7 @@ namespace Spring.Collections
 		public virtual object Remove()
 		{
 			object element = Poll();
-			if(element is object)
+			if(element is not null)
 			{
 				return element;
 			}
@@ -148,7 +148,7 @@ namespace Spring.Collections
 		public virtual object Element()
 		{
 			object element = Peek();
-			if(element is object)
+			if(element is not null)
 			{
 				return element;
 			}
@@ -173,7 +173,7 @@ namespace Spring.Collections
 		/// </remarks>
 		public virtual void Clear()
 		{
-			while(Poll() is object)
+			while(Poll() is not null)
 			{
 				;
 			}

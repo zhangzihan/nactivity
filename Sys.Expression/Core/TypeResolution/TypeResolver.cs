@@ -116,7 +116,7 @@ namespace Spring.Core.TypeResolution
 #else
             Assembly assembly = Assembly.Load(typeInfo.AssemblyName);
 #endif
-            if (assembly is object)
+            if (assembly is not null)
             {
                 type = assembly.GetType(typeInfo.TypeName, true, true);
             }
@@ -141,7 +141,7 @@ namespace Spring.Core.TypeResolution
             foreach (Assembly assembly in assemblies)
             {
                 type = assembly.GetType(typeInfo.TypeName, false, false);
-                if (type is object)
+                if (type is not null)
                 {
                     break;
                 }

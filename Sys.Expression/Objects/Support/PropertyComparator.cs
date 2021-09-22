@@ -43,7 +43,7 @@ namespace Spring.Objects.Support
         private static readonly ILogger logger
             = LogManager.GetLogger<PropertyComparator>();
 
-        private ISortDefinition sortDefinition;
+        private readonly ISortDefinition sortDefinition;
         private readonly IDictionary cachedObjectWrappers = new Hashtable();
 
         /// <summary>
@@ -88,18 +88,18 @@ namespace Spring.Objects.Support
             object v1 = GetPropertyValue(o1);
             object v2 = GetPropertyValue(o2);
             if (this.sortDefinition.IgnoreCase
-                && (v1 is string)
-                && (v2 is string))
+                && (v1 is string str1)
+                && (v2 is string str2))
             {
-                v1 = ((string)v1).ToLower(CultureInfo.CurrentCulture);
-                v2 = ((string)v2).ToLower(CultureInfo.CurrentCulture);
+                v1 = str1.ToLower(CultureInfo.CurrentCulture);
+                v2 = str2.ToLower(CultureInfo.CurrentCulture);
             }
-            int result = 0;
+            int result;
             try
             {
-                if (v1 is object)
+                if (v1 is not null)
                 {
-                    if (v2 is object)
+                    if (v2 is not null)
                     {
                         result = ((IComparable)v1).CompareTo(v2);
                     }
@@ -110,7 +110,7 @@ namespace Spring.Objects.Support
                 }
                 else
                 {
-                    if (v2 is object)
+                    if (v2 is not null)
                     {
                         result = 1;
                     }
@@ -145,7 +145,7 @@ namespace Spring.Objects.Support
         private object GetPropertyValue(object obj)
         {
             object propertyValue = null;
-            if (obj is object)
+            if (obj is not null)
             {
                 IObjectWrapper ow = (IObjectWrapper)this.cachedObjectWrappers[obj];
                 if (ow is null)

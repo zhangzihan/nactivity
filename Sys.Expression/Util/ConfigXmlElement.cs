@@ -76,7 +76,7 @@ namespace Spring.Util
         {
             XmlNode node = base.CloneNode(deep);
             ConfigXmlElement element = node as ConfigXmlElement;
-            if (element is object)
+            if (element is not null)
             {
                 element._textPositionInfo = new TextPositionInfo(this._textPositionInfo);
             }

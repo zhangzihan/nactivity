@@ -30,17 +30,18 @@ namespace Spring.Collections.Generic
     {
         public override void Add(TKey key, TValue value)
         {
-            Node node;
-            if (items.TryGetValue(key, out node))
+            if (items.TryGetValue(key, out Node node))
             {
                 node.value = value;
             }
             else
             {
-                node = new Node();
-                node.key = key;
-                node.value = value;
-                if ((node.previousLinked = linkedTail) is object)
+                node = new Node
+                {
+                    key = key,
+                    value = value
+                };
+                if ((node.previousLinked = linkedTail) is not null)
                     node.previousLinked.nextLinked = node;
                 node.nextLinked = null;
                 linkedTail = node;
@@ -57,11 +58,10 @@ namespace Spring.Collections.Generic
 
         public override bool Remove(TKey key)
         {
-            Node node;
-            if (!items.TryGetValue(key, out node))
+            if (!items.TryGetValue(key, out Node node))
                 return false;
 
-            if (node.previousLinked is object)
+            if (node.previousLinked is not null)
             {
                 node.previousLinked.nextLinked = node.nextLinked;
             }
@@ -70,7 +70,7 @@ namespace Spring.Collections.Generic
                 linkedHead = node.nextLinked;
             }
 
-            if (node.nextLinked is object)
+            if (node.nextLinked is not null)
             {
                 node.nextLinked.previousLinked = node.previousLinked;
             }
@@ -86,10 +86,9 @@ namespace Spring.Collections.Generic
 
         public override bool TryGetValue(TKey key, out TValue value)
         {
-            Node node;
-            if (!items.TryGetValue(key, out node))
+            if (!items.TryGetValue(key, out Node node))
             {
-                value = default(TValue);
+                value = default;
                 return false;
             }
             value = node.value;
@@ -105,8 +104,7 @@ namespace Spring.Collections.Generic
 
         public override bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            Node node;
-            if (!items.TryGetValue(item.Key, out node))
+            if (!items.TryGetValue(item.Key, out Node node))
                 return false;
             if (!node.value.Equals(item.Value))
                 return false;
@@ -130,7 +128,7 @@ namespace Spring.Collections.Generic
         protected override IEnumerable<KeyValuePair<TKey, TValue>> EntriesSet()
         {
             List<KeyValuePair<TKey, TValue>> entries = new();
-            for (Node node = linkedHead; node is object; node = node.nextLinked)
+            for (Node node = linkedHead; node is not null; node = node.nextLinked)
                 entries.Add(new KeyValuePair<TKey, TValue>(node.key, node.value));
             return entries;
         }
@@ -138,6 +136,6 @@ namespace Spring.Collections.Generic
         private Node linkedHead = null;
         private Node linkedTail = null;
 
-        private Dictionary<TKey, Node> items = new();
+        private readonly Dictionary<TKey, Node> items = new();
     }
 }

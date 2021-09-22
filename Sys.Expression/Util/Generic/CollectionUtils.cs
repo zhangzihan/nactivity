@@ -110,7 +110,7 @@ namespace Spring.Util.Generic
             MethodInfo method;
             method = targetCollection.GetType().GetMethod("containsAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-            if (method is object)
+            if (method is not null)
                 contains = Convert.ToBoolean(method.Invoke(targetCollection, new object[] { sourceCollection }));
             else
             {

@@ -73,29 +73,31 @@ namespace Spring.Objects.Factory.Xml
         /// </summary>
         static NamespaceParserRegistry()
         {
-            wellknownNamespaceParserTypeNames = new CaseInsensitiveHashtable();
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/tx"] =
-                "Spring.Transaction.Config.TxNamespaceParser, Spring.Data";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/aop"] =
-                "Spring.Aop.Config.AopNamespaceParser, Spring.Aop";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/context"] =
-                "Spring.Context.Config.ContextNamespaceParser, Spring.Core";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/db"] =
-                "Spring.Data.Config.DatabaseNamespaceParser, Spring.Data";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/database"] =
-                "Spring.Data.Config.DatabaseNamespaceParser, Spring.Data";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/remoting"] =
-                "Spring.Remoting.Config.RemotingNamespaceParser, Spring.Services";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/wcf"] =
-                "Spring.ServiceModel.Config.WcfNamespaceParser, Spring.Services";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/nms"] =
-                "Spring.Messaging.Nms.Config.NmsNamespaceParser, Spring.Messaging.Nms";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/ems"] =
-                "Spring.Messaging.Ems.Config.EmsNamespaceParser, Spring.Messaging.Ems";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/validation"] =
-                "Spring.Validation.Config.ValidationNamespaceParser, Spring.Core";
-            wellknownNamespaceParserTypeNames["http://www.springframework.net/nvelocity"] =
-                "Spring.Template.Velocity.Config.TemplateNamespaceParser, Spring.Template.Velocity";
+            wellknownNamespaceParserTypeNames = new CaseInsensitiveHashtable
+            {
+                ["http://www.springframework.net/tx"] =
+                "Spring.Transaction.Config.TxNamespaceParser, Spring.Data",
+                ["http://www.springframework.net/aop"] =
+                "Spring.Aop.Config.AopNamespaceParser, Spring.Aop",
+                ["http://www.springframework.net/context"] =
+                "Spring.Context.Config.ContextNamespaceParser, Spring.Core",
+                ["http://www.springframework.net/db"] =
+                "Spring.Data.Config.DatabaseNamespaceParser, Spring.Data",
+                ["http://www.springframework.net/database"] =
+                "Spring.Data.Config.DatabaseNamespaceParser, Spring.Data",
+                ["http://www.springframework.net/remoting"] =
+                "Spring.Remoting.Config.RemotingNamespaceParser, Spring.Services",
+                ["http://www.springframework.net/wcf"] =
+                "Spring.ServiceModel.Config.WcfNamespaceParser, Spring.Services",
+                ["http://www.springframework.net/nms"] =
+                "Spring.Messaging.Nms.Config.NmsNamespaceParser, Spring.Messaging.Nms",
+                ["http://www.springframework.net/ems"] =
+                "Spring.Messaging.Ems.Config.EmsNamespaceParser, Spring.Messaging.Ems",
+                ["http://www.springframework.net/validation"] =
+                "Spring.Validation.Config.ValidationNamespaceParser, Spring.Core",
+                ["http://www.springframework.net/nvelocity"] =
+                "Spring.Template.Velocity.Config.TemplateNamespaceParser, Spring.Template.Velocity"
+            };
 
             Reset();
         }
@@ -107,8 +109,10 @@ namespace Spring.Objects.Factory.Xml
         public static void Reset()
         {
             parsers = new HybridDictionary();
-            schemas = new XmlSchemaSet();
-            schemas.XmlResolver = new XmlResourceUrlResolver();
+            schemas = new XmlSchemaSet
+            {
+                XmlResolver = new XmlResourceUrlResolver()
+            };
 
             RegisterParser(new ObjectsNamespaceParser());
             // register custom config parsers
@@ -121,7 +125,7 @@ namespace Spring.Objects.Factory.Xml
         /// <returns><c>true</c> if the parser could be registered, <c>false</c> otherwise</returns>
         internal static bool RegisterWellknownNamespaceParserType(string namespaceUri)
         {
-            if (parsers[namespaceUri] is object) return true;
+            if (parsers[namespaceUri] is not null) return true;
 
             if (wellknownNamespaceParserTypeNames.Contains(namespaceUri))
             {
@@ -132,7 +136,7 @@ namespace Spring.Objects.Factory.Xml
                 string fullname = typeof(NamespaceParserRegistry).Assembly.GetName().FullName;
                 string versionCulturePublicKey = fullname.Substring(name.Length);
 
-                parserTypeName = parserTypeName + versionCulturePublicKey;
+                parserTypeName += versionCulturePublicKey;
                 Type parserType = Type.GetType(parserTypeName, true);
                 RegisterParser(parserType);
                 return true;
@@ -147,7 +151,7 @@ namespace Spring.Objects.Factory.Xml
         /// </summary>
         public static string GetAssemblySchemaLocation(Type schemaLocationAssemblyHint, string schemaLocation)
         {
-            if (schemaLocationAssemblyHint is object)
+            if (schemaLocationAssemblyHint is not null)
             {
                 return "assembly://" + schemaLocationAssemblyHint.Assembly.FullName + schemaLocation;
             }
@@ -248,8 +252,7 @@ namespace Spring.Objects.Factory.Xml
         {
             AssertUtils.ArgumentNotNull(parserType, "parserType");
 
-            INamespaceParser np = null;
-
+            INamespaceParser np;
             if ((typeof(INamespaceParser)).IsAssignableFrom(parserType))
             {
                 np = (INamespaceParser) ObjectUtils.InstantiateType(parserType);
@@ -275,7 +278,7 @@ namespace Spring.Objects.Factory.Xml
                     if (StringUtils.IsNullOrEmpty(schemaLocation))
                     {
                         schemaLocation = defaults.SchemaLocation;
-                        if (defaults.SchemaLocationAssemblyHint is object)
+                        if (defaults.SchemaLocationAssemblyHint is not null)
                         {
                             schemaLocation =
                                 GetAssemblySchemaLocation(defaults.SchemaLocationAssemblyHint, schemaLocation);
@@ -359,7 +362,7 @@ namespace Spring.Objects.Factory.Xml
                 if (StringUtils.IsNullOrEmpty(schemaLocation))
                 {
                     schemaLocation = defaults.SchemaLocation;
-                    if (defaults.SchemaLocationAssemblyHint is object)
+                    if (defaults.SchemaLocationAssemblyHint is not null)
                     {
                         schemaLocation = GetAssemblySchemaLocation(defaults.SchemaLocationAssemblyHint, schemaLocation);
                     }

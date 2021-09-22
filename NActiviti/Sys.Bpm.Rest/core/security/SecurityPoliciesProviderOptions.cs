@@ -25,7 +25,10 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <param name="configuration"></param>
         public SecurityPoliciesProviderOptions(IConfiguration configuration)
         {
-            configuration.Bind(this);
+            configuration.Bind(this, opts =>
+            {
+
+            });
         }
 
         /// <summary>
@@ -51,6 +54,6 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <summary>
         /// 签名证书
         /// </summary>
-        public SigningCredentials SigningCredentials { get; set; }
+        //public SigningCredentials SigningCredentials { get; set; }
     }
 }

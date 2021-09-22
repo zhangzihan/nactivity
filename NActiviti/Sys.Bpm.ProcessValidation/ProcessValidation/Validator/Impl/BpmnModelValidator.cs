@@ -69,7 +69,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
 
         protected internal virtual void HandleBPMNModelConstraints(BpmnModel bpmnModel, IList<ValidationError> errors)
         {
-            if (bpmnModel.TargetNamespace is object && bpmnModel.TargetNamespace.Length > Constraints.BPMN_MODEL_TARGET_NAMESPACE_MAX_LENGTH)
+            if (bpmnModel.TargetNamespace is not null && bpmnModel.TargetNamespace.Length > Constraints.BPMN_MODEL_TARGET_NAMESPACE_MAX_LENGTH)
             {
                 AddError(errors, ProblemsConstants.BPMN_MODEL_TARGET_NAMESPACE_TOO_LONG,
                     string.Format(ProcessValidatorResource.BPMN_MODEL_TARGET_NAMESPACE_TOO_LONG, Constraints.BPMN_MODEL_TARGET_NAMESPACE_MAX_LENGTH));

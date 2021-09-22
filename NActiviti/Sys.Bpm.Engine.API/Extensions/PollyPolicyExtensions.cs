@@ -17,24 +17,24 @@ namespace Sys.Workflow.Polly
         private static async Task OnFailed(DelegateResult<HttpResponseMessage> res, TimeSpan ts)
         {
             HttpResponseMessage response = res.Result;
-            if (response is null && res.Exception is object)
+            if (response is null && res.Exception is not null)
             {
                 logger.LogError($"【调用服务失败】" + res.Exception.Message + Environment.NewLine);
             }
-            else if (response is object)
+            else if (response is not null)
             {
                 string str = await (response.Content?.ReadAsStringAsync()).ConfigureAwait(false);
                 string request = null;
 
-                if (response.RequestMessage.Content is object)
+                if (response.RequestMessage.Content is not null)
                 {
                     request = await response.RequestMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
 
                 logger.LogError($"【调用服务失败】={(int)response.StatusCode}," +
                     $"Url={response.RequestMessage?.RequestUri?.AbsoluteUri}{Environment.NewLine}" +
-                    $"{(request is object ? $"参数={request}" : "")}" +
-                    $"{(res.Exception is object ? res.Exception.Message : str)}{Environment.NewLine}");
+                    $"{(request is not null ? $"参数={request}" : "")}" +
+                    $"{(res.Exception is not null ? res.Exception.Message : str)}{Environment.NewLine}");
             }
         }
 

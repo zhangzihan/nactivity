@@ -74,7 +74,7 @@ namespace BpmnWebTest.Hubs
                 if ((processEngineConfiguration?.EnableVerboseExecutionTreeLogging).GetValueOrDefault(false) && evt?.Execution is object)
                 {
                     string startUserId = evt.Execution.ProcessInstance.StartUserId;
-                    if (startUserId is object && users.TryGetValue(startUserId, out HashSet<string> clients))
+                    if (startUserId is not null && users.TryGetValue(startUserId, out HashSet<string> clients))
                     {
                         foreach (var clientId in clients)
                         {

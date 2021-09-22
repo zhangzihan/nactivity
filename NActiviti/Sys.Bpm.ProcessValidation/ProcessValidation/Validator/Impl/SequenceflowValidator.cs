@@ -55,7 +55,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                     AddError(errors, ProblemsConstants.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, ProcessValidatorResource.SEQ_FLOW_INVALID_TARGET);
                 }
 
-                if (source is object && target is object)
+                if (source is not null && target is not null)
                 {
                     IFlowElementsContainer sourceContainer = process.GetFlowElementsContainer(source.Id);
                     IFlowElementsContainer targetContainer = process.GetFlowElementsContainer(target.Id);

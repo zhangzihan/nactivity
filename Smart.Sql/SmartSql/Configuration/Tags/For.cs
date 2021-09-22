@@ -150,8 +150,8 @@ namespace SmartSql.Configuration.Tags
             string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
             var reqVal = GetPropertyValue(context) as IEnumerable;
             int item_index = 0;
-            Dictionary<PropertyInfo, PropertyReflector> htGetters = new Dictionary<PropertyInfo, PropertyReflector>();
-            Dictionary<string, Regex> regPatten = new Dictionary<string, Regex>(StringComparer.OrdinalIgnoreCase);
+            Dictionary<PropertyInfo, PropertyReflector> htGetters = new();
+            Dictionary<string, Regex> regPatten = new(StringComparer.OrdinalIgnoreCase);
 
             foreach (var itemVal in reqVal)
             {
@@ -187,7 +187,7 @@ namespace SmartSql.Configuration.Tags
                     string key_name_dbPrefix = $"{dbPrefix}{key_name}";
 
                     var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => string.Compare(p.Name, property.Name, true) == 0);
-                    if (paramMap is object && paramMap.Handler is object)
+                    if (paramMap is not null && paramMap.Handler is object)
                     {
                         propertyVal = paramMap.Handler.ToParameterValue(propertyVal);
                     }

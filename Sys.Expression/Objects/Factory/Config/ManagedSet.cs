@@ -107,7 +107,7 @@ namespace Spring.Objects.Factory.Config
             {
                 object resolvedElement = resolver(objectName, definition, elementName, element);
 
-                if (elementType is object)
+                if (elementType is not null)
                 {
                     try
                     {

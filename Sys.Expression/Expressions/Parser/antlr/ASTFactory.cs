@@ -539,7 +539,7 @@ namespace Spring.Expressions.Parser.antlr
 		/// <param name="t">Fully qualified AST Node Type name.</param>
 		public virtual void  setASTNodeType(string t)
 		{
-			if (defaultCreator_ is object)
+			if (defaultCreator_ is not null)
 			{
 				if (t != defaultCreator_.ASTNodeTypeName)
 				{
@@ -569,14 +569,14 @@ namespace Spring.Expressions.Parser.antlr
 			Type	nodeTypeObject	= null;
 			bool	typeCreated		= false;
 
-			if (nodeTypeName is object)
+			if (nodeTypeName is not null)
 			{
 				foreach (Assembly assem in AppDomain.CurrentDomain.GetAssemblies())
 				{
 					try
 					{
 						nodeTypeObject = assem.GetType(nodeTypeName);
-						if (nodeTypeObject is object)
+						if (nodeTypeObject is not null)
 						{
 							typeCreated = true;
 							break;
@@ -601,7 +601,7 @@ namespace Spring.Expressions.Parser.antlr
 			Type	nodeAsTypeObj	= node.GetType();
 
 			ASTNodeCreator creator = (ASTNodeCreator) typename2creator_[nodeAsTypeObj.FullName];
-			if (creator is object)
+			if (creator is not null)
 			{
 				newNode = creator.Create();
 				if (newNode is null)
@@ -621,7 +621,7 @@ namespace Spring.Expressions.Parser.antlr
 			AST		newNode			= null;
 
 			ASTNodeCreator creator = (ASTNodeCreator) typename2creator_[nodeTypeName];
-			if (creator is object)
+			if (creator is not null)
 			{
 				newNode = creator.Create();
 				if (newNode is null)
@@ -642,7 +642,7 @@ namespace Spring.Expressions.Parser.antlr
 			AST newNode = null;
 
 			FactoryEntry	entry = heteroList_[nodeTypeIndex];
-			if ((entry is object) && (entry.Creator is object))
+			if ((entry is not null) && (entry.Creator is not null))
 			{
 				newNode = entry.Creator.Create();
 			}

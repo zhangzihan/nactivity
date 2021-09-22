@@ -89,11 +89,10 @@ namespace Spring.Objects.Factory.Config
         /// </exception>
         protected virtual Type ResolveRequiredType(object value, string errorContextSource, string errorContext)
         {
-            Type requiredType = value as Type;
-            if (requiredType is null)
+            if (value is not Type requiredType)
             {
                 string typeName = value as string;
-                if (typeName is object)
+                if (typeName is not null)
                 {
                     try
                     {

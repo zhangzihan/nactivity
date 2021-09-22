@@ -24,7 +24,7 @@
 
                 var val = value as ValuedDataObject;
 
-                if (val.Value is object)
+                if (val.Value is not null)
                 {
                     Value = val.Value;
                 }

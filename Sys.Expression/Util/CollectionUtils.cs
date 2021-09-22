@@ -175,7 +175,7 @@ namespace Spring.Util
             MethodInfo method;
             method = targetCollection.GetType().GetMethod("containsAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-            if (method is object)
+            if (method is not null)
                 contains = Convert.ToBoolean(method.Invoke(targetCollection, new object[] { sourceCollection }));
             else
             {
@@ -209,7 +209,7 @@ namespace Spring.Util
             MethodInfo method;
             method = targetCollection.GetType().GetMethod("removeAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-            if (method is object)
+            if (method is not null)
                 method.Invoke(targetCollection, new object[] { al });
             else
             {
@@ -275,7 +275,7 @@ namespace Spring.Util
                 return null;
             }
 
-            if (!(candidates is IList candidateList))
+            if (candidates is not IList candidateList)
             {
                 if (candidates is ICollection collection)
                 {
@@ -320,7 +320,7 @@ namespace Spring.Util
             {
                 if (typeToUse.IsAssignableFrom(obj.GetType()))
                 {
-                    if (val is object)
+                    if (val is not null)
                     {
                         throw new ArgumentException("More than one value of type[" + typeToUse.Name + "] found.");
                     }
@@ -372,7 +372,7 @@ namespace Spring.Util
             foreach (Type type in types)
             {
                 object val = FindValueOfType(collection, type);
-                if (val is object)
+                if (val is not null)
                 {
                     return val;
                 }

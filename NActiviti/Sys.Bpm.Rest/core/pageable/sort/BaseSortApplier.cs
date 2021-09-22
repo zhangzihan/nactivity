@@ -30,7 +30,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables.Sorts
         /// </summary>
         public virtual void ApplySort(T query, Pageable pageable)
         {
-            if (pageable.Sort is object && pageable.Sort != Sort.UnSorted())
+            if (pageable.Sort is not null && pageable.Sort != Sort.UnSorted())
             {
                 ApplyPageableSort(query, pageable.Sort);
             }

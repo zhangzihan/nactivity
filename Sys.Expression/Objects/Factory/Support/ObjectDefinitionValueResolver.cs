@@ -106,8 +106,7 @@ namespace Spring.Objects.Factory.Support
         /// </param>
         public virtual object ResolveValueIfNecessary(string name, IObjectDefinition definition, string argumentName, object argumentValue)
         {
-            object resolvedValue = null;
-            resolvedValue = ResolvePropertyValue(name, definition, argumentName, argumentValue);
+            object resolvedValue = ResolvePropertyValue(name, definition, argumentName, argumentValue);
             return resolvedValue;
         }
 
@@ -129,7 +128,7 @@ namespace Spring.Objects.Factory.Support
         private object ResolvePropertyValue(string name, IObjectDefinition definition, string argumentName, object argumentValue)
         {
             object resolvedValue = null;
-            
+
             // we must check the argument value to see whether it requires a runtime
             // reference to another object to be resolved.
             // if it does, we'll attempt to instantiate the object and set the reference.
@@ -137,35 +136,29 @@ namespace Spring.Objects.Factory.Support
             {
                 resolvedValue = argumentValue;
             }
-            else if (argumentValue is ICustomValueReferenceHolder)
+            else if (argumentValue is ICustomValueReferenceHolder cholde1)
             {
-                resolvedValue = ((ICustomValueReferenceHolder) argumentValue).Resolve(objectFactory, name, definition, argumentName, argumentValue);
+                resolvedValue = cholde1.Resolve(objectFactory, name, definition, argumentName, argumentValue);
             }
-            else if (argumentValue is ObjectDefinitionHolder)
+            else if (argumentValue is ObjectDefinitionHolder holder) // contains an IObjectDefinition with name and aliases...
             {
-                // contains an IObjectDefinition with name and aliases...
-                ObjectDefinitionHolder holder = (ObjectDefinitionHolder)argumentValue;
                 resolvedValue = ResolveInnerObjectDefinition(name, holder.ObjectName, argumentName, holder.ObjectDefinition, definition.IsSingleton);
             }
-            else if (argumentValue is IObjectDefinition)
+            else if (argumentValue is IObjectDefinition def) // resolve plain IObjectDefinition, without contained name: use dummy name... 
             {
-                // resolve plain IObjectDefinition, without contained name: use dummy name... 
-                IObjectDefinition def = (IObjectDefinition)argumentValue;
                 resolvedValue = ResolveInnerObjectDefinition(name, "(inner object)", argumentName, def, definition.IsSingleton);
 
             }
-            else if (argumentValue is RuntimeObjectReference)
+            else if (argumentValue is RuntimeObjectReference roref)
             {
-                RuntimeObjectReference roref = (RuntimeObjectReference)argumentValue;
                 resolvedValue = ResolveReference(definition, name, argumentName, roref);
             }
-            else if (argumentValue is ExpressionHolder)
+            else if (argumentValue is ExpressionHolder expHolder)
             {
-                ExpressionHolder expHolder = (ExpressionHolder)argumentValue;
                 object context = null;
                 IDictionary<string, object> variables = null;
 
-                if (expHolder.Properties is object)
+                if (expHolder.Properties is not null)
                 {
                     PropertyValue contextProperty = expHolder.Properties.GetPropertyValue("Context");
                     context = contextProperty is null
@@ -177,22 +170,21 @@ namespace Spring.Objects.Factory.Support
                                        ? null
                                        : ResolveValueIfNecessary(name, definition, "Variables",
                                                                  variablesProperty.Value));
-                    if (vars is IDictionary<string, object>)
+                    if (vars is IDictionary<string, object> dictionary)
                     {
-                        variables = (IDictionary<string, object>)vars;
+                        variables = dictionary;
                     }
-                    if (vars is IDictionary)
+                    if (vars is IDictionary temp)
                     {
-                        IDictionary temp = (IDictionary) vars;
                         variables = new Dictionary<string, object>(temp.Count);
                         foreach (DictionaryEntry entry in temp)
                         {
-                            variables.Add((string) entry.Key, entry.Value);
+                            variables.Add((string)entry.Key, entry.Value);
                         }
                     }
                     else
                     {
-                        if (vars is object) throw new ArgumentException("'Variables' must resolve to an IDictionary");
+                        if (vars is not null) throw new ArgumentException("'Variables' must resolve to an IDictionary");
                     }
                 }
 
@@ -202,18 +194,17 @@ namespace Spring.Objects.Factory.Support
 
                 resolvedValue = expHolder.Expression.GetValue(context, variables);
             }
-            else if (argumentValue is IManagedCollection)
+            else if (argumentValue is IManagedCollection collection)
             {
                 resolvedValue =
-                    ((IManagedCollection)argumentValue).Resolve(name, definition, argumentName, ResolveValueIfNecessary);
+                    collection.Resolve(name, definition, argumentName, ResolveValueIfNecessary);
             }
-            else if (argumentValue is TypedStringValue)
+            else if (argumentValue is TypedStringValue tsv)
             {
-                TypedStringValue tsv = (TypedStringValue)argumentValue;
                 try
                 {
                     Type resolvedTargetType = ResolveTargetType(tsv);
-                    if (resolvedTargetType is object)
+                    if (resolvedTargetType is not null)
                     {
                         resolvedValue = TypeConversionUtils.ConvertValueIfNecessary(tsv.TargetType, tsv.Value, null);
                     }
@@ -244,9 +235,9 @@ namespace Spring.Objects.Factory.Support
         /// <returns>The resolved target type, if any. <see lang="null" /> otherwise.</returns>
         protected virtual Type ResolveTargetType(TypedStringValue value)
         {
-            if (value.HasTargetType) 
+            if (value.HasTargetType)
             {
-			    return value.TargetType;
+                return value.TargetType;
             }
             return value.ResolveTargetType();
         }

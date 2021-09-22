@@ -300,7 +300,7 @@ namespace Sys.Workflow.Bpmn.Converters
                     {
 
                         Process process = processParser.Parse(xtr, model);
-                        if (process is object)
+                        if (process is not null)
                         {
                             activeProcess = process;
                         }
@@ -324,7 +324,7 @@ namespace Sys.Workflow.Bpmn.Converters
                         {
                             parentElement = activeSubProcessList[activeSubProcessList.Count - 1];
                         }
-                        else if (activeProcess is object)
+                        else if (activeProcess is not null)
                         {
                             parentElement = activeProcess;
                         }
@@ -390,7 +390,7 @@ namespace Sys.Workflow.Bpmn.Converters
                         }
                         else if (convertersToBpmnMap.ContainsKey(xtr.LocalName))
                         {
-                            if (activeProcess is object)
+                            if (activeProcess is not null)
                             {
                                 BaseBpmnXMLConverter converter = convertersToBpmnMap[xtr.LocalName];
                                 converter.ConvertToBpmnModel(xtr, model, activeProcess, activeSubProcessList);
@@ -440,14 +440,14 @@ namespace Sys.Workflow.Bpmn.Converters
                 if (flowElement is SequenceFlow sequenceFlow)
                 {
                     FlowNode sourceNode = GetFlowNodeFromScope(sequenceFlow.SourceRef, parentScope);
-                    if (sourceNode is object)
+                    if (sourceNode is not null)
                     {
                         sourceNode.OutgoingFlows.Add(sequenceFlow);
                         sequenceFlow.SourceFlowElement = sourceNode;
                     }
 
                     FlowNode targetNode = GetFlowNodeFromScope(sequenceFlow.TargetRef, parentScope);
-                    if (targetNode is object)
+                    if (targetNode is not null)
                     {
                         targetNode.IncomingFlows.Add(sequenceFlow);
                         sequenceFlow.TargetFlowElement = targetNode;

@@ -47,7 +47,7 @@ namespace Spring.Expressions.Processors
             object total = 0d;
             foreach (object item in source)
             {
-                if (item is object)
+                if (item is not null)
                 {
                     if (NumberUtils.IsNumber(item))
                     {

@@ -129,7 +129,7 @@ namespace Spring.Expressions.Parser.antlr
 			
 			public override int execute(StringBuilder buf) 
 			{
-				if ( text is object ) 
+				if ( text is not null) 
 				{
 					buf.Append(text);
 				}
@@ -200,7 +200,7 @@ namespace Spring.Expressions.Parser.antlr
 			do 
 			{
 				t = (TokenWithIndex) stream.nextToken();
-				if ( t is object ) 
+				if ( t is not null) 
 				{
 					t.setIndex(index);  // what is t's index in list?
 					if ( t.Type != Token.EOF_TYPE ) 
@@ -209,7 +209,7 @@ namespace Spring.Expressions.Parser.antlr
 					}
 					index++;			// move to next position
 				}
-			} while ( (t is object) && (discardMask.member(t.Type)) );
+			} while ( (t is not null) && (discardMask.member(t.Type)) );
 
 			return t;
 		}
@@ -232,7 +232,7 @@ namespace Spring.Expressions.Parser.antlr
 		public void rollback(string programName, int instructionIndex) 
 		{
 			ArrayList il = (ArrayList) programs[programName];
-			if ( il is object ) 
+			if ( il is not null) 
 			{
 				programs[programName] = il.GetRange(MIN_TOKEN_INDEX, (instructionIndex - MIN_TOKEN_INDEX));
 			}

@@ -107,7 +107,7 @@ namespace Spring.Expressions.Parser.antlr
 		public CharScanner(LexerSharedInputState sharedState) : this()
 		{
 			inputState = sharedState;
-			if (inputState is object)
+			if (inputState is not null)
 			{
 				cached_LA2 = inputState.input.LA(2);
 				cached_LA1 = inputState.input.LA(1);
@@ -767,7 +767,7 @@ namespace Spring.Expressions.Parser.antlr
 					try
 					{
 						tokenTypeObject = assem.GetType(tokenTypeName);
-						if (tokenTypeObject is object)
+						if (tokenTypeObject is not null)
 						{
 							break;
 						}

@@ -176,7 +176,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 if (artifact is Association association)
                 {
-                    if (association.SourceRef is object && association.TargetRef is object && association.SourceRef.Equals(sourceRef))
+                    if (association.SourceRef is not null && association.TargetRef is not null && association.SourceRef.Equals(sourceRef))
                     {
                         associations.Add(association);
                     }
@@ -205,7 +205,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 if (artifact is Association association)
                 {
-                    if (association.TargetRef is object && association.TargetRef.Equals(targetRef))
+                    if (association.TargetRef is not null && association.TargetRef.Equals(targetRef))
                     {
                         associations.Add(association);
                     }
@@ -234,7 +234,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             foreach (FlowElement flowElement in flowElementsContainer.FlowElements)
             {
-                if (flowElement.Id is object && flowElement.Id.Equals(flowElementId))
+                if (flowElement.Id is not null && flowElement.Id.Equals(flowElementId))
                 {
                     return flowElementsContainer;
                 }
@@ -286,7 +286,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddFlowElementToMap(FlowElement element)
         {
-            if (element is object && !string.IsNullOrWhiteSpace(element.Id))
+            if (element is not null && !string.IsNullOrWhiteSpace(element.Id))
             {
                 flowElementMap[element.Id] = element;
             }
@@ -295,7 +295,7 @@ namespace Sys.Workflow.Bpmn.Models
         public virtual void RemoveFlowElement(string elementId)
         {
             flowElementMap.TryGetValue(elementId, out var element);
-            if (element is object)
+            if (element is not null)
             {
                 flowElementList.Remove(element);
                 flowElementMap.Remove(element.Id);
@@ -340,7 +340,7 @@ namespace Sys.Workflow.Bpmn.Models
         public virtual void RemoveArtifact(string artifactId)
         {
             Artifact artifact = GetArtifact(artifactId);
-            if (artifact is object)
+            if (artifact is not null)
             {
                 artifactList.Remove(artifact);
             }
@@ -445,7 +445,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             foreach (FlowElement flowElement in flowElementsContainer.FlowElements)
             {
-                if (childElement.Id is object && childElement.Id.Equals(flowElement.Id))
+                if (childElement.Id is not null && childElement.Id.Equals(flowElement.Id))
                 {
                     return flowElementsContainer;
                 }
@@ -482,7 +482,7 @@ namespace Sys.Workflow.Bpmn.Models
                 Name = val.Name;
                 Executable = val.Executable;
                 Documentation = val.Documentation;
-                if (val.IoSpecification is object)
+                if (val.IoSpecification is not null)
                 {
                     IoSpecification = val.IoSpecification.Clone() as IOSpecification;
                 }

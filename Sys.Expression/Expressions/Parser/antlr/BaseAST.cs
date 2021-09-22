@@ -64,9 +64,9 @@ namespace Spring.Expressions.Parser.antlr
 			if (node is null)
 				return ;
 			BaseAST t = this.down;
-			if (t is object)
+			if (t is not null)
 			{
-				while (t.right is object)
+				while (t.right is not null)
 				{
 					t = t.right;
 				}
@@ -311,10 +311,10 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			BaseAST t = this.down;
 			int n = 0;
-			if (t is object) 
+			if (t is not null) 
 			{
 				n = 1;
-				while (t.right is object) 
+				while (t.right is not null) 
 				{
 					t = t.right;
 					n++;

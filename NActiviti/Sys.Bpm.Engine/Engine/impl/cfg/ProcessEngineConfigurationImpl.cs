@@ -3666,8 +3666,6 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             }
         }
 
-        public virtual IsolationLevel IsolationLevel { get; set; } = IsolationLevel.ReadCommitted;
-
         /// <summary>
         /// 
         /// </summary>

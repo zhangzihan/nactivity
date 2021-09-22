@@ -66,8 +66,8 @@ namespace Spring.Context.Attributes
 
         private void ParseName()
         {
-            var attr = Attribute.GetCustomAttribute(ObjectType, typeof (ComponentAttribute), true) as ComponentAttribute;
-            if (attr is object && !string.IsNullOrEmpty(attr.Name))
+            var attr = Attribute.GetCustomAttribute(ObjectType, typeof(ComponentAttribute), true) as ComponentAttribute;
+            if (attr is not null && !string.IsNullOrEmpty(attr.Name))
                 _componentName = attr.Name;
         }
 
@@ -76,28 +76,27 @@ namespace Spring.Context.Attributes
             if (defaults is null)
                 return;
 
-            bool lazyInit = false;
-            bool.TryParse(defaults.LazyInit, out lazyInit);
+            bool.TryParse(defaults.LazyInit, out bool lazyInit);
             IsLazyInit = lazyInit;
-            
+
             if (!String.IsNullOrEmpty(defaults.Autowire))
             {
-               AutowireMode = GetAutowireMode(defaults.Autowire);
-            }            
+                AutowireMode = GetAutowireMode(defaults.Autowire);
+            }
         }
 
         private AutoWiringMode GetAutowireMode(string value)
         {
-           AutoWiringMode autoWiringMode;
-           autoWiringMode = (AutoWiringMode)Enum.Parse(typeof(AutoWiringMode), value, true);
-           return autoWiringMode;
+            AutoWiringMode autoWiringMode;
+            autoWiringMode = (AutoWiringMode)Enum.Parse(typeof(AutoWiringMode), value, true);
+            return autoWiringMode;
         }
 
 
         private void ParseScopeAttribute()
         {
             var attr = Attribute.GetCustomAttribute(ObjectType, typeof(ScopeAttribute), true) as ScopeAttribute;
-            if (attr is object)
+            if (attr is not null)
             {
                 Scope = attr.ObjectScope.ToString().ToLower();
 
@@ -111,14 +110,14 @@ namespace Spring.Context.Attributes
         private void ParseLazyAttribute()
         {
             var attr = Attribute.GetCustomAttribute(ObjectType, typeof(LazyAttribute), true) as LazyAttribute;
-            if (attr is object)
+            if (attr is not null)
                 IsLazyInit = attr.LazyInitialize;
         }
 
         private void ParseQualifierAttribute()
         {
             var attr = Attribute.GetCustomAttribute(ObjectType, typeof(QualifierAttribute), true) as QualifierAttribute;
-            if (attr is object)
+            if (attr is not null)
             {
                 var qualifier = new AutowireCandidateQualifier(attr.GetType());
 
@@ -138,7 +137,7 @@ namespace Spring.Context.Attributes
                 if (!property.Name.Equals("TypeId") && !property.Name.Equals("Value"))
                 {
                     object value = property.GetValue(attr, null);
-                    if (value is object)
+                    if (value is not null)
                     {
                         var attribute = new ObjectMetadataAttribute(property.Name, value);
                         qualifier.AddMetadataAttribute(attribute);

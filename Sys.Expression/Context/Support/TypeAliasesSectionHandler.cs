@@ -100,7 +100,7 @@ namespace Spring.Context.Support
         /// </returns>
         public object Create(object parent, object configContext, XmlNode section)
         {
-            if (section is object)
+            if (section is not null)
             {
                 XmlNodeList aliases = ((XmlElement) section).GetElementsByTagName(AliasElementName);
                 foreach (XmlElement aliasElement in aliases)

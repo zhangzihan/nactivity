@@ -72,7 +72,7 @@ namespace Sys.Workflow.Api.Runtime.Shared.Query
                     {
                         case "body":
                             var body = context.Request.Body;
-                            if (body is object)
+                            if (body is not null)
                             {
                                 var ms = new MemoryStream();
                                 var reader = new StreamReader(ms);
@@ -117,7 +117,7 @@ namespace Sys.Workflow.Api.Runtime.Shared.Query
             }
             catch (Exception exception)
             {
-                if (!(exception is FormatException) && (exception.InnerException is object))
+                if (!(exception is FormatException) && (exception.InnerException is not null))
                 {
                     exception = ExceptionDispatchInfo.Capture(exception.InnerException).SourceException;
                 }

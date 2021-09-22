@@ -70,8 +70,8 @@ namespace Spring.Core.IO
         /// </remarks>
         protected const string DefaultBasePathPlaceHolder = "~";
 
-        private string protocol;
-        private string resourceName;
+        private readonly string protocol;
+        private readonly string resourceName;
         private string basePathPlaceHolder = DefaultBasePathPlaceHolder;
 
         #region Constructor (s) / Destructor
@@ -391,8 +391,8 @@ namespace Spring.Core.IO
         /// <seealso cref="Spring.Core.IO.IResource.Description"/>
         public override bool Equals(object obj)
         {
-            return obj is IResource
-                   && ((IResource)obj).Description.Equals(Description);
+            return obj is IResource resource
+                   && resource.Description.Equals(Description);
         }
 
         /// <summary>
@@ -620,7 +620,7 @@ namespace Spring.Core.IO
             }
 
             StringBuilder fullResourceName = new(256);
-            if (Protocol is object && Protocol != String.Empty)
+            if (Protocol is not null && Protocol != String.Empty)
             {
                 fullResourceName.Append(Protocol).Append(ConfigurableResourceLoader.ProtocolSeparator);
             }
@@ -646,7 +646,7 @@ namespace Spring.Core.IO
                 }
 
                 fullResourceName.Append(RootLocation.TrimEnd('\\','/'));
-                if (resourcePath is object && resourcePath != String.Empty)
+                if (resourcePath is not null && resourcePath != String.Empty)
                 {
                     fullResourceName.Append('/').Append(resourcePath);
                 }
@@ -714,7 +714,7 @@ namespace Spring.Core.IO
             }
             else // relative to current namespace...
             {
-                if (ResourcePath is object && ResourcePath != String.Empty)
+                if (ResourcePath is not null && ResourcePath != String.Empty)
                 {
                     path.Append(ResourcePath.TrimEnd(PathSeparatorChars)).Append(PathSeparatorChars[0]);
                 }

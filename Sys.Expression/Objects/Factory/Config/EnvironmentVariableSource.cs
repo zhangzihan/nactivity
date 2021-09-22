@@ -38,7 +38,7 @@ namespace Spring.Objects.Factory.Config
         /// <returns><c>true</c> if the variable can be resolved, <c>false</c> otherwise</returns>
         public bool CanResolveVariable(string name)
         {
-            return (Environment.GetEnvironmentVariable(name) is object);
+            return (Environment.GetEnvironmentVariable(name) is not null);
         }
 
         /// <summary>

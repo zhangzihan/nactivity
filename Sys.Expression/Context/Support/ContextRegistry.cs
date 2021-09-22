@@ -60,7 +60,7 @@ namespace Spring.Context.Support
         private static readonly ContextRegistry instance = new();
         private static string rootContextName = null;
 
-        private IDictionary<string, IApplicationContext> contextMap = new Dictionary<string, IApplicationContext>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, IApplicationContext> contextMap = new Dictionary<string, IApplicationContext>(StringComparer.OrdinalIgnoreCase);
 
         #region Constructor (s) / Destructor
 
@@ -168,8 +168,7 @@ namespace Spring.Context.Support
 
             lock (syncRoot)
             {
-                IApplicationContext ctx;
-                if (instance.contextMap.TryGetValue(context.Name, out ctx))
+                if (instance.contextMap.TryGetValue(context.Name, out IApplicationContext ctx))
                 {
                     throw new ApplicationContextException(string.Format("Existing context '{0}' already registered under name '{1}'.", ctx, context.Name));
                 }
@@ -201,12 +200,12 @@ namespace Spring.Context.Support
         private static void OnContextEvent(object sender, ApplicationEventArgs e)
         {
             ContextEventArgs cea = e as ContextEventArgs;
-            if (cea is object
+            if (cea is not null
                 && cea.Event == ContextEventArgs.ContextEvent.Closed
-                && sender is IApplicationContext)
+                && sender is IApplicationContext context)
             {
                 // we know the context is registered!
-                UnregisterContext((IApplicationContext)sender);
+                UnregisterContext(context);
             }
         }
 
@@ -285,8 +284,7 @@ namespace Spring.Context.Support
                 lock (syncRoot)
                 {
                     InitializeContextIfNeeded();
-                    IApplicationContext ctx;
-                    if (!instance.contextMap.TryGetValue(name, out ctx))
+                    if (!instance.contextMap.TryGetValue(name, out IApplicationContext ctx))
                     {
                         throw new ApplicationContextException(String.Format(
                             "No context registered under name '{0}'. Use the 'RegisterContext' method or the 'spring/context' section from your configuration file.",
@@ -358,8 +356,7 @@ namespace Spring.Context.Support
         {
             lock (instance)
             {
-                IApplicationContext temp;
-                instance.contextMap.TryGetValue(name, out temp);
+                instance.contextMap.TryGetValue(name, out IApplicationContext temp);
                 return temp is object;
             }
         }
@@ -368,7 +365,7 @@ namespace Spring.Context.Support
 
         private static void InitializeContextIfNeeded()
         {
-            if (rootContextName is object)
+            if (rootContextName is not null)
             {
                 return;
             }

@@ -15,7 +15,7 @@ namespace SmartSql.DataReaderDeserializer
 {
     public class DataRowParserFactory
     {
-        private readonly ConcurrentDictionary<string, Func<IDataReader, RequestContext, object>> _cachedDeserializer = new ConcurrentDictionary<string, Func<IDataReader, RequestContext, object>>();
+        private readonly ConcurrentDictionary<string, Func<IDataReader, RequestContext, object>> _cachedDeserializer = new();
 
         public DataRowParserFactory()
         {
@@ -23,7 +23,7 @@ namespace SmartSql.DataReaderDeserializer
 
         public Func<IDataReader, RequestContext, object> GetParser(IDataReader dataReader, RequestContext requestContext, Type targetType)
         {
-            string key = $"{requestContext.FullSqlId}_{targetType.GUID.ToString("N")}";
+            string key = $"{requestContext.FullSqlId}_{targetType.GUID:N}";
             if (_cachedDeserializer.TryGetValue(key, out var deser) == false)
             {
                 if (targetType.IsValueType || targetType == TypeUtils.StringType)
@@ -148,7 +148,7 @@ namespace SmartSql.DataReaderDeserializer
                 colIndex++;
                 var result = context.Statement?.ResultMap?.Results?.FirstOrDefault(r => string.Compare(r.Column, colName, true) == 0);
                 bool hasTypeHandler = result?.Handler is object;
-                string propertyName = result is object ? result.Property : colName;
+                string propertyName = result is not null ? result.Property : colName;
                 var property = properties.FirstOrDefault(x => string.Compare(x.Name, propertyName, true) == 0);
 
                 if (property is null) { continue; }
@@ -173,7 +173,7 @@ namespace SmartSql.DataReaderDeserializer
                     var nullUnderType = Nullable.GetUnderlyingType(propertyType);
                     var realType = nullUnderType ?? propertyType;
 
-                    if (nullUnderType is object || realType == TypeUtils.StringType)
+                    if (nullUnderType is not null || realType == TypeUtils.StringType)
                     {
                         iLGenerator.Emit(OpCodes.Ldarg_0);// [dataReader]
                         EmitUtils.LoadInt32(iLGenerator, colIndex);// [dataReader][index]
@@ -192,7 +192,7 @@ namespace SmartSql.DataReaderDeserializer
                     #region GetValue
                     iLGenerator.Emit(OpCodes.Ldarg_0);// [dataReader]
                     EmitUtils.LoadInt32(iLGenerator, colIndex);// [dataReader][index]
-                    if (getRealValueMethod is object)
+                    if (getRealValueMethod is not null)
                     {
                         iLGenerator.Emit(OpCodes.Callvirt, getRealValueMethod);//[prop-value]
                     }
@@ -217,7 +217,7 @@ namespace SmartSql.DataReaderDeserializer
                     {
                         EmitUtils.ChangeType(iLGenerator, fieldType, realType);
                     }
-                    if (nullUnderType is object)
+                    if (nullUnderType is not null)
                     {
                         iLGenerator.Emit(OpCodes.Newobj, propertyType.GetConstructor(new[] { nullUnderType }));
                     }

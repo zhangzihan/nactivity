@@ -62,7 +62,7 @@ namespace Sys.Workflow.Bpmn.Converters
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, association.SourceRef, xtw);
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF, association.TargetRef, xtw);
             AssociationDirection associationDirection = association.AssociationDirection;
-            if (associationDirection is object)
+            if (associationDirection is not null)
             {
                 WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ASSOCIATION_DIRECTION, associationDirection.Value, xtw);
             }

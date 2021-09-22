@@ -58,7 +58,7 @@ namespace Spring.Objects.Factory.Support
 		/// A cache of generated <see cref="System.Type"/> instances, keyed on
 		/// the object name for which the <see cref="System.Type"/> was generated.
 		/// </summary>
-		private IDictionary typeCache = new Hashtable();
+		private readonly IDictionary typeCache = new Hashtable();
 
 		/// <summary>
 		/// Instantiate an instance of the object described by the supplied
@@ -250,10 +250,10 @@ namespace Spring.Objects.Factory.Support
 			/// </remarks>
 			internal const string MethodLookupPropertyName = "MethodLookup";
 
-			private RootObjectDefinition objectDefinition;
+			private readonly RootObjectDefinition objectDefinition;
 			private FieldBuilder methodReplacementField;
 			private FieldBuilder methodLookupField;
-			private ModuleBuilder module;
+			private readonly ModuleBuilder module;
 
 			private readonly MethodInfo MethodReplacerImplementMethod
 				= typeof (IMethodReplacer).GetMethod("Implement", new Type[] {typeof (object), typeof (MethodInfo), typeof (object[])});
@@ -370,15 +370,15 @@ namespace Spring.Objects.Factory.Support
 					MethodInfo method = methods[i];
 					MethodOverride methodOverride
 						= this.objectDefinition.MethodOverrides.GetOverride(method);
-					if (methodOverride is object)
+					if (methodOverride is not null)
 					{
 						if (!method.IsVirtual || method.IsFinal)
 						{
 							throw new ObjectCreationException(
 								"A replaced method must be marked as either abstract or virtual.");
 						}
-						FieldBuilder field = null;
-						if (methodOverride is ReplacedMethodOverride)
+                        FieldBuilder field;
+                        if (methodOverride is ReplacedMethodOverride)
 						{
 							field = this.methodReplacementField;
 						}
@@ -488,7 +488,7 @@ namespace Spring.Objects.Factory.Support
 			/// </param>
 			private static void SetupTheReturnValueIfAny(LocalBuilder returnValue, ILGenerator il)
 			{
-				if (returnValue is object)
+				if (returnValue is not null)
 				{
 					il.Emit(OpCodes.Castclass, returnValue.LocalType);
 					il.Emit(OpCodes.Stloc, returnValue);

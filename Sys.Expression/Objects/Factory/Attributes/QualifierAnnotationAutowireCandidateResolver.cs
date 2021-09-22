@@ -92,7 +92,7 @@ namespace Spring.Objects.Factory.Attributes
         {
             _objectFactory = (IObjectFactory) info.GetValue("objectFactory", typeof(IObjectFactory));
             var type = info.GetString("valueAttributeType");
-            _valueAttributeType = type is object ? Type.GetType(type) : null;
+            _valueAttributeType = type is not null ? Type.GetType(type) : null;
 
             _qualifierTypes = new HashSet<Type>();
             var typeNames = (List<string>) info.GetValue("qualifierTypeNames", typeof(List<string>));
@@ -159,7 +159,7 @@ namespace Spring.Objects.Factory.Attributes
             if (match)
             {
                 MethodParameter methodParam = descriptor.MethodParameter;
-                if (methodParam is object)
+                if (methodParam is not null)
                 {
                     var method = methodParam.MethodInfo;
                     if (method is null || method.ReturnType == typeof(void))
@@ -249,19 +249,19 @@ namespace Spring.Objects.Factory.Attributes
                     if (_objectFactory is object)
                     {
                         Type objectType = od.ObjectType;
-                        if (objectType is object)
+                        if (objectType is not null)
                         {
                             targetAttribute = Attribute.GetCustomAttribute(objectType, type);
                         }
                     }
 
-                    if (targetAttribute is null && od.ObjectType is object)
+                    if (targetAttribute is null && od.ObjectType is not null)
                     {
                         targetAttribute = Attribute.GetCustomAttribute(od.ObjectType, type);
                     }
                 }
 
-                if (targetAttribute is object && targetAttribute.Equals(attribute))
+                if (targetAttribute is not null && targetAttribute.Equals(attribute))
                 {
                     return true;
                 }
@@ -280,7 +280,7 @@ namespace Spring.Objects.Factory.Attributes
                 object expectedValue = entry.Value;
                 object actualValue = null;
                 // check qualifier first
-                if (qualifier is object)
+                if (qualifier is not null)
                 {
                     actualValue = qualifier.GetAttribute(propertyName);
                 }
@@ -292,19 +292,19 @@ namespace Spring.Objects.Factory.Attributes
                 }
 
                 if (actualValue is null && propertyName.Equals(AutowireCandidateQualifier.VALUE_KEY) &&
-                    expectedValue is string && odHolder.MatchesName((string) expectedValue))
+                    expectedValue is string @string && odHolder.MatchesName(@string))
                 {
                     // fall back on bean name (or alias) match
                     continue;
                 }
 
-                if (actualValue is null && qualifier is object)
+                if (actualValue is null && qualifier is not null)
                 {
                     // fall back on default, but only if the qualifier is present
                     actualValue = AttributeUtils.GetDefaultValue(attribute, propertyName);
                 }
 
-                if (actualValue is object)
+                if (actualValue is not null)
                 {
                     actualValue = TypeConversionUtils.ConvertValueIfNecessary(expectedValue.GetType(), actualValue, null);
                 }
@@ -327,7 +327,7 @@ namespace Spring.Objects.Factory.Attributes
             if (value is null)
             {
                 MethodParameter methodParam = descriptor.MethodParameter;
-                if (methodParam is object)
+                if (methodParam is not null)
                 {
                     value = FindValue(methodParam.MethodAttributes);
                 }

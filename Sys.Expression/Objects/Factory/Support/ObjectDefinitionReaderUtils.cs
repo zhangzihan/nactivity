@@ -141,11 +141,11 @@ namespace Spring.Objects.Factory.Support
             string generatedObjectName = objectDefinition.ObjectTypeName;
             if (StringUtils.IsNullOrEmpty(generatedObjectName))
             {
-                if (objectDefinition is ChildObjectDefinition)
+                if (objectDefinition is ChildObjectDefinition definition)
                 {
-                    generatedObjectName = ((ChildObjectDefinition)objectDefinition).ParentName + "$child";
+                    generatedObjectName = definition.ParentName + "$child";
                 }
-                else if (objectDefinition.FactoryObjectName is object)
+                else if (objectDefinition.FactoryObjectName is not null)
                 {
                     generatedObjectName = objectDefinition.FactoryObjectName + "$created";
                 }

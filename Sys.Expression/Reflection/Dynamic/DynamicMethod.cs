@@ -21,6 +21,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using Microsoft.CSharp.RuntimeBinder;
 using Spring.Util;
 
 namespace Spring.Reflection.Dynamic
@@ -50,6 +52,111 @@ namespace Spring.Reflection.Dynamic
     #endregion
 
     #region Safe wrapper
+
+    class IdentityTable : Hashtable
+    {
+        public IdentityTable()
+        { }
+
+        protected override int GetHash(object key)
+        {
+            return key.GetHashCode();
+        }
+
+        protected override bool KeyEquals(object item, object key)
+        {
+            return ReferenceEquals(item, key);
+        }
+    }
+
+    class SafeDyanmicObjectMethod : IDynamicMethod
+    {
+        private readonly dynamic context;
+        private readonly string methodName;
+
+        public SafeDyanmicObjectMethod(dynamic context, string methodName)
+        {
+            if (string.IsNullOrEmpty(methodName))
+            {
+                throw new ArgumentException($"“{nameof(methodName)}”不能为 null 或空。", nameof(methodName));
+            }
+
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.methodName = methodName;
+        }
+
+        public object Invoke(object target, params object[] arguments)
+        {
+            dynamic member = GetMember();
+
+            if (member is MulticastDelegate delegateMethod)
+            {
+                var method = delegateMethod.Method;
+                if (method.ReturnParameter.Name != "Void")
+                {
+                    return method.Invoke(delegateMethod.Target, arguments);
+                }
+                else
+                {
+                    method.Invoke(delegateMethod.Target, arguments);
+                    return null;
+                }
+            }
+            else if (member is MethodInfo)
+            {
+                var method = member;
+                if (method.ReturnParameter.Name != "Void")
+                {
+                    return method.Invoke(context, arguments);
+                }
+                else
+                {
+                    method.hod.Invoke(context, arguments);
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        internal dynamic GetMember()
+        {
+            var binder = Microsoft.CSharp.RuntimeBinder.Binder.GetMember(
+                CSharpBinderFlags.None,
+                methodName,
+                context.GetType(),
+                new[]
+                {
+                    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null)
+                });
+            var callsite = CallSite<Func<CallSite, object, object>>.Create(binder);
+            var member = callsite.Target(callsite, context);
+            return member;
+        }
+    }
+
+    class SafeDelegateMethod : IDynamicMethod
+    {
+        private readonly Delegate delegateMethod;
+
+        public SafeDelegateMethod(Delegate delegateMethod)
+        {
+            this.delegateMethod = delegateMethod ?? throw new ArgumentNullException(nameof(delegateMethod));
+        }
+
+        public object Invoke(object target, params object[] arguments)
+        {
+            if (this.delegateMethod.Method.ReturnParameter.Name != "Void")
+            {
+                return this.delegateMethod.DynamicInvoke(arguments);
+            }
+            else
+            {
+                this.delegateMethod.DynamicInvoke(arguments);
+                return null;
+            }
+        }
+    }
 
     /// <summary>
     /// Safe wrapper for the dynamic method.
@@ -85,22 +192,6 @@ namespace Spring.Reflection.Dynamic
             }
         }
 
-        private class IdentityTable : Hashtable
-        {
-            public IdentityTable()
-            { }
-
-            protected override int GetHash(object key)
-            {
-                return key.GetHashCode();
-            }
-
-            protected override bool KeyEquals(object item, object key)
-            {
-                return ReferenceEquals(item, key);
-            }
-        }
-
         private static readonly Hashtable stateCache = new IdentityTable();
 
         #endregion
@@ -127,7 +218,7 @@ namespace Spring.Reflection.Dynamic
                     state = (SafeMethodState)stateCache[methodInfo];
                     if (state is null)
                     {
-                        state = newState; 
+                        state = newState;
                         stateCache[methodInfo] = state;
                     }
                 }

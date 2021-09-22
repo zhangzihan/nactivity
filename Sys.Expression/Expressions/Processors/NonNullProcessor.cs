@@ -50,7 +50,7 @@ namespace Spring.Expressions.Processors
             ArrayList list = new();
             foreach (object item in source)
             {
-                if (item is object)
+                if (item is not null)
                 {
                     list.Add(item);
                 }

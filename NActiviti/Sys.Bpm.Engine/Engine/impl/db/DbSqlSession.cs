@@ -123,7 +123,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             {
                 ISmartSqlMapper sqlMapper = ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>();
 
-                var cfg = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
+                var cfg = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
 
                 sqlMapper.Variables = cfg.GetProperties();
 
@@ -532,9 +532,14 @@ namespace Sys.Workflow.Engine.Impl.DB
                 DebugFlush();
             }
 
+            if (insertedObjects.Count == 0 && updatedObjects.Count == 0 && deletedObjects.Count == 0)
+            {
+                return;
+            }
+
             if (SqlMapper.SessionStore.LocalSession is null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
             {
-                SqlMapper.BeginTransaction((ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl).IsolationLevel);
+                SqlMapper.BeginTransaction();
 
                 RemoveInstanceIncludeHis();
             }

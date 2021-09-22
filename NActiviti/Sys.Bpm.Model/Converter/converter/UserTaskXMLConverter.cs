@@ -121,7 +121,7 @@ namespace Sys.Workflow.Bpmn.Converters
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_BUSINESS_CALENDAR_NAME, userTask.BusinessCalendarName, xtw);
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_CATEGORY, userTask.Category, xtw);
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, userTask.FormKey, xtw);
-            if (userTask.Priority is object)
+            if (userTask.Priority is not null)
 
             {
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_PRIORITY, userTask.Priority.ToString(), xtw);
@@ -131,7 +131,7 @@ namespace Sys.Workflow.Bpmn.Converters
             {
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID, userTask.ExtensionId, xtw);
             }
-            if (userTask.SkipExpression is object)
+            if (userTask.SkipExpression is not null)
 
             {
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_SKIP_EXPRESSION, userTask.SkipExpression, xtw);

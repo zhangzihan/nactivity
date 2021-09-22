@@ -12,8 +12,8 @@ namespace SmartSql.Cache
     public class LruCacheProvider : ICacheProvider
     {
         private int _cacheSize = 0;
-        private Hashtable _cache = null;
-        private IList _keyList = null;
+        private readonly Hashtable _cache = null;
+        private readonly IList _keyList = null;
 
         public LruCacheProvider()
         {
@@ -24,7 +24,7 @@ namespace SmartSql.Cache
 
         public bool Remove(CacheKey cacheKey)
         {
-            object o = this[cacheKey,typeof(object)];
+            _ = this[cacheKey, typeof(object)];
 
             _keyList.Remove(cacheKey);
             _cache.Remove(cacheKey);
@@ -59,7 +59,7 @@ namespace SmartSql.Cache
         public void Initialize(IDictionary properties)
         {
             string size = (string)properties["CacheSize"]; ;
-            if (size is object)
+            if (size is not null)
             {
                 _cacheSize = Convert.ToInt32(size);
             }

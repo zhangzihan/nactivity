@@ -77,7 +77,7 @@ namespace Sys.Workflow.Bpmn.Models
                 SourceRef = val.SourceRef;
                 TargetRef = val.TargetRef;
 
-                if (val.AssociationDirection is object)
+                if (val.AssociationDirection is not null)
                 {
                     AssociationDirection = val.AssociationDirection;
                 }

@@ -21,7 +21,7 @@ namespace Spring.Expressions
                 throw new ArgumentException($"“{nameof(memberName)}”不能为 null 或空。", nameof(memberName));
             }
 
-            if (TypeResolutionUtils.TryResolveType(memberName, out var type) && type is object)
+            if (TypeResolutionUtils.TryResolveType(memberName, out var type) && type is not null)
             {
                 return new TypeValueAccessor(type);
             }

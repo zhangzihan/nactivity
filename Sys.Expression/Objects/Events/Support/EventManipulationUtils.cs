@@ -89,8 +89,8 @@ namespace Spring.Objects.Events.Support
 				MemberTypes.Method, ReflectionUtils.AllMembersCaseInsensitiveFlags,
 				new MemberFilter(new CriteriaMemberFilter().FilterMemberByCriteria),
 				criteria);
-			if (methods is object
-				&& methods.Length > 0)
+			if (methods is not null
+                && methods.Length > 0)
 			{
 				return methods[0] as MethodInfo;
 			}

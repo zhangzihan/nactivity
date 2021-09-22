@@ -56,7 +56,7 @@ namespace Spring.Expressions
             object leftVal = GetValue(Left, context, evalContext);
             object rightVal = GetValue(Right, context, evalContext);
 
-            return (leftVal is object ? leftVal : rightVal);
+            return (leftVal is not null ? leftVal : rightVal);
         }
     }
 }

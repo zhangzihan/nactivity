@@ -54,10 +54,10 @@ namespace Spring.Objects.Factory.Support
         private bool isAbstract;
         private string scope = ScopeSingleton;
         private ObjectRole role = ObjectRole.ROLE_APPLICATION;
-        
+
         private string objectTypeName;
         private Type objectType;
-        
+
         private AutoWiringMode autowireMode = AutoWiringMode.No;
         private DependencyCheckingMode dependencyCheck = DependencyCheckingMode.None;
         private List<string> dependsOn;
@@ -122,7 +122,7 @@ namespace Spring.Objects.Factory.Support
             OverrideFrom(other);
 
             AbstractObjectDefinition aod = other as AbstractObjectDefinition;
-            if (aod is object)
+            if (aod is not null)
             {
                 if (aod.HasObjectType)
                 {
@@ -137,7 +137,7 @@ namespace Spring.Objects.Factory.Support
             }
             ParentName = other.ParentName;
             IsAbstract = other.IsAbstract;
-//            IsSingleton = other.IsSingleton;
+            //            IsSingleton = other.IsSingleton;
             Scope = other.Scope;
             Role = other.Role;
             IsLazyInit = other.IsLazyInit;
@@ -404,7 +404,7 @@ namespace Spring.Objects.Factory.Support
         /// Is the <see cref="System.Type"/> of the object definition a resolved
         /// <see cref="System.Type"/>?
         /// </summary>
-        public bool HasObjectType => objectType is object;
+        public bool HasObjectType => objectType is not null;
 
         /// <summary>
         /// Returns the <see cref="System.Type.FullName"/> of the
@@ -538,8 +538,8 @@ namespace Spring.Objects.Factory.Support
         /// If this value is true for exactly one bean among multiple
         /// matching candidates, it will serve as a tie-breaker.
         /// </summary>
-        public bool IsPrimary 
-        { 
+        public bool IsPrimary
+        {
             get => primary;
             set => primary = value;
         }
@@ -551,7 +551,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public void AddQualifier(AutowireCandidateQualifier qualifier)
         {
-            qualifiers = qualifiers ?? new Dictionary<string, AutowireCandidateQualifier>();
+            qualifiers ??= new Dictionary<string, AutowireCandidateQualifier>();
             qualifiers.Add(qualifier.TypeName, qualifier);
         }
 
@@ -560,7 +560,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public bool HasQualifier(string typeName)
         {
-            return qualifiers is object && qualifiers.ContainsKey(typeName);
+            return qualifiers is not null && qualifiers.ContainsKey(typeName);
         }
 
         /// <summary>
@@ -568,7 +568,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public AutowireCandidateQualifier GetQualifier(string typeName)
         {
-            if (qualifiers is object && qualifiers.TryGetValue(typeName, out var qualifier))
+            if (qualifiers is not null && qualifiers.TryGetValue(typeName, out var qualifier))
             {
                 return qualifier;
             }
@@ -582,7 +582,7 @@ namespace Spring.Objects.Factory.Support
         /// <returns>the Set of <see cref="AutowireCandidateQualifier"/> objects.</returns>
         public Set<AutowireCandidateQualifier> GetQualifiers()
         {
-            return qualifiers is object
+            return qualifiers is not null
                 ? new OrderedSet<AutowireCandidateQualifier>(qualifiers.Values)
                 : new OrderedSet<AutowireCandidateQualifier>();
         }
@@ -593,10 +593,10 @@ namespace Spring.Objects.Factory.Support
         /// <param name="source">the AbstractBeanDefinition to copy from</param>
         public void CopyQualifiersFrom(AbstractObjectDefinition source)
         {
-            Trace.Assert(source is object, "Source must not be null");
-            if (source.qualifiers is object && source.qualifiers.Count > 0)
+            Trace.Assert(source is not null, "Source must not be null");
+            if (source.qualifiers is not null && source.qualifiers.Count > 0)
             {
-                qualifiers = qualifiers ?? new Dictionary<string, AutowireCandidateQualifier>();
+                qualifiers ??= new Dictionary<string, AutowireCandidateQualifier>();
                 foreach (var qualifier in source.qualifiers)
                 {
                     if (!qualifiers.ContainsKey(qualifier.Key))
@@ -672,7 +672,7 @@ namespace Spring.Objects.Factory.Support
         /// <see cref="Spring.Objects.Factory.Support.AbstractObjectDefinition.ConstructorArgumentValues"/>
         /// property.
         /// </value>
-        public virtual bool HasConstructorArgumentValues => ConstructorArgumentValues is object
+        public virtual bool HasConstructorArgumentValues => ConstructorArgumentValues is not null
                                                             && !ConstructorArgumentValues.Empty;
 
         /// <summary>
@@ -810,7 +810,7 @@ namespace Spring.Objects.Factory.Support
 
             if (other is AbstractObjectDefinition aod)
             {
-                if (other.ObjectTypeName is object)
+                if (other.ObjectTypeName is not null)
                 {
                     ObjectTypeName = other.ObjectTypeName;
                 }
@@ -855,36 +855,36 @@ namespace Spring.Objects.Factory.Support
             }
             return buffer.ToString();
         }
-       
+
         protected AbstractObjectDefinition(SerializationInfo info, StreamingContext context)
         {
-            constructorArgumentValues = (ConstructorArgumentValues) info.GetValue("constructorArgumentValues", typeof(ConstructorArgumentValues));
-            propertyValues = (MutablePropertyValues) info.GetValue("propertyValues", typeof(MutablePropertyValues));
-            eventHandlerValues= (EventValues) info.GetValue("eventHandlerValues", typeof(EventValues));
-            methodOverrides= (MethodOverrides) info.GetValue("methodOverrides", typeof(MethodOverrides));
+            constructorArgumentValues = (ConstructorArgumentValues)info.GetValue("constructorArgumentValues", typeof(ConstructorArgumentValues));
+            propertyValues = (MutablePropertyValues)info.GetValue("propertyValues", typeof(MutablePropertyValues));
+            eventHandlerValues = (EventValues)info.GetValue("eventHandlerValues", typeof(EventValues));
+            methodOverrides = (MethodOverrides)info.GetValue("methodOverrides", typeof(MethodOverrides));
             resourceDescription = info.GetString("resourceDescription");
             isSingleton = info.GetBoolean("isSingleton");
             isPrototype = info.GetBoolean("isPrototype");
             isLazyInit = info.GetBoolean("isLazyInit");
             isAbstract = info.GetBoolean("isAbstract");
-            scope= info.GetString("scope");
-            role = (ObjectRole) info.GetValue("role", typeof(ObjectRole));
-            
+            scope = info.GetString("scope");
+            role = (ObjectRole)info.GetValue("role", typeof(ObjectRole));
+
             var objectTypeName = info.GetString("objectTypeName");
-            objectType = objectTypeName is object ? Type.GetType(objectTypeName) : null;
-            
-            autowireMode = (AutoWiringMode) info.GetValue("autowireMode", typeof(AutoWiringMode));
-            dependencyCheck= (DependencyCheckingMode) info.GetValue("dependencyCheck", typeof(DependencyCheckingMode));
-            dependsOn = (List<string>) info.GetValue("dependsOn", typeof(List<string>));
+            objectType = objectTypeName is not null ? Type.GetType(objectTypeName) : null;
+
+            autowireMode = (AutoWiringMode)info.GetValue("autowireMode", typeof(AutoWiringMode));
+            dependencyCheck = (DependencyCheckingMode)info.GetValue("dependencyCheck", typeof(DependencyCheckingMode));
+            dependsOn = (List<string>)info.GetValue("dependsOn", typeof(List<string>));
             autowireCandidate = info.GetBoolean("autowireCandidate");
             primary = info.GetBoolean("primary");
-            qualifiers = (Dictionary<string, AutowireCandidateQualifier>) info.GetValue("qualifiers", typeof(Dictionary<string, AutowireCandidateQualifier>));
+            qualifiers = (Dictionary<string, AutowireCandidateQualifier>)info.GetValue("qualifiers", typeof(Dictionary<string, AutowireCandidateQualifier>));
             initMethodName = info.GetString("initMethodName");
             destroyMethodName = info.GetString("destroyMethodName");
-            factoryMethodName = info.GetString("factoryMethodName" );
-            factoryObjectName= info.GetString("factoryObjectName");
+            factoryMethodName = info.GetString("factoryMethodName");
+            factoryObjectName = info.GetString("factoryObjectName");
         }
-        
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("constructorArgumentValues", constructorArgumentValues);

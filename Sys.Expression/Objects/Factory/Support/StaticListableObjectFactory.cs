@@ -51,7 +51,7 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// Map from object name to object instance.
         /// </summary>
-        private Dictionary<string, object> objects = new();
+        private readonly Dictionary<string, object> objects = new();
 
         /// <summary>
         /// Determine whether this object factory treats object names case-sensitive or not.
@@ -154,7 +154,7 @@ namespace Spring.Objects.Factory.Support
         public object GetObject(string name)
         {
             object instance = objects[name];
-            if (instance is IFactoryObject)
+            if (instance is IFactoryObject @object)
             {
                 if (instance is IConfigurableFactoryObject)
                 {
@@ -162,7 +162,7 @@ namespace Spring.Objects.Factory.Support
                 }
                 try
                 {
-                    return ((IFactoryObject)instance).GetObject();
+                    return @object.GetObject();
                 }
                 catch (Exception ex)
                 {
@@ -382,9 +382,9 @@ namespace Spring.Objects.Factory.Support
             bool isSingleton = true;
             object instance = GetObject(name);
             // in case of IFactoryObject, return singleton status of created object
-            if (instance is IFactoryObject)
+            if (instance is IFactoryObject @object)
             {
-                isSingleton = ((IFactoryObject)instance).IsSingleton;
+                isSingleton = @object.IsSingleton;
             }
             return isSingleton;
         }
@@ -412,9 +412,9 @@ namespace Spring.Objects.Factory.Support
         {
             bool isPrototype = true;
             object instance = GetObject(name);
-            if (instance is IFactoryObject)
+            if (instance is IFactoryObject @object)
             {
-                isPrototype = !((IFactoryObject)instance).IsSingleton;
+                isPrototype = !@object.IsSingleton;
             }
             return isPrototype;
 
@@ -444,9 +444,9 @@ namespace Spring.Objects.Factory.Support
             {
                 throw new NoSuchObjectDefinitionException(name, GrabDefinedObjectsString());
             }
-            if (instance is IFactoryObject && !ObjectFactoryUtils.IsFactoryDereference(name))
+            if (instance is IFactoryObject @object && !ObjectFactoryUtils.IsFactoryDereference(name))
             {
-                return ((IFactoryObject)instance).ObjectType;
+                return @object.ObjectType;
             }
             return instance.GetType();
         }
@@ -466,7 +466,7 @@ namespace Spring.Objects.Factory.Support
         public bool IsTypeMatch(string name, Type targetType)
         {
             Type type = GetType(name);
-            return (targetType is null || (type is object && targetType.IsAssignableFrom(type)));
+            return (targetType is null || (type is not null && targetType.IsAssignableFrom(type)));
         }
 
         private string GrabDefinedObjectsString()
@@ -675,17 +675,17 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.IListableObjectFactory.GetObjectNamesForType(Type, bool, bool)"/>
         public IReadOnlyList<string> GetObjectNamesForType(Type type, bool includePrototypes, bool includeFactoryObjects)
         {
-            bool isFactoryType = (type is object && typeof(IFactoryObject).IsAssignableFrom(type));
+            bool isFactoryType = (type is not null && typeof(IFactoryObject).IsAssignableFrom(type));
             List<string> matches = new();
             foreach (string name in objects.Keys)
             {
                 object instance = objects[name];
-                if (instance is IFactoryObject && !isFactoryType)
+                if (instance is IFactoryObject @object && !isFactoryType)
                 {
                     if (includeFactoryObjects)
                     {
-                        Type objectType = ((IFactoryObject)instance).ObjectType;
-                        if (objectType is object && type.IsAssignableFrom(objectType))
+                        Type objectType = @object.ObjectType;
+                        if (objectType is not null && type.IsAssignableFrom(objectType))
                         {
                             matches.Add(name);
                         }
@@ -856,17 +856,17 @@ namespace Spring.Objects.Factory.Support
 
         private void DoGetObjectsOfType(Type type, bool includeFactoryObjects, bool includePrototypes, IDictionary collector)
         {
-            bool isFactoryType = (type is object && typeof(IFactoryObject).IsAssignableFrom(type));
+            bool isFactoryType = (type is not null && typeof(IFactoryObject).IsAssignableFrom(type));
             foreach (string name in objects.Keys)
             {
                 object instance = objects[name];
-                if (instance is IFactoryObject && includeFactoryObjects)
+                if (instance is IFactoryObject @object && includeFactoryObjects)
                 {
-                    IFactoryObject factory = (IFactoryObject)instance;
+                    IFactoryObject factory = @object;
                     Type objectType = factory.ObjectType;
                     if ((objectType is null && factory.IsSingleton) ||
                         ((factory.IsSingleton || includePrototypes) &&
-                         objectType is object && type.IsAssignableFrom(objectType)))
+                         objectType is not null && type.IsAssignableFrom(objectType)))
                     {
                         object createdObject = GetObject(name);
                         if (type.IsInstanceOfType(createdObject))

@@ -48,11 +48,11 @@ namespace Spring.Expressions.Processors
                 x = _expression.GetValue(x);
                 y = _expression.GetValue(y);
 
-                if (x==y) return 0;
+                if (x == y) return 0;
 
-                if (x is object) return ((IComparable) x).CompareTo(y);
-                
-                return ((IComparable)y).CompareTo(x)*-1;
+                if (x is not null) return ((IComparable)x).CompareTo(y);
+
+                return ((IComparable)y).CompareTo(x) * -1;
             }
         }
 
@@ -74,15 +74,17 @@ namespace Spring.Expressions.Processors
                 functionNode.addChild(y);
 
                 _fn = functionNode;
-                _variables = new Dictionary<string, object>();
-                _variables.Add( "compare", lambdaExpression );
+                _variables = new Dictionary<string, object>
+                {
+                    { "compare", lambdaExpression }
+                };
             }
 
             public int Compare(object x, object y)
             {
                 _variables["x"] = x;
                 _variables["y"] = y;
-                return (int) _fn.GetValue(null, _variables);
+                return (int)_fn.GetValue(null, _variables);
             }
         }
 
@@ -133,27 +135,26 @@ namespace Spring.Expressions.Processors
 
             object arg = args[0];
             IComparer comparer = null;
-            if (arg is string)
+            if (arg is string @string)
             {
-                IExpression expCompare = Expression.Parse((string) arg);
+                IExpression expCompare = Expression.Parse(@string);
                 comparer = new SimpleExpressionComparer(expCompare);
             }
-            else if (arg is IComparer)
+            else if (arg is IComparer acomparer)
             {
-                comparer = (IComparer) arg;
+                comparer = acomparer;
             }
-            else if (arg is LambdaExpressionNode)
+            else if (arg is LambdaExpressionNode fnCompare)
             {
-                LambdaExpressionNode fnCompare = (LambdaExpressionNode)arg;
                 if (fnCompare.ArgumentNames.Length != 2)
                 {
                     throw new ArgumentException("compare function must accept 2 arguments");
                 }
-                comparer = new LambdaComparer(fnCompare);                
+                comparer = new LambdaComparer(fnCompare);
             }
-            else if (arg is Delegate)
+            else if (arg is Delegate @delegate)
             {
-                comparer = new DelegateComparer((Delegate) arg);                
+                comparer = new DelegateComparer(@delegate);
             }
 
             AssertUtils.ArgumentNotNull(comparer, "comparer", "orderBy(comparer) argument 'comparer' does not evaluate to a supported type");

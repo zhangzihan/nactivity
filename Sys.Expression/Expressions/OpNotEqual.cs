@@ -59,7 +59,7 @@ namespace Spring.Expressions
 
             if (leftVal is null)
             {
-                return rightVal is object;
+                return rightVal is not null;
             }
             else if (rightVal is null)
             {

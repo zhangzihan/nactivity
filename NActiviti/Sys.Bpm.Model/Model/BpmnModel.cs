@@ -75,7 +75,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddDefinitionsAttribute(ExtensionAttribute attribute)
         {
-            if (attribute is object && !string.IsNullOrWhiteSpace(attribute.Name))
+            if (attribute is not null && !string.IsNullOrWhiteSpace(attribute.Name))
             {
                 if (!this.definitionsAttributes.ContainsKey(attribute.Name))
                 {
@@ -112,7 +112,7 @@ namespace Sys.Workflow.Bpmn.Models
                     if (!string.IsNullOrWhiteSpace(pool.ProcessRef) && pool.ProcessRef.Equals(process.Id, StringComparison.CurrentCultureIgnoreCase))
                     {
 
-                        if (poolRef is object)
+                        if (poolRef is not null)
                         {
                             if (pool.Id.Equals(poolRef, StringComparison.CurrentCultureIgnoreCase))
                             {
@@ -130,7 +130,7 @@ namespace Sys.Workflow.Bpmn.Models
                 {
                     return process;
                 }
-                else if (poolRef is object && foundPool)
+                else if (poolRef is not null && foundPool)
                 {
                     return process;
                 }
@@ -196,7 +196,7 @@ namespace Sys.Workflow.Bpmn.Models
                             break;
                         }
                     }
-                    if (foundLane is object)
+                    if (foundLane is not null)
                     {
                         break;
                     }
@@ -211,7 +211,7 @@ namespace Sys.Workflow.Bpmn.Models
             foreach (Process process in processes)
             {
                 foundFlowElement = process.FindFlowElement(id);
-                if (foundFlowElement is object)
+                if (foundFlowElement is not null)
                 {
                     break;
                 }
@@ -224,12 +224,12 @@ namespace Sys.Workflow.Bpmn.Models
                     foreach (FlowElement flowElement in process.FindFlowElementsOfType<SubProcess>())
                     {
                         foundFlowElement = GetFlowElementInSubProcess(id, (SubProcess)flowElement);
-                        if (foundFlowElement is object)
+                        if (foundFlowElement is not null)
                         {
                             break;
                         }
                     }
-                    if (foundFlowElement is object)
+                    if (foundFlowElement is not null)
                     {
                         break;
                     }
@@ -249,7 +249,7 @@ namespace Sys.Workflow.Bpmn.Models
                     if (flowElement is SubProcess)
                     {
                         foundFlowElement = GetFlowElementInSubProcess(id, (SubProcess)flowElement);
-                        if (foundFlowElement is object)
+                        if (foundFlowElement is not null)
                         {
                             break;
                         }
@@ -265,7 +265,7 @@ namespace Sys.Workflow.Bpmn.Models
             foreach (Process process in processes)
             {
                 foundArtifact = process.GetArtifact(id);
-                if (foundArtifact is object)
+                if (foundArtifact is not null)
                 {
                     break;
                 }
@@ -278,12 +278,12 @@ namespace Sys.Workflow.Bpmn.Models
                     foreach (FlowElement flowElement in process.FindFlowElementsOfType<SubProcess>())
                     {
                         foundArtifact = GetArtifactInSubProcess(id, (SubProcess)flowElement);
-                        if (foundArtifact is object)
+                        if (foundArtifact is not null)
                         {
                             break;
                         }
                     }
-                    if (foundArtifact is object)
+                    if (foundArtifact is not null)
                     {
                         break;
                     }
@@ -303,7 +303,7 @@ namespace Sys.Workflow.Bpmn.Models
                     if (flowElement is SubProcess)
                     {
                         foundArtifact = GetArtifactInSubProcess(id, (SubProcess)flowElement);
-                        if (foundArtifact is object)
+                        if (foundArtifact is not null)
                         {
                             break;
                         }
@@ -409,7 +409,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddResource(Resource resource)
         {
-            if (resource is object)
+            if (resource is not null)
             {
                 resources.Add(resource);
             }
@@ -417,7 +417,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual bool ContainsResourceId(string resourceId)
         {
-            return GetResource(resourceId) is object;
+            return GetResource(resourceId) is not null;
         }
 
         public virtual Resource GetResource(string id)
@@ -451,7 +451,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddSignal(Signal signal)
         {
-            if (signal is object)
+            if (signal is not null)
             {
                 signals.Add(signal);
             }
@@ -459,7 +459,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual bool ContainsSignalId(string signalId)
         {
-            return GetSignal(signalId) is object;
+            return GetSignal(signalId) is not null;
         }
 
         public virtual Signal GetSignal(string id)
@@ -489,7 +489,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddMessageFlow(MessageFlow messageFlow)
         {
-            if (messageFlow is object && !string.IsNullOrWhiteSpace(messageFlow.Id))
+            if (messageFlow is not null && !string.IsNullOrWhiteSpace(messageFlow.Id))
             {
                 messageFlowMap[messageFlow.Id] = messageFlow;
             }
@@ -527,7 +527,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddMessage(Message message)
         {
-            if (message is object && !string.IsNullOrWhiteSpace(message.Id))
+            if (message is not null && !string.IsNullOrWhiteSpace(message.Id))
             {
                 messageMap[message.Id] = message;
             }

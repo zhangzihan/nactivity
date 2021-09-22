@@ -61,8 +61,7 @@ namespace Spring.Util
             {
                 get
                 {
-                    Exception exception;
-                    _eventExceptions.TryGetValue(source, out exception);
+                    _eventExceptions.TryGetValue(source, out Exception exception);
                     return exception;
                 }
             }
@@ -95,7 +94,7 @@ namespace Spring.Util
         {
             EventExceptionsCollector exceptions = new();
 
-            if (source is object)
+            if (source is not null)
             {
                 Delegate[] delegates = source.GetInvocationList();
                 foreach (Delegate sink in delegates)

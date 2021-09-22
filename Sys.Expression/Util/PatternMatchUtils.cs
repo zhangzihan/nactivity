@@ -79,7 +79,7 @@ namespace Spring.Util
         /// </returns>
         public static bool SimpleMatch(System.String[] patterns, System.String str)
         {
-            if (patterns is object)
+            if (patterns is not null)
             {
                 for (int i = 0; i < patterns.Length; i++)
                 {

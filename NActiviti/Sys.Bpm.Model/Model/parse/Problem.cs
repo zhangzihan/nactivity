@@ -34,7 +34,7 @@
 
         public override string ToString()
         {
-            return errorMessage + (resource is object ? " | " + resource : "") + " | line " + line + " | column " + column;
+            return errorMessage + (resource is not null ? " | " + resource : "") + " | line " + line + " | column " + column;
         }
     }
 

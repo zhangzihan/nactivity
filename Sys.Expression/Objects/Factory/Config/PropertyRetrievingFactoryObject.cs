@@ -122,7 +122,7 @@ namespace Spring.Objects.Factory.Config
 			get { return _arguments; }
 			set
 			{
-				if (value is object)
+				if (value is not null)
 				{
 					this._arguments = value;
 				}
@@ -173,7 +173,7 @@ namespace Spring.Objects.Factory.Config
 		/// </summary>
 		public override Type ObjectType
 		{
-			get { return (Property is null) ? null : Property.PropertyType; }
+			get { return Property?.PropertyType; }
 		}
 
 		private PropertyInfo Property
@@ -207,39 +207,40 @@ namespace Spring.Objects.Factory.Config
 			{
 				throw new ArgumentException("The TargetProperty property is required.");
 			}
-			Type targetType = null;
-			BindingFlags propertyFlags = BindingFlags.Public | BindingFlags.IgnoreCase;
-			if (TargetObject is null)
-			{
-				// a static property...
-				propertyFlags |= BindingFlags.Static;
-				targetType = TargetType;
-				if (TargetProperty.IndexOf(".") == -1)
-				{
-					Property = targetType.GetProperty(TargetProperty, propertyFlags);
-				}
-				else
-				{
-					// $?#@! a nested static property... recurse to the end property
-					string property = TargetProperty;
-					int propertyIndex = property.IndexOf(".");
-					string startProperty = property.Substring(0, propertyIndex);
-					Property = targetType.GetProperty(startProperty, propertyFlags);
-					TargetObject = Property.GetValue(null, new object[] {});
-					TargetProperty = property.Substring(propertyIndex + 1);
-					AfterPropertiesSet();
-				}
-			}
-			else
-			{
-				// an instance property...
-				propertyFlags |= BindingFlags.Instance;
-				targetType = TargetObject.GetType();
 
-				// using the object wrapper does nested property lookup
-				Property = _targetObjectWrapper.GetPropertyInfo(TargetProperty);
-			}
-			if (Property is null)
+            BindingFlags propertyFlags = BindingFlags.Public | BindingFlags.IgnoreCase;
+            Type targetType;
+            if (TargetObject is null)
+            {
+                // a static property...
+                propertyFlags |= BindingFlags.Static;
+                targetType = TargetType;
+                if (TargetProperty.IndexOf(".") == -1)
+                {
+                    Property = targetType.GetProperty(TargetProperty, propertyFlags);
+                }
+                else
+                {
+                    // $?#@! a nested static property... recurse to the end property
+                    string property = TargetProperty;
+                    int propertyIndex = property.IndexOf(".");
+                    string startProperty = property.Substring(0, propertyIndex);
+                    Property = targetType.GetProperty(startProperty, propertyFlags);
+                    TargetObject = Property.GetValue(null, new object[] { });
+                    TargetProperty = property.Substring(propertyIndex + 1);
+                    AfterPropertiesSet();
+                }
+            }
+            else
+            {
+                // an instance property...
+                propertyFlags |= BindingFlags.Instance;
+                targetType = TargetObject.GetType();
+
+                // using the object wrapper does nested property lookup
+                Property = _targetObjectWrapper.GetPropertyInfo(TargetProperty);
+            }
+            if (Property is null)
 			{
 				throw new InvalidPropertyException(targetType, TargetProperty);
 			}
@@ -260,29 +261,29 @@ namespace Spring.Objects.Factory.Config
 		/// <returns>The object returned by this factory.</returns>
 		protected override object CreateInstance()
 		{
-			object instance = null;
-			object target = null;
-			if (TargetObject is object)
+            object target = null;
+            if (TargetObject is not null)
 			{
 				target = TargetObject;
 			}
-			try
-			{
-				if (Arguments.Length == 0 && target is object)
-				{
-					// using object wrapper supports nested property lookup...               
-					instance = _targetObjectWrapper.GetPropertyValue(_targetProperty);
-				}
-				else
-				{
-					instance = Property.GetValue(target, Arguments);
-				}
-			}
-			catch (Exception ex)
-			{
-				throw new FatalObjectException("Error reading property value.", ex);
-			}
-			return instance;
+            object instance;
+            try
+            {
+                if (Arguments.Length == 0 && target is not null)
+                {
+                    // using object wrapper supports nested property lookup...               
+                    instance = _targetObjectWrapper.GetPropertyValue(_targetProperty);
+                }
+                else
+                {
+                    instance = Property.GetValue(target, Arguments);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FatalObjectException("Error reading property value.", ex);
+            }
+            return instance;
 		}
 
 		#endregion

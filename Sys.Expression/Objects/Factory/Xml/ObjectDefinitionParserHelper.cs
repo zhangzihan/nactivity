@@ -76,7 +76,7 @@ namespace Spring.Objects.Factory.Xml
             log = LogManager.GetLogger<ObjectDefinitionParserHelper>();
             this.readerContext = readerContext;
             this.objectsNamespaceParser = (ObjectsNamespaceParser) readerContext.NamespaceParserResolver.Resolve(ObjectsNamespaceParser.Namespace);
-            if (root is object)
+            if (root is not null)
             {
                 InitDefaults(root);
             }
@@ -372,7 +372,7 @@ namespace Spring.Objects.Factory.Xml
                         objectName = readerContext.GenerateObjectName(definition);
                         // Register an alias for the plain object type name, if possible.
                         string objectTypeName = definition.ObjectTypeName;
-                        if (objectTypeName is object
+                        if (objectTypeName is not null
                             && objectName.StartsWith(objectTypeName)
                             && objectName.Length>objectTypeName.Length
                             && !readerContext.Registry.IsObjectNameInUse(objectTypeName))
@@ -430,7 +430,7 @@ namespace Spring.Objects.Factory.Xml
             if (!StringUtils.HasText(objectName) && aliases.Count == 0)
             {
                 string result = this.objectsNamespaceParser.CalculateId(element, aliases);
-                if (result is object)
+                if (result is not null)
                 {
                     return result;
                 }
@@ -453,7 +453,7 @@ namespace Spring.Objects.Factory.Xml
             {
                 foundName = (string) CollectionUtils.FindFirstMatch(this.usedNames, aliases);
             }
-            if(foundName is object)
+            if(foundName is not null)
             {
                 Error("Object name '" + foundName + "' is already used in this file", element);
             }

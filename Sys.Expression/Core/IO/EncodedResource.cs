@@ -101,7 +101,7 @@ namespace Spring.Core.IO
         /// <returns></returns>
         public TextReader OpenReader()
         {
-            if (this.encoding is object)
+            if (this.encoding is not null)
             {
                 return new StreamReader(this.resource.InputStream, this.encoding, autoDetectEncoding);
             }
@@ -118,7 +118,7 @@ namespace Spring.Core.IO
         public override bool Equals(object obj)
         {
             if (obj == this) return true;
-            if (!(obj is EncodedResource)) return false;
+            if (obj is not EncodedResource) return false;
 
             EncodedResource other = (EncodedResource) obj;
             return Equals(this.resource, other.resource) 

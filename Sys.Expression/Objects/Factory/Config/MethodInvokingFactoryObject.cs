@@ -208,7 +208,7 @@ namespace Spring.Objects.Factory.Config
 			get
 			{
 				Type objectType = null;
-				if (GetPreparedMethod() is object)
+				if (GetPreparedMethod() is not null)
 				{
 					objectType = GetPreparedMethod().ReturnType;
 					if (objectType.Equals(typeof (void)))

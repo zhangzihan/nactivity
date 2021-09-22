@@ -138,7 +138,7 @@ namespace Spring.Core.TypeConversion
             }
 
             // value must either be null or a UniqueKey
-            if ( (value is object) && (typeof(UniqueKey) != value.GetType()) )
+            if ( (value is not null) && (typeof(UniqueKey) != value.GetType()) )
             {
                 throw new NotSupportedException(string.Format("value is not of type '{0}'", typeof(UniqueKey).FullName));
             }

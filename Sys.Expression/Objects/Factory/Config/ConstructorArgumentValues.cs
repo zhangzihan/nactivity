@@ -136,26 +136,26 @@ namespace Spring.Objects.Factory.Config
 		/// </param>
 		public void AddAll(ConstructorArgumentValues other)
 		{
-			if (other is object)
+			if (other is not null)
 			{
-				if (other._genericArgumentValues is object && other._genericArgumentValues.Count > 0)
+				if (other._genericArgumentValues is not null && other._genericArgumentValues.Count > 0)
 				{
 					GetAndInitializeGenericArgumentValuesIfNeeded().AddRange(other._genericArgumentValues);
 				}
 
-				if (other._indexedArgumentValues is object && other._indexedArgumentValues.Count > 0)
+				if (other._indexedArgumentValues is not null && other._indexedArgumentValues.Count > 0)
 				{
 					foreach (var entry in other._indexedArgumentValues)
 					{
 						ValueHolder vh = entry.Value;
-						if (vh is object)
+						if (vh is not null)
 						{
 							AddOrMergeIndexedArgumentValues(entry.Key, vh.Copy());
 						}
 					}
 				}
 
-				if (other._namedArgumentValues is object && other._namedArgumentValues.Count > 0)
+				if (other._namedArgumentValues is not null && other._namedArgumentValues.Count > 0)
 				{
 					foreach (var entry in other._namedArgumentValues)
 					{
@@ -276,7 +276,7 @@ namespace Spring.Objects.Factory.Config
 		public ValueHolder GetNamedArgumentValue(string name)
 		{
 			ValueHolder valueHolder = null;
-			if (name is object && ContainsNamedArgument(name))
+			if (name is not null && ContainsNamedArgument(name))
 			{
 				valueHolder = (ValueHolder) GetAndInitializeNamedArgumentValuesIfNeeded()[GetCanonicalNamedArgument(name)];
 			}
@@ -301,7 +301,7 @@ namespace Spring.Objects.Factory.Config
 		/// </returns>
 		public bool ContainsNamedArgument(string argument)
 		{
-			return _namedArgumentValues is object && _namedArgumentValues.ContainsKey(GetCanonicalNamedArgument(argument));
+			return _namedArgumentValues is not null && _namedArgumentValues.ContainsKey(GetCanonicalNamedArgument(argument));
 		}
 
 		/// <summary>
@@ -379,7 +379,7 @@ namespace Spring.Objects.Factory.Config
 				ValueHolder valueHolder = _genericArgumentValues[i];
 				if (usedValues is null || !usedValues.Contains(valueHolder))
 				{
-					if (requiredType is object)
+					if (requiredType is not null)
 					{
 						if (StringUtils.HasText(valueHolder.Type))
 						{
@@ -564,7 +564,7 @@ namespace Spring.Objects.Factory.Config
 
 		private string GetCanonicalNamedArgument(string argument)
 		{
-            return argument is object ? argument.ToLower(enUSCultureInfo) : argument;
+            return argument is not null ? argument.ToLower(enUSCultureInfo) : argument;
 		}
 		
 		private Dictionary<int, ValueHolder> GetAndInitializeIndexedArgumentValuesIfNeeded()

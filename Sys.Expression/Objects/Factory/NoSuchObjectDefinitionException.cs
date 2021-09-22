@@ -126,7 +126,7 @@ namespace Spring.Objects.Factory
 			: base(string.Format(
 				CultureInfo.CurrentCulture,
 				"No unique object of type [{0}] is defined : {1}",
-				type is object ? type.FullName : "<< no Type specified >>",
+				type is not null ? type.FullName : "<< no Type specified >>",
 				StringUtils.HasText(message) ? message : "not found."))
 		{
 			_objectType = type;
@@ -149,7 +149,7 @@ namespace Spring.Objects.Factory
 		{
 			_objectName = info.GetString("ObjectName");
 			var typeName = info.GetString("ObjectTypeName");
-			_objectType = typeName is object ? Type.GetType(typeName) : null;
+			_objectType = typeName is not null ? Type.GetType(typeName) : null;
 		}
 
 		#endregion
@@ -203,8 +203,8 @@ namespace Spring.Objects.Factory
 
 		#region Fields
 
-		private Type _objectType;
-		private string _objectName;
+		private readonly Type _objectType;
+		private readonly string _objectName;
 
 		#endregion
 	}

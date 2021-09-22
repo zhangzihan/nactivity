@@ -23,23 +23,17 @@ namespace SmartSql
     public class SmartSqlMapper : ISmartSqlMapper
     {
         private readonly SmartSqlOptions _smartSqlOptions;
-        public SmartSqlOptions SmartSqlOptions { get => _smartSqlOptions; }
+        public SmartSqlOptions SmartSqlOptions => _smartSqlOptions;
 
         private readonly ILogger _logger;
-        public IDbConnectionSessionStore SessionStore
-        {
-            get
-            {
-                return _smartSqlOptions.DbSessionStore;
-            }
-        }
-        public IDataSourceFilter DataSourceFilter { get { return _smartSqlOptions.DataSourceFilter; } }
-        public IConfigLoader ConfigLoader { get { return _smartSqlOptions.ConfigLoader; } }
-        public ICommandExecuter CommandExecuter { get { return _smartSqlOptions.CommandExecuter; } }
-        public IDataReaderDeserializerFactory DeserializerFactory { get { return _smartSqlOptions.DataReaderDeserializerFactory; } }
-        public ILoggerFactory LoggerFactory { get { return _smartSqlOptions.LoggerFactory; } }
-        public ICacheManager CacheManager { get { return _smartSqlOptions.CacheManager; } }
-        public ISqlBuilder SqlBuilder { get { return _smartSqlOptions.SqlBuilder; } }
+        public IDbConnectionSessionStore SessionStore => _smartSqlOptions.DbSessionStore;
+        public IDataSourceFilter DataSourceFilter => _smartSqlOptions.DataSourceFilter;
+        public IConfigLoader ConfigLoader => _smartSqlOptions.ConfigLoader;
+        public ICommandExecuter CommandExecuter => _smartSqlOptions.CommandExecuter;
+        public IDataReaderDeserializerFactory DeserializerFactory => _smartSqlOptions.DataReaderDeserializerFactory;
+        public ILoggerFactory LoggerFactory => _smartSqlOptions.LoggerFactory;
+        public ICacheManager CacheManager => _smartSqlOptions.CacheManager;
+        public ISqlBuilder SqlBuilder => _smartSqlOptions.SqlBuilder;
 
         private JToken variables;
         public JToken Variables
@@ -128,10 +122,10 @@ namespace SmartSql
         {
             return ExecuteWrap((dbSession) =>
             {
-                var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
+                using var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
                 var deser = DeserializerFactory.Create();
                 Type resultType = context.Statement.ResultType ?? context.Statement?.ResultMap?.ResultType;
-                if (resultType is object)
+                if (resultType is not null)
                 {
                     var method = deser.GetType().GetMethod("ToEnumerable", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
 
@@ -139,17 +133,18 @@ namespace SmartSql
 
                     return (list as System.Collections.IEnumerable).Cast<T>().ToList();
                 }
-                return deser.ToEnumerable<T>(context, dataReader).ToList();
+                var objList = deser.ToEnumerable<T>(context, dataReader).ToList();
+                return objList;
             }, context);
         }
         public T QuerySingle<T>(RequestContext context)
         {
             return ExecuteWrap((dbSession) =>
             {
-                var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
+                using var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
                 var deser = DeserializerFactory.Create();
                 Type resultType = context.Statement.ResultType ?? context.Statement?.ResultMap?.ResultType;
-                if (resultType is object)
+                if (resultType is not null)
                 {
                     var method = deser.GetType().GetMethod("ToSingle", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
 
@@ -163,19 +158,8 @@ namespace SmartSql
         {
             return ExecuteWrap((dbSession) =>
             {
-                IDataReader dataReader = null;
-                try
-                {
-                    dataReader = CommandExecuter.ExecuteReader(dbSession, context);
-                    return DataReaderConvert.ToDataTable(dataReader);
-                }
-                finally
-                {
-                    if (dataReader is object)
-                    {
-                        dataReader.Dispose();
-                    }
-                }
+                using var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
+                return DataReaderConvert.ToDataTable(dataReader);
 
             }, context);
         }
@@ -184,19 +168,8 @@ namespace SmartSql
         {
             return ExecuteWrap((dbSession) =>
             {
-                IDataReader dataReader = null;
-                try
-                {
-                    dataReader = CommandExecuter.ExecuteReader(dbSession, context);
-                    return DataReaderConvert.ToDataSet(dataReader);
-                }
-                finally
-                {
-                    if (dataReader is object)
-                    {
-                        dataReader.Dispose();
-                    }
-                }
+                using var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
+                return DataReaderConvert.ToDataSet(dataReader);
             }, context);
         }
         #endregion
@@ -276,7 +249,7 @@ namespace SmartSql
                 }
                 finally
                 {
-                    if (dataReader is object)
+                    if (dataReader is not null)
                     {
                         dataReader.Dispose();
                     }
@@ -297,7 +270,7 @@ namespace SmartSql
                 }
                 finally
                 {
-                    if (dataReader is object)
+                    if (dataReader is not null)
                     {
                         dataReader.Dispose();
                     }

@@ -118,7 +118,7 @@ namespace Spring.Objects.Factory.Config
         protected TypedStringValue(SerializationInfo info, StreamingContext context)
         {
             var type = info.GetString("TargetTypeName");
-            targetType = type is object ? Type.GetType(type) : null;
+            targetType = type is not null ? Type.GetType(type) : null;
             theValue = info.GetString("Value");
         }
 
@@ -173,9 +173,9 @@ namespace Spring.Objects.Factory.Config
         {
             get
             {
-                if (targetType is Type)
+                if (targetType is Type type)
                 {
-                    return ((Type) targetType).FullName;
+                    return type.FullName;
                 }
                 else
                 {

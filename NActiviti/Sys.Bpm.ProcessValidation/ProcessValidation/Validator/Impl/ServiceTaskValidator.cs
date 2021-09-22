@@ -110,7 +110,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                         {
                             foreach (Operation operation in bpmnInterface.Operations)
                             {
-                                if (operation.Id is object && operation.Id.Equals(serviceTask.OperationRef))
+                                if (operation.Id is not null && operation.Id.Equals(serviceTask.OperationRef))
                                 {
                                     operationFound = true;
                                 }

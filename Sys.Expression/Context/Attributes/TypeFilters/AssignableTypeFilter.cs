@@ -75,7 +75,7 @@ namespace Spring.Context.Attributes.TypeFilters
         /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
-            return string.Format("Required Type: {0}", RequiredType is object ? RequiredType.FullName : "");
+            return string.Format("Required Type: {0}", RequiredType is not null ? RequiredType.FullName : "");
         }
     }
 }

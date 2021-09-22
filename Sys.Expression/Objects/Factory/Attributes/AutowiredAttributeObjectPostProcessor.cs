@@ -215,7 +215,7 @@ namespace Spring.Objects.Factory.Attributes
                         {
                             if (Attribute.GetCustomAttribute(candidate, typeof(AutowiredAttribute)) is AutowiredAttribute attr)
                             {
-                                if (requiredConstructor is object)
+                                if (requiredConstructor is not null)
                                 {
                                     throw new ObjectCreationException("Invalid autowire-marked constructor: " + candidate +
                                                                       ". Found another constructor with 'required' Autowired annotation: " +
@@ -246,7 +246,7 @@ namespace Spring.Objects.Factory.Attributes
                         if (candidates.Count > 0)
                         {
                             // Add default constructor to list of optional constructors, as fallback.
-                            if (requiredConstructor is null && defaultConstructor is object)
+                            if (requiredConstructor is null && defaultConstructor is not null)
                             {
                                 candidates.Add(defaultConstructor);
                             }
@@ -285,7 +285,7 @@ namespace Spring.Objects.Factory.Attributes
         public override object PostProcessBeforeInstantiation(Type objectType, string objectName)
         {
             var objectDefinition = objectFactory.GetObjectDefinition(objectName) as RootObjectDefinition;
-            if (objectType is object)
+            if (objectType is not null)
             {
                 var metadata = FindAutowiringMetadata(objectName, objectType, null);
                 metadata.CheckConfigMembers(objectDefinition);
@@ -361,7 +361,7 @@ namespace Spring.Objects.Factory.Attributes
                             required = autowiredAttribute.Required;
                         }
 
-                        if (attr is object && property.DeclaringType == objectType)
+                        if (attr is not null && property.DeclaringType == objectType)
                         {
                             currElements.Add(new AutowiredPropertyElement(this, property, required));
                         }
@@ -377,7 +377,7 @@ namespace Spring.Objects.Factory.Attributes
                             required = autowiredAttribute.Required;
                         }
 
-                        if (attr is object && field.DeclaringType == objectType)
+                        if (attr is not null && field.DeclaringType == objectType)
                         {
                             currElements.Add(new AutowiredFieldElement(this, field, required));
                         }
@@ -393,7 +393,7 @@ namespace Spring.Objects.Factory.Attributes
                             required = autowiredAttribute.Required;
                         }
 
-                        if (attr is object && method.DeclaringType == objectType)
+                        if (attr is not null && method.DeclaringType == objectType)
                         {
                             if (method.IsStatic)
                             {
@@ -415,7 +415,7 @@ namespace Spring.Objects.Factory.Attributes
                 }
 
                 objectType = objectType.BaseType;
-            } while (objectType is object && objectType != typeof(object));
+            } while (objectType is not null && objectType != typeof(object));
 
             return new InjectionMetadata(objectType, elements);
         }
@@ -430,8 +430,7 @@ namespace Spring.Objects.Factory.Attributes
                 return;
             }
 
-            var objectDefinition = objectFactory.GetObjectDefinition(objectName) as RootObjectDefinition;
-            if (objectDefinition is null)
+            if (objectFactory.GetObjectDefinition(objectName) is not RootObjectDefinition objectDefinition)
             {
                 return;
             }
@@ -481,7 +480,7 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
-            private object syncRoot = new();
+            private readonly object syncRoot = new();
 
             public override void Inject(object instance, string objectName, IPropertyValues pvs)
             {
@@ -502,7 +501,7 @@ namespace Spring.Objects.Factory.Attributes
                         {
                             if (!cached)
                             {
-                                if (value is object || required)
+                                if (value is not null || required)
                                 {
                                     cachedFieldValue = descriptor;
                                     processor.RegisterDependentObjects(objectName, autowiredObjectNames);
@@ -526,7 +525,7 @@ namespace Spring.Objects.Factory.Attributes
                             }
                         }
                     }
-                    if (value is object)
+                    if (value is not null)
                     {
                         property.SetValue(instance, value, null);
                     }
@@ -555,7 +554,7 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
-            private object syncRoot = new();
+            private readonly object syncRoot = new();
 
             public override void Inject(object instance, string objectName, IPropertyValues pvs)
             {
@@ -576,7 +575,7 @@ namespace Spring.Objects.Factory.Attributes
                         {
                             if (!cached)
                             {
-                                if (value is object || required)
+                                if (value is not null || required)
                                 {
                                     cachedFieldValue = descriptor;
                                     processor.RegisterDependentObjects(objectName, autowiredObjectNames);
@@ -600,7 +599,7 @@ namespace Spring.Objects.Factory.Attributes
                             }
                         }
                     }
-                    if (value is object)
+                    if (value is not null)
                     {
                         field.SetValue(instance, value);
                     }
@@ -629,7 +628,7 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
-            private object syncRoot = new();
+            private readonly object syncRoot = new();
 
             public override void Inject(object target, string objectName, IPropertyValues pvs)
             {
@@ -662,7 +661,7 @@ namespace Spring.Objects.Factory.Attributes
                         {
                             if (!cached)
                             {
-                                if (arguments is object)
+                                if (arguments is not null)
                                 {
                                     cachedMethodArguments = new object[arguments.Length];
                                     for (int i = 0; i < arguments.Length; i++)
@@ -694,7 +693,7 @@ namespace Spring.Objects.Factory.Attributes
                             }
                         }
                     }
-                    if (arguments is object)
+                    if (arguments is not null)
                     {
                         method.Invoke(target, arguments);
                     }

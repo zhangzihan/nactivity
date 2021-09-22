@@ -13,17 +13,17 @@ namespace Spring.Objects.Factory.Support
     {
         private readonly ILogger logger = LogManager.GetLogger<DisposableObjectAdapter>();
 
-        private object instance;
+        private readonly object instance;
 
-        private string objectName;
+        private readonly string objectName;
 
-        private bool invokeDisposableObject;
+        private readonly bool invokeDisposableObject;
 
-        private string destroyMethodName;
+        private readonly string destroyMethodName;
 
-        private MethodInfo destroyMethod;
+        private readonly MethodInfo destroyMethod;
 
-        private List<IDestructionAwareObjectPostProcessor> objectPostProcessors;
+        private readonly List<IDestructionAwareObjectPostProcessor> objectPostProcessors;
 
         /// <summary>
         /// Create a new DisposableBeanAdapter for the given bean.
@@ -49,7 +49,7 @@ namespace Spring.Objects.Factory.Support
 
             string definedDestroyMethodName = objectDefinition.DestroyMethodName;
 
-            if (definedDestroyMethodName is object && !(this.invokeDisposableObject && "Destroy".Equals(definedDestroyMethodName))) // && !beanDefinition.isExternallyManagedDestroyMethod(destroyMethodName)) 
+            if (definedDestroyMethodName is not null && !(this.invokeDisposableObject && "Destroy".Equals(definedDestroyMethodName))) // && !beanDefinition.isExternallyManagedDestroyMethod(destroyMethodName)) 
             {
                 this.destroyMethodName = definedDestroyMethodName;
                 this.destroyMethod = DetermineDestroyMethod();
@@ -127,7 +127,7 @@ namespace Spring.Objects.Factory.Support
         {
             if (disposing)
             {
-                if (this.objectPostProcessors is object && this.objectPostProcessors.Count != 0)
+                if (this.objectPostProcessors is not null && this.objectPostProcessors.Count != 0)
                 {
                     foreach (IDestructionAwareObjectPostProcessor processor in this.objectPostProcessors)
                     {
@@ -171,14 +171,14 @@ namespace Spring.Objects.Factory.Support
                     }
                 }
 
-                if (this.destroyMethod is object)
+                if (this.destroyMethod is not null)
                 {
                     InvokeCustomDestroyMethod(this.destroyMethod);
                 }
-                else if (this.destroyMethodName is object)
+                else if (this.destroyMethodName is not null)
                 {
                     MethodInfo methodToCall = DetermineDestroyMethod();
-                    if (methodToCall is object)
+                    if (methodToCall is not null)
                     {
                         InvokeCustomDestroyMethod(methodToCall);
                     }

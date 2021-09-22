@@ -173,7 +173,7 @@ namespace Spring.Objects.Factory.Config
             }
 
             NameValueCollection newProperties = (NameValueCollection)GetSection(resource, configSection, typeof(NameValueFileSectionHandler));
-            if (newProperties is object)
+            if (newProperties is not null)
             {
                 PopulateProperties(overrideValues, properties, newProperties);
             }
@@ -234,12 +234,10 @@ namespace Spring.Objects.Factory.Config
         /// </summary>
         public static object GetSection(IResource resource, string configSectionName, Type defaultConfigurationSectionHandlerType)
         {
-            using (Stream istm = resource.InputStream)
-            {
-                ConfigXmlDocument doc = new();
-                doc.Load(istm);
-                return GetSectionFromXmlDocument(doc, configSectionName, defaultConfigurationSectionHandlerType);
-            }
+            using Stream istm = resource.InputStream;
+            ConfigXmlDocument doc = new();
+            doc.Load(istm);
+            return GetSectionFromXmlDocument(doc, configSectionName, defaultConfigurationSectionHandlerType);
         }
 
         /// <summary>
@@ -257,7 +255,7 @@ namespace Spring.Objects.Factory.Config
         public static TResult GetSection<TResult>(IResource resource, string configSectionName, Type defaultConfigurationSectionHandlerType)
         {
             object result = GetSection(resource, configSectionName, defaultConfigurationSectionHandlerType);
-            if (result is object && !(result is TResult))
+            if (result is not null && result is not TResult)
             {
                 throw new ArgumentException(string.Format("evaluating configuration section {0} does not result in an instance of type {1}", configSectionName, typeof(TResult)));
             }
@@ -271,7 +269,7 @@ namespace Spring.Objects.Factory.Config
         public static TResult GetSectionFromXmlDocument<TResult>(XmlDocument configDocument, string configSectionName)
         {
             object result = GetSectionFromXmlDocument(configDocument, configSectionName);
-            if (result is object && !(result is TResult))
+            if (result is not null && result is not TResult)
             {
                 throw new ArgumentException(string.Format("evaluating configuration sectoin {0} does not result in an instance of type {1}", configSectionName, typeof(TResult)));
             }
@@ -375,7 +373,7 @@ namespace Spring.Objects.Factory.Config
                 }
             }
 
-            if (xmlConfig is object)
+            if (xmlConfig is not null)
             {
                 XmlAttribute xmlConfigType = xmlConfig.Attributes[ConfigSectionTypeAttribute];
                 handlerType = TypeResolutionUtils.ResolveType(xmlConfigType.Value);
@@ -407,7 +405,7 @@ namespace Spring.Objects.Factory.Config
 
 
         private delegate void DeserializeSectionMethod(ConfigurationSection section, XmlReader reader);
-        private static DeserializeSectionMethod deserialized = (DeserializeSectionMethod)Delegate.CreateDelegate(typeof(DeserializeSectionMethod),
+        private static readonly DeserializeSectionMethod deserialized = (DeserializeSectionMethod)Delegate.CreateDelegate(typeof(DeserializeSectionMethod),
                                                                                                    typeof(ConfigurationSection).GetMethod("DeserializeSection",
                                                                                                                                            BindingFlags.Instance |
                                                                                                                                            BindingFlags.NonPublic));
@@ -447,7 +445,7 @@ namespace Spring.Objects.Factory.Config
             NameValueCollection newProperties
                 = ConfigurationUtils.GetSection(configSectionName) as NameValueCollection;
 
-            if (newProperties is object)
+            if (newProperties is not null)
             {
                 sectionFound = true;
                 PopulateProperties(overrideValues, properties, newProperties);

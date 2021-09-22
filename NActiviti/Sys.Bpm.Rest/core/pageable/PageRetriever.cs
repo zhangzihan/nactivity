@@ -52,7 +52,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
             int firstResult = (pageable.PageNo <= 0 ? 0 : pageable.PageNo - 1) * pageable.PageSize;
 
             PageQueryCmd<T1, SOURCE> cmd;
-            if (createPageQueryCmd is object)
+            if (createPageQueryCmd is not null)
             {
                 cmd = createPageQueryCmd(query, firstResult, pageable.PageSize);
             }

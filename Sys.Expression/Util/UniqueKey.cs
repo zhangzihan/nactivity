@@ -164,7 +164,7 @@ namespace Spring.Util
         {
             StringBuilder sb = new();
             sb.Append(type.FullName);
-            if (instance is object) sb.Append('[').Append(instance.GetHashCode()).Append(']');
+            if (instance is not null) sb.Append('[').Append(instance.GetHashCode()).Append(']');
             sb.Append('.').Append(partialKey);
             return sb.ToString();
         }

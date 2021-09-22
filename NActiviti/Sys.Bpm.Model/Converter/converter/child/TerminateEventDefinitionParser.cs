@@ -50,7 +50,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
         protected internal virtual void ParseTerminateAllAttribute(XMLStreamReader xtr, TerminateEventDefinition eventDefinition)
         {
             string terminateAllValue = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TERMINATE_ALL);
-            if (terminateAllValue is object && "true".Equals(terminateAllValue))
+            if (terminateAllValue is not null && "true".Equals(terminateAllValue))
             {
                 eventDefinition.TerminateAll = true;
             }
@@ -63,7 +63,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
         protected internal virtual void ParseTerminateMultiInstanceAttribute(XMLStreamReader xtr, TerminateEventDefinition eventDefinition)
         {
             string terminateMiValue = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TERMINATE_MULTI_INSTANCE);
-            if (terminateMiValue is object && "true".Equals(terminateMiValue, StringComparison.OrdinalIgnoreCase))
+            if (terminateMiValue is not null && "true".Equals(terminateMiValue, StringComparison.OrdinalIgnoreCase))
             {
                 eventDefinition.TerminateMultiInstance = true;
             }

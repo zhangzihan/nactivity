@@ -44,9 +44,9 @@ namespace Spring.Core.TypeResolution
         /// The cache, mapping type names (<see cref="System.String"/> instances) against
         /// <see cref="System.Type"/> instances.
         /// </summary>
-        private IDictionary typeCache = new HybridDictionary();
+        private readonly IDictionary typeCache = new HybridDictionary();
 
-        private ITypeResolver typeResolver;
+        private readonly ITypeResolver typeResolver;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Spring.Core.TypeResolution.CachedTypeResolver"/> class.
@@ -135,12 +135,12 @@ namespace Spring.Core.TypeResolution
                     type = this.typeCache[typeName] as Type;
                     if (type is null)
                     {
-                        if (this.typeResolver.TryResolve(typeName, out type) && type is object)
+                        if (this.typeResolver.TryResolve(typeName, out type) && type is not null)
                         {
                             this.typeCache[typeName] = type;
                         }
                     }
-                    return type is object;
+                    return type is not null;
                 }
             }
             catch

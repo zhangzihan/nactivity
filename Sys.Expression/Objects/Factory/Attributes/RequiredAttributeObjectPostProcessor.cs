@@ -61,7 +61,7 @@ namespace Spring.Objects.Factory.Attributes
         /// <summary>
         /// Cache for validated object names, skipping re-validation for the same object
         /// </summary>
-        private ISet validatedObjectNames = new SynchronizedSet(new HashedSet());
+        private readonly ISet validatedObjectNames = new SynchronizedSet(new HashedSet());
 
         /// <summary>
         /// Sets the type of the required attribute, to be used on a property setter
@@ -144,7 +144,7 @@ namespace Spring.Objects.Factory.Attributes
         /// </returns>
         protected virtual bool IsRequiredProperty(PropertyInfo pi)
         {
-            return (pi.GetSetMethod() is object && pi.GetCustomAttributes(RequiredAttributeType, true).Length > 0);
+            return (pi.GetSetMethod() is not null && pi.GetCustomAttributes(RequiredAttributeType, true).Length > 0);
         }
 
         /// <summary>

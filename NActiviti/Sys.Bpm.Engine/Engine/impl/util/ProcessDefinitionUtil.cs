@@ -82,7 +82,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
             else
             {
-                var processEngineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+                var processEngineConfig = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
                 return processEngineConfig.CommandExecutor.Execute(new Cmd.GetBpmnModelCmd(processDefinitionId));
             }
         }

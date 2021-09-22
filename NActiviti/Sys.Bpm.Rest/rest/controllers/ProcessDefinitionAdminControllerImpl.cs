@@ -96,7 +96,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                     }
 
                     Assembly assembly = Assembly.LoadFrom(fileName);
-                    IEnumerable<Type> types = assembly.GetTypes().Where(x => x.GetCustomAttribute(typeof(FormulaTypeAttribute)) is object);
+                    IEnumerable<Type> types = assembly.GetTypes().Where(x => x.GetCustomAttribute(typeof(FormulaTypeAttribute)) is not null);
                     foreach (var type in types)
                     {
                         expressionTypeRegistry.Register(type);

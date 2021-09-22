@@ -54,7 +54,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
         protected internal virtual void HandleMultiInstanceLoopCharacteristics(Process process, Activity activity, IList<ValidationError> errors)
         {
             MultiInstanceLoopCharacteristics multiInstanceLoopCharacteristics = activity.LoopCharacteristics;
-            if (multiInstanceLoopCharacteristics is object)
+            if (multiInstanceLoopCharacteristics is not null)
             {
 
                 if (string.IsNullOrWhiteSpace(multiInstanceLoopCharacteristics.LoopCardinality) && string.IsNullOrWhiteSpace(multiInstanceLoopCharacteristics.InputDataItem))

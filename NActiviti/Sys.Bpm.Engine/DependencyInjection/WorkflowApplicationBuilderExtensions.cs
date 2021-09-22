@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl;
+using Sys.Workflow.Engine.Impl.Cfg;
 using Sys.Workflow.Options;
 using System;
 
@@ -14,25 +17,6 @@ namespace Sys.Workflow
     /// </summary>
     public static class WorkflowApplicationBuilderExtensions
     {
-        public static IProcessEngine UseProcessEngine(this IServiceProvider serviceProvider, string processEngineName)
-        {
-            ProcessEngineServiceProvider.ServiceProvider = serviceProvider;
-
-            if (string.IsNullOrWhiteSpace(processEngineName))
-            {
-                return serviceProvider.GetService<IProcessEngine>();
-            }
-
-            ProcessEngineConfiguration processEngineConfig = serviceProvider.GetService<ProcessEngineConfiguration>();
-            processEngineConfig.ProcessEngineName = processEngineName;
-
-            IProcessEngine engine = processEngineConfig.BuildProcessEngine();
-            ProcessEngineFactory.RegisterProcessEngine(engine);
-
-            return engine;
-        }
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -40,6 +24,14 @@ namespace Sys.Workflow
         /// <returns></returns>
         public static IApplicationBuilder UseProcessEngine(this IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
+            ProcessEngineServiceProvider.ServiceProvider = app.ApplicationServices;
+
+            ProcessEngineConfiguration processEngineConfig =
+                app.ApplicationServices.GetService<ProcessEngineConfiguration>();
+            processEngineConfig.BuildProcessEngine();
+
+            ProcessEngineFactory.InitProcessEngineFromResource();
+
             app.ApplicationServices.EnsureProcessEngineInit();
 
             app.ApplicationServices.GetService<IOptionsMonitor<ProcessEngineOption>>()
@@ -47,7 +39,7 @@ namespace Sys.Workflow
                 {
                     if (ProcessEngineOption.HasChanged())
                     {
-                        ProcessEngineFactory.Instance.Destroy();
+                        ProcessEngineFactory.Destroy();
                         app.ApplicationServices.EnsureProcessEngineInit();
                     }
                 });
@@ -62,15 +54,12 @@ namespace Sys.Workflow
             lifetime.ApplicationStopping.Register((context) =>
             {
                 IApplicationBuilder builder = context as IApplicationBuilder;
-                ProcessEngineFactory engineFact = builder.ApplicationServices.GetService<ProcessEngineFactory>();
-                engineFact.Destroy();
+                ProcessEngineFactory.Destroy();
             }, app, true);
         }
 
         private static void EnsureProcessEngineInit(this IServiceProvider serviceProvider)
         {
-            ProcessEngineServiceProvider.ServiceProvider = serviceProvider;
-
             var engine = serviceProvider.GetService<IProcessEngine>();
             if (engine is null)
             {

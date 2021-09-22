@@ -50,7 +50,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
                 xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_SIGNAL, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, signal.Id);
                 xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, signal.Name);
-                if (signal.Scope is object)
+                if (signal.Scope is not null)
                 {
                     xtw.WriteAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_SCOPE, signal.Scope);
                 }
@@ -62,7 +62,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
                 xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MESSAGE, BpmnXMLConstants.BPMN2_NAMESPACE);
                 string messageId = message.Id;
                 // remove the namespace from the message id if set
-                if (model.TargetNamespace is object && messageId.StartsWith(model.TargetNamespace, StringComparison.Ordinal))
+                if (model.TargetNamespace is not null && messageId.StartsWith(model.TargetNamespace, StringComparison.Ordinal))
                 {
                     messageId = messageId.Replace(model.TargetNamespace, "");
                     messageId = messageId.ReplaceFirst(":", "");

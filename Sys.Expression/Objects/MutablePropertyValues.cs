@@ -125,7 +125,7 @@ namespace Spring.Objects
         /// </param>
         public void Add(PropertyValue pv)
         {
-            propertyValuesList = propertyValuesList ?? new List<PropertyValue>();
+            propertyValuesList ??= new List<PropertyValue>();
 
             for (int i = 0; i < propertyValuesList.Count; ++i)
             {
@@ -248,7 +248,7 @@ namespace Spring.Objects
         /// </summary>
         public void SetPropertyValueAt(PropertyValue pv, int i)
         {
-            propertyValuesList = propertyValuesList ?? new List<PropertyValue>();
+            propertyValuesList ??= new List<PropertyValue>();
             propertyValuesList[i] = pv;
         }
 
@@ -293,7 +293,7 @@ namespace Spring.Objects
         /// </returns>
         public bool Contains(string propertyName)
         {
-            return GetPropertyValue(propertyName) is object;
+            return GetPropertyValue(propertyName) is not null;
         }
 
         /// <summary>

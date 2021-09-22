@@ -182,7 +182,7 @@ namespace Spring.Objects.Factory.Config
         /// </summary>
         public Type ObjectType
         {
-            get { return (this.field is null) ? null : this.field.FieldType; }
+            get { return this.field?.FieldType; }
         }
 
         /// <summary>
@@ -212,14 +212,14 @@ namespace Spring.Objects.Factory.Config
         /// </exception>
         public void AfterPropertiesSet()
         {
-            if (TargetType is object && TargetObject is object)
+            if (TargetType is not null && TargetObject is not null)
             {
                 throw new ArgumentException(
                     "Only one of the TargetType or TargetObject properties can be set, not both.");
             }
             if (TargetType is null && TargetObject is null)
             {
-                if (TargetField is object)
+                if (TargetField is not null)
                 {
                     throw new ArgumentException(
                         "Specify the TargetType or TargetObject property in combination with the TargetField property.");
@@ -270,7 +270,7 @@ namespace Spring.Objects.Factory.Config
         /// <see cref="Spring.Objects.Factory.IFactoryObject.GetObject"/>
         public object GetObject()
         {
-            if (TargetObject is object)
+            if (TargetObject is not null)
             {
                 return this.field.GetValue(TargetObject);
             }

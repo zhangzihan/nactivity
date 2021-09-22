@@ -86,7 +86,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
         {
             string userId = authenticationWrapper.AuthenticatedUser.Id;
             ITaskQuery taskQuery = taskService.CreateTaskQuery();
-            if (userId is object)
+            if (userId is not null)
             {
                 IList<string> groups = null;
                 if (userGroupLookupProxy is object)
@@ -95,7 +95,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
                 }
                 taskQuery = taskQuery.SetTaskCandidateOrAssigned(userId, groups);
             }
-            if (query.ProcessInstanceBusinessKey is object)
+            if (query.ProcessInstanceBusinessKey is not null)
             {
                 taskQuery.SetProcessInstanceBusinessKey(query.ProcessInstanceBusinessKey);
             }

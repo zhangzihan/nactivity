@@ -21,7 +21,7 @@ namespace Sys.Extentions
         public static IServiceCollection AddUserSession<T>(this IServiceCollection services) where T : class, IUserSession
         {
             var sp = services.FirstOrDefault(x => x.ServiceType == typeof(IUserSession));
-            if (sp is object)
+            if (sp is not null)
             {
                 services.Remove(sp);
             }

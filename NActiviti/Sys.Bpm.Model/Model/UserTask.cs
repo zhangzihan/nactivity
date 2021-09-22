@@ -137,7 +137,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             get
             {
-                return extensionId is object && extensionId.Length > 0;
+                return extensionId is not null && extensionId.Length > 0;
             }
         }
 

@@ -54,7 +54,7 @@ namespace Sys.Net.Http
 
         public Task<IUserInfo> GetUserAsync(HttpContext context)
         {
-            if (context.User is object)
+            if (context.User is not null)
             {
                 return Task.FromResult(CreateUser(context.User));
             }

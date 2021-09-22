@@ -284,7 +284,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
                 {
                     foreach (ExtensionAttribute attribute in attributes)
                     {
-                        if (!string.IsNullOrWhiteSpace(attribute.Name) && attribute.Value is object)
+                        if (!string.IsNullOrWhiteSpace(attribute.Name) && attribute.Value is not null)
                         {
                             if (!string.IsNullOrWhiteSpace(attribute.Namespace))
                             {
@@ -313,7 +313,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
                     }
                 }
 
-                if (extensionElement.ElementText is object)
+                if (extensionElement.ElementText is not null)
                 {
                     xtw.WriteCData(extensionElement.ElementText);
                 }
@@ -483,7 +483,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
 
         public static bool IsBlacklisted(ExtensionAttribute attribute, params IList<ExtensionAttribute>[] blackLists)
         {
-            if (blackLists is object)
+            if (blackLists is not null)
             {
                 foreach (IList<ExtensionAttribute> blackList in blackLists)
                 {
@@ -491,7 +491,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
                     {
                         if (blackAttribute.Name.Equals(attribute.Name))
                         {
-                            if (blackAttribute.Namespace is object && attribute.Namespace is object && blackAttribute.Namespace.Equals(attribute.Namespace))
+                            if (blackAttribute.Namespace is not null && attribute.Namespace is not null && blackAttribute.Namespace.Equals(attribute.Namespace))
                             {
                                 return true;
                             }

@@ -271,7 +271,7 @@ namespace Spring.Objects.Factory.Support
             get => null;
             set
             {
-                if (value is object)
+                if (value is not null)
                 {
                     throw new ArgumentException("Root Object cannot be changed into a child oject with parent reference");
                 }

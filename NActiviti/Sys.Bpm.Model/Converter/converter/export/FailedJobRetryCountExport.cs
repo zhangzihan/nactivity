@@ -21,7 +21,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
         public static void WriteFailedJobRetryCount(Activity activity, XMLStreamWriter xtw)
         {
             string failedJobRetryCycle = activity.FailedJobRetryTimeCycleValue;
-            if (failedJobRetryCycle is object)
+            if (failedJobRetryCycle is not null)
             {
 
                 if (!string.IsNullOrWhiteSpace(failedJobRetryCycle))

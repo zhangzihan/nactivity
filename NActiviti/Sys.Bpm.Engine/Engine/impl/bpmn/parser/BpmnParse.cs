@@ -168,7 +168,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                             // Throw exception if there is any error
                             if (validationErrors.Any(x => x.Warning == false))
                             {
-                                logger.LogError($"Following errors encounted during process validation:\r\n{errorBuilder.ToString()}");
+                                logger.LogError($"Following errors encounted during process validation:\r\n{errorBuilder}");
 
                                 throw new ActivitiValidationException(validationErrors);
                             }
@@ -176,7 +176,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                             // Write out warnings (if any)
                             if (warningBuilder.Length > 0)
                             {
-                                logger.LogWarning($"Following warnings encountered during process validation: {warningBuilder.ToString()}");
+                                logger.LogWarning($"Following warnings encountered during process validation: {warningBuilder}");
                             }
 
                         }
@@ -193,25 +193,16 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
 
                 // Finally, process the diagram interchange info
                 ProcessDI();
-
             }
             catch (Exception e)
             {
-                if (e is ActivitiException)
+                switch (e)
                 {
-                    throw;
-                }
-                else if (e is XMLException)
-                {
-                    throw;
-                }
-                else if (e is ActivitiValidationException)
-                {
-                    throw;
-                }
-                else
-                {
-                    throw new ActivitiException("Error parsing XML", e);
+                    case XMLException _:
+                    case ActivitiValidationException _:
+                        throw;
+                    default:
+                        throw new ActivitiException("Error parsing XML", e);
                 }
             }
 
@@ -332,13 +323,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
             foreach (FlowElement flowElement in flowElements)
             {
                 // Sequence flow are also flow elements, but are only parsed once every activity is found
-                if (flowElement is SequenceFlow)
+                if (flowElement is SequenceFlow flow)
                 {
-                    sequenceFlowToParse.Add((SequenceFlow)flowElement);
+                    sequenceFlowToParse.Add(flow);
                 }
-                else if (flowElement is BoundaryEvent)
+                else if (flowElement is BoundaryEvent @event)
                 {
-                    boundaryEventsToParse.Add((BoundaryEvent)flowElement);
+                    boundaryEventsToParse.Add(@event);
                 }
                 else if (flowElement is Event)
                 {

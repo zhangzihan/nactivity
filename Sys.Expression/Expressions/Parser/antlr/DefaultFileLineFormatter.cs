@@ -23,7 +23,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			StringBuilder buf = new();
 			
-			if (fileName is object)
+			if (fileName is not null)
 				buf.Append(fileName + ":");
 			
 			if (line != - 1)

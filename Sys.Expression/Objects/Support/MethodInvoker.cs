@@ -207,7 +207,7 @@ namespace Spring.Objects.Support
 			get { return _arguments; }
 			set
 			{
-				if (value is object)
+				if (value is not null)
 				{
 					this._arguments = value;
 				}
@@ -242,7 +242,7 @@ namespace Spring.Objects.Support
 			get { return _preparedArguments; }
 			set
 			{
-				if (value is object)
+				if (value is not null)
 				{
 					this._preparedArguments = value;
 				}
@@ -395,7 +395,7 @@ namespace Spring.Objects.Support
         protected virtual MethodInfo FindTheMethodToInvoke()
         {
             MethodInfo theMethod = null;
-            Type targetType = (TargetObject is object) ? TargetObject.GetType() : TargetType;
+            Type targetType = (TargetObject is not null) ? TargetObject.GetType() : TargetType;
             GenericArgumentsHolder genericInfo = new(TargetMethod);
 
             // if we don't have any named arguments, we can try to get the exact method first...
@@ -413,7 +413,7 @@ namespace Spring.Objects.Support
                     new MemberFilter(new CriteriaMemberFilter().FilterMemberByCriteria),
                     searchCriteria);
 
-                if (matchingMethods is object && matchingMethods.Length == 1)
+                if (matchingMethods is not null && matchingMethods.Length == 1)
                 {
                     theMethod = matchingMethods[0] as MethodInfo;
                 }
@@ -520,8 +520,8 @@ namespace Spring.Objects.Support
 		/// </exception>
 		public virtual object Invoke()
 		{
-			object result = null;
-			try
+            object result;
+            try
 			{
 				result = this._methodObject.Invoke(TargetObject, PreparedArguments);
 			}

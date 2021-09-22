@@ -27,6 +27,8 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
     using Sys.Workflow.Engine.Logging;
     using Sys.Workflow;
     using System.Collections.Concurrent;
+    using Sys.DataSource;
+    using System.Transactions;
 
     public class CommandContext<T1> : ICommandContext
     {
@@ -43,14 +45,14 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         protected internal IFailedJobCommandFactory failedJobCommandFactory;
         protected internal IList<ICommandContextCloseListener> closeListeners;
         // General-purpose storing of anything during the lifetime of a command context
-        protected internal ConcurrentDictionary<string, object> attributes; 
+        protected internal ConcurrentDictionary<string, object> attributes;
         protected internal bool reused;
 
         protected internal IActivitiEngineAgenda agenda;
         // The executions involved with the command
-        protected internal ConcurrentDictionary<string, IExecutionEntity> involvedExecutions = new ConcurrentDictionary<string, IExecutionEntity>(StringComparer.OrdinalIgnoreCase); 
+        protected internal ConcurrentDictionary<string, IExecutionEntity> involvedExecutions = new ConcurrentDictionary<string, IExecutionEntity>(StringComparer.OrdinalIgnoreCase);
         // needs to be a stack, as JavaDelegates can do api calls again
-        protected internal ConcurrentQueue<object> resultStack = new ConcurrentQueue<object>(); 
+        protected internal ConcurrentQueue<object> resultStack = new ConcurrentQueue<object>();
 
         public CommandContext(ICommand<T1> command, ProcessEngineConfigurationImpl processEngineConfiguration)
         {
@@ -76,7 +78,13 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                         ExecuteCloseListenersClosing();
                         if (_exception is null)
                         {
+                            var opts = processEngineConfiguration.TransactionOption;
+                            var curtran = Transaction.Current;
+                            using var ts = curtran is object ?
+                                TransactionOption.Create(curtran) :
+                                TransactionOption.Create(opts.TransactionTimeout, opts.IsolationLevel, opts.TransactionScopeOption);
                             FlushSessions();
+                            ts.Complete();
                         }
                     }
                     catch (Exception exception)

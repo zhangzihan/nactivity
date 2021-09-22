@@ -163,11 +163,11 @@ namespace Spring.Objects.Factory.Config
             if (definition is object)
             {
                 PropertyValue pv = definition.PropertyValues.GetPropertyValue(objectProperty);
-                if (pv is object && pv.Value is RuntimeObjectReference)
+                if (pv is not null && pv.Value is RuntimeObjectReference)
                 {
                     definition.PropertyValues.Add(objectProperty, new RuntimeObjectReference(value));
                 }
-                else if (pv is object && pv.Value is ExpressionHolder)
+                else if (pv is not null && pv.Value is ExpressionHolder)
                 {
                     definition.PropertyValues.Add(objectProperty, new ExpressionHolder(value));
                 }

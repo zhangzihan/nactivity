@@ -45,7 +45,7 @@ namespace Sys.Net.Http
         /// <inheritdoc />
         public Task SetRequestAccessTokenAsync(HttpClient httpClient, HttpContext httpContext = null)
         {
-            if (httpClient.DefaultRequestHeaders.Authorization is object)
+            if (httpClient.DefaultRequestHeaders.Authorization is not null)
             {
                 return Task.CompletedTask;
             }
@@ -55,7 +55,7 @@ namespace Sys.Net.Http
             {
                 accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(Authentication.AuthenticatedUser, Formatting.Indented));
             }
-            else if (httpContext is object)
+            else if (httpContext is not null)
             {
                 accessToken = httpContext.Request.Headers["Authorization"].ToString()?.Split(' ')[1];
             }

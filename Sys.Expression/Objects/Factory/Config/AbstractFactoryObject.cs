@@ -156,7 +156,7 @@ namespace Spring.Objects.Factory.Config
         {
             if (disposing)
             {
-                if (this.isSingleton && this.singletonInstance is object)
+                if (this.isSingleton && this.singletonInstance is not null)
                 {
                     IDisposable disposableSingletonInstance = this.singletonInstance as IDisposable;
                     if (disposableSingletonInstance is object)

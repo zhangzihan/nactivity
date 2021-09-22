@@ -116,7 +116,7 @@ namespace Spring.Core
         {
             bool satisfied = false;
             MethodBase method = datum as MethodBase;
-            if (method is object)
+            if (method is not null)
             {
                 satisfied = method.GetGenericArguments().Length == ExpectedGenericArgumentCount;
             }

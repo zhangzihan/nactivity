@@ -32,7 +32,7 @@ namespace Spring.Util
             foreach (Type interfaceType in type.GetInterfaces())
             {
                 Attribute attrib = FindAttribute(interfaceType, attributeType);
-                if (attrib is object)
+                if (attrib is not null)
                 {
                     return attrib;
                 }

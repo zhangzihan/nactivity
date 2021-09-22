@@ -26,6 +26,8 @@ namespace Sys.Workflow.Engine
     using Sys.Workflow;
     using Sys.Data;
     using Sys.Workflow.Engine.Bpmn.Rules;
+    using System.Transactions;
+    using System;
 
 
     /// <summary>
@@ -930,5 +932,17 @@ namespace Sys.Workflow.Engine
                 return engineAgendaFactory;
             }
         }
+
+        public virtual TransOption TransactionOption { get; set; } = new TransOption();
+    }
+
+    public  class TransOption
+    {
+        public bool UseTransactionScope { get; set; } = true;
+        public virtual IsolationLevel IsolationLevel { get; set; } = IsolationLevel.RepeatableRead;
+
+        public virtual TransactionScopeOption TransactionScopeOption { get; set; } = TransactionScopeOption.Required;
+
+        public virtual TimeSpan? TransactionTimeout { get; set; }
     }
 }

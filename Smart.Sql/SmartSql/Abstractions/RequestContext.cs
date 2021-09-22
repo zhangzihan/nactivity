@@ -31,10 +31,10 @@ namespace SmartSql.Abstractions
         public Statement Statement { get; internal set; }
         public StringBuilder Sql { get; internal set; }
         public bool IsStatementSql { get; internal set; }
-        public String RealSql { get; set; }
-        public String Scope { get; set; }
-        public String SqlId { get; set; }
-        public String FullSqlId => $"{Scope}.{SqlId}";
+        public string RealSql { get; set; }
+        public string Scope { get; set; }
+        public string SqlId { get; set; }
+        public string FullSqlId => $"{Scope}.{SqlId}";
         public bool IsFirstDyChild { get; internal set; }
         public IDictionary<string, object> RequestParameters
         {
@@ -123,7 +123,7 @@ namespace SmartSql.Abstractions
                     IDictionary<string, object> ret = new Dictionary<string, object>(paramComparer);
                     ToRequestParameters(@enum.Current, ignoreParameterCase, ref ret);
                     requestParameters.Add(index.ToString(), ret);
-                    index = index + 1;
+                    index++;
                 }
                 return;
             }
@@ -139,7 +139,7 @@ namespace SmartSql.Abstractions
         private object ToParameterValue(string paramName, object value)
         {
             var paramMap = Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => p.Name == paramName);
-            if (paramMap is object)
+            if (paramMap is not null)
             {
                 paramMap.Handler.ToParameterValue(value);
             }
@@ -204,11 +204,12 @@ namespace SmartSql.Abstractions
 
         private void FixedSqlServerOrderBy()
         {
-            if (Request is Dictionary<string, object> dict && !dict.TryGetValue("orderByColumns", out object ob))
+            if (Request is Dictionary<string, object> dict && !dict.TryGetValue("orderByColumns", out _))
             {
                 dict["orderByColumns"] = "RES.ID_";
             }
-            if (!RequestParameters.TryGetValue("orderByColumns", out object obj))
+
+            if (!RequestParameters.TryGetValue("orderByColumns", out _))
             {
                 RequestParameters["orderByColumns"] = "RES.ID_";
             }
@@ -244,14 +245,14 @@ namespace SmartSql.Abstractions
         }
 
 
-        public String Key { get { return $"{FullSqlId}:{RequestString}"; } }
+        public string Key { get { return $"{FullSqlId}:{RequestString}"; } }
 
-        public String RequestString
+        public string RequestString
         {
             get
             {
                 if (RequestParameters is null) { return "Null"; }
-                StringBuilder strBuilder = new StringBuilder();
+                StringBuilder strBuilder = new();
                 var reqParams = RequestParameters;
                 foreach (var reqParam in reqParams)
                 {
@@ -263,7 +264,7 @@ namespace SmartSql.Abstractions
 
         private void BuildSqlQueryString(StringBuilder strBuilder, string key, object val)
         {
-            if (val is IEnumerable list && !(val is String))
+            if (val is IEnumerable list && val is not string)
             {
                 strBuilder.AppendFormat("&{0}=(", key);
                 foreach (var item in list)

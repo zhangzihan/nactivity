@@ -44,7 +44,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                         AddError(errors, ProblemsConstants.SIGNAL_DUPLICATE_NAME, signal, ProcessValidatorResource.SIGNAL_DUPLICATE_NAME);
                     }
 
-                    if (signal.Scope is object && !signal.Scope.Equals(Signal.SCOPE_GLOBAL) && !signal.Scope.Equals(Signal.SCOPE_PROCESS_INSTANCE))
+                    if (signal.Scope is not null && !signal.Scope.Equals(Signal.SCOPE_GLOBAL) && !signal.Scope.Equals(Signal.SCOPE_PROCESS_INSTANCE))
                     {
                         AddError(errors, ProblemsConstants.SIGNAL_INVALID_SCOPE, signal, ProcessValidatorResource.SIGNAL_INVALID_SCOPE);
                     }
@@ -57,7 +57,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
         {
             foreach (Signal signal in signals)
             {
-                if (id is object && signal.Id is object)
+                if (id is not null && signal.Id is not null)
                 {
                     if (name.Equals(signal.Name) && !id.Equals(signal.Id))
                     {

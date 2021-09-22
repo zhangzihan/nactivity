@@ -154,7 +154,7 @@ namespace Spring.Core.TypeResolution
         {
             get
             {
-                return (unresolvedGenericArguments is object &&
+                return (unresolvedGenericArguments is not null &&
                     unresolvedGenericArguments.Length > 0);
             }
         }
@@ -192,7 +192,7 @@ namespace Spring.Core.TypeResolution
         /// </summary>
         public bool IsArrayDeclaration
         {
-            get { return arrayDeclaration is object; }
+            get { return arrayDeclaration is not null; }
         }
 
         #endregion

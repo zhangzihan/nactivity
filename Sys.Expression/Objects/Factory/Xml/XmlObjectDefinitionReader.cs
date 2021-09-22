@@ -75,7 +75,7 @@ namespace Spring.Objects.Factory.Xml
 
         private Type documentReaderType;
         private INamespaceParserResolver namespaceParserResolver;
-        private IObjectDefinitionFactory objectDefinitionFactory;
+        private readonly IObjectDefinitionFactory objectDefinitionFactory;
 
         #endregion
 
@@ -298,7 +298,7 @@ namespace Spring.Objects.Factory.Xml
                     }
                     catch (RetryParseException)
                     {
-                        if (reader is object)
+                        if (reader is not null)
                             reader.Close();
                     }
                 }

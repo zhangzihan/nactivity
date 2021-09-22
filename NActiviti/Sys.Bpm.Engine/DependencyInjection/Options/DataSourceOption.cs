@@ -29,14 +29,6 @@ namespace Sys.Workflow.Options
                     return connectionString;
                 }
 
-                if (ProviderName.ToLower() != "npgsql")
-                {
-                    if (new Regex("(Connection Timeout)", RegexOptions.IgnoreCase).IsMatch(connectionString) == false)
-                    {
-                        connectionString = string.Concat("Connection Timeout=300;", connectionString);
-                    }
-                }
-
                 if (regDatabase.IsMatch(connectionString))
                 {
                     return regDatabase.Replace(connectionString, match =>

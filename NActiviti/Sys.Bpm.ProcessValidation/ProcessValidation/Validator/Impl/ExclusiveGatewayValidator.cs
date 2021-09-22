@@ -51,7 +51,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 foreach (SequenceFlow flow in exclusiveGateway.OutgoingFlows)
                 {
                     string condition = flow.ConditionExpression;
-                    bool isDefaultFlow = flow.Id is object && flow.Id.Equals(defaultSequenceFlow);
+                    bool isDefaultFlow = flow.Id is not null && flow.Id.Equals(defaultSequenceFlow);
                     bool hasConditon = !string.IsNullOrWhiteSpace(condition);
 
                     if (!hasConditon && !isDefaultFlow)

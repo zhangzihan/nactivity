@@ -125,7 +125,7 @@ namespace Spring.Objects.Factory.Support
             ConstructorInfo constructorToUse = null;
             object[] argsToUse = null;
 
-            if (explicitArgs is object)
+            if (explicitArgs is not null)
             {
                 argsToUse = explicitArgs;
             }
@@ -136,12 +136,12 @@ namespace Spring.Objects.Factory.Support
 
 
             // Need to resolve the constructor.
-            bool autowiring = (chosenCtors is object ||
+            bool autowiring = (chosenCtors is not null ||
                                rod.ResolvedAutowireMode == AutoWiringMode.Constructor);
             ConstructorArgumentValues resolvedValues = null;
 
-            int minNrOfArgs = 0;
-            if (explicitArgs is object)
+            int minNrOfArgs;
+            if (explicitArgs is not null)
             {
                 minNrOfArgs = explicitArgs.Length;
             }
@@ -160,7 +160,7 @@ namespace Spring.Objects.Factory.Support
             {
                 ConstructorInfo candidate = candidates[i];
                 Type[] paramTypes = ReflectionUtils.GetParameterTypes(candidate.GetParameters());
-                if (constructorToUse is object && argsToUse.Length > paramTypes.Length)
+                if (constructorToUse is not null && argsToUse.Length > paramTypes.Length)
                 {
                     // already found greedy constructor that can be satisfied, so
                     // don't look any further, there are only less greedy constructors left...
@@ -176,7 +176,7 @@ namespace Spring.Objects.Factory.Support
                 }
 
                 ArgumentsHolder args;
-                if (resolvedValues is object)
+                if (resolvedValues is not null)
                 {
                     // Try to resolve arguments for current constructor
 
@@ -272,13 +272,12 @@ namespace Spring.Objects.Factory.Support
         public virtual IObjectWrapper InstantiateUsingFactoryMethod(string name, RootObjectDefinition definition, object[] arguments)
         {
             ObjectWrapper wrapper = new();
-            Type factoryClass = null;
             bool isStatic = true;
 
 
             ConstructorArgumentValues cargs = definition.ConstructorArgumentValues;
             ConstructorArgumentValues resolvedValues = new();
-            int expectedArgCount = 0;
+            int expectedArgCount;
 
             // we don't have arguments passed in programmatically, so we need to resolve the
             // arguments specified in the constructor arguments held in the object definition...
@@ -294,6 +293,7 @@ namespace Spring.Objects.Factory.Support
             }
 
 
+            Type factoryClass;
             if (StringUtils.HasText(definition.FactoryObjectName))
             {
                 // it's an instance method on the factory object's class...
@@ -332,9 +332,8 @@ namespace Spring.Objects.Factory.Support
                 {
                     Type[] paramTypes = ReflectionUtils.GetParameterTypes(factoryMethodCandidate.GetParameters());
                     // try to create the required arguments...
-                    UnsatisfiedDependencyExceptionData unsatisfiedDependencyExceptionData = null;
                     ArgumentsHolder args = CreateArgumentArray(name, definition, resolvedValues, wrapper, paramTypes,
-                                                               factoryMethodCandidate, autowiring, out unsatisfiedDependencyExceptionData);
+                                                               factoryMethodCandidate, autowiring, out _);
                     if (args is null)
                     {
                         arguments = null;
@@ -389,8 +388,6 @@ namespace Spring.Objects.Factory.Support
             ArgumentsHolder args = new(paramTypes.Length);
             var usedValueHolders = new HybridSet();
             List<string> autowiredObjectNames = null;
-            bool resolveNecessary = false;
-
             ParameterInfo[] argTypes = methodOrCtorInfo.GetParameters();
 
             for (int paramIndex = 0; paramIndex < paramTypes.Length; paramIndex++)
@@ -401,8 +398,8 @@ namespace Spring.Objects.Factory.Support
                 // If we couldn't find a direct match and are not supposed to autowire,
                 // let's try the next generic, untyped argument value as fallback:
                 // it could match after type conversion (for example, String -> int).               
-                ConstructorArgumentValues.ValueHolder valueHolder = null;
-                if (resolvedValues.GetNamedArgumentValue(parameterName) is object)
+                ConstructorArgumentValues.ValueHolder valueHolder;
+                if (resolvedValues.GetNamedArgumentValue(parameterName) is not null)
                 {
                     valueHolder = resolvedValues.GetArgumentValue(parameterName, paramType, usedValueHolders);
                 }
@@ -416,7 +413,7 @@ namespace Spring.Objects.Factory.Support
                 {
                     valueHolder = resolvedValues.GetGenericArgumentValue(null, usedValueHolders);
                 }
-                if (valueHolder is object)
+                if (valueHolder is not null)
                 {
                     // We found a potential match - let's give it a try.
                     // Do not consider the same value definition multiple times!
@@ -464,7 +461,7 @@ namespace Spring.Objects.Factory.Support
                         args.rawArguments[paramIndex] = autowiredArgument;
                         args.arguments[paramIndex] = autowiredArgument;
                         args.preparedArguments[paramIndex] = new AutowiredArgumentMarker();
-                        resolveNecessary = true;
+                        bool resolveNecessary = true;
                     }
                     catch (ObjectsException ex)
                     {
@@ -476,7 +473,7 @@ namespace Spring.Objects.Factory.Support
                 }
             }
 
-            if (log.IsEnabled(LogLevel.Debug) && autowiredObjectNames is object)
+            if (log.IsEnabled(LogLevel.Debug) && autowiredObjectNames is not null)
             {
                 for (var i = 0; i < autowiredObjectNames.Count; i++)
                 {

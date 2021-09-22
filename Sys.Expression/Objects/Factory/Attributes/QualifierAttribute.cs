@@ -55,7 +55,7 @@ namespace Spring.Objects.Factory.Attributes
 
         public override int GetHashCode()
         {
-            return _value is object ? _value.GetHashCode() : 0;
+            return _value is not null ? _value.GetHashCode() : 0;
         }
     }
 }

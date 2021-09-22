@@ -13,8 +13,8 @@ namespace Spring.Expressions.Parser.antlr.debug
 			set	{ debugMode = value;	}
 		}
 
-		private InputBuffer buffer;
-		private InputBufferEventSupport inputBufferEventSupport;
+		private readonly InputBuffer buffer;
+		private readonly InputBufferEventSupport inputBufferEventSupport;
 		private bool debugMode = true;
 		
 		
@@ -69,7 +69,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		}
 		public virtual void  removeInputBufferListener(InputBufferListener l)
 		{
-			if (inputBufferEventSupport is object)
+			if (inputBufferEventSupport is not null)
 				inputBufferEventSupport.removeInputBufferListener(l);
 		}
 		public override void  rewind(int mark)

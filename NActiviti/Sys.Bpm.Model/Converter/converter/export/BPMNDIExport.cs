@@ -44,7 +44,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
             foreach (string elementId in model.LocationMap.Keys)
             {
 
-                if (model.GetFlowElement(elementId) is object || model.GetArtifact(elementId) is object || model.GetPool(elementId) is object || model.GetLane(elementId) is object)
+                if (model.GetFlowElement(elementId) is not null || model.GetArtifact(elementId) is not null || model.GetPool(elementId) is not null || model.GetLane(elementId) is not null)
                 {
 
                     xtw.WriteStartElement(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_SHAPE, BpmnXMLConstants.BPMNDI_NAMESPACE);
@@ -53,7 +53,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
 
                     GraphicInfo graphicInfo = model.GetGraphicInfo(elementId);
                     FlowElement flowElement = model.GetFlowElement(elementId);
-                    if (flowElement is SubProcess && graphicInfo.Expanded is object)
+                    if (flowElement is SubProcess && graphicInfo.Expanded is not null)
                     {
                         xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_IS_EXPANDED, graphicInfo.Expanded.ToString());
                     }
@@ -72,7 +72,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
             foreach (string elementId in model.FlowLocationMap.Keys)
             {
 
-                if (model.GetFlowElement(elementId) is object || model.GetArtifact(elementId) is object || model.GetMessageFlow(elementId) is object)
+                if (model.GetFlowElement(elementId) is not null || model.GetArtifact(elementId) is not null || model.GetMessageFlow(elementId) is not null)
                 {
 
                     xtw.WriteStartElement(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_EDGE, BpmnXMLConstants.BPMNDI_NAMESPACE);
@@ -89,7 +89,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
                     }
 
                     GraphicInfo labelGraphicInfo = model.GetLabelGraphicInfo(elementId);
-                    if (labelGraphicInfo is object)
+                    if (labelGraphicInfo is not null)
                     {
                         FlowElement flowElement = model.GetFlowElement(elementId);
                         MessageFlow messageFlow = null;
@@ -99,17 +99,17 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
                         }
 
                         bool hasName = false;
-                        if (flowElement is object && !string.IsNullOrWhiteSpace(flowElement.Name))
+                        if (flowElement is not null && !string.IsNullOrWhiteSpace(flowElement.Name))
                         {
                             hasName = true;
 
                         }
-                        else if (messageFlow is object && !string.IsNullOrWhiteSpace(messageFlow.Name))
+                        else if (messageFlow is not null && !string.IsNullOrWhiteSpace(messageFlow.Name))
                         {
                             hasName = true;
                         }
 
-                        if (labelGraphicInfo is object && hasName)
+                        if (labelGraphicInfo is not null && hasName)
                         {
                             xtw.WriteStartElement(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_LABEL, BpmnXMLConstants.BPMNDI_NAMESPACE);
                             xtw.WriteStartElement(BpmnXMLConstants.OMGDC_PREFIX, BpmnXMLConstants.ELEMENT_DI_BOUNDS, BpmnXMLConstants.OMGDC_NAMESPACE);

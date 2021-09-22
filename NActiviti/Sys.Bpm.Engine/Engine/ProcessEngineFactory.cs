@@ -19,6 +19,8 @@ namespace Sys.Workflow.Engine
     using Sys.Workflow.Engine.Impl;
     using Sys.Workflow;
     using System.Collections.Concurrent;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Microsoft.Extensions.Configuration;
 
     /// <summary>
     /// Helper for initializing and closing process engines in server environments. <br>
@@ -36,63 +38,18 @@ namespace Sys.Workflow.Engine
     /// 
     /// 
     /// </summary>
-    public class ProcessEngineFactory
+    public abstract class ProcessEngineFactory
     {
         private static readonly ILogger<ProcessEngineFactory> log = ProcessEngineServiceProvider.LoggerService<ProcessEngineFactory>();
 
-        private static ProcessEngineFactory processEngineFactory;
-
-        private readonly object syncRoot = new object();
-
-        public static ProcessEngineFactory Instance
-        {
-            get
-            {
-                if (processEngineFactory is null)
-                {
-                    processEngineFactory = new ProcessEngineFactory();
-                }
-
-                return processEngineFactory;
-            }
-        }
-
-        private ProcessEngineFactory()
-        {
-        }
+        private static readonly object syncRoot = new object();
 
         public const string NAME_DEFAULT = "default";
 
-        protected internal static bool isInitialized;
-        protected internal static ConcurrentDictionary<string, IProcessEngine> processEngines = new ConcurrentDictionary<string, IProcessEngine>();
-        protected internal static IDictionary<string, IProcessEngineInfo> processEngineInfosByName = new Dictionary<string, IProcessEngineInfo>();
-        protected internal static IDictionary<string, IProcessEngineInfo> processEngineInfosByResourceUrl = new Dictionary<string, IProcessEngineInfo>();
-        protected internal static IList<IProcessEngineInfo> processEngineInfos = new List<IProcessEngineInfo>();
-
-        /// <summary>
-        /// Initializes all process engines that can be found on the classpath for resources <code>activiti.cfg.xml</code> (plain Activiti style configuration) and for resources
-        /// <code>activiti-context.xml</code> (Spring style configuration).
-        /// </summary>
-        public void Init()
-        {
-            lock (syncRoot)
-            {
-                if (!Initialized)
-                {
-                    if (processEngines is null)
-                    {
-                        processEngines = new ConcurrentDictionary<string, IProcessEngine>();
-                    }
-                    log.LogInformation("Initializing process engine using configuration '{}'");
-                    InitProcessEngineFromResource();
-                    Initialized = true;
-                }
-                else
-                {
-                    log.LogInformation("Process engines already initialized");
-                }
-            }
-        }
+        private readonly static ConcurrentDictionary<string, IProcessEngine> processEngines = new ConcurrentDictionary<string, IProcessEngine>();
+        private readonly static IDictionary<string, IProcessEngineInfo> processEngineInfosByName = new Dictionary<string, IProcessEngineInfo>();
+        private readonly static IDictionary<string, IProcessEngineInfo> processEngineInfosByResourceUrl = new Dictionary<string, IProcessEngineInfo>();
+        private readonly static IList<IProcessEngineInfo> processEngineInfos = new List<IProcessEngineInfo>();
 
         /// <summary>
         /// Registers the given process engine. No <seealso cref="IProcessEngineInfo"/> will be available for this process engine. An engine that is registered will be closed when the <seealso cref="ProcessEngines#destroy()"/>
@@ -101,6 +58,7 @@ namespace Sys.Workflow.Engine
         public static void RegisterProcessEngine(IProcessEngine processEngine)
         {
             processEngines.AddOrUpdate(processEngine.Name, processEngine, (key, old) => processEngine);
+            InitProcessEngineFromResource(processEngine);
         }
 
         /// <summary>
@@ -111,24 +69,24 @@ namespace Sys.Workflow.Engine
             processEngines.TryRemove(processEngine.Name, out _);
         }
 
-        private IProcessEngineInfo InitProcessEngineFromResource()
+        public static void InitProcessEngineFromResource()
         {
-            IProcessEngineInfo processEngineInfo = null;
-            string processEngineName = null;
+
+        }
+
+        private static IProcessEngineInfo InitProcessEngineFromResource(IProcessEngine processEngine)
+        {
+            IProcessEngineInfo processEngineInfo;
             try
             {
-                log.LogInformation("initializing process engine");
-                IProcessEngine processEngine = BuildProcessEngine();
-                processEngineName = processEngine.Name;
-                log.LogInformation($"initialised process engine {processEngineName}");
-                processEngineInfo = new ProcessEngineInfoImpl(processEngineName, null);
-                processEngines.AddOrUpdate(processEngineName, processEngine, (name, engine) => processEngine);
-                processEngineInfosByName[processEngineName] = processEngineInfo;
+                log.LogInformation($"initialised process engine {processEngine.Name}");
+                processEngineInfo = new ProcessEngineInfoImpl(processEngine.Name, null);
+                processEngineInfosByName[processEngine.Name] = processEngineInfo;
             }
             catch (Exception e)
             {
                 log.LogError(e, $"Exception while initializing process engine: {e.Message}");
-                processEngineInfo = new ProcessEngineInfoImpl(null, GetExceptionString(e));
+                _ = new ProcessEngineInfoImpl(null, e.StackTrace);
                 throw e;
             }
 
@@ -137,30 +95,9 @@ namespace Sys.Workflow.Engine
             return processEngineInfo;
         }
 
-        private string GetExceptionString(Exception e)
-        {
-            Console.WriteLine(e.StackTrace);
-            return e.StackTrace;
-        }
-
-        private IProcessEngine BuildProcessEngine()
-        {
-            try
-            {
-                ProcessEngineConfiguration engineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
-
-                return engineConfig.BuildProcessEngine();
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, $"buld process engine failed.{ex.Message}");
-                throw ex;
-            }
-        }
-
         /// <summary>
         /// Get initialization results. </summary>
-        public IList<IProcessEngineInfo> ProcessEngineInfos
+        public static IList<IProcessEngineInfo> ProcessEngineInfos
         {
             get
             {
@@ -172,14 +109,14 @@ namespace Sys.Workflow.Engine
         /// Get initialization results. Only info will we available for process engines which were added in the <seealso cref="ProcessEngines#init()"/>. No <seealso cref="IProcessEngineInfo"/> is available for engines which were
         /// registered programatically.
         /// </summary>
-        public IProcessEngineInfo GetProcessEngineInfo(string processEngineName)
+        public static IProcessEngineInfo GetProcessEngineInfo(string processEngineName)
         {
             processEngineInfosByName.TryGetValue(processEngineName, out var pe);
 
             return pe;
         }
 
-        public IProcessEngine DefaultProcessEngine
+        public static IProcessEngine DefaultProcessEngine
         {
             get
             {
@@ -187,43 +124,56 @@ namespace Sys.Workflow.Engine
             }
         }
 
+        public static IProcessEngine CreateProcessEngine(ProcessEngineConfiguration processEngineConfig)
+        {
+            if (processEngineConfig is null)
+            {
+                throw new ArgumentNullException(nameof(processEngineConfig));
+            }
+            IProcessEngine engine = processEngineConfig.BuildProcessEngine();
+
+            return engine;
+        }
+
+        public static IProcessEngine CreateProcessEngine(string processEngineName)
+        {
+            if (string.IsNullOrWhiteSpace(processEngineName))
+            {
+                throw new ArgumentException($"“{nameof(processEngineName)}”不能为 null 或空白。", nameof(processEngineName));
+            }
+
+            ProcessEngineConfiguration processEngineConfig = new StandaloneProcessEngineConfiguration(
+                    new HistoryServiceImpl(),
+                    new TaskServiceImpl(),
+                    new DynamicBpmnServiceImpl(),
+                    new RepositoryServiceImpl(),
+                    new RuntimeServiceImpl(),
+                    new ManagementServiceImpl(),
+                    //sp.GetService<IAsyncExecutor>(),
+                    null,
+                    ProcessEngineServiceProvider.Resolve<IConfiguration>())
+            {
+                ProcessEngineName = processEngineName
+            };
+            return CreateProcessEngine(processEngineConfig);
+        }
+
         /// <summary>
         /// obtain a process engine by name.
         /// </summary>
         /// <param name="processEngineName">
         ///          is the name of the process engine or null for the default process engine. </param>
-        public IProcessEngine GetProcessEngine(string processEngineName)
+        public static IProcessEngine GetProcessEngine(string processEngineName)
         {
-            if (!Initialized)
-            {
-                Init();
-            }
-
             processEngines.TryGetValue(processEngineName, out var engine);
 
             return engine;
         }
 
         /// <summary>
-        /// retries to initialize a process engine that previously failed.
-        /// </summary>
-        public IProcessEngineInfo Retry()
-        {
-            log.LogDebug($"retying initializing of resource.");
-            try
-            {
-                return InitProcessEngineFromResource();
-            }
-            catch (Exception e)
-            {
-                throw new ActivitiIllegalArgumentException("retry failed.", e);
-            }
-        }
-
-        /// <summary>
         /// provides access to process engine to application clients in a managed server environment.
         /// </summary>
-        public IDictionary<string, IProcessEngine> ProcessEngines
+        public static IDictionary<string, IProcessEngine> ProcessEngines
         {
             get
             {
@@ -234,49 +184,30 @@ namespace Sys.Workflow.Engine
         /// <summary>
         /// closes all process engines. This method should be called when the server shuts down.
         /// </summary>
-        public void Destroy()
+        public static void Destroy()
         {
             lock (syncRoot)
             {
-                if (Initialized)
+                IDictionary<string, IProcessEngine> engines = new Dictionary<string, IProcessEngine>(processEngines);
+                processEngines.Clear();
+
+                foreach (string processEngineName in engines.Keys)
                 {
-                    IDictionary<string, IProcessEngine> engines = new Dictionary<string, IProcessEngine>(processEngines);
-                    processEngines = new ConcurrentDictionary<string, IProcessEngine>();
-
-                    foreach (string processEngineName in engines.Keys)
+                    IProcessEngine processEngine = engines[processEngineName];
+                    try
                     {
-                        IProcessEngine processEngine = engines[processEngineName];
-                        try
-                        {
-                            processEngine.Close();
-                        }
-                        catch (Exception e)
-                        {
-                            log.LogError(e, $"exception while closing {(processEngineName is null ? "the default process engine" : "process engine " + processEngineName)}");
-                        }
+                        processEngine.Close();
                     }
-
-                    processEngineInfosByName.Clear();
-                    processEngineInfosByResourceUrl.Clear();
-                    processEngineInfos.Clear();
-
-                    Initialized = false;
+                    catch (Exception e)
+                    {
+                        log.LogError(e, $"exception while closing {(processEngineName is null ? "the default process engine" : "process engine " + processEngineName)}");
+                    }
                 }
+
+                processEngineInfosByName.Clear();
+                processEngineInfosByResourceUrl.Clear();
+                processEngineInfos.Clear();
             }
         }
-
-        public bool Initialized
-        {
-            get
-            {
-                return isInitialized;
-            }
-            set
-            {
-                isInitialized = value;
-            }
-        }
-
     }
-
 }

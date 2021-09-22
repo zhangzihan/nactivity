@@ -51,17 +51,17 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             ProcessEngineConfiguration processEngineConfig = commandContext.ProcessEngineConfiguration;
 
-            IExecutionEntity executionEntity = fetchExecutionEntity(commandContext, job.ExecutionId);
+            IExecutionEntity executionEntity = FetchExecutionEntity(commandContext, job.ExecutionId);
             FlowElement currentFlowElement = executionEntity is object ? executionEntity.CurrentFlowElement : null;
 
             string failedJobRetryTimeCycleValue = null;
-            if (currentFlowElement is ServiceTask)
+            if (currentFlowElement is ServiceTask task)
             {
-                failedJobRetryTimeCycleValue = ((ServiceTask)currentFlowElement).FailedJobRetryTimeCycleValue;
+                failedJobRetryTimeCycleValue = task.FailedJobRetryTimeCycleValue;
             }
 
-            IAbstractJobEntity newJobEntity = null;
-            if (currentFlowElement is null || ReferenceEquals(failedJobRetryTimeCycleValue, null))
+            IAbstractJobEntity newJobEntity;
+            if (currentFlowElement is null || failedJobRetryTimeCycleValue is null)
             {
 
                 log.LogDebug("activity or FailedJobRetryTimerCycleValue is null in job " + jobId + ". only decrementing retries.");
@@ -79,12 +79,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (!job.Duedate.HasValue || JobFields.JOB_TYPE_MESSAGE.Equals(job.JobType))
                 {
                     // add wait time for failed async job
-                    newJobEntity.Duedate = calculateDueDate(commandContext, processEngineConfig.AsyncFailedJobWaitTime, null);
+                    newJobEntity.Duedate = CalculateDueDate(commandContext, processEngineConfig.AsyncFailedJobWaitTime, null);
                 }
                 else
                 {
                     // add default wait time for failed job
-                    newJobEntity.Duedate = calculateDueDate(commandContext, processEngineConfig.DefaultFailedJobWaitTime, job.Duedate);
+                    newJobEntity.Duedate = CalculateDueDate(commandContext, processEngineConfig.DefaultFailedJobWaitTime, job.Duedate);
                 }
 
             }
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 {
                     DurationHelper durationHelper = new DurationHelper(failedJobRetryTimeCycleValue, processEngineConfig.Clock);
                     int jobRetries = job.Retries;
-                    if (ReferenceEquals(job.ExceptionMessage, null))
+                    if (job.ExceptionMessage is null)
                     {
                         // change default retries to the ones configured
                         jobRetries = durationHelper.Times;
@@ -111,8 +111,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
                     newJobEntity.Duedate = durationHelper.DateAfter;
 
-                    if (ReferenceEquals(job.ExceptionMessage, null))
-                    { 
+                    if (job.ExceptionMessage is null)
+                    {
                         // is it the first exception
                         log.LogDebug("Applying JobRetryStrategy '" + failedJobRetryTimeCycleValue + "' the first time for job " + job.Id + " with " + durationHelper.Times + " retries");
 
@@ -148,7 +148,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             return null;
         }
 
-        protected internal virtual DateTime calculateDueDate(ICommandContext commandContext, int waitTimeInSeconds, DateTime? oldDate)
+        protected internal virtual DateTime CalculateDueDate(ICommandContext commandContext, int waitTimeInSeconds, DateTime? oldDate)
         {
             DateTime newDateCal = DateTime.Now;
             if (oldDate is object)
@@ -176,9 +176,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
         }
 
-        protected internal virtual IExecutionEntity fetchExecutionEntity(ICommandContext commandContext, string executionId)
+        protected internal virtual IExecutionEntity FetchExecutionEntity(ICommandContext commandContext, string executionId)
         {
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 return null;
             }

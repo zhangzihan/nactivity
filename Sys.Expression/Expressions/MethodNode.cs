@@ -26,6 +26,7 @@ using System.Runtime.Serialization;
 using Spring.Expressions.Processors;
 using Spring.Util;
 using Spring.Reflection.Dynamic;
+using System.Dynamic;
 
 namespace Spring.Expressions
 {
@@ -48,7 +49,7 @@ namespace Spring.Expressions
         private bool cachedIsParamArray = false;
         private Type paramArrayType;
         private int argumentCount;
-        private SafeMethod cachedInstanceMethod;
+        private IDynamicMethod cachedInstanceMethod;
         private int cachedInstanceMethodHash;
 
         /// <summary>
@@ -70,6 +71,15 @@ namespace Spring.Expressions
 
             extensionMethodProcessorMap.Add("date", new DateConversionProcessor());
             extensionMethodProcessorMap.Add("isnull", new IsNullValueConversionProcessor());
+
+            extensionMethodProcessorMap.Add("IIF", new Func<bool, object, object, object>((b, x, y) =>
+            {
+                return b ? x : y;
+            }));
+            extensionMethodProcessorMap.Add("IF", new Func<bool, object, object, object>((b, x, y) =>
+            {
+                return b ? x : y;
+            }));
         }
 
         /// <summary>
@@ -87,7 +97,7 @@ namespace Spring.Expressions
         {
         }
 
-        private object syncRoot = new();
+        private readonly object syncRoot = new();
 
         /// <summary>
         /// Returns node's value for the given context.
@@ -119,9 +129,11 @@ namespace Spring.Expressions
                     }
                 }
 
+                var method = extensionMethodProcessorMap[methodName];
                 // try extension methods
-                methodCallProcessor = (IMethodCallProcessor)extensionMethodProcessorMap[methodName];
+                if (method is IMethodCallProcessor)
                 {
+                    methodCallProcessor = method as IMethodCallProcessor;
                     // user-defined extension method processor?
                     if (methodCallProcessor is null && evalContext.Variables is object)
                     {
@@ -129,9 +141,13 @@ namespace Spring.Expressions
                         methodCallProcessor = temp as IMethodCallProcessor;
                     }
                 }
+                else if (method is Delegate delegateMethod)
+                {
+                    cachedInstanceMethod = new SafeDelegateMethod(delegateMethod);
+                }
 
                 // try instance method
-                if (context is object)
+                if (context is not null && cachedInstanceMethod is null)
                 {
                     // calculate checksum, if the cached method matches the current context
                     if (initialized)
@@ -175,7 +191,7 @@ namespace Spring.Expressions
             for (int i = 0; i < argValues.Length; i++)
             {
                 object arg = argValues[i];
-                if (arg is object)
+                if (arg is not null)
                     hash += s_primes[i] * arg.GetType().GetHashCode();
             }
             return hash;
@@ -196,9 +212,53 @@ namespace Spring.Expressions
 
             if (mi is null)
             {
+                var property = contextType.GetProperty(methodName);
+                if (property is not null && property.GetValue(context) is Delegate methodDelegate)
+                {
+                    mi = methodDelegate.Method;
+
+                    SetParameters(mi);
+
+                    cachedInstanceMethod = new SafeDelegateMethod(methodDelegate);
+                    cachedInstanceMethodHash = CalculateMethodHash(contextType, argValues);
+
+                    return;
+                }
+            }
+
+            //if (mi is null && context is DynamicObject)
+            //{
+            //    var method = new SafeDyanmicObjectMethod(context, methodName);
+            //    var member = method.GetMember();
+
+            //    if (member is Delegate methodDelegate)
+            //    {
+            //        SetParameters(methodDelegate.Method);
+            //    }
+            //    else if (member is MethodInfo)
+            //    {
+            //        SetParameters(member);
+            //    }
+
+            //    cachedInstanceMethod = method;
+            //    cachedInstanceMethodHash = CalculateMethodHash(contextType, argValues);
+
+            //    return;
+            //}
+
+            if (mi is null)
+            {
                 return;
             }
             else
+            {
+                SetParameters(mi);
+
+                cachedInstanceMethod = new SafeMethod(mi);
+                cachedInstanceMethodHash = CalculateMethodHash(contextType, argValues);
+            }
+
+            void SetParameters(MethodInfo mi)
             {
                 ParameterInfo[] parameters = mi.GetParameters();
                 if (parameters.Length > 0)
@@ -211,9 +271,6 @@ namespace Spring.Expressions
                         argumentCount = parameters.Length;
                     }
                 }
-
-                cachedInstanceMethod = new SafeMethod(mi);
-                cachedInstanceMethodHash = CalculateMethodHash(contextType, argValues);
             }
         }
 

@@ -75,7 +75,7 @@ namespace Spring.Objects.Factory.Support
             : base(original)
         {
             GenericObjectDefinition god = original as GenericObjectDefinition;
-            if (god is object)
+            if (god is not null)
             {
                 this.parentName = god.parentName;
             }

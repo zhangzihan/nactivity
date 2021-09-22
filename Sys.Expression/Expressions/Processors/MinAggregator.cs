@@ -46,7 +46,7 @@ namespace Spring.Expressions.Processors
             object minItem = null;
             foreach (object item in source)
             {
-                if ((minItem is null && item is object) || (CompareUtils.Compare(minItem, item) > 0))
+                if ((minItem is null && item is not null) || (CompareUtils.Compare(minItem, item) > 0))
                 {
                     minItem = item;
                 }

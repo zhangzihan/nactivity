@@ -162,7 +162,6 @@ namespace Sys.Workflow
                 .AddDataBaseReader()
                 .AddAsyncExecutor()
                 .AddProcessEngineConfiguration()
-                .AddProcessEngineFactory()
                 .AddProcessEngineService();
 
             return builder;

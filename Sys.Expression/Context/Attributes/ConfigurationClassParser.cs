@@ -32,11 +32,11 @@ namespace Spring.Context.Attributes
     /// </summary>
     public class ConfigurationClassParser
     {
-        private Collections.Generic.ISet<ConfigurationClass> _configurationClasses = new HashedSet<ConfigurationClass>();
+        private readonly Collections.Generic.ISet<ConfigurationClass> _configurationClasses = new HashedSet<ConfigurationClass>();
 
-        private Stack<ConfigurationClass> _importStack = new();
+        private readonly Stack<ConfigurationClass> _importStack = new();
 
-        private IProblemReporter _problemReporter;
+        private readonly IProblemReporter _problemReporter;
 
         /// <summary>
         /// Initializes a new instance of the ConfigurationClassParser class.
@@ -85,7 +85,7 @@ namespace Spring.Context.Attributes
         {
             DoProcessConfigurationClass(configurationClass);
 
-            if (ConfigurationClasses.Contains(configurationClass) && configurationClass.ObjectName is object)
+            if (ConfigurationClasses.Contains(configurationClass) && configurationClass.ObjectName is not null)
             {
                 // Explicit object definition found, probably replacing an import.
                 // Let's remove the old one and go with the new one.
@@ -103,9 +103,7 @@ namespace Spring.Context.Attributes
             {
                 foreach (Attribute importAttribute in importAttributes)
                 {
-                    ImportAttribute attrib = importAttribute as ImportAttribute;
-
-                    if (null != attrib)
+                    if (importAttribute is ImportAttribute attrib)
                     {
                         ProcessImport(configurationClass, attrib.Types);
                     }
@@ -118,9 +116,7 @@ namespace Spring.Context.Attributes
             {
                 foreach (Attribute importResourceAttribute in importResourceAttributes)
                 {
-                    ImportResourceAttribute attrib = importResourceAttribute as ImportResourceAttribute;
-
-                    if (null != attrib)
+                    if (importResourceAttribute is ImportResourceAttribute attrib)
                     {
                         foreach (string resource in attrib.Resources)
                         {
@@ -150,7 +146,7 @@ namespace Spring.Context.Attributes
 
             foreach (MethodInfo method in theClass.GetMethods())
             {
-                if (Attribute.GetCustomAttribute(method, customAttribute) is object)
+                if (Attribute.GetCustomAttribute(method, customAttribute) is not null)
                 {
                     methods.Add(method);
                 }

@@ -47,8 +47,8 @@ namespace Spring.Context.Support
 	/// <seealso cref="Spring.Context.Support.DelegatingMessageSource"/>
     public class StaticMessageSource : AbstractMessageSource
     {
-        private Dictionary<string, string> _messages;
-        private Dictionary<string, object> _objects;
+        private readonly Dictionary<string, string> _messages;
+        private readonly Dictionary<string, object> _objects;
 
 		/// <summary>
 		/// Creates a new instance of the
@@ -75,9 +75,8 @@ namespace Spring.Context.Support
 		protected override string ResolveMessage(string code, CultureInfo cultureInfo)
 		{
 		    string key = GetLookupKey(code, cultureInfo);
-		    string message;
-		    _messages.TryGetValue(key, out message);
-		    return message;
+            _messages.TryGetValue(key, out string message);
+            return message;
 		}
 
         /// <summary>
@@ -95,8 +94,7 @@ namespace Spring.Context.Support
         protected override object ResolveObject(string code, CultureInfo cultureInfo)
         {
             string key = GetLookupKey(code, cultureInfo);
-            object obj;
-            _objects.TryGetValue(key, out obj);
+            _objects.TryGetValue(key, out object obj);
             return obj;
         }
 
@@ -134,7 +132,7 @@ namespace Spring.Context.Support
 		/// <seealso cref="Spring.Context.Support.AbstractMessageSource.ApplyResourcesToObject(object, string, CultureInfo)"/>
 		protected override void ApplyResourcesToObject(object value, string objectName, CultureInfo cultureInfo)
 		{
-		    if(value is object) 
+		    if(value is not null) 
 		    {
 		        new ComponentResourceManager(value.GetType()).ApplyResources(value, objectName, cultureInfo);
 		    }

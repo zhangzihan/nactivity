@@ -101,7 +101,7 @@ namespace Spring.Core
         {
             bool satisfied = false;
             MethodInfo method = datum as MethodInfo;
-            if (method is object)
+            if (method is not null)
             {
                 satisfied = method.ReturnType.Equals(ReturnType);
             }

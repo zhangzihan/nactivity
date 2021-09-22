@@ -108,7 +108,7 @@ namespace Spring.Core.TypeResolution
             try
             {
                 type = TypeRegistry.ResolveType(typeName);
-                return type is object;
+                return type is not null;
             }
             catch
             {

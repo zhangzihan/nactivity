@@ -49,7 +49,7 @@ namespace Spring.Objects.Factory.Support
         /// <param name="typeName">the name of the annotation type</param>
 	    public AutowireCandidateQualifier(string typeName)
         {
-		    Trace.Assert(typeName is object, "Type name must not be null");
+		    Trace.Assert(typeName is not null, "Type name must not be null");
 		    _typeName = typeName;
 	    }
 
@@ -75,7 +75,7 @@ namespace Spring.Objects.Factory.Support
         /// <param name="value">the annotation value to match</param>
 	    public AutowireCandidateQualifier(string typeName, object value)
         {
-		    Trace.Assert(typeName is object, "Type name must not be null");
+		    Trace.Assert(typeName is not null, "Type name must not be null");
 		    _typeName = typeName;
 		    SetAttribute(VALUE_KEY, value);
 	    }

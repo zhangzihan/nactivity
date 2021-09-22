@@ -34,9 +34,9 @@ namespace Spring.Core
     /// <author>Mark Pollack (.NET)</author>
     public class MethodParameter
     {
-        private MethodInfo methodInfo;
+        private readonly MethodInfo methodInfo;
 
-        private ConstructorInfo constructorInfo;
+        private readonly ConstructorInfo constructorInfo;
 
         private readonly int parameterIndex;
 
@@ -75,9 +75,9 @@ namespace Spring.Core
             {
                 if (this.parameterType is null)
                 {
-                    this.parameterType = (this.methodInfo is object
+                    this.parameterType = (this.methodInfo is not null
                                               ? ReflectionUtils.GetParameterTypes(this.methodInfo.GetParameters())[parameterIndex]
-                                              : ReflectionUtils.GetParameterTypes(this.constructorInfo.GetParameters())[parameterIndex]);                                        
+                                              : ReflectionUtils.GetParameterTypes(this.constructorInfo.GetParameters())[parameterIndex]);
                 }
                 return this.parameterType;
             }
@@ -93,13 +93,15 @@ namespace Spring.Core
         /// <returns>the corresponding MethodParameter instance</returns>
         public static MethodParameter ForMethodOrConstructor(object methodOrConstructorInfo, int parameterIndex)
         {
-            if (methodOrConstructorInfo is MethodInfo)
+            if (methodOrConstructorInfo is MethodInfo info)
             {
-                return new MethodParameter((MethodInfo) methodOrConstructorInfo, parameterIndex);
-            } else if (methodOrConstructorInfo is ConstructorInfo)
+                return new MethodParameter(info, parameterIndex);
+            }
+            else if (methodOrConstructorInfo is ConstructorInfo cinfo)
             {
-                return new MethodParameter((ConstructorInfo) methodOrConstructorInfo, parameterIndex);
-            } else
+                return new MethodParameter(cinfo, parameterIndex);
+            }
+            else
             {
                 throw new ArgumentException("Given object [" + methodOrConstructorInfo + "] is nieth a MethodInfo nor a ConstructorInfo");
             }
@@ -111,10 +113,11 @@ namespace Spring.Core
         /// <returns>the parameter name.</returns>
         public string ParameterName()
         {
-            if (methodInfo is object)
+            if (methodInfo is not null)
             {
                 return methodInfo.GetParameters()[parameterIndex].Name;
-            } else
+            }
+            else
             {
                 return constructorInfo.GetParameters()[parameterIndex].Name;
             }
@@ -145,7 +148,7 @@ namespace Spring.Core
         {
             get
             {
-                if (methodInfo is object)
+                if (methodInfo is not null)
                     return Attribute.GetCustomAttributes(methodInfo.GetParameters()[parameterIndex]);
                 else
                     return Attribute.GetCustomAttributes(constructorInfo.GetParameters()[parameterIndex]);
@@ -159,7 +162,7 @@ namespace Spring.Core
         {
             get
             {
-                if (methodInfo is object)
+                if (methodInfo is not null)
                     return Attribute.GetCustomAttributes(methodInfo);
                 else
                     return Attribute.GetCustomAttributes(constructorInfo);

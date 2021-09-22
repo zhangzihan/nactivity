@@ -280,7 +280,7 @@ namespace Spring.Util
         /// </param>
         public static void AssertArgumentType(object argument, string argumentName, Type requiredType, string message)
         {
-            if (argument is object && requiredType is object && !requiredType.IsInstanceOfType(argument))
+            if (argument is not null && requiredType is not null && !requiredType.IsInstanceOfType(argument))
             {
                 ThrowArgumentException(message, argumentName);
             }

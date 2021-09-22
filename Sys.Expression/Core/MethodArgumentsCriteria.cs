@@ -101,7 +101,7 @@ namespace Spring.Core
         {
             bool satisfied = false;
             MethodInfo method = datum as MethodInfo;
-            if (method is object)
+            if (method is not null)
             {
                 bool isParamArray = false;
                 Type paramArrayType = null;
@@ -115,7 +115,7 @@ namespace Spring.Core
                         paramArrayType = lastParameter.ParameterType.GetElementType();
                     }
                 }
-                if (parametersBeingChecked is object
+                if (parametersBeingChecked is not null
                     && parametersBeingChecked.Length == _parameters.Length)
                 {
                     satisfied = true;

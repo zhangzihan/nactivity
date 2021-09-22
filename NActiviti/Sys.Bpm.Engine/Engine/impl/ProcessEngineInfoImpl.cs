@@ -22,9 +22,9 @@ namespace Sys.Workflow.Engine.Impl
 
         private const long serialVersionUID = 1L;
 
-        internal string name;
-        internal string resourceUrl;
-        internal string exception;
+        private readonly string name;
+        private readonly string resourceUrl;
+        private readonly string exception;
 
         public ProcessEngineInfoImpl(string name, string exception)
         {

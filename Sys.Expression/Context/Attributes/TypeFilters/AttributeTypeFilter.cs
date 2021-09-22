@@ -49,7 +49,7 @@ namespace Spring.Context.Attributes.TypeFilters
             if (RequiredType is null)
                 return false;
 
-            return (Attribute.GetCustomAttribute(type, RequiredType) is object);
+            return (Attribute.GetCustomAttribute(type, RequiredType) is not null);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Spring.Context.Attributes.TypeFilters
         /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
-            return string.Format("Required Type: {0}", RequiredType is object ? RequiredType.FullName : "");
+            return string.Format("Required Type: {0}", RequiredType is not null ? RequiredType.FullName : "");
         }
 
     }

@@ -111,7 +111,7 @@ namespace Spring.Core
         {
             bool satisfied = false;
             MethodBase method = datum as MethodBase;
-            if (method is object)
+            if (method is not null)
             {
                 satisfied = PatternMatchUtils.SimpleMatch(pattern.ToLower(), method.Name.ToLower());
             }

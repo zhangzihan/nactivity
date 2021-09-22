@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                 var targetElement = ProcessDefinitionUtil.GetFlowElement(entity.ProcessDefinitionId, entity.TargetActivityId);
                 if (targetElement is UserTask)
                 {
-                    var pec = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+                    var pec = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
                     IExecutionEntity execution = pec.ExecutionEntityManager.FindById<IExecutionEntity>(entity.ExecutionId);
                     Notify(execution);
                 }

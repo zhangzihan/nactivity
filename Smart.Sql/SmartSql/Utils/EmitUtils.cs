@@ -128,7 +128,7 @@ namespace SmartSql.Utils
                 return;
             }
 
-            if ((convertOp = GetConvertOperator(from, to)) is object)
+            if ((convertOp = GetConvertOperator(from, to)) is not null)
             {
                 il.Emit(OpCodes.Call, convertOp);
             }

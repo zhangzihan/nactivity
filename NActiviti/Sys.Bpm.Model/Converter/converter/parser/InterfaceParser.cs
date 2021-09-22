@@ -53,7 +53,7 @@ namespace Sys.Workflow.Bpmn.Converters.Parsers
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_IN_MESSAGE.Equals(xtr.LocalName))
                     {
                         string inMessageRef = xtr.ElementText;
-                        if (operation is object && !string.IsNullOrWhiteSpace(inMessageRef))
+                        if (operation is not null && !string.IsNullOrWhiteSpace(inMessageRef))
                         {
                             operation.InMessageRef = ParseMessageRef(inMessageRef.Trim(), model);
                         }
@@ -62,7 +62,7 @@ namespace Sys.Workflow.Bpmn.Converters.Parsers
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_OUT_MESSAGE.Equals(xtr.LocalName))
                     {
                         string outMessageRef = xtr.ElementText;
-                        if (operation is object && !string.IsNullOrWhiteSpace(outMessageRef))
+                        if (operation is not null && !string.IsNullOrWhiteSpace(outMessageRef))
                         {
                             operation.OutMessageRef = ParseMessageRef(outMessageRef.Trim(), model);
                         }
@@ -70,7 +70,7 @@ namespace Sys.Workflow.Bpmn.Converters.Parsers
                     }
                     else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_OPERATION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        if (operation is object && !string.IsNullOrWhiteSpace(operation.ImplementationRef))
+                        if (operation is not null && !string.IsNullOrWhiteSpace(operation.ImplementationRef))
                         {
                             interfaceObject.Operations.Add(operation);
                         }

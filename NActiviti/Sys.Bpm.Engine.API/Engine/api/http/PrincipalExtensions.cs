@@ -55,7 +55,7 @@ namespace Sys.Extentions
             if (!string.IsNullOrWhiteSpace(name)) return name;
 
             var sub = principal.FindFirst(JwtClaimTypes.Subject);
-            if (sub is object) return sub.Value;
+            if (sub is not null) return sub.Value;
 
             return string.Empty;
         }
@@ -69,7 +69,7 @@ namespace Sys.Extentions
         public static string GetEmail(this ClaimsPrincipal principal)
         {
             var email = principal.FindFirst(JwtClaimTypes.Email);
-            if (email is object) return email.Value;
+            if (email is not null) return email.Value;
 
             return string.Empty;
         }
@@ -83,7 +83,7 @@ namespace Sys.Extentions
         public static string GetPhone(this ClaimsPrincipal principal)
         {
             var phone = principal.FindFirst(JwtClaimTypes.PhoneNumber);
-            if (phone is object) return phone.Value;
+            if (phone is not null) return phone.Value;
 
             return string.Empty;
         }
@@ -97,7 +97,7 @@ namespace Sys.Extentions
         public static string GetTenantId(this ClaimsPrincipal principal)
         {
             var tenantId = principal.FindFirst(JwtClaimTypes.TenantId);
-            if (tenantId is object) return tenantId.Value;
+            if (tenantId is not null) return tenantId.Value;
 
             return string.Empty;
         }

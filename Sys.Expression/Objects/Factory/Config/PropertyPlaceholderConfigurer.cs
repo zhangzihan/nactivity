@@ -303,7 +303,7 @@ namespace Spring.Objects.Factory.Config
                     }
 				    visitedPlaceholders.Add(placeholder);
 					string resolvedValue = ResolvePlaceholder(placeholder, properties, environmentVariableMode);
-					if (resolvedValue is object)
+					if (resolvedValue is not null)
 					{
                         resolvedValue = ParseString(properties, resolvedValue, visitedPlaceholders);
 

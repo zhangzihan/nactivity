@@ -404,7 +404,7 @@ namespace Spring.Util
         /// </returns>
         public static bool NullSafeEquals(object o1, object o2)
         {
-            return (o1 == o2 || (o1 is object && o1.Equals(o2)));
+            return (o1 == o2 || (o1 is not null && o1.Equals(o2)));
         }
 
 
@@ -417,7 +417,7 @@ namespace Spring.Util
         /// </summary>
         public static int NullSafeHashCode(object o1)
         {
-            return (o1 is object ? o1.GetHashCode() : 0);
+            return (o1 is not null ? o1.GetHashCode() : 0);
         }
 
         /// <summary>

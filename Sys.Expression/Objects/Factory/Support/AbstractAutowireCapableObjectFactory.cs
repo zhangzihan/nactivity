@@ -168,9 +168,9 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         protected override Type GetTypeForFactoryMethod(string objectName, RootObjectDefinition definition)
         {
-            Type factoryType = null;
             bool isStatic = true;
 
+            Type factoryType;
             if (StringUtils.HasText(definition.FactoryObjectName))
             {
                 // check declared factory method return type on factory type...
@@ -239,7 +239,7 @@ namespace Spring.Objects.Factory.Support
         public override void ApplyObjectPropertyValues(object instance, string name)
         {
             RootObjectDefinition definition = GetMergedObjectDefinition(name, true);
-            if (definition is object)
+            if (definition is not null)
             {
                 log.LogDebug($"configuring object '{instance}' using definition '{name}'");
                 ApplyPropertyValues(name, definition, new ObjectWrapper(instance), definition.PropertyValues);
@@ -302,7 +302,7 @@ namespace Spring.Objects.Factory.Support
                 IObjectPostProcessor processor = ObjectPostProcessors[i];
                 IInstantiationAwareObjectPostProcessor inProc = processor as IInstantiationAwareObjectPostProcessor;
                 object theObject = inProc?.PostProcessBeforeInstantiation(objectType, objectName);
-                if (theObject is object)
+                if (theObject is not null)
                 {
                     return theObject;
                 }
@@ -405,7 +405,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         protected virtual ObjectDefinitionValueResolver CreateValueResolver()
         {
-            return cachedValueResolver ?? (cachedValueResolver = new ObjectDefinitionValueResolver(this));
+            return cachedValueResolver ??= new ObjectDefinitionValueResolver(this);
         }
 
         /// <summary>
@@ -565,7 +565,7 @@ namespace Spring.Objects.Factory.Support
                         IObjectPostProcessor processor = ObjectPostProcessors[i];
                         if (processor is IInstantiationAwareObjectPostProcessor instantiationAwareObjectPostProcessor)
                         {
-                            filteredPropInfo = filteredPropInfo ?? FilterPropertyInfoForDependencyCheck(wrapper);
+                            filteredPropInfo ??= FilterPropertyInfoForDependencyCheck(wrapper);
                             properties = instantiationAwareObjectPostProcessor.PostProcessPropertyValues(properties,
                                 filteredPropInfo, wrapper.WrappedInstance, name);
                             if (properties is null)
@@ -578,7 +578,7 @@ namespace Spring.Objects.Factory.Support
 
                 if (needsDepCheck)
                 {
-                    filteredPropInfo = filteredPropInfo ?? FilterPropertyInfoForDependencyCheck(wrapper);
+                    filteredPropInfo ??= FilterPropertyInfoForDependencyCheck(wrapper);
                     CheckDependencies(name, definition, filteredPropInfo, properties);
                 }
 
@@ -609,9 +609,8 @@ namespace Spring.Objects.Factory.Support
                         in definition.EventHandlerValues[eventName])
                 {
                     object handler = null;
-                    if (handlerValue.Source is RuntimeObjectReference)
+                    if (handlerValue.Source is RuntimeObjectReference roref)
                     {
-                        RuntimeObjectReference roref = (RuntimeObjectReference)handlerValue.Source;
                         handler = ResolveReference(definition, name, eventName, roref);
                     }
                     else if (handlerValue.Source is Type)
@@ -873,27 +872,22 @@ namespace Spring.Objects.Factory.Support
                 return definition;
             }
 
-
-
-            object instance = null;
-
-
-            IObjectWrapper instanceWrapper = null;
             bool eagerlyCached = false;
+            object instance;
             try
             {
                 // Give IInstantiationAwareObjectPostProcessors a chance to return a proxy instead of the target instance....
                 if (definition.HasObjectType)
                 {
                     instance = ApplyObjectPostProcessorsBeforeInstantiation(definition.ObjectType, name);
-                    if (instance is object)
+                    if (instance is not null)
                     {
                         return instance;
                     }
                 }
 
 
-                instanceWrapper = CreateObjectInstance(name, definition, arguments);
+                IObjectWrapper instanceWrapper = CreateObjectInstance(name, definition, arguments);
                 instance = instanceWrapper.WrappedInstance;
 
                 // eagerly cache singletons to be able to resolve circular references
@@ -981,7 +975,7 @@ namespace Spring.Objects.Factory.Support
             //TODO perf optimization when creating the same object
 
             ConstructorInfo[] ctors = DetermineConstructorsFromObjectPostProcessors(objectType, objectName);
-            if (ctors is object ||
+            if (ctors is not null ||
                 objectDefinition.ResolvedAutowireMode == AutoWiringMode.Constructor ||
                 objectDefinition.HasConstructorArgumentValues || !ObjectUtils.IsEmpty(arguments))
             {
@@ -1050,7 +1044,7 @@ namespace Spring.Objects.Factory.Support
                         SmartInstantiationAwareObjectPostProcessor iop =
                             (SmartInstantiationAwareObjectPostProcessor)objectPostProcessor;
                         ConstructorInfo[] ctors = iop.DetermineCandidateConstructors(objectType, objectName);
-                        if (ctors is object)
+                        if (ctors is not null)
                         {
                             return ctors;
                         }
@@ -1331,7 +1325,7 @@ namespace Spring.Objects.Factory.Support
             {
                 // #%&^! try to find the method with a boolean "force" parameter
                 targetMethod = target.GetType().GetMethod(destroyMethodName, MethodResolutionFlags, null, new Type[] { typeof(bool) }, null);
-                if (targetMethod is object)
+                if (targetMethod is not null)
                 {
                     usingForcingVersion = true;
                 }
@@ -1720,7 +1714,7 @@ namespace Spring.Objects.Factory.Support
         {
             MarkObjectAsCreated(name);
             RootObjectDefinition definition = GetMergedObjectDefinition(name, true);
-            if (definition is object)
+            if (definition is not null)
             {
                 return ConfigureObject(name, definition, new ObjectWrapper(target));
             }

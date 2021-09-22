@@ -61,20 +61,18 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireEvents(int type, ArrayList listeners)
 		{
 			ArrayList targets = null;
-			Listener l = null;
-			
-			lock(this)
+            lock (this)
 			{
 				if (listeners is null)
 					return ;
 				targets = (ArrayList) listeners.Clone();
 			}
 			
-			if (targets is object)
+			if (targets is not null)
 				 for (int i = 0; i < targets.Count; i++)
 				{
-					l = (Listener) targets[i];
-					fireEvent(type, l);
+                    Listener l = (Listener)targets[i];
+                    fireEvent(type, l);
 				}
 		}
 		public virtual void  fireLA(char c, int la)
@@ -99,7 +97,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 			{
 				v = (ArrayList) listeners.Clone();
 			}
-			if (v is object)
+			if (v is not null)
 				 for (int i = 0; i < v.Count; i++)
 					((Listener) v[i]).refresh();
 		}
@@ -109,7 +107,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		}
 		public virtual void  removeInputBufferListener(InputBufferListener l)
 		{
-			if (inputBufferListeners is object)
+			if (inputBufferListeners is not null)
 			{
 				ArrayList temp_arraylist;
 				object temp_object;

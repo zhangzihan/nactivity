@@ -55,7 +55,7 @@ namespace Spring.Objects.Factory.Support
 	    public virtual AbstractObjectDefinition CreateObjectDefinition(string typeName, string parent, AppDomain domain)
 	    {
             Type objectType = null;
-            if (StringUtils.HasText(typeName) && domain is object)
+            if (StringUtils.HasText(typeName) && domain is not null)
             {
                 try
                 {
@@ -66,7 +66,7 @@ namespace Spring.Objects.Factory.Support
             }
             if (StringUtils.IsNullOrEmpty(parent))
             {
-                if (objectType is object)
+                if (objectType is not null)
                 {                    
                     return new RootObjectDefinition(objectType);
 
@@ -80,7 +80,7 @@ namespace Spring.Objects.Factory.Support
             }
             else
             {
-                if (objectType is object)
+                if (objectType is not null)
                 {
                     ChildObjectDefinition childObjectDefinition = new(parent);
                     childObjectDefinition.ObjectType = objectType;

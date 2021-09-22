@@ -21,7 +21,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
     {
         public static void WriteMultiInstance(Activity activity, XMLStreamWriter xtw)
         {
-            if (activity.LoopCharacteristics is object)
+            if (activity.LoopCharacteristics is not null)
             {
                 MultiInstanceLoopCharacteristics multiInstanceObject = activity.LoopCharacteristics;
                 if (!string.IsNullOrWhiteSpace(multiInstanceObject.LoopCardinality) || !string.IsNullOrWhiteSpace(multiInstanceObject.InputDataItem) || !string.IsNullOrWhiteSpace(multiInstanceObject.CompletionCondition))

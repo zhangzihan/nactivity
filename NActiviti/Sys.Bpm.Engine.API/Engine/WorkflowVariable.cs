@@ -105,7 +105,7 @@ namespace Sys.Workflow.Services.Api.Commands
         {
             get
             {
-                if (TryGetValue(GLOBAL_APPROVALED_VARIABLE, out object approvaled) && approvaled is object)
+                if (TryGetValue(GLOBAL_APPROVALED_VARIABLE, out object approvaled) && approvaled is not null)
                 {
                     bool.TryParse(approvaled.ToString(), out bool result);
 

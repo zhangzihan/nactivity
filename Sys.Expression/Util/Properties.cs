@@ -108,11 +108,9 @@ namespace Spring.Util
 		/// <param name="stream">The stream to load from.</param>
 		public static void Load(IDictionary dictionary, Stream stream)
 		{
-			using (StreamReader streamReader = new(stream))
-			{
-				Load(dictionary, streamReader);
-			}
-		}
+            using StreamReader streamReader = new(stream);
+            Load(dictionary, streamReader);
+        }
 
 		/// <summary>
 		/// Reads a property list (key and element pairs) from a text reader.
@@ -124,11 +122,11 @@ namespace Spring.Util
 			bool isContinuation = false;
 			string key = null;
 			string value = null;
-			string line = null;
-			while ((line = textReader.ReadLine()) is object)
+            string line;
+            while ((line = textReader.ReadLine()) is not null)
 			{
 				line = RemoveLeadingWhitespace(line);
-				if (line is object && line.Length>0 && Comments.IndexOf(line[0]) == -1)
+				if (line is not null && line.Length>0 && Comments.IndexOf(line[0]) == -1)
 				{
 					if (!isContinuation)
 					{
@@ -140,7 +138,7 @@ namespace Spring.Util
 						key = keyvalue[0];
 						value = keyvalue[1];
 
-						if (value is object && value.EndsWith("\\"))
+						if (value is not null && value.EndsWith("\\"))
 						{
 							value = value.Substring(0, value.Length - 1);
 							isContinuation = true;
@@ -196,10 +194,8 @@ namespace Spring.Util
 		private static string[] SplitLine(string line)
 		{
 			string key = line;
-			string value = null;
-
-			int index = 0;
-			int len = line.Length;
+            int index = 0;
+            int len = line.Length;
 			for (; index < len; index++)
 			{
 				if (WhitespaceWithSeparators.IndexOf(line[index]) != -1)
@@ -222,11 +218,12 @@ namespace Spring.Util
 			// first ignore leading whitespace and initial separator
 			// (if one's there)
 			index++;
-			if (index > len)
-			{
+            string value;
+            if (index > len)
+            {
                 // this is an extension to support key-only lines and specifying null values
-			    value = null;
-			} 
+                value = null;
+            }
             else if (index == len)
             {
                 value = string.Empty;
@@ -237,7 +234,7 @@ namespace Spring.Util
                 value = RemoveLeadingWhitespace(value);
             }
 
-		    if (value is object && value.Length > 0 
+            if (value is not null && value.Length > 0 
                 && Separators.IndexOf(value[0]) != -1)
 			{
 				value = value.Substring(1);
@@ -268,7 +265,7 @@ namespace Spring.Util
 		public string GetProperty(string key, string def)
 		{
 			string val = this[key] as string;
-			return (val is object ? val : def);
+			return (val is not null ? val : def);
 		}
 
 		/// <summary>
@@ -277,14 +274,12 @@ namespace Spring.Util
 		/// <param name="stream">The stream to write to.</param>
 		public void List(Stream stream)
 		{
-			using (StreamWriter sw = new(stream))
-			{
-				foreach (DictionaryEntry de in this)
-				{
-					sw.WriteLine(de.Key + "=" + de.Value);
-				}
-			}
-		}
+            using StreamWriter sw = new(stream);
+            foreach (DictionaryEntry de in this)
+            {
+                sw.WriteLine(de.Key + "=" + de.Value);
+            }
+        }
 
 		/// <summary>
 		/// Sets the specified property key / value pair.
@@ -303,16 +298,14 @@ namespace Spring.Util
 		/// <param name="header">Arbitrary header information.</param>
 		public void Store(Stream stream, string header)
 		{
-			using (StreamWriter sw = new(stream))
-			{
-				sw.WriteLine(header);
+            using StreamWriter sw = new(stream);
+            sw.WriteLine(header);
 
-				foreach (DictionaryEntry de in this)
-				{
-					sw.WriteLine(de.Key + "=" + de.Value);
-				}
-			}
-		}
+            foreach (DictionaryEntry de in this)
+            {
+                sw.WriteLine(de.Key + "=" + de.Value);
+            }
+        }
 
 		#endregion
 

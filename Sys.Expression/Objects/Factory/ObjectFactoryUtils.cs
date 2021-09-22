@@ -421,7 +421,7 @@ namespace Spring.Objects.Factory
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFactoryDereference(string name)
         {
-            return name is object && name.Length > 1 && name[0] == '&';
+            return name is not null && name.Length > 1 && name[0] == '&';
         }
 
         private static IListableObjectFactory GetParentListableObjectFactoryIfAny(IListableObjectFactory factory)

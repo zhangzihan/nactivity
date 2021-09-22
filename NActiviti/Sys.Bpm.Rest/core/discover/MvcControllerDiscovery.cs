@@ -32,7 +32,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <returns></returns>
         public IEnumerable<MvcControllerInfo> GetControllers()
         {
-            if (_mvcControllers is object)
+            if (_mvcControllers is not null)
                 return _mvcControllers;
 
             _mvcControllers = new List<MvcControllerInfo>();
@@ -85,13 +85,13 @@ namespace Sys.Workflow.Cloud.Services.Core
 
         private static bool IsProtectedAction(MemberInfo controllerTypeInfo, MemberInfo actionMethodInfo)
         {
-            if (actionMethodInfo.GetCustomAttribute<AllowAnonymousAttribute>(true) is object)
+            if (actionMethodInfo.GetCustomAttribute<AllowAnonymousAttribute>(true) is not null)
                 return false;
 
-            if (controllerTypeInfo.GetCustomAttribute<AuthorizeAttribute>(true) is object)
+            if (controllerTypeInfo.GetCustomAttribute<AuthorizeAttribute>(true) is not null)
                 return true;
 
-            if (actionMethodInfo.GetCustomAttribute<AuthorizeAttribute>(true) is object)
+            if (actionMethodInfo.GetCustomAttribute<AuthorizeAttribute>(true) is not null)
                 return true;
 
             return false;

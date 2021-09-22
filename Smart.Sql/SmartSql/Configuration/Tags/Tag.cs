@@ -97,7 +97,7 @@ namespace SmartSql.Configuration.Tags
                 throw new PropertyArgumentNullException($"Tag property null {ToString()}");
             }
 
-            if (!string.IsNullOrWhiteSpace(Property) && context.Request is object)
+            if (!string.IsNullOrWhiteSpace(Property) && context.Request is not null)
             {
                 return ExpressionManager.GetValue(context.Request, Property, context.RequestParameters);
             }

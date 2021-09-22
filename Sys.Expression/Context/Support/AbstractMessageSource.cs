@@ -225,9 +225,9 @@ namespace Spring.Context.Support
         public string GetMessage(string name, CultureInfo culture, params object[] arguments)
         {
             string msg = GetMessageInternal(name, arguments, culture);
-            if (msg is object) return msg;
+            if (msg is not null) return msg;
             string fallback = GetDefaultMessage(name);
-            if (fallback is object) return fallback;
+            if (fallback is not null) return fallback;
             throw new NoSuchMessageException(name, culture);
         }
 
@@ -258,11 +258,11 @@ namespace Spring.Context.Support
         public string GetMessage(string name, string defaultMessage, CultureInfo culture, params object[] arguments)
         {
             string msg = GetMessageInternal(name, arguments, culture);
-            if (msg is object) return msg;
+            if (msg is not null) return msg;
             if (defaultMessage is null)
             {
                 string fallback = GetDefaultMessage(name);
-                if (fallback is object) return fallback;
+                if (fallback is not null) return fallback;
             }
             return RenderDefaultMessage(defaultMessage, arguments, culture);
         }
@@ -289,14 +289,14 @@ namespace Spring.Context.Support
             for (int i = 0; i < codes.Count; i++)
             {
                 string msg = GetMessageInternal(codes[i], resolvable.GetArguments(), culture);
-                if (msg is object) return msg;
+                if (msg is not null) return msg;
             }
-            if (resolvable.DefaultMessage is object)
+            if (resolvable.DefaultMessage is not null)
                 return RenderDefaultMessage(resolvable.DefaultMessage, resolvable.GetArguments(), culture);
             if (codes.Count > 0)
             {
                 string fallback = GetDefaultMessage(codes[0]);
-                if (fallback is object) return fallback;
+                if (fallback is not null) return fallback;
             }
             throw new NoSuchMessageException(codes.Count > 0 ? codes[codes.Count - 1] : null, culture);
         }
@@ -315,7 +315,7 @@ namespace Spring.Context.Support
         public object GetResourceObject(string name)
         {
             object resource = GetResourceInternal(name, CultureInfo.CurrentUICulture);
-            if (resource is object) return resource;
+            if (resource is not null) return resource;
             if (ParentMessageSource is object)
                 return ParentMessageSource.GetResourceObject(name, CultureInfo.CurrentUICulture);
             return null;
@@ -346,7 +346,7 @@ namespace Spring.Context.Support
         public object GetResourceObject(string name, CultureInfo culture)
         {
             object resource = GetResourceInternal(name, culture);
-            if (resource is object) return resource;
+            if (resource is not null) return resource;
             if (ParentMessageSource is object) return ParentMessageSource.GetResourceObject(name, culture);
             return null;
         }
@@ -393,7 +393,7 @@ namespace Spring.Context.Support
             if (code is null) return null;
             if (culture is null) culture = CultureInfo.CurrentUICulture;
 
-            if ((args is object && args.Length > 0))
+            if ((args is not null && args.Length > 0))
             {
                 // Resolve arguments eagerly, for the case where the message
                 // is defined in a parent MessageSource but resolvable arguments
@@ -403,7 +403,7 @@ namespace Spring.Context.Support
 
             string message = ResolveMessage(code, culture);
 
-            if (message is object) return FormatMessage(message, args, culture);
+            if (message is not null) return FormatMessage(message, args, culture);
 
             // Not found -> check parent, if any.
             return GetMessageFromParent(code, args, culture);
@@ -426,7 +426,7 @@ namespace Spring.Context.Support
             if (ParentMessageSource is object)
             {
                 AbstractMessageSource parent = ParentMessageSource as AbstractMessageSource;
-                if (parent is object)
+                if (parent is not null)
                 {
                     // Call internal method to avoid getting the default code back
                     // in case of "useCodeAsDefaultMessage" being activated.
@@ -516,8 +516,7 @@ namespace Spring.Context.Support
 
             for (int i = 0; i < args.Length; i++)
             {
-                IMessageSourceResolvable resolvable = args[i] as IMessageSourceResolvable;
-                if (resolvable is object) resolvedArgs[i] = GetMessage(resolvable, culture);
+                if (args[i] is IMessageSourceResolvable resolvable) resolvedArgs[i] = GetMessage(resolvable, culture);
                 else resolvedArgs[i] = args[i];
             }
 

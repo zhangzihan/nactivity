@@ -66,7 +66,7 @@ namespace Spring.Objects.Factory.Config
 				throw new ArgumentException(
 					"Exactly one of either the 'TargetType' or 'TargetObject' properties is required.");
 			}
-			if (TargetType is object && TargetObject is object)
+			if (TargetType is not null && TargetObject is not null)
 			{
 				throw new ArgumentException(
 					"Exactly one of either the 'TargetType' or 'TargetObject' properties is required (not both).");
@@ -89,8 +89,8 @@ namespace Spring.Objects.Factory.Config
 		/// <seealso cref="Spring.Objects.Factory.Config.AbstractFactoryObject.CreateInstance()"/> 
 		protected override object CreateInstance()
 		{
-			Delegate instance = null;
-			if (TargetType is object)
+            Delegate instance;
+            if (TargetType is not null)
 			{
 				instance = Delegate.CreateDelegate(DelegateType, TargetType, MethodName);
 			}
@@ -118,7 +118,7 @@ namespace Spring.Objects.Factory.Config
 		{
 			get
 			{
-				return (DelegateType is object)
+				return (DelegateType is not null)
 				       	? DelegateType
 				       	: typeof (Delegate);
 			}

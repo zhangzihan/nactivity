@@ -58,7 +58,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddFlowElementToMap(FlowElement element)
         {
-            if (element is object && !string.IsNullOrWhiteSpace(element.Id))
+            if (element is not null && !string.IsNullOrWhiteSpace(element.Id))
             {
                 flowElementMap[element.Id] = element;
                 if (ParentContainer is object)
@@ -71,7 +71,7 @@ namespace Sys.Workflow.Bpmn.Models
         public virtual void RemoveFlowElement(string elementId)
         {
             FlowElement element = FindFlowElement(elementId);
-            if (element is object)
+            if (element is not null)
             {
                 flowElementList.Remove(element);
                 flowElementMap.Remove(elementId);
@@ -138,7 +138,7 @@ namespace Sys.Workflow.Bpmn.Models
         public virtual void RemoveArtifact(string artifactId)
         {
             Artifact artifact = GetArtifact(artifactId);
-            if (artifact is object)
+            if (artifact is not null)
             {
                 artifactList.Remove(artifact);
             }

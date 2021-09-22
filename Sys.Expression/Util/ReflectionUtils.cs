@@ -437,7 +437,7 @@ namespace Spring.Util
                             object paramValue = paramValues[i];
 
                             if ((paramValue is null && paramType.IsValueType && !IsNullableType(paramType))
-                                || (paramValue is object && !paramType.IsAssignableFrom(paramValue.GetType())))
+                                || (paramValue is not null && !paramType.IsAssignableFrom(paramValue.GetType())))
                             {
                                 isMatch = false;
                                 break;
@@ -627,7 +627,7 @@ namespace Spring.Util
                         method.Name,
                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly,
                         null, paramTypes, null);
-                    if (mi is object)
+                    if (mi is not null)
                     {
                         // found it...
                         return true;
@@ -791,7 +791,7 @@ namespace Spring.Util
             for (int i = 0; i < args.Length; ++i)
             {
                 object arg = args[i];
-                paramsType[i] = (arg is object) ? args[i].GetType() : typeof(object);
+                paramsType[i] = (arg is not null) ? args[i].GetType() : typeof(object);
             }
             return paramsType;
         }
@@ -929,7 +929,7 @@ namespace Spring.Util
                 ctorArgs = GetDefaultValues(GetParameterTypes(ci.GetParameters()));
             }
 
-            if (sourceAttribute is object)
+            if (sourceAttribute is not null)
             {
                 object defaultAttribute = null;
                 try
@@ -954,11 +954,11 @@ namespace Spring.Util
                         if (pi.CanWrite)
                         {
                             object propValue = pi.GetValue(sourceAttribute, null);
-                            if (defaultAttribute is object)
+                            if (defaultAttribute is not null)
                             {
                                 object defaultValue = pi.GetValue(defaultAttribute, null);
                                 if ((propValue is null && defaultValue is null) ||
-                                    (propValue is object && propValue.Equals(defaultValue)))
+                                    (propValue is not null && propValue.Equals(defaultValue)))
                                     continue;
                             }
                             getSetProps.Add(pi);
@@ -976,7 +976,7 @@ namespace Spring.Util
                 {
                     PropertyInfo pi = readOnlyProps[0];
                     ConstructorInfo ciTemp = type.GetConstructor(new Type[1] { pi.PropertyType });
-                    if (ciTemp is object)
+                    if (ciTemp is not null)
                     {
                         ci = ciTemp;
                         ctorArgs = new object[1] { readOnlyValues[0] };
@@ -984,7 +984,7 @@ namespace Spring.Util
                     else
                     {
                         ciTemp = type.GetConstructor(new Type[1] { readOnlyValues[0].GetType() });
-                        if (ciTemp is object)
+                        if (ciTemp is not null)
                         {
                             ci = ciTemp;
                             ctorArgs = new object[1] { readOnlyValues[0] };
@@ -1411,7 +1411,7 @@ namespace Spring.Util
             }
             else
             {
-                if (friendlyAssemblyName is object
+                if (friendlyAssemblyName is not null
                     && friendlyAssemblyName.Length > 0
                     && (!type.IsNested || type.IsNestedPublic ||
                      (!type.IsNestedPrivate && (type.IsNestedAssembly || type.IsNestedFamORAssem))))
@@ -1471,7 +1471,7 @@ namespace Spring.Util
         public static Exception GetExplicitBaseException(Exception ex)
         {
             Exception innerEx = ex.InnerException;
-            while (innerEx is object &&
+            while (innerEx is not null &&
                 !(innerEx is NullReferenceException))
             {
                 ex = innerEx;
@@ -1533,7 +1533,7 @@ namespace Spring.Util
                 throw new ArgumentException("fieldName is null or empty.", "fieldName");
 
             FieldInfo f = obj.GetType().GetField(fieldName, BindingFlags.SetField | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            if (f is object)
+            if (f is not null)
                 return f.GetValue(obj);
             else
             {
@@ -1560,7 +1560,7 @@ namespace Spring.Util
 
             FieldInfo f = obj.GetType().GetField(fieldName, BindingFlags.SetField | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-            if (f is object)
+            if (f is not null)
             {
                 if (f.FieldType != fieldValue.GetType())
                     throw new ArgumentException(string.Format("fieldValue for fieldName '{0}' of object type '{1}' must be of type '{2}' but was of type '{3}'", fieldName, obj.GetType().ToString(), f.FieldType.ToString(), fieldValue.GetType().ToString()), "fieldValue");

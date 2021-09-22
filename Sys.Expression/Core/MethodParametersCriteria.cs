@@ -91,10 +91,10 @@ namespace Spring.Core
         {
             bool satisfied = false;
             MethodInfo method = datum as MethodInfo;
-            if (method is object)
+            if (method is not null)
             {
                 ParameterInfo[] parameterInfosBeingChecked = method.GetParameters();
-                if (parameterInfosBeingChecked is object
+                if (parameterInfosBeingChecked is not null
                     && parameterInfosBeingChecked.Length == _parameters.Length)
                 {
                     satisfied = true;

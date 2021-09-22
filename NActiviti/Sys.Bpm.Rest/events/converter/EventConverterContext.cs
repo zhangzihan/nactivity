@@ -151,7 +151,7 @@ namespace Sys.Workflow.Cloud.Services.Events.Converters
             if (activitiEvent is IActivitiEntityEvent)
             {
                 object entity = ((IActivitiEntityEvent)activitiEvent).Entity;
-                if (entity is object && entity.GetType().IsAssignableFrom(typeof(ProcessInstance)))
+                if (entity is not null && entity.GetType().IsAssignableFrom(typeof(ProcessInstance)))
                 {
                     isProcessEvent = !IsExecutionEntityEvent(activitiEvent) || ((IExecutionEntity)entity).ProcessInstanceType;
                 }
@@ -201,7 +201,7 @@ namespace Sys.Workflow.Cloud.Services.Events.Converters
         /// <returns></returns>
         private static bool IsCandidateUserEntity(IIdentityLink identityLinkEntity)
         {
-            return string.Compare(IdentityLinkType.CANDIDATE, identityLinkEntity.Type, true) == 0 && identityLinkEntity.UserId is object;
+            return string.Compare(IdentityLinkType.CANDIDATE, identityLinkEntity.Type, true) == 0 && identityLinkEntity.UserId is not null;
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace Sys.Workflow.Cloud.Services.Events.Converters
         /// <returns></returns>
         private static bool IsCandidateGroupEntity(IIdentityLink identityLinkEntity)
         {
-            return string.Compare(IdentityLinkType.CANDIDATE, identityLinkEntity.Type, true) == 0 && identityLinkEntity.GroupId is object;
+            return string.Compare(IdentityLinkType.CANDIDATE, identityLinkEntity.Type, true) == 0 && identityLinkEntity.GroupId is not null;
         }
     }
 

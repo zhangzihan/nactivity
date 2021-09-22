@@ -315,10 +315,10 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// </summary>
         public virtual void CompleteTask(CompleteTaskCmd cmd)
         {
-            if (cmd is object)
+            if (cmd is not null)
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>(cmd.OutputVariables);
-                if (cmd.RuntimeAssigneeUser is object && (cmd.RuntimeAssigneeUser.Users?.Length).GetValueOrDefault() > 0)
+                if (cmd.RuntimeAssigneeUser is not null && (cmd.RuntimeAssigneeUser.Users?.Length).GetValueOrDefault() > 0)
                 {
                     variables.Add(BpmnXMLConstants.RUNTIME_ASSIGNEE_USER_VARIABLE_NAME, cmd.RuntimeAssigneeUser);
                 }

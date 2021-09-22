@@ -52,7 +52,7 @@ namespace Spring.Core.TypeConversion
         /// <returns>The new value, possibly the result of type conversion.</returns>
         public static object ConvertValueIfNecessary(Type requiredType, object newValue, string propertyName)
         {
-            if (newValue is object)
+            if (newValue is not null)
             {
                 // if it is assignable, return the value right away
                 if (IsAssignableFrom(newValue, requiredType))
@@ -61,7 +61,7 @@ namespace Spring.Core.TypeConversion
                 }
 
                 // if required type is an array, convert all the elements
-                if (requiredType is object && requiredType.IsArray)
+                if (requiredType is not null && requiredType.IsArray)
                 {
                     // convert individual elements to array elements
                     Type componentType = requiredType.GetElementType();
@@ -70,15 +70,15 @@ namespace Spring.Core.TypeConversion
                         ICollection elements = (ICollection)newValue;
                         return ToArrayWithTypeConversion(componentType, elements, propertyName);
                     }
-                    else if (newValue is string)
+                    else if (newValue is string @string)
                     {
                         if (requiredType.Equals(typeof(char[])))
                         {
-                            return ((string)newValue).ToCharArray();
+                            return @string.ToCharArray();
                         }
                         else
                         {
-                            string[] elements = StringUtils.CommaDelimitedListToStringArray((string)newValue);
+                            string[] elements = StringUtils.CommaDelimitedListToStringArray(@string);
                             return ToArrayWithTypeConversion(componentType, elements, propertyName);
                         }
                     }
@@ -92,38 +92,35 @@ namespace Spring.Core.TypeConversion
                     }
                 }
                 // if required type is some ISet<T>, convert all the elements
-                if (requiredType is object && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(Spring.Collections.Generic.ISet<>)))
+                if (requiredType is not null && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(Spring.Collections.Generic.ISet<>)))
                 {
                     // convert individual elements to array elements
                     Type componentType = requiredType.GetGenericArguments()[0];
-                    if (newValue is ICollection)
+                    if (newValue is ICollection elements)
                     {
-                        ICollection elements = (ICollection)newValue;
-                        return ToTypedCollectionWithTypeConversion(typeof(Spring.Collections.Generic.HashedSet<>), componentType, elements, propertyName);
+                        return ToTypedCollectionWithTypeConversion(typeof(Collections.Generic.HashedSet<>), componentType, elements, propertyName);
                     }
                 }
 
                 // if required type is some IList<T>, convert all the elements
-                if (requiredType is object && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IList<>)))
+                if (requiredType is not null && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IList<>)))
                 {
                     // convert individual elements to array elements
                     Type componentType = requiredType.GetGenericArguments()[0];
-                    if (newValue is ICollection)
+                    if (newValue is ICollection elements)
                     {
-                        ICollection elements = (ICollection)newValue;
                         return ToTypedCollectionWithTypeConversion(typeof(List<>), componentType, elements, propertyName);
                     }
                 }
 
                 // if required type is some IDictionary<K,V>, convert all the elements
-                if (requiredType is object && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IDictionary<,>)))
+                if (requiredType is not null && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IDictionary<,>)))
                 {
                     Type[] typeParameters = requiredType.GetGenericArguments();
                     Type keyType = typeParameters[0];
                     Type valueType = typeParameters[1];
-                    if (newValue is IDictionary)
+                    if (newValue is IDictionary elements)
                     {
-                        IDictionary elements = (IDictionary)newValue;
                         Type targetCollectionType = typeof(Dictionary<,>);
                         Type collectionType = targetCollectionType.MakeGenericType(new Type[] { keyType, valueType });
                         object typedCollection = Activator.CreateInstance(collectionType);
@@ -143,13 +140,12 @@ namespace Spring.Core.TypeConversion
                 }
 
                 // if required type is some IEnumerable<T>, convert all the elements
-                if (requiredType is object && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IEnumerable<>)))
+                if (requiredType is not null && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IEnumerable<>)))
                 {
                     // convert individual elements to array elements
                     Type componentType = requiredType.GetGenericArguments()[0];
-                    if (newValue is ICollection)
+                    if (newValue is ICollection elements)
                     {
-                        ICollection elements = (ICollection)newValue;
                         return ToTypedCollectionWithTypeConversion(typeof(List<>), componentType, elements, propertyName);
                     }
                 }
@@ -158,7 +154,7 @@ namespace Spring.Core.TypeConversion
                 try
                 {
                     TypeConverter typeConverter = TypeConverterRegistry.GetConverter(requiredType);
-                    if (typeConverter is object && typeConverter.CanConvertFrom(newValue.GetType()))
+                    if (typeConverter is not null && typeConverter.CanConvertFrom(newValue.GetType()))
                     {
                         try
                         {
@@ -166,26 +162,26 @@ namespace Spring.Core.TypeConversion
                         }
                         catch
                         {
-                            if (newValue is string)
+                            if (newValue is string @string)
                             {
-                                newValue = typeConverter.ConvertFromInvariantString((string)newValue);
+                                newValue = typeConverter.ConvertFromInvariantString(@string);
                             }
                         }
                     }
                     else
                     {
                         typeConverter = TypeConverterRegistry.GetConverter(newValue.GetType());
-                        if (typeConverter is object && typeConverter.CanConvertTo(requiredType))
+                        if (typeConverter is not null && typeConverter.CanConvertTo(requiredType))
                         {
                             newValue = typeConverter.ConvertTo(newValue, requiredType);
                         }
                         else
                         {
                             // look if it's an enum
-                            if (requiredType is object
+                            if (requiredType is not null
                                 && requiredType.IsEnum
-                                && (!(newValue is float)
-                                    && (!(newValue is double))))
+                                && (newValue is not float
+                                    && (newValue is not double)))
                             {
                                 // convert numeric value into enum's underlying type
                                 Type numericType = Enum.GetUnderlyingType(requiredType);
@@ -265,7 +261,7 @@ namespace Spring.Core.TypeConversion
 
         private static string BuildIndexedPropertyName(string propertyName, int index)
         {
-            return (propertyName is object ?
+            return (propertyName is not null ?
                     propertyName + "[" + index + "]" :
                     null);
         }

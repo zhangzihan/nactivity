@@ -135,7 +135,7 @@ namespace Spring.Objects.Factory.Config
 		{
 			set
 			{
-				if (value is object)
+				if (value is not null)
 				{
 					value = value.Trim();
 				}
@@ -175,7 +175,7 @@ namespace Spring.Objects.Factory.Config
 		{
 			set
 			{
-				if (value is object)
+				if (value is not null)
 				{
 					value = value.Trim();
 				}
@@ -295,13 +295,13 @@ namespace Spring.Objects.Factory.Config
 			set
 			{
 				this.objectFactory = value;
-				if (this.targetObjectWrapper is object && this.targetObjectName is object)
+				if (this.targetObjectWrapper is object && this.targetObjectName is not null)
 				{
 					throw new ArgumentException("Only one of the TargetObjectName or TargetObject properties can be set, not both.");
 				}
 				if (this.targetObjectWrapper is null && this.targetObjectName is null)
 				{
-					if (this.propertyPath is object)
+					if (this.propertyPath is not null)
 					{
 						throw new ArgumentException(
 							"Specify TargetObject or TargetObjectName property in combination with PropertyPath.");

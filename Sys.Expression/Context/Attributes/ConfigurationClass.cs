@@ -148,7 +148,7 @@ namespace Spring.Context.Attributes
         /// </returns>
         public override bool Equals(object other)
         {
-            return this == other || (other is ConfigurationClass && ConfigurationClassType == ((ConfigurationClass)other).ConfigurationClassType);
+            return this == other || (other is ConfigurationClass @class && ConfigurationClassType == @class.ConfigurationClassType);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Spring.Context.Attributes
                 }
             }
 
-            if (Attribute.GetCustomAttribute(_configurationClassType, typeof(ConfigurationAttribute)) is object)
+            if (Attribute.GetCustomAttribute(_configurationClassType, typeof(ConfigurationAttribute)) is not null)
             {
 
                 if (ConfigurationClassType.IsSealed)

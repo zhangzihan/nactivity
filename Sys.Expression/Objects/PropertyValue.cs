@@ -168,7 +168,7 @@ namespace Spring.Objects
             {
                 return true;
             }
-            if (!(other is PropertyValue))
+            if (other is not PropertyValue)
             {
                 return false;
             }
@@ -187,7 +187,7 @@ namespace Spring.Objects
         /// </returns>
         public override int GetHashCode()
         {
-            return propertyName.GetHashCode() * 29 + (propertyValue is object ? propertyValue.GetHashCode() : 0);
+            return propertyName.GetHashCode() * 29 + (propertyValue is not null ? propertyValue.GetHashCode() : 0);
         }
     }
 }

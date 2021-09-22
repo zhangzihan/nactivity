@@ -164,7 +164,7 @@ namespace Spring.Core.IO
         public static bool HasProtocol(string resourceName)
         {
             string protocol = GetProtocol(resourceName);
-            return protocol is object && ResourceHandlerRegistry.IsHandlerRegistered(protocol);
+            return protocol is not null && ResourceHandlerRegistry.IsHandlerRegistered(protocol);
         }
 
         /// <summary>

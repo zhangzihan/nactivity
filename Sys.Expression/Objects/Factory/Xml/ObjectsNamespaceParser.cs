@@ -146,7 +146,7 @@ namespace Spring.Objects.Factory.Xml
             {
                 // atm this will call back into this ns parsers
                 ObjectDefinitionHolder odh = parserContext.ParserHelper.ParseObjectDefinitionElement(element);
-                if (odh is object)
+                if (odh is not null)
                 {
                     return odh.ObjectDefinition as AbstractObjectDefinition;
                 }
@@ -452,7 +452,7 @@ namespace Spring.Objects.Factory.Xml
                 EventValues events = ParseEventHandlerSubElements(id, element, childParserContext);
                 MethodOverrides methodOverrides = ParseMethodOverrideSubElements(id, element, childParserContext);
 
-                bool isPage = StringUtils.HasText(typeName) && typeName is object && typeName.ToLower().EndsWith(".aspx");
+                bool isPage = StringUtils.HasText(typeName) && typeName is not null && typeName.ToLower().EndsWith(".aspx");
                 if (!isPage)
                 {
                     od.ConstructorArgumentValues = arguments;
@@ -501,7 +501,7 @@ namespace Spring.Objects.Factory.Xml
                 }
                 od.IsPrimary = IsTrueStringValue(primary);
                 string initMethodName = GetAttributeValue(element, ObjectDefinitionConstants.InitMethodAttribute);
-                if (initMethodName is object)
+                if (initMethodName is not null)
                 {
                     if (StringUtils.HasText(initMethodName))
                         od.InitMethodName = initMethodName;
@@ -512,7 +512,7 @@ namespace Spring.Objects.Factory.Xml
                         od.InitMethodName = childParserContext.ParserHelper.Defaults.InitMethod;
                 }
                 string destroyMethodName = GetAttributeValue(element, ObjectDefinitionConstants.DestroyMethodAttribute);
-                if (destroyMethodName is object)
+                if (destroyMethodName is not null)
                 {
                     if (StringUtils.HasText(destroyMethodName))
                     {
@@ -910,17 +910,17 @@ namespace Spring.Objects.Factory.Xml
             XmlElement element, string name, ParserContext parserContext)
         {
             XmlAttribute inlineValueAtt = element.Attributes[ObjectDefinitionConstants.ValueAttribute];
-            if (inlineValueAtt is object)
+            if (inlineValueAtt is not null)
             {
                 return inlineValueAtt.Value;
             }
             XmlAttribute inlineRefAtt = element.Attributes[ObjectDefinitionConstants.RefAttribute];
-            if (inlineRefAtt is object)
+            if (inlineRefAtt is not null)
             {
                 return new RuntimeObjectReference(inlineRefAtt.Value);
             }
             XmlAttribute inlineExpressionAtt = element.Attributes[ObjectDefinitionConstants.ExpressionAttribute];
-            if (inlineExpressionAtt is object)
+            if (inlineExpressionAtt is not null)
             {
                 return new ExpressionHolder(inlineExpressionAtt.Value);
             }
@@ -931,7 +931,7 @@ namespace Spring.Objects.Factory.Xml
             for (int i = 0; i < nodes.Count; ++i)
             {
                 XmlElement candidateEle = nodes.Item(i) as XmlElement;
-                if (candidateEle is object)
+                if (candidateEle is not null)
                 {
                     if (ObjectDefinitionConstants.DescriptionElement.Equals(candidateEle.Name))
                     {
@@ -1147,7 +1147,7 @@ namespace Spring.Objects.Factory.Xml
             foreach (XmlNode node in collectionEle.ChildNodes)
             {
                 XmlElement ele = node as XmlElement;
-                if (ele is object)
+                if (ele is not null)
                 {
                     target.Add(ParsePropertySubElement(ele, name, parserContext));
                 }
@@ -1193,7 +1193,7 @@ namespace Spring.Objects.Factory.Xml
             foreach (XmlNode node in collectionEle.ChildNodes)
             {
                 XmlElement ele = node as XmlElement;
-                if (ele is object)
+                if (ele is not null)
                 {
                     object sub = ParsePropertySubElement(ele, name, parserContext);
                     target.Add(sub);
@@ -1232,7 +1232,7 @@ namespace Spring.Objects.Factory.Xml
                 object key = null;
 
                 XmlAttribute keyAtt = entryEle.Attributes[ObjectDefinitionConstants.KeyAttribute];
-                if (keyAtt is object)
+                if (keyAtt is not null)
                 {
                     key = keyAtt.Value;
                 }
@@ -1240,7 +1240,7 @@ namespace Spring.Objects.Factory.Xml
                 {
                     // ok, we're not using the 'key' attribute; lets check for the ref shortcut...
                     XmlAttribute keyRefAtt = entryEle.Attributes[ObjectDefinitionConstants.DictionaryKeyRefShortcutAttribute];
-                    if (keyRefAtt is object)
+                    if (keyRefAtt is not null)
                     {
                         key = new RuntimeObjectReference(keyRefAtt.Value);
                     }
@@ -1278,19 +1278,19 @@ namespace Spring.Objects.Factory.Xml
                 #region Value
 
                 XmlAttribute inlineValueAtt = entryEle.Attributes[ObjectDefinitionConstants.ValueAttribute];
-                if (inlineValueAtt is object)
+                if (inlineValueAtt is not null)
                 {
                     // ok, we're using the value attribute shortcut...
                     dictionary[key] = inlineValueAtt.Value;
                 }
-                else if (entryEle.Attributes[ObjectDefinitionConstants.DictionaryValueRefShortcutAttribute] is object)
+                else if (entryEle.Attributes[ObjectDefinitionConstants.DictionaryValueRefShortcutAttribute] is not null)
                 {
                     // ok, we're using the value-ref attribute shortcut...
                     XmlAttribute inlineValueRefAtt = entryEle.Attributes[ObjectDefinitionConstants.DictionaryValueRefShortcutAttribute];
                     RuntimeObjectReference ror = new(inlineValueRefAtt.Value);
                     dictionary[key] = ror;
                 }
-                else if (entryEle.Attributes[ObjectDefinitionConstants.ExpressionAttribute] is object)
+                else if (entryEle.Attributes[ObjectDefinitionConstants.ExpressionAttribute] is not null)
                 {
                     // ok, we're using the expression attribute shortcut...
                     XmlAttribute inlineExpressionAtt = entryEle.Attributes[ObjectDefinitionConstants.ExpressionAttribute];
@@ -1300,7 +1300,7 @@ namespace Spring.Objects.Factory.Xml
                 else
                 {
                     XmlNode keyNode = SelectSingleNode(entryEle, ObjectDefinitionConstants.KeyElement);
-                    if (keyNode is object)
+                    if (keyNode is not null)
                     {
                         entryEle.RemoveChild(keyNode);
                     }

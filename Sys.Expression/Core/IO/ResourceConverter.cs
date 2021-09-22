@@ -67,7 +67,7 @@ namespace Spring.Core.IO
     public class ResourceConverter : TypeConverter
 	{
 		private static readonly ILogger _log = LogManager.GetLogger<ResourceConverter>();
-		private IResourceLoader _resourceLoader;
+		private readonly IResourceLoader _resourceLoader;
 		
 		#region Constructor (s) / Destructor
 
@@ -149,7 +149,7 @@ namespace Spring.Core.IO
 			CultureInfo culture, object value)
 		{
 			string resource = value as string;
-			if (resource is object)
+			if (resource is not null)
 			{
 				return GetResourceLoader().GetResource(ResolvePath(resource));
 			}
@@ -175,7 +175,7 @@ namespace Spring.Core.IO
 			{
 				string environmentValue
 					= Environment.GetEnvironmentVariable(expression);
-				if (environmentValue is object)
+				if (environmentValue is not null)
 				{
 					path = StringUtils.SetAntExpression(
 						path, expression, environmentValue);

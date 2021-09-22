@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace SmartSql.Utils
 {
@@ -10,18 +9,18 @@ namespace SmartSql.Utils
     /// </summary>
     public class FileWatcherLoader : IDisposable
     {
-        private IList<FileSystemWatcher> _fileWatchers = new List<FileSystemWatcher>();
+        private readonly IList<FileSystemWatcher> _fileWatchers = new List<FileSystemWatcher>();
 
         public void Watch(FileInfo fileInfo, Action onFileChanged)
         {
-            if (onFileChanged is object)
+            if (onFileChanged is not null)
             {
                 WatchFileChange(fileInfo, onFileChanged);
             }
         }
         private void WatchFileChange(FileInfo fileInfo, Action onFileChanged)
         {
-            FileSystemWatcher fileWatcher = new FileSystemWatcher(fileInfo.DirectoryName)
+            FileSystemWatcher fileWatcher = new(fileInfo.DirectoryName)
             {
                 Filter = fileInfo.Name,
                 NotifyFilter = NotifyFilters.LastWrite

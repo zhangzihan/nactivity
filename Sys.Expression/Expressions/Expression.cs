@@ -102,7 +102,7 @@ namespace Spring.Expressions
                     if (BASENODE_TYPE.IsAssignableFrom(type))
                     {
                         ConstructorInfo ctor = type.GetConstructor(new Type[0]);
-                        if (ctor is object)
+                        if (ctor is not null)
                         {
                             ASTNodeCreator creator = new(ctor);
                             Typename2Creator[creator.ASTNodeTypeName] = creator;
@@ -132,7 +132,7 @@ namespace Spring.Expressions
         static Expression()
         {
             // Ensure antlr is loaded (fixes GAC issues)!
-            Assembly antlrAss = typeof(LLkParser).Assembly;
+            _ = typeof(LLkParser).Assembly;
         }
 
         /// <summary>
@@ -338,13 +338,13 @@ namespace Spring.Expressions
                     node = node.getNextSibling();
                 }
 
-                if (node is PropertyOrFieldNode)
+                if (node is PropertyOrFieldNode propNode)
                 {
-                    return (PropertyInfo)((PropertyOrFieldNode)node).GetMemberInfo(target);
+                    return (PropertyInfo)propNode.GetMemberInfo(target);
                 }
-                else if (node is IndexerNode)
+                else if (node is IndexerNode idxNode)
                 {
-                    return ((IndexerNode)node).GetPropertyInfo(target, variables);
+                    return idxNode.GetPropertyInfo(target, variables);
                 }
                 else
                 {

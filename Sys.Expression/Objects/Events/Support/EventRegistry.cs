@@ -142,7 +142,7 @@ namespace Spring.Objects.Events.Support
                 MethodInfo eventHandler
                     = EventManipulationUtils.GetMethodInfoMatchingSignature(
                         invoke, currentSubscriberType);
-                if (eventHandler is object)
+                if (eventHandler is not null)
                 {
                     if (wire)
                     {

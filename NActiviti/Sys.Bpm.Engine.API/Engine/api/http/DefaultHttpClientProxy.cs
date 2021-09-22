@@ -60,7 +60,7 @@ namespace Sys.Net.Http
         /// <returns></returns>
         protected virtual async Task<T> PopulateData<T>(HttpResponseMessage response)
         {
-            if (response.StatusCode == HttpStatusCode.BadRequest && response.Content is object)
+            if (response.StatusCode == HttpStatusCode.BadRequest && response.Content is not null)
             {
                 Http400 h400 = JsonConvert.DeserializeObject<Http400>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 

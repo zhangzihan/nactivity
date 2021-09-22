@@ -123,7 +123,7 @@ namespace Spring.Core
                    string.Format(CultureInfo.InvariantCulture,
                                  "Property '{0}' is not writable in class [{1}].",
                                  offendingProperty,
-                                 offendingType is object ? offendingType.FullName : "null"),
+                                 offendingType is not null ? offendingType.FullName : "null"),
                    rootCause)
         {
         }

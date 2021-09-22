@@ -103,7 +103,7 @@ namespace Spring.Context.Support
         /// </returns>
         public object Create(object parent, object configContext, XmlNode section)
         {
-            if (section is object)
+            if (section is not null)
             {
                 XmlNodeList resourceHandlers = ((XmlElement) section).GetElementsByTagName(HandlerElement);
 

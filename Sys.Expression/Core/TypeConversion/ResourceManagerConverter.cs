@@ -108,21 +108,21 @@ namespace Spring.Core.TypeConversion
             ITypeDescriptorContext context, 
             CultureInfo culture, object value) 
         {
-            if (value is string) 
+            if (value is string @string) 
             {          
                 // convert incoming string into ResourceManager...
-                string[] resourceManagerDescription = StringUtils.DelimitedListToStringArray((string)value, ",");
+                string[] resourceManagerDescription = StringUtils.DelimitedListToStringArray(@string, ",");
                 if (resourceManagerDescription.Length != 2)
                 {
                     throw new ArgumentException ("The string to specify a ResourceManager must be a comma delimited list of length two.  i.e. resourcename, assembly parial name.");
                 }
                 string resourceName = resourceManagerDescription[0].Trim();
-                if (resourceName is object && resourceName.Length == 0)
+                if (resourceName is not null && resourceName.Length == 0)
                 {
                     throw new ArgumentException("Empty value set for the resource name in ResourceManager string.");
                 }
                 string assemblyName = resourceManagerDescription[1].Trim();
-                if (assemblyName is object && assemblyName.Length == 0)
+                if (assemblyName is not null && assemblyName.Length == 0)
                 {
                     throw new ArgumentException("Empty value set for the assembly name in ResourceManager string.");
                 }

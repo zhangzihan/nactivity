@@ -133,9 +133,11 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 			BitSet s;
 			try
 			{
-				s = new BitSet();
-				s.dataBits = new long[dataBits.Length];
-				Array.Copy(dataBits, 0, s.dataBits, 0, dataBits.Length);
+                s = new BitSet
+                {
+                    dataBits = new long[dataBits.Length]
+                };
+                Array.Copy(dataBits, 0, s.dataBits, 0, dataBits.Length);
 			}
 			catch //(System.Exception e)
 			{
@@ -172,9 +174,9 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		/*code "inherited" from java.util.BitSet */
 		override public bool Equals(object obj)
 		{
-			if ((obj is object) && (obj is BitSet))
+			if ((obj is not null) && (obj is BitSet set))
 			{
-				BitSet bset = (BitSet) obj;
+				BitSet bset = set;
 				
 				int n = (int) (Math.Min(dataBits.Length, bset.dataBits.Length));
 				 for (int i = n; i-- > 0; )

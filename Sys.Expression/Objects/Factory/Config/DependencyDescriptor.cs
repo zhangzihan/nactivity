@@ -136,11 +136,11 @@ namespace Spring.Objects.Factory.Config
         {
             get
             {
-                if (methodParameter is object)
+                if (methodParameter is not null)
                     return methodParameter.ParameterType;
-                if (property is object)
+                if (property is not null)
                     return property.PropertyType;
-                if (field is object)
+                if (field is not null)
                     return field.FieldType;
 
                 return null;
@@ -174,11 +174,11 @@ namespace Spring.Objects.Factory.Config
         { 
             get
             {
-                if (methodParameter is object)
+                if (methodParameter is not null)
                     return methodParameter.ParameterAttributes;
-                if (property is object)
+                if (property is not null)
                     return Attribute.GetCustomAttributes(property);
-                if (field is object)
+                if (field is not null)
                     return Attribute.GetCustomAttributes(field);
 
                 return new Attribute[0];
@@ -192,11 +192,11 @@ namespace Spring.Objects.Factory.Config
         {
             get
             {
-                if (methodParameter is object)
+                if (methodParameter is not null)
                     return methodParameter.ParameterName();
-                if (property is object)
+                if (property is not null)
                     return property.Name;
-                if (field is object)
+                if (field is not null)
                     return field.Name;
 
                 return "";

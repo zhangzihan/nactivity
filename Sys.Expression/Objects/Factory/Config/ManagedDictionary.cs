@@ -141,7 +141,7 @@ namespace Spring.Objects.Factory.Config
 				object resolvedKey = resolver(objectName, definition, elementName, key);
 				object resolvedValue = resolver(objectName, definition, elementName, this[key]);
 
-                if (keyType is object)
+                if (keyType is not null)
                 {
                     try
                     {
@@ -157,7 +157,7 @@ namespace Spring.Objects.Factory.Config
                     }
                 }
 
-                if (valueType is object)
+                if (valueType is not null)
                 {
                     try
                     {
@@ -213,14 +213,13 @@ namespace Spring.Objects.Factory.Config
             	{
                 	return this;
             	}
-            	var pDict = parent as IDictionary;
-            	if (pDict is null)
-            	{
-            		throw new InvalidOperationException("Cannot merge with object of type [" + parent.GetType() + "]");
-            	}
-            	var merged = new ManagedDictionary();
+            if (parent is not IDictionary pDict)
+            {
+                throw new InvalidOperationException("Cannot merge with object of type [" + parent.GetType() + "]");
+            }
+            var merged = new ManagedDictionary();
             	var pManagedDict = pDict as ManagedDictionary;
-            	if (pManagedDict is object)
+            	if (pManagedDict is not null)
             	{
             		merged.KeyTypeName = pManagedDict.keyTypeName;
             		merged.valueTypeName = pManagedDict.valueTypeName;

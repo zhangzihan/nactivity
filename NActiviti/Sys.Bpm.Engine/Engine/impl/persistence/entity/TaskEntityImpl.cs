@@ -346,7 +346,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                var config = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+                var config = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
                 if (execution is null && !string.IsNullOrWhiteSpace(executionId))
                 {
                     this.execution = config.CommandExecutor.Execute(new GetExecutionByIdCmd(executionId));

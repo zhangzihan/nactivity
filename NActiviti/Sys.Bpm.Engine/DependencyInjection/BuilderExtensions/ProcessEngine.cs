@@ -50,7 +50,7 @@ namespace Sys.Workflow
         {
             builder.AddBookmarkRuleProvider();
 
-            builder.Services.AddTransient<IActivitiEngineAgendaFactory>(sp => new DefaultActivitiEngineAgendaFactory());
+            builder.Services.AddTransient<IActivitiEngineAgendaFactory, DefaultActivitiEngineAgendaFactory>();
 
             builder.Services.AddSingleton<IBpmnParseFactory, DefaultBpmnParseFactory>();
 
@@ -70,7 +70,7 @@ namespace Sys.Workflow
 
             builder.Services.AddTransient<IProcessEngine>(sp =>
             {
-                return sp.GetService<ProcessEngineFactory>().DefaultProcessEngine;
+                return ProcessEngineFactory.DefaultProcessEngine;
             });
 
             builder.Services.AddBpmModelServiceProvider();
@@ -88,21 +88,6 @@ namespace Sys.Workflow
             IGetBookmarkRuleProvider getBookmarkRuleProvider = new GetBookmarkRuleProvider();
 
             builder.Services.AddSingleton(getBookmarkRuleProvider);
-
-            return builder;
-        }
-
-        /// <summary>
-        /// 注入流程引擎工厂
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static IProcessEngineBuilder AddProcessEngineFactory(this IProcessEngineBuilder builder)
-        {
-            builder.Services.AddSingleton<ProcessEngineFactory>(sp =>
-            {
-                return ProcessEngineFactory.Instance;
-            });
 
             return builder;
         }

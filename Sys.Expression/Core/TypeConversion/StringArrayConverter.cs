@@ -107,7 +107,7 @@ namespace Spring.Core.TypeConversion
 			get { return this.listSeparator; }
 			set
 			{
-				if (value is object)
+				if (value is not null)
 				{
 					if (value.Length != 1)
 					{
@@ -172,7 +172,7 @@ namespace Spring.Core.TypeConversion
 			ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
 			string values = value as string;
-			if (values is object)
+			if (values is not null)
 			{
 				return StringUtils.DelimitedListToStringArray(values, this.ListSeparator);
 			}

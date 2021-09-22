@@ -14,6 +14,11 @@ using Sys.Expressions;
 using Newtonsoft.Json.Linq;
 using Sys.Workflow.Engine.Api;
 using Newtonsoft.Json;
+using System.Reflection;
+using Spring.Expressions.Processors;
+using System.Dynamic;
+using System.Runtime.CompilerServices;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace Sys.Workflow.Client.Tests.Expression
 {
@@ -575,6 +580,167 @@ namespace Sys.Workflow.Client.Tests.Expression
             var obj = ExpressionEvaluator.GetValue(data, $"nrOfActiveInstances == 0 or({constBoolean.ToString().ToLower()})");
 
             Assert.True(constBoolean ? obj.ToString() == "True" : obj.ToString() == "False");
+        }
+
+        class IIFMethod : IMethodCallProcessor
+        {
+            public object Process(object context, object[] args)
+            {
+                bool b = bool.Parse(args[0]?.ToString());
+                return b ? args[1] : args[2];
+            }
+        }
+
+        class Test : DynamicObject
+        {
+            // The inner dictionary.
+            public Dictionary<string, object> dictionary
+                = new Dictionary<string, object>();
+
+            // Getting a property.
+            public override bool TryGetMember(
+                GetMemberBinder binder, out object result)
+            {
+                return dictionary.TryGetValue(binder.Name, out result);
+            }
+
+            // Setting a property.
+            public override bool TrySetMember(
+                SetMemberBinder binder, object value)
+            {
+                dictionary[binder.Name] = value;
+                return true;
+            }
+
+            public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
+            {
+                return base.TryInvoke(binder, args, out result);
+            }
+
+            // Calling a method.
+            public override bool TryInvokeMember(
+                InvokeMemberBinder binder, object[] args, out object result)
+            {
+                if (dictionary.TryGetValue(binder.Name, out result))
+                {
+                    if (result is MethodInfo method)
+                    {
+                        if (method.ReturnParameter.Name != "Void")
+                        {
+                            result = method.Invoke(this, args);
+                            return true;
+                        }
+                        else
+                        {
+                            result = null;
+                            method.Invoke(this, args);
+                            return true;
+                        }
+                    }
+
+                }
+
+                return base.TryInvokeMember(binder, args, out result);
+
+                //return base.TryInvokeMember(binder, args, out result);
+                //Type dictType = typeof(Dictionary<string, object>);
+                //try
+                //{
+                //    result = dictType.InvokeMember(
+                //                 binder.Name,
+                //                 BindingFlags.InvokeMethod,
+                //                 null, dictionary, args);
+                //    return true;
+                //}
+                //catch
+                //{
+                //    result = null;
+                //    return false;
+                //}
+                //result = null;
+                //return true;
+            }
+
+            // This methods prints out dictionary elements.
+            public void Print()
+            {
+                foreach (var pair in dictionary)
+                    Console.WriteLine(pair.Key + " " + pair.Value);
+                if (dictionary.Count == 0)
+                    Console.WriteLine("No elements in the dictionary.");
+            }
+
+            //public object IIF(bool b, object x, object y)
+            //{
+            //    return b ? x : y;
+            //}
+        }
+
+        static class Test1
+        {
+            public static object IIF(bool b, object x, object y)
+            {
+                return b ? x : y;
+            }
+        }
+
+        [Fact]
+        public void 对象函数表达式()
+        {
+
+            var act = new Action(() => { });
+            dynamic context = new Test();
+            context.Name = "test";
+            Assert.Equal("test", context.Name);
+            //context.IIF = typeof(Test1).GetMethod("IIF");
+            
+            //context.IIF = new Func<bool, object, object, object>((b, arg1, arg2) =>
+            //{
+            //    return b ? arg1 : arg2;
+            //});
+
+            //var methods = context.GetType().GetMethods();
+            //int? i = context.IIF(true, 1, 0);
+            //Assert.Equal(1, i);
+
+            //var binder = Microsoft.CSharp.RuntimeBinder.Binder.GetMember(
+            //    CSharpBinderFlags.None,
+            //    "IIF",
+            //    context.GetType(),
+            //    new[]
+            //    {
+            //        CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null)
+            //    });
+            //var callsite = CallSite<Func<CallSite, object, object>>.Create(binder);
+            //var res = callsite.Target(callsite, context);
+            //i = res.Method.Invoke(res.Target, new object[] { true, 1, 0 });
+            //Assert.Equal(1, i);
+            //dynamic context = new
+            //{
+            //    IIF = new Func<bool, object, object, object>((b, arg1, arg2) =>
+            //    {
+            //        return b ? arg1 : arg2;
+            //    })
+            //};
+            //i = context.IIF(true, 1, 0);
+            //Assert.Equal(1, i);
+
+            var str = ExpressionEvaluator.GetValue(context, "IIF(true, '1', '0')");
+
+            Assert.Equal("1", str.ToString());
+        }
+
+        [Fact]
+        public void 问号表达式()
+        {
+            var data = new
+            {
+                同意 = true
+            };
+
+            object str = ExpressionEvaluator.GetValue(data, $"同意?'true':'false'");
+
+            Assert.Equal("true", str.ToString());
         }
 
     }

@@ -95,7 +95,7 @@ namespace Spring.Util
                 return true;
             }
 
-            if (a is object && b is object)
+            if (a is not null && b is not null)
             {
                 if (a.Length == b.Length)
                 {
@@ -139,12 +139,12 @@ namespace Spring.Util
         {
             int hashCode = 0;
 
-            if (array is object)
+            if (array is not null)
             {
                 for (int i = 0; i < array.Length; i++)
                 {
                     object el = array.GetValue(i);
-                    if (el is object)
+                    if (el is not null)
                     {
                         if (el is Array)
                         {

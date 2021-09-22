@@ -75,18 +75,18 @@ namespace Spring.Objects.Factory.Support
 		{
 			if (other != null)
 			{
-				if (other._overrides is object && other._overrides.Count > 0)
+				if (other._overrides is not null && other._overrides.Count > 0)
 				{
-					_overrides = _overrides ?? new HashSet<MethodOverride>();
+					_overrides ??= new HashSet<MethodOverride>();
 					foreach (var @override in other._overrides)
 					{
 						_overrides.Add(@override);
 					}
 				}
 
-				if (other._overloadedMethodNames is object && other._overloadedMethodNames.Count > 0)
+				if (other._overloadedMethodNames is not null && other._overloadedMethodNames.Count > 0)
 				{
-					_overloadedMethodNames = _overloadedMethodNames ?? new HashSet<string>();
+					_overloadedMethodNames ??= new HashSet<string>();
 					foreach (var methodName in other._overloadedMethodNames)
 					{
 						_overloadedMethodNames.Add(methodName);
@@ -105,7 +105,7 @@ namespace Spring.Objects.Factory.Support
 		/// </param>
 		public void Add(MethodOverride theOverride)
 		{
-			_overrides = _overrides ?? new HashSet<MethodOverride>();
+			_overrides ??= new HashSet<MethodOverride>();
 			_overrides.Add(theOverride);
 		}
 
@@ -118,7 +118,7 @@ namespace Spring.Objects.Factory.Support
 		/// </param>
 		public void AddOverloadedMethodName(string methodName)
 		{
-			_overloadedMethodNames = _overloadedMethodNames ?? new HashSet<string>();
+			_overloadedMethodNames ??= new HashSet<string>();
 			_overloadedMethodNames.Add(methodName);
 		}
 

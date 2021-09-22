@@ -13,7 +13,7 @@ namespace SmartSql.Configuration.Tags
         public override bool IsCondition(RequestContext context)
         {
             Object reqVal = GetPropertyValue(context);
-            return reqVal is object;
+            return reqVal is not null;
         }
     }
 }

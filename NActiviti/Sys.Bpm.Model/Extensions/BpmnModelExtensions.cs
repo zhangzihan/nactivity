@@ -16,7 +16,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             extElement = parent.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE)).FirstOrDefault();
 
-            return extElement is object;
+            return extElement is not null;
         }
 
         public static XElement GetOrAddExtensionElements(this XElement parent)
@@ -46,7 +46,7 @@ namespace Sys.Workflow.Bpmn.Models
                 .Where(x => string.Compare(x.Attribute(BpmnXMLConstants.ATTRIBUTE_NAME)?.Value, BpmnXMLConstants.ELEMENT_USER_TASK_EXTENSION_ASSIGNE_TYPE, true) == 0)
                 .FirstOrDefault();
 
-            return assigneeElement is object;
+            return assigneeElement is not null;
         }
 
         public static bool TryGetExecutionStartListener(this XElement parent, out IEnumerable<XElement> listeners)
@@ -146,7 +146,7 @@ namespace Sys.Workflow.Bpmn.Models
                     return false;
                 }).FirstOrDefault();
 
-            return elem is object;
+            return elem is not null;
         }
     }
 }

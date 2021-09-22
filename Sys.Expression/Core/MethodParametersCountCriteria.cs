@@ -119,7 +119,7 @@ namespace Spring.Core
         {
             bool satisfied = false;
             MethodBase method = datum as MethodBase;
-            if (method is object)
+            if (method is not null)
             {
                 ParameterInfo[] parameters = method.GetParameters();
                 if (parameters.Length == ExpectedParameterCount)

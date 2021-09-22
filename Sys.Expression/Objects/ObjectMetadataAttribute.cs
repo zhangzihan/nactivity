@@ -44,7 +44,7 @@ namespace Spring.Objects
 	    /// <param name="value">the value of the attribute (possibly before type conversion)</param>
 	    public ObjectMetadataAttribute(string name, object value)
         {
-		    Trace.Assert(name is object, "Name must not be null");
+		    Trace.Assert(name is not null, "Name must not be null");
 		    _name = name;
 		    _value = value;
 	    }

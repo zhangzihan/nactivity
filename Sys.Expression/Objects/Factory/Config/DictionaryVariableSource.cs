@@ -63,7 +63,7 @@ namespace Spring.Objects.Factory.Config
         public DictionaryVariableSource(params string[] args)
             : this(true)
         {
-            if (args is object)
+            if (args is not null)
             {
                 if (args.Length % 2 != 0)
                 {
@@ -107,7 +107,7 @@ namespace Spring.Objects.Factory.Config
                 foreach (DictionaryEntry entry in dictionary)
                 {
                     string key = "" + entry.Key;
-                    string value = entry.Value is object ? "" + entry.Value : null;
+                    string value = entry.Value is not null ? "" + entry.Value : null;
 
                     variables[key] = value;
                 }
@@ -140,8 +140,7 @@ namespace Spring.Objects.Factory.Config
         /// </summary>
         public string ResolveVariable(string name)
         {
-            string value;
-            if (!variables.TryGetValue(name, out value))
+            if (!variables.TryGetValue(name, out string value))
             {
                 throw new ArgumentException(string.Format("variable '{0}' cannot be resolved", name));
             }

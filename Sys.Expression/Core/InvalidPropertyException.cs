@@ -142,7 +142,7 @@ namespace Spring.Core
             : base(info, context)
         {
             var typeName = info.GetString("ObjectTypeName");
-            offendingObjectType = typeName is object ? Type.GetType(typeName) : null;
+            offendingObjectType = typeName is not null ? Type.GetType(typeName) : null;
             offendingPropertyName = info.GetString("OffendingPropertyName");
         }
 
@@ -184,7 +184,7 @@ namespace Spring.Core
             info.AddValue("OffendingPropertyName", OffendingPropertyName);
         }
 
-        private Type offendingObjectType;
-        private string offendingPropertyName;
+        private readonly Type offendingObjectType;
+        private readonly string offendingPropertyName;
     }
 }

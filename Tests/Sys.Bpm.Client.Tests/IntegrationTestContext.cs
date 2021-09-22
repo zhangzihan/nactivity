@@ -217,7 +217,7 @@ namespace Sys.Workflow.Test
 
         private static void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
-            if (e.Exception is object)
+            if (e.Exception is not null)
             {
                 //ILogger logger = unitTestContext.Resolve<ILoggerFactory>().CreateLogger<IntegrationTestContext>();
 
@@ -346,7 +346,7 @@ namespace Sys.Workflow.Test
             string processDefinitionId = GetOrAddProcessDefinition(bpmnFile).Id;
 
             var vars = new Dictionary<string, object>(variables ?? new Dictionary<string, object>());
-            if (users is object)
+            if (users is not null)
             {
                 vars.TryAdd("name", users);
             }
@@ -501,7 +501,7 @@ namespace Sys.Workflow.Test
             services.AddProcessEngine(Configuration);
 
             var sd = services.FirstOrDefault(x => x.ServiceType == typeof(IServiceWebApiHttpProxy));
-            if (sd is object)
+            if (sd is not null)
             {
                 services.Remove(sd);
             }
