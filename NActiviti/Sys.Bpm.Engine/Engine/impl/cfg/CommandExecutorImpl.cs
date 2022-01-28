@@ -78,7 +78,7 @@
         /// <returns></returns>
         public virtual T Execute<T>(CommandConfig config, ICommand<T> command)
         {
-            return first.Execute(config, command);
+            return First.Execute(config, command);
         }
     }
 }

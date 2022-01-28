@@ -191,18 +191,11 @@ Exception message: {ex.Message}");
 
             public virtual object Execute(ICommandContext commandContext)
             {
-                try
+                foreach (ITimerJobEntity job in acquiredJobs.Jobs)
                 {
-                    foreach (ITimerJobEntity job in acquiredJobs.Jobs)
-                    {
-                        outerInstance.jobManager.MoveTimerJobToExecutableJob(job);
-                    }
-                    return commandContext.GetResult();
+                    outerInstance.jobManager.MoveTimerJobToExecutableJob(job);
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                return commandContext.GetResult();
             }
         }
 

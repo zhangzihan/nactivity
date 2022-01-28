@@ -54,7 +54,10 @@ namespace SmartSql.DbSession
 
         public IDbConnectionSession GetOrAddDbSession(IDataSource dataSource)
         {
-            if (LocalSession is object) { return LocalSession; }
+            if (LocalSession is object) 
+            {
+                return LocalSession; 
+            }
             return CreateDbSession(dataSource);
         }
 

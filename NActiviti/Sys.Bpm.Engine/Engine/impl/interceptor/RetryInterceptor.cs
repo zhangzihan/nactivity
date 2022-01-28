@@ -46,7 +46,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 try
                 {
                     // try to execute the command
-                    return next.Execute(config, command);
+                    return Next.Execute(config, command);
                 }
                 catch (ActivitiOptimisticLockingException e)
                 {

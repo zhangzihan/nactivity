@@ -48,7 +48,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                     commandContext.AddCloseListener(new TransactionCommandContextCloseListener(transactionContext));
                 }
 
-                return next.Execute(config, command);
+                return Next.Execute(config, command);
             }
             finally
             {

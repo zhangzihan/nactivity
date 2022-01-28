@@ -27,7 +27,6 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
     using Sys.Workflow.Engine.Logging;
     using Sys.Workflow;
     using System.Collections.Concurrent;
-    using Sys.DataSource;
     using System.Transactions;
 
     public class CommandContext<T1> : ICommandContext
@@ -78,13 +77,15 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                         ExecuteCloseListenersClosing();
                         if (_exception is null)
                         {
-                            var opts = processEngineConfiguration.TransactionOption;
-                            var curtran = Transaction.Current;
-                            using var ts = curtran is object ?
-                                TransactionOption.Create(curtran) :
-                                TransactionOption.Create(opts.TransactionTimeout, opts.IsolationLevel, opts.TransactionScopeOption);
-                            FlushSessions();
-                            ts.Complete();
+                            using (var ts = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
+                            {
+                                IsolationLevel = IsolationLevel.RepeatableRead,
+                                Timeout = processEngineConfiguration.TransactionOption.TransactionTimeout.GetValueOrDefault(TimeSpan.FromMinutes(15))
+                            }, TransactionScopeAsyncFlowOption.Enabled))
+                            {
+                                FlushSessions();
+                                ts.Complete();
+                            }
                         }
                     }
                     catch (Exception exception)
@@ -136,6 +137,24 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             if (_exception is object)
             {
                 RethrowExceptionIfNeeded();
+            }
+
+            static TransactionScope CreateTransactionScope(TransOption opts)
+            {
+                if (Transaction.Current != null)
+                {
+                    var dependentTransaction = Transaction.Current.DependentClone(DependentCloneOption.BlockCommitUntilComplete);
+
+                    return new TransactionScope(dependentTransaction, opts.TransactionTimeout.GetValueOrDefault(TimeSpan.FromMinutes(1)), TransactionScopeAsyncFlowOption.Enabled);
+                }
+                else
+                {
+                    return new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
+                    {
+                        IsolationLevel = IsolationLevel.RepeatableRead,
+                        Timeout = opts.TransactionTimeout.GetValueOrDefault(TimeSpan.FromMinutes(1))
+                    }, TransactionScopeAsyncFlowOption.Enabled);
+                }
             }
         }
 

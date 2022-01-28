@@ -107,10 +107,13 @@
 			inner join ACT_RU_EVENT_SUBSCR EVT on RES.ID_ = EVT.CONFIGURATION_
 		</IsTrue>
 		<IsTrue Property="latest">
-			inner join (select max(VERSION_) VERSION_, NAME_, TENANT_ID_ from ACT_RE_PROCDEF
+			inner join (select max(VERSION_) VERSION_, KEY_, NAME_, TENANT_ID_ from ACT_RE_PROCDEF
 			<Where>
 				<IsTrue Property="tenantId != null">
 					TENANT_ID_ = #{tenantId}
+				</IsTrue>
+				<IsTrue Property="key != null">
+					and KEY_ = #{key}
 				</IsTrue>
 				<IsTrue Property="name != null">
 					and NAME_ = #{name}
@@ -118,7 +121,7 @@
 				<IsTrue Property="deploymentId != null">
 					and DEPLOYMENT_ID_ = #{deploymentId}
 				</IsTrue>
-			</Where> group by NAME_, TENANT_ID_) v on RES.VERSION_ = v.VERSION_ and  v.NAME_ = RES.NAME_ and v.TENANT_ID_ = RES.TENANT_ID_
+			</Where> group by NAME_, KEY_, TENANT_ID_) v on RES.VERSION_=v.VERSION_ and v.KEY_=RES.KEY_ and v.TENANT_ID_=RES.TENANT_ID_
 		</IsTrue>
 		<Where>
 			<IsTrue Property="id != null">

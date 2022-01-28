@@ -20,7 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         /// <summary>
         /// will be initialized by the <seealso cref="Sys.Workflow.Engine.ProcessEngineConfiguration ProcessEngineConfiguration"/>
         /// </summary>
-        protected internal ICommandInterceptor next;
+        private ICommandInterceptor next;
 
         public virtual ICommandInterceptor Next
         {

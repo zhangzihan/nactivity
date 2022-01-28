@@ -48,7 +48,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             // rollback state, and some other command is being fired to compensate (eg. decrementing job retries)
             if (!config.ContextReusePossible || context is null || context.Exception is object)
             {
-                context = commandContextFactory.CreateCommandContext<T>(command);
+                context = CommandContextFactory.CreateCommandContext<T>(command);
             }
             else
             {
@@ -61,9 +61,9 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             {
                 // Push on stack
                 Context.CommandContext = context;
-                Context.ProcessEngineConfiguration = processEngineConfiguration;
+                Context.ProcessEngineConfiguration = ProcessEngineConfiguration;
 
-                return next.Execute(config, command);
+                return Next.Execute(config, command);
 
             }
             catch (NullReferenceException e)

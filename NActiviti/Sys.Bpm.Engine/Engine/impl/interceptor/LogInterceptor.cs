@@ -26,7 +26,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             if (!log.IsEnabled(LogLevel.Debug))
             {
                 // do nothing here if we cannot log
-                return next.Execute(config, command);
+                return Next.Execute(config, command);
             }
 
             log.LogDebug("\n");
@@ -34,7 +34,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             try
             {
 
-                return next.Execute(config, command);
+                return Next.Execute(config, command);
 
             }
             finally
