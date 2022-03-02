@@ -539,7 +539,8 @@ namespace Sys.Workflow.Engine.Impl.DB
 
             if (SqlMapper.SessionStore.LocalSession is null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
             {
-                SqlMapper.BeginTransaction();
+                // 使用TransactionScope控制事务提交
+                //SqlMapper.BeginTransaction();
 
                 RemoveInstanceIncludeHis();
             }
@@ -1094,10 +1095,11 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual void Commit()
         {
-            if (SqlMapper.SessionStore?.LocalSession is object)
-            {
-                SqlMapper.CommitTransaction();
-            }
+            // 使用TransactoinScope控制事务提交
+            //if (SqlMapper.SessionStore?.LocalSession is object)
+            //{
+            //    SqlMapper.CommitTransaction();
+            //}
         }
 
         /// <summary>

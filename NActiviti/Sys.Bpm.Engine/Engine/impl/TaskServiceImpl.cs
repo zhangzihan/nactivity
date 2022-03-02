@@ -46,10 +46,7 @@ namespace Sys.Workflow.Engine.Impl
 
         private TOut ExecuteCommand<TOut>(ICommand<TOut> command)
         {
-            lock (syncRoot)
-            {
-                return commandExecutor.Execute(command);
-            }
+            return commandExecutor.Execute(command);
         }
 
         public virtual ITask NewTask()
@@ -687,11 +684,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             try
             {
-
-                lock (syncRoot)
-                {
-                    return commandExecutor.Execute(new CommandConfig(true), new TransferTaskCmd(cmd)) as ITask[];
-                }
+                return commandExecutor.Execute(new CommandConfig(true), new TransferTaskCmd(cmd)) as ITask[];
             }
             catch (ActivitiObjectNotFoundException e)
             {
@@ -706,12 +699,9 @@ namespace Sys.Workflow.Engine.Impl
         /// <inheritdoc />
         public ITask[] AddCountersign(string taskId, string[] assignees, string tenantId)
         {
-            lock (syncRoot)
-            {
-                var cmd = new AddCountersignCmd(taskId, assignees, tenantId);
+            var cmd = new AddCountersignCmd(taskId, assignees, tenantId);
 
-                return commandExecutor.Execute(new CommandConfig(true), cmd);
-            }
+            return commandExecutor.Execute(new CommandConfig(true), cmd);
         }
 
         /// <inheritdoc />

@@ -56,95 +56,92 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal virtual IDeployment ExecuteDeploy(ICommandContext commandContext)
         {
-            lock (syncRoot)
+            IDeploymentEntity deployment = deploymentBuilder.Deployment;
+
+            deployment.Runable();
+
+            deployment.DeploymentTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
+
+            IDictionary<string, IResourceEntity> resources = this.deploymentBuilder.Deployment.GetResources();
+
+            deployment.DeployExecutionBehavior();
+
+            if (deploymentBuilder.DuplicateFilterEnabled)
             {
-                IDeploymentEntity deployment = deploymentBuilder.Deployment;
-
-                deployment.Runable();
-
-                deployment.DeploymentTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
-
-                IDictionary<string, IResourceEntity> resources = this.deploymentBuilder.Deployment.GetResources();
-
-                deployment.DeployExecutionBehavior();
-
-                if (deploymentBuilder.DuplicateFilterEnabled)
+                IList<IDeployment> existingDeployments = new List<IDeployment>();
+                if (deployment.TenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
                 {
-                    IList<IDeployment> existingDeployments = new List<IDeployment>();
-                    if (deployment.TenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
+                    IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.FindLatestDeploymentByName(deployment.Name);
+                    if (existingDeployment is object)
                     {
-                        IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.FindLatestDeploymentByName(deployment.Name);
-                        if (existingDeployment is object)
-                        {
-                            existingDeployments.Add(existingDeployment);
-                        }
+                        existingDeployments.Add(existingDeployment);
                     }
-                    else
+                }
+                else
+                {
+                    //按部署时间倒序排序,始终与最后一次部署做比较
+                    IList<IDeployment> deploymentList = commandContext.ProcessEngineConfiguration.RepositoryService.CreateDeploymentQuery()
+                        .SetDeploymentName(deployment.Name)
+                        .SetDeploymentTenantId(deployment.TenantId)
+                        .SetOrderByDeploymenTime()
+                        .Desc()
+                        .List();
+
+                    if (deploymentList.Count > 0)
                     {
-                        //按部署时间倒序排序,始终与最后一次部署做比较
-                        IList<IDeployment> deploymentList = commandContext.ProcessEngineConfiguration.RepositoryService.CreateDeploymentQuery()
-                            .SetDeploymentName(deployment.Name)
-                            .SetDeploymentTenantId(deployment.TenantId)
-                            .SetOrderByDeploymenTime()
-                            .Desc()
-                            .List();
-
-                        if (deploymentList.Count > 0)
-                        {
-                            ((List<IDeployment>)existingDeployments).AddRange(deploymentList);
-                        }
-                    }
-
-                    {
-                        IDeploymentEntity existingDeployment = null;
-                        if (existingDeployments.Count > 0)
-                        {
-                            existingDeployment = (IDeploymentEntity)existingDeployments[0];
-                        }
-
-                        if ((existingDeployment is object) && !DeploymentsDiffer(deployment, existingDeployment))
-                        {
-                            commandContext.ProcessEngineConfiguration.DeploymentEntityManager.RemoveDrafts(deployment.TenantId, deployment.Name);
-
-                            return existingDeployment;
-                        }
+                        ((List<IDeployment>)existingDeployments).AddRange(deploymentList);
                     }
                 }
 
-                deployment.New = true;
-
-                // Save the data
-                commandContext.DeploymentEntityManager.Insert(deployment);
-
-                if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
                 {
-                    commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, deployment));
+                    IDeploymentEntity existingDeployment = null;
+                    if (existingDeployments.Count > 0)
+                    {
+                        existingDeployment = (IDeploymentEntity)existingDeployments[0];
+                    }
+
+                    if ((existingDeployment is object) && !DeploymentsDiffer(deployment, existingDeployment))
+                    {
+                        commandContext.ProcessEngineConfiguration.DeploymentEntityManager.RemoveDrafts(deployment.TenantId, deployment.Name);
+
+                        return existingDeployment;
+                    }
                 }
-
-                // Deployment settings
-                IDictionary<string, object> deploymentSettings = new Dictionary<string, object>
-                {
-                    [DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED] = deploymentBuilder.Bpmn20XsdValidationEnabled,
-                    [DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED] = deploymentBuilder.ProcessValidationEnabled
-                };
-
-                // Actually deploy
-                commandContext.ProcessEngineConfiguration.DeploymentManager.Deploy(deployment, deploymentSettings);
-
-                if (deploymentBuilder.ProcessDefinitionsActivationDate is object)
-                {
-                    ScheduleProcessDefinitionActivation(commandContext, deployment);
-                }
-
-                if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
-                {
-                    commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, deployment));
-                }
-
-                commandContext.ProcessEngineConfiguration.DeploymentEntityManager.RemoveDrafts(deployment.TenantId, deployment.Name);
-
-                return deployment;
             }
+
+            deployment.New = true;
+
+            // Save the data
+            commandContext.DeploymentEntityManager.Insert(deployment);
+
+            if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            {
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, deployment));
+            }
+
+            // Deployment settings
+            IDictionary<string, object> deploymentSettings = new Dictionary<string, object>
+            {
+                [DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED] = deploymentBuilder.Bpmn20XsdValidationEnabled,
+                [DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED] = deploymentBuilder.ProcessValidationEnabled
+            };
+
+            // Actually deploy
+            commandContext.ProcessEngineConfiguration.DeploymentManager.Deploy(deployment, deploymentSettings);
+
+            if (deploymentBuilder.ProcessDefinitionsActivationDate is object)
+            {
+                ScheduleProcessDefinitionActivation(commandContext, deployment);
+            }
+
+            if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            {
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, deployment));
+            }
+
+            commandContext.ProcessEngineConfiguration.DeploymentEntityManager.RemoveDrafts(deployment.TenantId, deployment.Name);
+
+            return deployment;
         }
 
         protected internal virtual bool DeploymentsDiffer(IDeploymentEntity deployment, IDeploymentEntity saved)

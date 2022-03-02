@@ -61,33 +61,30 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal override void ExecuteTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
         {
-            lock (syncRoot)
+            taskEntity.SetVariable(WorkflowVariable.GLOBAL_APPROVALED_VARIABLE, false);
+            taskEntity.SetVariableLocal(WorkflowVariable.GLOBAL_OPERATOR_STATE, 4);
+            // Task complete logic
+            CompleteTask(commandContext, taskEntity, variables, localScope);
+
+            if (!string.IsNullOrWhiteSpace(completeReason))
             {
-                taskEntity.SetVariable(WorkflowVariable.GLOBAL_APPROVALED_VARIABLE, false);
-                taskEntity.SetVariableLocal(WorkflowVariable.GLOBAL_OPERATOR_STATE, 4);
-                // Task complete logic
-                CompleteTask(commandContext, taskEntity, variables, localScope);
+                commandContext.ProcessEngineConfiguration.commandExecutor
+                    .Execute(new AddCommentCmd(taskId, taskEntity.ProcessInstanceId, completeReason));
+            }
 
-                if (!string.IsNullOrWhiteSpace(completeReason))
-                {
-                    commandContext.ProcessEngineConfiguration.commandExecutor
-                        .Execute(new AddCommentCmd(taskId, taskEntity.ProcessInstanceId, completeReason));
-                }
+            IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
 
-                IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
+            if (eventDispatcher.Enabled)
+            {
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateCustomTaskCompletedEvent(taskEntity, ActivitiEventType.TASK_TERMINATED));
+            }
 
-                if (eventDispatcher.Enabled)
-                {
-                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateCustomTaskCompletedEvent(taskEntity, ActivitiEventType.TASK_TERMINATED));
-                }
-
-                // Continue process (if not a standalone task)
-                if (taskEntity.ExecutionId is object && isTerminateExecution)
-                {
-                    IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
-                    executionEntity.SetVariableLocal(WorkflowVariable.GLOBAL_TERMINATE_TASK_VARNAME, true);
-                    Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
-                }
+            // Continue process (if not a standalone task)
+            if (taskEntity.ExecutionId is object && isTerminateExecution)
+            {
+                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
+                executionEntity.SetVariableLocal(WorkflowVariable.GLOBAL_TERMINATE_TASK_VARNAME, true);
+                Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
             }
         }
     }

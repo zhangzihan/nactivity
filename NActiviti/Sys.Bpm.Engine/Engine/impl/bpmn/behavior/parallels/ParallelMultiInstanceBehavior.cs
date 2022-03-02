@@ -114,146 +114,143 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <param name="signalData"></param>
         public override void Leave(IExecutionEntity execution, object signalData)
         {
-            lock (syncRoot)
+            ICommandContext commandContext = Context.CommandContext;
+            if (commandContext is null)
             {
-                ICommandContext commandContext = Context.CommandContext;
-                if (commandContext is null)
+                throw new ActivitiException("lazy loading outside command context");
+            }
+
+            completedPolicy.LeaveExection = execution;
+
+            bool zeroNrOfInstances = false;
+            if (ResolveNrOfInstances(execution) == 0)
+            {
+                // Empty collection, just leave.
+                zeroNrOfInstances = true;
+                RemoveLocalLoopVariable(execution, CollectionElementIndexVariable);
+                base.Leave(execution, signalData); // Plan the default leave
+                execution.IsMultiInstanceRoot = false;
+            }
+
+            int loopCounter = GetLoopVariable(execution, CollectionElementIndexVariable).GetValueOrDefault(0);
+            int nrOfInstances = GetLoopVariable(execution, NUMBER_OF_INSTANCES).GetValueOrDefault(0);
+            int nrOfCompletedInstances = GetLoopVariable(execution, NUMBER_OF_COMPLETED_INSTANCES).GetValueOrDefault(0) + 1;
+            int nrOfActiveInstances = GetLoopVariable(execution, NUMBER_OF_ACTIVE_INSTANCES).GetValueOrDefault(0) - 1;
+
+            Context.CommandContext.HistoryManager.RecordActivityEnd(execution, null);
+            CallActivityEndListeners(execution);
+
+            if (zeroNrOfInstances)
+            {
+                return;
+            }
+
+            IExecutionEntity miRootExecution = GetMultiInstanceRootExecution(execution);
+            if (miRootExecution is object)
+            { // will be null in case of empty collection
+                SetLoopVariable(miRootExecution, NUMBER_OF_COMPLETED_INSTANCES, nrOfCompletedInstances);
+                SetLoopVariable(miRootExecution, NUMBER_OF_ACTIVE_INSTANCES, nrOfActiveInstances < 0 ? 0 : nrOfActiveInstances);
+            }
+
+            //ExecuteCompensationBoundaryEvents(execution.CurrentFlowElement, execution);
+
+            LogLoopDetails(execution, "instance completed", loopCounter, nrOfCompletedInstances, nrOfActiveInstances, nrOfActiveInstances < 0 ? 0 : nrOfActiveInstances);
+
+            if (execution.Parent is object)
+            {
+                execution.Inactivate();
+                LockFirstParentScope(execution);
+
+                if (CompletionConditionSatisfied(execution.Parent, signalData) || nrOfCompletedInstances >= nrOfInstances)
                 {
-                    throw new ActivitiException("lazy loading outside command context");
-                }
-
-                completedPolicy.LeaveExection = execution;
-
-                bool zeroNrOfInstances = false;
-                if (ResolveNrOfInstances(execution) == 0)
-                {
-                    // Empty collection, just leave.
-                    zeroNrOfInstances = true;
-                    RemoveLocalLoopVariable(execution, CollectionElementIndexVariable);
-                    base.Leave(execution, signalData); // Plan the default leave
-                    execution.IsMultiInstanceRoot = false;
-                }
-
-                int loopCounter = GetLoopVariable(execution, CollectionElementIndexVariable).GetValueOrDefault(0);
-                int nrOfInstances = GetLoopVariable(execution, NUMBER_OF_INSTANCES).GetValueOrDefault(0);
-                int nrOfCompletedInstances = GetLoopVariable(execution, NUMBER_OF_COMPLETED_INSTANCES).GetValueOrDefault(0) + 1;
-                int nrOfActiveInstances = GetLoopVariable(execution, NUMBER_OF_ACTIVE_INSTANCES).GetValueOrDefault(0) - 1;
-
-                Context.CommandContext.HistoryManager.RecordActivityEnd(execution, null);
-                CallActivityEndListeners(execution);
-
-                if (zeroNrOfInstances)
-                {
-                    return;
-                }
-
-                IExecutionEntity miRootExecution = GetMultiInstanceRootExecution(execution);
-                if (miRootExecution is object)
-                { // will be null in case of empty collection
-                    SetLoopVariable(miRootExecution, NUMBER_OF_COMPLETED_INSTANCES, nrOfCompletedInstances);
-                    SetLoopVariable(miRootExecution, NUMBER_OF_ACTIVE_INSTANCES, nrOfActiveInstances < 0 ? 0 : nrOfActiveInstances);
-                }
-
-                //ExecuteCompensationBoundaryEvents(execution.CurrentFlowElement, execution);
-
-                LogLoopDetails(execution, "instance completed", loopCounter, nrOfCompletedInstances, nrOfActiveInstances, nrOfActiveInstances < 0 ? 0 : nrOfActiveInstances);
-
-                if (execution.Parent is object)
-                {
-                    execution.Inactivate();
-                    LockFirstParentScope(execution);
-
-                    if (CompletionConditionSatisfied(execution.Parent, signalData) || nrOfCompletedInstances >= nrOfInstances)
+                    IExecutionEntity executionToUse;
+                    if (nrOfInstances > 0)
                     {
-                        IExecutionEntity executionToUse;
-                        if (nrOfInstances > 0)
-                        {
-                            executionToUse = execution.Parent;
-                        }
-                        else
-                        {
-                            executionToUse = execution;
-                        }
-
-                        bool hasCompensation = false;
-                        Activity activity = (Activity)execution.CurrentFlowElement;
-                        if (activity is Transaction)
-                        {
-                            hasCompensation = true;
-                        }
-                        else if (activity is SubProcess subProcess)
-                        {
-                            foreach (FlowElement subElement in subProcess.FlowElements)
-                            {
-                                if (subElement is Activity subActivity)
-                                {
-                                    if (CollectionUtil.IsNotEmpty(subActivity.BoundaryEvents))
-                                    {
-                                        foreach (BoundaryEvent boundaryEvent in subActivity.BoundaryEvents)
-                                        {
-                                            if (CollectionUtil.IsNotEmpty(boundaryEvent.EventDefinitions) && boundaryEvent.EventDefinitions[0] is CompensateEventDefinition)
-                                            {
-                                                hasCompensation = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (hasCompensation)
-                        {
-                            ScopeUtil.CreateCopyOfSubProcessExecutionForCompensation(executionToUse);
-                        }
-
-                        if (activity is CallActivity)
-                        {
-                            IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
-                            if (executionToUse is object)
-                            {
-                                IList<string> callActivityExecutionIds = new List<string>();
-
-                                // Find all execution entities that are at the call activity
-                                IList<IExecutionEntity> childExecutions = executionEntityManager.CollectChildren(executionToUse);
-                                if (childExecutions is object)
-                                {
-                                    foreach (IExecutionEntity childExecution in childExecutions)
-                                    {
-                                        if (activity.Id.Equals(childExecution.CurrentActivityId))
-                                        {
-                                            callActivityExecutionIds.Add(childExecution.Id);
-                                        }
-                                    }
-
-                                    // Now all call activity executions have been collected, loop again and check which should be removed
-                                    for (int i = childExecutions.Count - 1; i >= 0; i--)
-                                    {
-                                        IExecutionEntity childExecution = childExecutions[i];
-                                        if (!string.IsNullOrWhiteSpace(childExecution.SuperExecutionId) && callActivityExecutionIds.Contains(childExecution.SuperExecutionId))
-                                        {
-
-                                            executionEntityManager.DeleteProcessInstanceExecutionEntity(childExecution.Id, activity.Id, "call activity completion condition met", true, false);
-                                        }
-                                    }
-
-                                }
-                            }
-                        }
-
-                        DeleteChildExecutions(executionToUse, false, Context.CommandContext);
-                        RemoveLocalLoopVariable(executionToUse, CollectionElementIndexVariable);
-                        executionToUse.IsScope = false;
-                        executionToUse.IsMultiInstanceRoot = false;
-                        Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(executionToUse, true);
+                        executionToUse = execution.Parent;
                     }
+                    else
+                    {
+                        executionToUse = execution;
+                    }
+
+                    bool hasCompensation = false;
+                    Activity activity = (Activity)execution.CurrentFlowElement;
+                    if (activity is Transaction)
+                    {
+                        hasCompensation = true;
+                    }
+                    else if (activity is SubProcess subProcess)
+                    {
+                        foreach (FlowElement subElement in subProcess.FlowElements)
+                        {
+                            if (subElement is Activity subActivity)
+                            {
+                                if (CollectionUtil.IsNotEmpty(subActivity.BoundaryEvents))
+                                {
+                                    foreach (BoundaryEvent boundaryEvent in subActivity.BoundaryEvents)
+                                    {
+                                        if (CollectionUtil.IsNotEmpty(boundaryEvent.EventDefinitions) && boundaryEvent.EventDefinitions[0] is CompensateEventDefinition)
+                                        {
+                                            hasCompensation = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (hasCompensation)
+                    {
+                        ScopeUtil.CreateCopyOfSubProcessExecutionForCompensation(executionToUse);
+                    }
+
+                    if (activity is CallActivity)
+                    {
+                        IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
+                        if (executionToUse is object)
+                        {
+                            IList<string> callActivityExecutionIds = new List<string>();
+
+                            // Find all execution entities that are at the call activity
+                            IList<IExecutionEntity> childExecutions = executionEntityManager.CollectChildren(executionToUse);
+                            if (childExecutions is object)
+                            {
+                                foreach (IExecutionEntity childExecution in childExecutions)
+                                {
+                                    if (activity.Id.Equals(childExecution.CurrentActivityId))
+                                    {
+                                        callActivityExecutionIds.Add(childExecution.Id);
+                                    }
+                                }
+
+                                // Now all call activity executions have been collected, loop again and check which should be removed
+                                for (int i = childExecutions.Count - 1; i >= 0; i--)
+                                {
+                                    IExecutionEntity childExecution = childExecutions[i];
+                                    if (!string.IsNullOrWhiteSpace(childExecution.SuperExecutionId) && callActivityExecutionIds.Contains(childExecution.SuperExecutionId))
+                                    {
+
+                                        executionEntityManager.DeleteProcessInstanceExecutionEntity(childExecution.Id, activity.Id, "call activity completion condition met", true, false);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                    DeleteChildExecutions(executionToUse, false, Context.CommandContext);
+                    RemoveLocalLoopVariable(executionToUse, CollectionElementIndexVariable);
+                    executionToUse.IsScope = false;
+                    executionToUse.IsMultiInstanceRoot = false;
+                    Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(executionToUse, true);
                 }
-                else
-                {
-                    RemoveLocalLoopVariable(execution, CollectionElementIndexVariable);
-                    execution.IsMultiInstanceRoot = false;
-                    base.Leave(execution, signalData);
-                }
+            }
+            else
+            {
+                RemoveLocalLoopVariable(execution, CollectionElementIndexVariable);
+                execution.IsMultiInstanceRoot = false;
+                base.Leave(execution, signalData);
             }
         }
 
