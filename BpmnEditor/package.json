@@ -27,7 +27,7 @@
     "jquery": "3.2.1",
     "jquery-ui": "^1.12.1",
     "min-dash": "^3.5.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "rxjs": "^6.5.3",
     "shortid": "2.2.14",
     "string-format": "^2.0.0",
