@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using Xunit;
 using Sys.Workflow.Services.Api.Commands;
-using Sys.Expressions;
 using Newtonsoft.Json.Linq;
 using Sys.Workflow.Engine.Api;
 using Newtonsoft.Json;
@@ -19,6 +18,10 @@ using Spring.Expressions.Processors;
 using System.Dynamic;
 using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
+using MSExpr = AdaptiveExpressions;
+using Sys.Expressions;
+using ExpressionEvaluator = Spring.Expressions.ExpressionEvaluator;
+using System.Linq.Expressions;
 
 namespace Sys.Workflow.Client.Tests.Expression
 {
@@ -29,6 +32,22 @@ namespace Sys.Workflow.Client.Tests.Expression
         public ExpressionTest()
         {
             typeRegistry = new ExpressionTypeRegistry();
+
+            //MSExpr.Expression.Functions.Add("CollectionUtil.SingletonMap", (args) =>
+            //{
+            //    return CollectionUtil.SingletonMap(args[0]?.ToString(), args[1].value);
+            //});
+
+            //LambdaExpression
+
+            //TypeRegistry.RegisterType(typeof(CollectionUtil));
+            //TypeRegistry.RegisterType(typeof(ConfigUtil));
+            //TypeRegistry.RegisterType(typeof(DateTimeHelper));
+            //TypeRegistry.RegisterType(typeof(UrlUtil));
+            //TypeRegistry.RegisterType(typeof(Math));
+            //TypeRegistry.RegisterType(typeof(String));
+            //TypeRegistry.RegisterType(typeof(MathHelper));
+            //TypeRegistry.RegisterType(typeof(NumberUtils));
         }
 
         class ObjectData

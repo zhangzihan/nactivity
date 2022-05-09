@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Ahoo Wang</Authors>
     <Company>Ahoo Wang</Company>
     <Description>SmartSql = MyBatis + Cache(Memory | Redis) + ZooKeeper + R/W Splitting + ......</Description>
@@ -28,11 +28,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\SmartSql.xml</DocumentationFile>
   </PropertyGroup>
-  
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight " Version="4.3.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Configuration\Tags\TagBuilder\DefaultTagBuilder.cs" />
@@ -40,10 +35,10 @@
 
   <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.Reflection" Version="2.2.0" />
-    <PackageReference Include="Dapper" Version="2.0.35" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
