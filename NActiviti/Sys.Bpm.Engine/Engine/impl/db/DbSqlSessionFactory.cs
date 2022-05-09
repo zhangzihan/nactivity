@@ -144,9 +144,36 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// <param name="clazz"></param>
         /// <param name="managedType"></param>
         /// <returns></returns>
+        public virtual string GetBulkUpdateStatement(Type clazz, ref Type managedType)
+        {
+            return GetBulkUpdateStatement(clazz, databaseType, ref managedType);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="managedType"></param>
+        /// <returns></returns>
+        public virtual string GetBulkUpdateStatement(Type clazz, string dbType, ref Type managedType)
+        {
+            return GetStatement(clazz, $"{dbType}bulkUpdate", ref managedType);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="managedType"></param>
+        /// <returns></returns>
         public virtual string GetDeleteStatement(Type clazz, ref Type managedType)
         {
             return GetStatement(clazz, "delete", ref managedType);
+        }
+
+        public virtual string GetBulkDeleteWithRevisionStatement(Type clazz, ref Type managedType)
+        {
+            return GetStatement(clazz, "bulkDeleteWithRevision", ref managedType);
         }
 
         /// <summary>

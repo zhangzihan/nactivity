@@ -77,15 +77,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                         ExecuteCloseListenersClosing();
                         if (_exception is null)
                         {
-                            using (var ts = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
-                            {
-                                IsolationLevel = IsolationLevel.RepeatableRead,
-                                Timeout = processEngineConfiguration.TransactionOption.TransactionTimeout.GetValueOrDefault(TimeSpan.FromMinutes(15))
-                            }, TransactionScopeAsyncFlowOption.Enabled))
-                            {
-                                FlushSessions();
-                                ts.Complete();
-                            }
+                            FlushSessions();
                         }
                     }
                     catch (Exception exception)

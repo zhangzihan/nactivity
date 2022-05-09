@@ -16,37 +16,37 @@
 
 <SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
-  <!-- TASK RESULTMAP -->
-  <ResultMap Id="taskResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntityImpl,Sys.Bpm.Engine">
-    <Result Property="id" Column="ID_" />
-    <Result Property="revision" Column="REV_" />
-    <Result Property="name" Column="NAME_" />
-    <Result Property="parentTaskId" Column="PARENT_TASK_ID_" />
-    <Result Property="description" Column="DESCRIPTION_" />
-    <Result Property="priority" Column="PRIORITY_" />
-    <Result Property="createTime" Column="CREATE_TIME_" />
-    <Result Property="owner" Column="OWNER_" />
-    <Result Property="assignee" Column="ASSIGNEE_" />
-    <Result Property="assigneeUser" Column="ASSIGNEE_USER_" />
-    <Result Property="delegationStateString" Column="DELEGATION_" />
-    <Result Property="executionId" Column="EXECUTION_ID_" />
-    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
-    <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
-    <Result Property="taskDefinitionKey" Column="TASK_DEF_KEY_" />
-    <Result Property="dueDate" Column="DUE_DATE_" />
-    <Result Property="category" Column="CATEGORY_" />
-    <Result Property="suspensionState" Column="SUSPENSION_STATE_" />
-    <Result Property="tenantId" Column="TENANT_ID_" />
-    <Result Property="formKey" Column="FORM_KEY_" />
-    <Result Property="claimTime" Column="CLAIM_TIME_" />
-    <Result Property="isAppend" Column="IS_APPEND_" />
-    <Result Property="isTransfer" Column="IS_TRANSFER_" />
-    <Result Property="isRuntime" Column="IS_RUNTIME_" />
-    <Result Property="canTransfer" Column="CAN_TRANSFER_" />
-    <Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
-  </ResultMap>
+	<!-- TASK RESULTMAP -->
+	<ResultMap Id="taskResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntityImpl,Sys.Bpm.Engine">
+		<Result Property="id" Column="ID_" />
+		<Result Property="revision" Column="REV_" />
+		<Result Property="name" Column="NAME_" />
+		<Result Property="parentTaskId" Column="PARENT_TASK_ID_" />
+		<Result Property="description" Column="DESCRIPTION_" />
+		<Result Property="priority" Column="PRIORITY_" />
+		<Result Property="createTime" Column="CREATE_TIME_" />
+		<Result Property="owner" Column="OWNER_" />
+		<Result Property="assignee" Column="ASSIGNEE_" />
+		<Result Property="assigneeUser" Column="ASSIGNEE_USER_" />
+		<Result Property="delegationStateString" Column="DELEGATION_" />
+		<Result Property="executionId" Column="EXECUTION_ID_" />
+		<Result Property="processInstanceId" Column="PROC_INST_ID_" />
+		<Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
+		<Result Property="taskDefinitionKey" Column="TASK_DEF_KEY_" />
+		<Result Property="dueDate" Column="DUE_DATE_" />
+		<Result Property="category" Column="CATEGORY_" />
+		<Result Property="suspensionState" Column="SUSPENSION_STATE_" />
+		<Result Property="tenantId" Column="TENANT_ID_" />
+		<Result Property="formKey" Column="FORM_KEY_" />
+		<Result Property="claimTime" Column="CLAIM_TIME_" />
+		<Result Property="isAppend" Column="IS_APPEND_" />
+		<Result Property="isTransfer" Column="IS_TRANSFER_" />
+		<Result Property="isRuntime" Column="IS_RUNTIME_" />
+		<Result Property="canTransfer" Column="CAN_TRANSFER_" />
+		<Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
+	</ResultMap>
 
-  <!--
+	<!--
     <collection property="queryVariables" column="TASK_ID_" javaType="ArrayList" ofType="Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntityImpl">
       <id property="id" column="VAR_ID_"/>
       <result property="name" column="VAR_NAME_" javaType="String" jdbcType="VARCHAR" />
@@ -62,218 +62,218 @@
       <result property="longValue" column="VAR_LONG_" jdbcType="BIGINT" />
     </collection>-->
 
-  <ResultMap Id="taskAndVariablesResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntityImpl,Sys.Bpm.Engine">
-    <Result Property="id" Column="ID_" />
-    <Result Property="revision" Column="REV_" />
-    <Result Property="name" Column="NAME_" />
-    <Result Property="parentTaskId" Column="PARENT_TASK_ID_" />
-    <Result Property="description" Column="DESCRIPTION_" />
-    <Result Property="priority" Column="PRIORITY_" />
-    <Result Property="createTime" Column="CREATE_TIME_" />
-    <Result Property="owner" Column="OWNER_" />
-    <Result Property="assignee" Column="ASSIGNEE_" />
-    <Result Property="assigneeUser" Column="ASSIGNEE_USER_" />
-    <Result Property="delegationStateString" Column="DELEGATION_" />
-    <Result Property="executionId" Column="EXECUTION_ID_" />
-    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
-    <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
-    <Result Property="taskDefinitionKey" Column="TASK_DEF_KEY_" />
-    <Result Property="dueDate" Column="DUE_DATE_" />
-    <Result Property="category" Column="CATEGORY_" />
-    <Result Property="suspensionState" Column="SUSPENSION_STATE_" />
-    <Result Property="tenantId" Column="TENANT_ID_" />
-    <Result Property="formKey" Column="FORM_KEY_" />
-    <Result Property="claimTime" Column="CLAIM_TIME_" />
-    <Result Property="isAppend" Column="IS_APPEND_" />
-    <Result Property="isTransfer" Column="IS_TRANSFER_" />
-    <Result Property="isRuntime" Column="IS_RUNTIME_" />
-    <Result Property="canTransfer" Column="CAN_TRANSFER_" />
-    <Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
-  </ResultMap>
+	<ResultMap Id="taskAndVariablesResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntityImpl,Sys.Bpm.Engine">
+		<Result Property="id" Column="ID_" />
+		<Result Property="revision" Column="REV_" />
+		<Result Property="name" Column="NAME_" />
+		<Result Property="parentTaskId" Column="PARENT_TASK_ID_" />
+		<Result Property="description" Column="DESCRIPTION_" />
+		<Result Property="priority" Column="PRIORITY_" />
+		<Result Property="createTime" Column="CREATE_TIME_" />
+		<Result Property="owner" Column="OWNER_" />
+		<Result Property="assignee" Column="ASSIGNEE_" />
+		<Result Property="assigneeUser" Column="ASSIGNEE_USER_" />
+		<Result Property="delegationStateString" Column="DELEGATION_" />
+		<Result Property="executionId" Column="EXECUTION_ID_" />
+		<Result Property="processInstanceId" Column="PROC_INST_ID_" />
+		<Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
+		<Result Property="taskDefinitionKey" Column="TASK_DEF_KEY_" />
+		<Result Property="dueDate" Column="DUE_DATE_" />
+		<Result Property="category" Column="CATEGORY_" />
+		<Result Property="suspensionState" Column="SUSPENSION_STATE_" />
+		<Result Property="tenantId" Column="TENANT_ID_" />
+		<Result Property="formKey" Column="FORM_KEY_" />
+		<Result Property="claimTime" Column="CLAIM_TIME_" />
+		<Result Property="isAppend" Column="IS_APPEND_" />
+		<Result Property="isTransfer" Column="IS_TRANSFER_" />
+		<Result Property="isRuntime" Column="IS_RUNTIME_" />
+		<Result Property="canTransfer" Column="CAN_TRANSFER_" />
+		<Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
+	</ResultMap>
 
-  <!-- TASK INSERT -->
+	<!-- TASK INSERT -->
 
-  <Insert Id="insertTask">
-    insert into ACT_RU_TASK (ID_, REV_, NAME_, PARENT_TASK_ID_, DESCRIPTION_, PRIORITY_, CREATE_TIME_, OWNER_,
-    ASSIGNEE_, ASSIGNEE_USER_, DELEGATION_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, TASK_DEF_KEY_, DUE_DATE_, CATEGORY_, SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, IS_APPEND_, IS_TRANSFER_, IS_RUNTIME_, CAN_TRANSFER_, ONLY_ASSIGNEE_)
-    values (#{id},
-    1,
-    #{name},
-    #{parentTaskId},
-    #{description},
-    #{priority},
-    #{createTime},
-    #{owner},
-    #{assignee},
-    #{assigneeUser},
-    #{delegationStateString},
-    #{executionId},
-    #{processInstanceId},
-    #{processDefinitionId},
-    #{taskDefinitionKey},
-    #{dueDate},
-    #{category},
-    #{suspensionState},
-    #{tenantId},
-    #{formKey},
-    #{isAppend},
-    #{isTransfer},
-    #{isRuntime},
-    #{canTransfer},
-    #{onlyAssignee}
-    )
-  </Insert>
+	<Insert Id="insertTask">
+		insert into ACT_RU_TASK (ID_, REV_, NAME_, PARENT_TASK_ID_, DESCRIPTION_, PRIORITY_, CREATE_TIME_, OWNER_,
+		ASSIGNEE_, ASSIGNEE_USER_, DELEGATION_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, TASK_DEF_KEY_, DUE_DATE_, CATEGORY_, SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, IS_APPEND_, IS_TRANSFER_, IS_RUNTIME_, CAN_TRANSFER_, ONLY_ASSIGNEE_)
+		values (#{id},
+		1,
+		#{name},
+		#{parentTaskId},
+		#{description},
+		#{priority},
+		#{createTime},
+		#{owner},
+		#{assignee},
+		#{assigneeUser},
+		#{delegationStateString},
+		#{executionId},
+		#{processInstanceId},
+		#{processDefinitionId},
+		#{taskDefinitionKey},
+		#{dueDate},
+		#{category},
+		#{suspensionState},
+		#{tenantId},
+		#{formKey},
+		#{isAppend},
+		#{isTransfer},
+		#{isRuntime},
+		#{canTransfer},
+		#{onlyAssignee}
+		)
+	</Insert>
 
-  <Insert Id="bulkInsertTask">
-    INSERT INTO ACT_RU_TASK (ID_, REV_, NAME_, PARENT_TASK_ID_, DESCRIPTION_, PRIORITY_, CREATE_TIME_, OWNER_,
-    ASSIGNEE_, ASSIGNEE_USER_, DELEGATION_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, TASK_DEF_KEY_, DUE_DATE_, CATEGORY_, SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, IS_APPEND_, IS_TRANSFER_, IS_RUNTIME_, CAN_TRANSFER_, ONLY_ASSIGNEE_)
-    VALUES
-    <For Property="Items" Key="task" Separator=",">
-      (#{id},
-      1,
-      #{name},
-      #{parentTaskId},
-      #{description},
-      #{priority},
-      #{createTime},
-      #{owner},
-      #{assignee},
-      #{assigneeUser},
-      #{delegationStateString},
-      #{executionId},
-      #{processInstanceId},
-      #{processDefinitionId},
-      #{taskDefinitionKey},
-      #{dueDate},
-      #{category},
-      #{suspensionState},
-      #{tenantId},
-      #{formKey},
-      #{isAppend},
-      #{isTransfer},
-      #{isRuntime},
-      #{canTransfer},
-      #{onlyAssignee})
-    </For>
-  </Insert>
+	<Insert Id="bulkInsertTask">
+		INSERT INTO ACT_RU_TASK (ID_, REV_, NAME_, PARENT_TASK_ID_, DESCRIPTION_, PRIORITY_, CREATE_TIME_, OWNER_,
+		ASSIGNEE_, ASSIGNEE_USER_, DELEGATION_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, TASK_DEF_KEY_, DUE_DATE_, CATEGORY_, SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, IS_APPEND_, IS_TRANSFER_, IS_RUNTIME_, CAN_TRANSFER_, ONLY_ASSIGNEE_)
+		VALUES
+		<For Property="Items" Key="task" Separator=",">
+			(#{id},
+			1,
+			#{name},
+			#{parentTaskId},
+			#{description},
+			#{priority},
+			#{createTime},
+			#{owner},
+			#{assignee},
+			#{assigneeUser},
+			#{delegationStateString},
+			#{executionId},
+			#{processInstanceId},
+			#{processDefinitionId},
+			#{taskDefinitionKey},
+			#{dueDate},
+			#{category},
+			#{suspensionState},
+			#{tenantId},
+			#{formKey},
+			#{isAppend},
+			#{isTransfer},
+			#{isRuntime},
+			#{canTransfer},
+			#{onlyAssignee})
+		</For>
+	</Insert>
 
-  <!-- TASK UPDATE -->
+	<!-- TASK UPDATE -->
 
-  <Update Id="updateTask">
-    update ACT_RU_TASK
-    <Set>
-      REV_ = #{revisionNext},
-      NAME_ = #{name},
-      PARENT_TASK_ID_ = #{parentTaskId},
-      PRIORITY_ = #{priority},
-      CREATE_TIME_ = #{createTime},
-      OWNER_ = #{owner},
-      ASSIGNEE_ = #{assignee},
-      ASSIGNEE_USER_ = #{assigneeUser},
-      DELEGATION_ = #{delegationStateString},
-      EXECUTION_ID_ = #{executionId},
-      PROC_DEF_ID_ = #{processDefinitionId},
-      DESCRIPTION_ = #{description},
-      DUE_DATE_ = #{dueDate},
-      CATEGORY_ = #{category},
-      SUSPENSION_STATE_ = #{suspensionState},
-      FORM_KEY_ = #{formKey},
-      IS_APPEND_ = #{isAppend},
-      IS_TRANSFER_ = #{isTransfer},
-      IS_RUNTIME_ = #{isRuntime}
-    </Set>
-    where ID_= #{id}
-    and REV_ = #{revision}
-  </Update>
+	<Update Id="updateTask">
+		update ACT_RU_TASK
+		<Set>
+			REV_ = #{revisionNext},
+			NAME_ = #{name},
+			PARENT_TASK_ID_ = #{parentTaskId},
+			PRIORITY_ = #{priority},
+			CREATE_TIME_ = #{createTime},
+			OWNER_ = #{owner},
+			ASSIGNEE_ = #{assignee},
+			ASSIGNEE_USER_ = #{assigneeUser},
+			DELEGATION_ = #{delegationStateString},
+			EXECUTION_ID_ = #{executionId},
+			PROC_DEF_ID_ = #{processDefinitionId},
+			DESCRIPTION_ = #{description},
+			DUE_DATE_ = #{dueDate},
+			CATEGORY_ = #{category},
+			SUSPENSION_STATE_ = #{suspensionState},
+			FORM_KEY_ = #{formKey},
+			IS_APPEND_ = #{isAppend},
+			IS_TRANSFER_ = #{isTransfer},
+			IS_RUNTIME_ = #{isRuntime}
+		</Set>
+		where ID_= #{id}
+		and REV_ = #{revision}
+	</Update>
 
-  <Update Id="updateTaskTenantIdForDeployment">
-    update ACT_RU_TASK set
-    TENANT_ID_ = #{tenantId}
-    where
-    ID_ in (
-    SELECT T.ID_ from ACT_RU_TASK T
-    inner join ACT_RE_PROCDEF P on T.PROC_DEF_ID_  = P.ID_
-    inner join ACT_RE_DEPLOYMENT D on P.DEPLOYMENT_ID_ = D.ID_
-    where D.ID_ = #{deploymentId}
-    )
-  </Update>
+	<Update Id="updateTaskTenantIdForDeployment">
+		update ACT_RU_TASK set
+		TENANT_ID_ = #{tenantId}
+		where
+		ID_ in (
+		SELECT T.ID_ from ACT_RU_TASK T
+		inner join ACT_RE_PROCDEF P on T.PROC_DEF_ID_  = P.ID_
+		inner join ACT_RE_DEPLOYMENT D on P.DEPLOYMENT_ID_ = D.ID_
+		where D.ID_ = #{deploymentId}
+		)
+	</Update>
 
-  <!-- See http://stackoverflow.com/questions/4429319/you-cant-specify-target-table-for-update-in-from-clause
+	<!-- See http://stackoverflow.com/questions/4429319/you-cant-specify-target-table-for-update-in-from-clause
        Tested this on MySQL 5.6: does NOT use a temporary table (so good, performance0 -->
-  <Update Id="updateTaskTenantIdForDeployment_mysql">
-    update ACT_RU_TASK set
-    TENANT_ID_ = #{tenantId}
-    where
-    ID_ in (
+	<Update Id="updateTaskTenantIdForDeployment_mysql">
+		update ACT_RU_TASK set
+		TENANT_ID_ = #{tenantId}
+		where
+		ID_ in (
 
-    SELECT tempTask.tempId
-    FROM (
-    SELECT T.ID_ as tempId
-    FROM  ACT_RU_TASK T
-    inner join ACT_RE_PROCDEF P on T.PROC_DEF_ID_  = P.ID_
-    inner join ACT_RE_DEPLOYMENT D on P.DEPLOYMENT_ID_ = D.ID_
-    where D.ID_ = #{deploymentId}
+		SELECT tempTask.tempId
+		FROM (
+		SELECT T.ID_ as tempId
+		FROM  ACT_RU_TASK T
+		inner join ACT_RE_PROCDEF P on T.PROC_DEF_ID_  = P.ID_
+		inner join ACT_RE_DEPLOYMENT D on P.DEPLOYMENT_ID_ = D.ID_
+		where D.ID_ = #{deploymentId}
 
-    ) AS tempTask
+		) AS tempTask
 
-    )
-  </Update>
+		)
+	</Update>
 
-  <!-- TASK DELETE -->
-  <Delete Id="deleteTask">
-    delete from ACT_RU_TASK where ID_ = #{id} and REV_ = #{revision}
-  </Delete>
+	<!-- TASK DELETE -->
+	<Delete Id="deleteTask">
+		delete from ACT_RU_TASK where ID_ = #{id} and REV_ = #{revision}
+	</Delete>
 
-  <Delete Id="bulkDeleteTask">
-    delete from ACT_RU_TASK where
-    <For Key="task" Property="Items" Separator=" or ">
-      ID_ = #{id}
-    </For>
-  </Delete>
+	<Delete Id="bulkDeleteTask">
+		delete from ACT_RU_TASK where
+		<For Key="task" Property="Items" Separator=" or ">
+			ID_ = #{id}
+		</For>
+	</Delete>
 
-  <!-- TASK SELECT -->
+	<!-- TASK SELECT -->
 
-  <Statement Id="executionVariableOperator">
-    <Switch>
-      <Case Test="queryVariableValue.operator=='EQUALS'">=</Case>
-      <Case Test="queryVariableValue.operator=='NOT_EQUALS'">&lt;&gt;</Case>
-      <Case Test="queryVariableValue.operator=='NOT_EQUALS_IGNORE_CASE'">&lt;&gt;</Case>
-      <Case Test="queryVariableValue.operator=='GREATER_THAN'">&gt;</Case>
-      <Case Test="queryVariableValue.operator=='GREATER_THAN_OR_EQUAL'">&gt;=</Case>
-      <Case Test="queryVariableValue.operator=='LESS_THAN'">&lt;</Case>
-      <Case Test="queryVariableValue.operator=='LESS_THAN_OR_EQUAL'">&lt;=</Case>
-    </Switch>
-  </Statement>
+	<Statement Id="executionVariableOperator">
+		<Switch>
+			<Case Test="queryVariableValue.operator=='EQUALS'">=</Case>
+			<Case Test="queryVariableValue.operator=='NOT_EQUALS'">&lt;&gt;</Case>
+			<Case Test="queryVariableValue.operator=='NOT_EQUALS_IGNORE_CASE'">&lt;&gt;</Case>
+			<Case Test="queryVariableValue.operator=='GREATER_THAN'">&gt;</Case>
+			<Case Test="queryVariableValue.operator=='GREATER_THAN_OR_EQUAL'">&gt;=</Case>
+			<Case Test="queryVariableValue.operator=='LESS_THAN'">&lt;</Case>
+			<Case Test="queryVariableValue.operator=='LESS_THAN_OR_EQUAL'">&lt;=</Case>
+		</Switch>
+	</Statement>
 
-  <Statement Id="commonSelectTaskByQueryCriteriaSql">
-    <If Test="candidateUser != null or candidateGroups != null or bothCandidateAndAssigned or involvedGroups != null">
-      <Switch>
-        <Case Test="bothCandidateAndAssigned">left</Case>
-        <Default>inner</Default>
-      </Switch>
-      join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = RES.ID_
-    </If>
-    <For Property="queryVariableValues" Index="index" Key="queryVariableValue">
-      <Switch>
-        <Case Test="queryVariableValue.local">
-          inner join ACT_RU_VARIABLE A${index} on RES.ID_ = A${index}.TASK_ID_
-        </Case>
-        <Default>
-          inner join ACT_RU_VARIABLE A${index} on RES.PROC_INST_ID_ = A${index}.PROC_INST_ID_
-        </Default>
-      </Switch>
-    </For>
-    <For Property="orQueryObjects" Index="orIndex" Key="orQueryObject">
-      <Trim>
-        <If Test="orQueryObject.candidateUser != null or orQueryObject.candidateGroups != null or orQueryObject.bothCandidateAndAssigned or orQueryObject.involvedGroups != null">
-          <Switch>
-            <Case Test="orQueryObject.bothCandidateAndAssigned or orQueryObject.involvedGroups != null">left</Case>
-            <Default>inner</Default>
-          </Switch>
-          join ACT_RU_IDENTITYLINK I_OR${orIndex} on I_OR${orIndex}.TASK_ID_ = RES.ID_
-        </If>
+	<Statement Id="commonSelectTaskByQueryCriteriaSql">
+		<If Test="candidateUser != null or candidateGroups != null or bothCandidateAndAssigned or involvedGroups != null">
+			<Switch>
+				<Case Test="bothCandidateAndAssigned">left</Case>
+				<Default>inner</Default>
+			</Switch>
+			join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = RES.ID_
+		</If>
+		<For Property="queryVariableValues" Index="index" Key="queryVariableValue">
+			<Switch>
+				<Case Test="queryVariableValue.local">
+					inner join ACT_RU_VARIABLE A${index} on RES.ID_ = A${index}.TASK_ID_
+				</Case>
+				<Default>
+					inner join ACT_RU_VARIABLE A${index} on RES.PROC_INST_ID_ = A${index}.PROC_INST_ID_
+				</Default>
+			</Switch>
+		</For>
+		<For Property="orQueryObjects" Index="orIndex" Key="orQueryObject">
+			<Trim>
+				<If Test="orQueryObject.candidateUser != null or orQueryObject.candidateGroups != null or orQueryObject.bothCandidateAndAssigned or orQueryObject.involvedGroups != null">
+					<Switch>
+						<Case Test="orQueryObject.bothCandidateAndAssigned or orQueryObject.involvedGroups != null">left</Case>
+						<Default>inner</Default>
+					</Switch>
+					join ACT_RU_IDENTITYLINK I_OR${orIndex} on I_OR${orIndex}.TASK_ID_ = RES.ID_
+				</If>
 
-        <!--<If Test="orQueryObject.queryVariableValues">
+				<!--<If Test="orQueryObject.queryVariableValues">
           <If Test="orQueryObject.hasLocalQueryVariableValue()">
             left outer join ACT_RU_VARIABLE A_L_OR${orIndex} on RES.ID_ = A_L_OR${orIndex}.TASK_ID_
           </If>
@@ -282,862 +282,862 @@
           </If>
         </If>-->
 
-        <If Test="orQueryObject.processDefinitionKey != null or orQueryObject.processDefinitionKeyLike != null or orQueryObject.processDefinitionKeyLikeIgnoreCase != null or orQueryObject.processDefinitionName != null or orQueryObject.processDefinitionNameLike != null or (orQueryObject.processCategoryInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryInList)) or (orQueryObject.processCategoryNotInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryNotInList)) or (orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys))">
-          left outer join ACT_RE_PROCDEF D_OR${orIndex} on RES.PROC_DEF_ID_ = D_OR${orIndex}.ID_
-        </If>
+				<If Test="orQueryObject.processDefinitionKey != null or orQueryObject.processDefinitionKeyLike != null or orQueryObject.processDefinitionKeyLikeIgnoreCase != null or orQueryObject.processDefinitionName != null or orQueryObject.processDefinitionNameLike != null or (orQueryObject.processCategoryInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryInList)) or (orQueryObject.processCategoryNotInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryNotInList)) or (orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys))">
+					left outer join ACT_RE_PROCDEF D_OR${orIndex} on RES.PROC_DEF_ID_ = D_OR${orIndex}.ID_
+				</If>
 
-        <If Test="orQueryObject.processInstanceBusinessKey != null or orQueryObject.processInstanceBusinessKeyLike != null or orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
-          inner join ACT_RU_EXECUTION E_OR${orIndex} on RES.PROC_INST_ID_ = E_OR${orIndex}.ID_
-        </If>
+				<If Test="orQueryObject.processInstanceBusinessKey != null or orQueryObject.processInstanceBusinessKeyLike != null or orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
+					inner join ACT_RU_EXECUTION E_OR${orIndex} on RES.PROC_INST_ID_ = E_OR${orIndex}.ID_
+				</If>
 
-        <If Test="orQueryObject.deploymentId != null or (orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds))">
-          left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
-        </If>
-      </Trim>
-    </For>
+				<If Test="orQueryObject.deploymentId != null or (orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds))">
+					left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
+				</If>
+			</Trim>
+		</For>
 
-    <If Test="processDefinitionKey != null or processDefinitionKeyLike != null or  processDefinitionKeyLikeIgnoreCase != null or processDefinitionName != null or processDefinitionNameLike != null or (processCategoryInList != null and CollectionUtil.IsNotEmpty(processCategoryInList)) or (processCategoryNotInList != null and CollectionUtil.IsNotEmpty(processCategoryNotInList)) or (processDefinitionKeys != null and CollectionUtil.IsNotEmpty(processDefinitionKeys))">
-      inner join ACT_RE_PROCDEF D on RES.PROC_DEF_ID_ = D.ID_
-    </If>
-    <If Test="processInstanceBusinessKey != null or processInstanceBusinessKeyLike != null  or processInstanceBusinessKeyLikeIgnoreCase != null">
-      inner join ACT_RU_EXECUTION E 
-      <IsTrue Property="isTaskBusinessKey">
-        on RES.EXECUTION_ID_ = E.ID_
-      </IsTrue>
-      <IsFalse Property="isTaskBusinessKey">
-        on RES.PROC_INST_ID_ = E.ID_
-      </IsFalse>
-    </If>
-    <If Test="deploymentId != null or (deploymentIds != null and CollectionUtil.IsNotEmpty(deploymentIds))">
-      left outer join ACT_RE_PROCDEF DEPLOY_P ON RES.PROC_DEF_ID_ = DEPLOY_P.ID_
-    </If>
-    <Where>
-      <If Test="taskId != null">
-        RES.ID_ = #{taskId}
-      </If>
-      <If Test="isRuntime">
-        RES.IS_RUNTIME_ = #{isRuntime}
-      </If>
-      <If Test="isTransfer">
-        RES.IS_TRANSFER_ = #{isTransfer}
-      </If>
-      <If Test="isAppend">
-        RES.IS_APPEND_ = #{isAppend}
-      </If>
-      <If Test="name != null">
-        and RES.NAME_ = #{name}
-      </If>
-      <If Test="nameLike != null">
-        and RES.NAME_ like #{nameLike}${wildcardEscapeClause}
-      </If>
-      <If Test="nameLikeIgnoreCase != null">
-        and lower(RES.NAME_) like #{nameLikeIgnoreCase}${wildcardEscapeClause}
-      </If>
-      <If Test="nameList != null and CollectionUtil.IsNotEmpty(nameList)">
-        and RES.NAME_ IN
-        <For Key="name" Index="index" Property="nameList" Open="(" Separator="," Close=")">
-          #{name}
-        </For>
-      </If>
-      <If Test="nameListIgnoreCase != null and CollectionUtil.IsNotEmpty(nameListIgnoreCase)">
-        and lower(RES.NAME_) IN
-        <For Key="name" Index="index" Property="nameListIgnoreCase" Open="(" Separator="," Close=")">
-          #{name}
-        </For>
-      </If>
-      <If Test="description != null">
-        and RES.DESCRIPTION_ = #{description}
-      </If>
-      <If Test="descriptionLike != null">
-        and RES.DESCRIPTION_ like #{descriptionLike}${wildcardEscapeClause}
-      </If>
-      <If Test="descriptionLikeIgnoreCase != null">
-        and lower(RES.DESCRIPTION_) like #{descriptionLikeIgnoreCase}${wildcardEscapeClause}
-      </If>
-      <If Test="priority != null">
-        and RES.PRIORITY_ = #{priority}
-      </If>
-      <If Test="minPriority != null">
-        and RES.PRIORITY_ &gt;= #{minPriority}
-      </If>
-      <If Test="maxPriority != null">
-        and RES.PRIORITY_ &lt;= #{maxPriority}
-      </If>
-      <If Test="assignee != null">
-        and RES.ASSIGNEE_ = #{assignee}
-      </If>
-      <If Test="assigneeLike != null">
-        and RES.ASSIGNEE_ like #{assigneeLike}${wildcardEscapeClause}
-      </If>
-      <If Test="assigneeLikeIgnoreCase != null">
-        and lower(RES.ASSIGNEE_) like #{assigneeLikeIgnoreCase}${wildcardEscapeClause}
-      </If>
-      <If Test="assigneeIds != null and CollectionUtil.IsNotEmpty(assigneeIds)">
-        and RES.ASSIGNEE_ IN
-        <For Key="assigneeId" Index="index" Property="assigneeIds"
-                 Open="(" Separator="," Close=")">
-          #{assigneeId}
-        </For>
-      </If>
-      <If Test="owner != null">
-        and RES.OWNER_ = #{owner}
-      </If>
-      <If Test="ownerLike != null">
-        and RES.OWNER_ like #{ownerLike}${wildcardEscapeClause}
-      </If>
-      <If Test="ownerLikeIgnoreCase != null">
-        and lower(RES.OWNER_) like #{ownerLikeIgnoreCase}${wildcardEscapeClause}
-      </If>
-      <If Test="unassigned">
-        and RES.ASSIGNEE_ IS NULL
-      </If>
-      <If Test="noDelegationState">
-        and RES.DELEGATION_ IS NULL
-      </If>
-      <If Test="delegationState != null">
-        and RES.DELEGATION_ = #{delegationStateString}
-      </If>
-      <If Test="processInstanceId != null">
-        and RES.PROC_INST_ID_ = #{processInstanceId}
-      </If>
-      <If Test="processInstanceIds != null and CollectionUtil.IsNotEmpty(processInstanceIds)">
-        and RES.PROC_INST_ID_ IN
-        <For Key="processInstance" Index="index" Property="processInstanceIds"
-                 Open="(" Separator="," Close=")">
-          #{processInstance}
-        </For>
-      </If>
-      <If Test="processInstanceBusinessKey != null">
-        and E.BUSINESS_KEY_ = #{processInstanceBusinessKey}
-      </If>
-      <If Test="processInstanceBusinessKeyLike != null">
-        and E.BUSINESS_KEY_ like #{processInstanceBusinessKeyLike}${wildcardEscapeClause}
-      </If>
-      <If Test="processInstanceBusinessKeyLikeIgnoreCase != null">
-        and lower(E.BUSINESS_KEY_) like #{processInstanceBusinessKeyLikeIgnoreCase}${wildcardEscapeClause}
-      </If>
-      <If Test="executionId != null">
-        and RES.EXECUTION_ID_ = #{executionId}
-      </If>
-      <If Test="CollectionUtil.IsNotEmpty(executionIds)">
-        and RES.EXECUTION_ID_ IN
-        <For Property="executionIds" Index="index" Key="excutionId" Open="(" Separator="," Close=")">
-          #{excutionId}
-        </For>
-      </If>
-      <IsTrue Property="CollectionUtil.IsNotEmpty(taskNotInIds)">
-        and RES.ID_ NOT IN
-        <For Property="taskNotInIds" Index="index" Key="taskId" Open="(" Separator="," Close=")">
-          #{taskId}
-        </For>
-      </IsTrue>
-      <If Test="createTime != null">
-        and RES.CREATE_TIME_ = #{createTime}
-      </If>
-      <If Test="createTimeBefore != null">
-        and RES.CREATE_TIME_ &lt; #{createTimeBefore}
-      </If>
-      <If Test="createTimeAfter != null">
-        and RES.CREATE_TIME_ &gt; #{createTimeAfter}
-      </If>
-      <If Test="key != null">
-        and RES.TASK_DEF_KEY_ = #{key}
-      </If>
-      <If Test="keyLike != null">
-        and RES.TASK_DEF_KEY_ like #{keyLike}${wildcardEscapeClause}
-      </If>
-      <If Test="processDefinitionId != null">
-        and RES.PROC_DEF_ID_ = #{processDefinitionId}
-      </If>
-      <If Test="processDefinitionKey != null">
-        and D.KEY_ = #{processDefinitionKey}
-      </If>
-      <If Test="processDefinitionKeyLike != null">
-        and D.KEY_ like #{processDefinitionKeyLike}${wildcardEscapeClause}
-      </If>
-      <If Test="processDefinitionKeyLikeIgnoreCase != null">
-        and lower(D.KEY_) like #{processDefinitionKeyLikeIgnoreCase}${wildcardEscapeClause}
-      </If>
-      <If Test="processDefinitionKeys != null and CollectionUtil.IsNotEmpty(processDefinitionKeys)">
-        and D.KEY_ in
-        <For Key="item" Index="index" Property="processDefinitionKeys" Open="(" Separator="," Close=")">
-          #{item}${index}
-        </For>
-      </If>
-      <If Test="processDefinitionName != null">
-        and D.NAME_ = #{processDefinitionName}
-      </If>
-      <If Test="processDefinitionNameLike != null">
-        and D.NAME_ like #{processDefinitionNameLike}${wildcardEscapeClause}
-      </If>
-      <If Test="processCategoryInList != null and CollectionUtil.IsNotEmpty(processCategoryInList)">
-        and D.CATEGORY_ IN
-        <For Key="processCategory" Index="index" Property="processCategoryInList"
-                 Open="(" Separator="," Close=")">
-          #{processCategory}${index}
-        </For>
-      </If>
-      <If Test="processCategoryNotInList != null and CollectionUtil.IsNotEmpty(processCategoryNotInList)">
-        and D.CATEGORY_ NOT IN
-        <For Key="processCategory" Index="index" Property="processCategoryNotInList"
-                 Open="(" Separator="," Close=")">
-          #{processCategory}${index}
-        </For>
-      </If>
-      <If Test="deploymentId != null">
-        and DEPLOY_P.DEPLOYMENT_ID_ = #{deploymentId}
-      </If>
-      <If Test="deploymentIds != null and CollectionUtil.IsNotEmpty(deploymentIds)">
-        and DEPLOY_P.DEPLOYMENT_ID_ IN
-        <For Key="deployment" Index="index" Property="deploymentIds"
-                 Open="(" Separator="," Close=")">
-          #{deployment}${index}
-        </For>
-      </If>
-      <If Test="dueDate != null">
-        and RES.DUE_DATE_ = #{dueDate}
-      </If>
-      <If Test="dueBefore != null">
-        and RES.DUE_DATE_ &lt; #{dueBefore}
-      </If>
-      <If Test="dueAfter != null">
-        and RES.DUE_DATE_ &gt; #{dueAfter}
-      </If>
-      <If Test="withoutDueDate">
-        and RES.DUE_DATE_ is null
-      </If>
-      <If Test="dueDate != null or dueBefore != null or dueAfter != null">
-        and RES.DUE_DATE_ is not null
-      </If>
-      <If Test="category != null">
-        and RES.CATEGORY_ = #{category}
-      </If>
-      <If Test="excludeSubtasks">
-        and RES.PARENT_TASK_ID_ IS NULL
-      </If>
-      <If Test="!bothCandidateAndAssigned and (candidateUser != null or candidateGroups != null)">
-        and RES.ASSIGNEE_ is null
-        and I.TYPE_ = 'candidate'
-        and
-        (
-        <If Test="candidateUser != null">
-          I.USER_ID_ = #{candidateUser}
-        </If>
-        <If Test="candidateUser != null and candidateGroups != null and CollectionUtil.IsNotEmpty(candidateGroups)">
-          or
-        </If>
-        <If Test="candidateGroups != null and CollectionUtil.IsNotEmpty(candidateGroups)">
-          I.GROUP_ID_ IN
-          <For Key="group" Property="candidateGroups" Open="(" Separator="," Close=")">
-            #{group}
-          </For>
-        </If>
-        )
-      </If>
-      <If Test="involvedUser != null">
-        and
-        (
-        exists(select LINK.USER_ID_ from ACT_RU_IDENTITYLINK LINK where USER_ID_ = #{involvedUser} and LINK.TASK_ID_ = RES.ID_)
-        or RES.ASSIGNEE_ = #{involvedUser}
-        or RES.OWNER_ = #{involvedUser}
-        )
-      </If>
-      <If Test="involvedGroups != null and CollectionUtil.IsNotEmpty(involvedGroups)">
-        and
-        (
-        I.TYPE_ = 'participant'
-        and
-        I.GROUP_ID_ IN
-        <For Key="group" Property="involvedGroups" Open="(" Separator="," Close=")">
-          #{group}
-        </For>
-        )
-      </If>
-      <For Key="queryVariableValue" Property="queryVariableValues" Index="index">
-        <Trim>
-          <If Test="!queryVariableValue.local">
-            <!-- When process instance variable is queried for, taskId should be null -->
-            and A${index}.TASK_ID_ is null
-          </If>
-          <If Test="queryVariableValue.name != null">
-            <!-- Match-all variable-names when name is null -->
-            and A${index}.NAME_= #{queryVariableValue.name}
-          </If>
-          <If Test="queryVariableValue.name == null">
-            and A${index}.NAME_ is not null
-          </If>
-          <If Test="!queryVariableValue.type=='null'">
-            and A${index}.TYPE_ = #{queryVariableValue.type}
-          </If>
+		<If Test="processDefinitionKey != null or processDefinitionKeyLike != null or  processDefinitionKeyLikeIgnoreCase != null or processDefinitionName != null or processDefinitionNameLike != null or (processCategoryInList != null and CollectionUtil.IsNotEmpty(processCategoryInList)) or (processCategoryNotInList != null and CollectionUtil.IsNotEmpty(processCategoryNotInList)) or (processDefinitionKeys != null and CollectionUtil.IsNotEmpty(processDefinitionKeys))">
+			inner join ACT_RE_PROCDEF D on RES.PROC_DEF_ID_ = D.ID_
+		</If>
+		<If Test="processInstanceBusinessKey != null or processInstanceBusinessKeyLike != null  or processInstanceBusinessKeyLikeIgnoreCase != null">
+			inner join ACT_RU_EXECUTION E
+			<IsTrue Property="isTaskBusinessKey">
+				on RES.EXECUTION_ID_ = E.ID_
+			</IsTrue>
+			<IsFalse Property="isTaskBusinessKey">
+				on RES.PROC_INST_ID_ = E.ID_
+			</IsFalse>
+		</If>
+		<If Test="deploymentId != null or (deploymentIds != null and CollectionUtil.IsNotEmpty(deploymentIds))">
+			left outer join ACT_RE_PROCDEF DEPLOY_P ON RES.PROC_DEF_ID_ = DEPLOY_P.ID_
+		</If>
+		<Where>
+			<If Test="taskId != null">
+				RES.ID_ = #{taskId}
+			</If>
+			<If Test="isRuntime">
+				RES.IS_RUNTIME_ = #{isRuntime}
+			</If>
+			<If Test="isTransfer">
+				RES.IS_TRANSFER_ = #{isTransfer}
+			</If>
+			<If Test="isAppend">
+				RES.IS_APPEND_ = #{isAppend}
+			</If>
+			<If Test="name != null">
+				and RES.NAME_ = #{name}
+			</If>
+			<If Test="nameLike != null">
+				and RES.NAME_ like #{nameLike}${wildcardEscapeClause}
+			</If>
+			<If Test="nameLikeIgnoreCase != null">
+				and lower(RES.NAME_) like #{nameLikeIgnoreCase}${wildcardEscapeClause}
+			</If>
+			<If Test="nameList != null and CollectionUtil.IsNotEmpty(nameList)">
+				and RES.NAME_ IN
+				<For Key="name" Index="index" Property="nameList" Open="(" Separator="," Close=")">
+					#{name}
+				</For>
+			</If>
+			<If Test="nameListIgnoreCase != null and CollectionUtil.IsNotEmpty(nameListIgnoreCase)">
+				and lower(RES.NAME_) IN
+				<For Key="name" Index="index" Property="nameListIgnoreCase" Open="(" Separator="," Close=")">
+					#{name}
+				</For>
+			</If>
+			<If Test="description != null">
+				and RES.DESCRIPTION_ = #{description}
+			</If>
+			<If Test="descriptionLike != null">
+				and RES.DESCRIPTION_ like #{descriptionLike}${wildcardEscapeClause}
+			</If>
+			<If Test="descriptionLikeIgnoreCase != null">
+				and lower(RES.DESCRIPTION_) like #{descriptionLikeIgnoreCase}${wildcardEscapeClause}
+			</If>
+			<If Test="priority != null">
+				and RES.PRIORITY_ = #{priority}
+			</If>
+			<If Test="minPriority != null">
+				and RES.PRIORITY_ &gt;= #{minPriority}
+			</If>
+			<If Test="maxPriority != null">
+				and RES.PRIORITY_ &lt;= #{maxPriority}
+			</If>
+			<If Test="assignee != null">
+				and RES.ASSIGNEE_ = #{assignee}
+			</If>
+			<If Test="assigneeLike != null">
+				and RES.ASSIGNEE_ like #{assigneeLike}${wildcardEscapeClause}
+			</If>
+			<If Test="assigneeLikeIgnoreCase != null">
+				and lower(RES.ASSIGNEE_) like #{assigneeLikeIgnoreCase}${wildcardEscapeClause}
+			</If>
+			<If Test="assigneeIds != null and CollectionUtil.IsNotEmpty(assigneeIds)">
+				and RES.ASSIGNEE_ IN
+				<For Key="assigneeId" Index="index" Property="assigneeIds"
+						 Open="(" Separator="," Close=")">
+					#{assigneeId}
+				</For>
+			</If>
+			<If Test="owner != null">
+				and RES.OWNER_ = #{owner}
+			</If>
+			<If Test="ownerLike != null">
+				and RES.OWNER_ like #{ownerLike}${wildcardEscapeClause}
+			</If>
+			<If Test="ownerLikeIgnoreCase != null">
+				and lower(RES.OWNER_) like #{ownerLikeIgnoreCase}${wildcardEscapeClause}
+			</If>
+			<If Test="unassigned">
+				and RES.ASSIGNEE_ IS NULL
+			</If>
+			<If Test="noDelegationState">
+				and RES.DELEGATION_ IS NULL
+			</If>
+			<If Test="delegationState != null">
+				and RES.DELEGATION_ = #{delegationStateString}
+			</If>
+			<If Test="processInstanceId != null">
+				and RES.PROC_INST_ID_ = #{processInstanceId}
+			</If>
+			<If Test="processInstanceIds != null and CollectionUtil.IsNotEmpty(processInstanceIds)">
+				and RES.PROC_INST_ID_ IN
+				<For Key="processInstance" Index="index" Property="processInstanceIds"
+						 Open="(" Separator="," Close=")">
+					#{processInstance}
+				</For>
+			</If>
+			<If Test="processInstanceBusinessKey != null">
+				and E.BUSINESS_KEY_ = #{processInstanceBusinessKey}
+			</If>
+			<If Test="processInstanceBusinessKeyLike != null">
+				and E.BUSINESS_KEY_ like #{processInstanceBusinessKeyLike}${wildcardEscapeClause}
+			</If>
+			<If Test="processInstanceBusinessKeyLikeIgnoreCase != null">
+				and lower(E.BUSINESS_KEY_) like #{processInstanceBusinessKeyLikeIgnoreCase}${wildcardEscapeClause}
+			</If>
+			<If Test="executionId != null">
+				and RES.EXECUTION_ID_ = #{executionId}
+			</If>
+			<If Test="CollectionUtil.IsNotEmpty(executionIds)">
+				and RES.EXECUTION_ID_ IN
+				<For Property="executionIds" Index="index" Key="excutionId" Open="(" Separator="," Close=")">
+					#{excutionId}
+				</For>
+			</If>
+			<IsTrue Property="CollectionUtil.IsNotEmpty(taskNotInIds)">
+				and RES.ID_ NOT IN
+				<For Property="taskNotInIds" Index="index" Key="taskId" Open="(" Separator="," Close=")">
+					#{taskId}
+				</For>
+			</IsTrue>
+			<If Test="createTime != null">
+				and RES.CREATE_TIME_ = #{createTime}
+			</If>
+			<If Test="createTimeBefore != null">
+				and RES.CREATE_TIME_ &lt; #{createTimeBefore}
+			</If>
+			<If Test="createTimeAfter != null">
+				and RES.CREATE_TIME_ &gt; #{createTimeAfter}
+			</If>
+			<If Test="key != null">
+				and RES.TASK_DEF_KEY_ = #{key}
+			</If>
+			<If Test="keyLike != null">
+				and RES.TASK_DEF_KEY_ like #{keyLike}${wildcardEscapeClause}
+			</If>
+			<If Test="processDefinitionId != null">
+				and RES.PROC_DEF_ID_ = #{processDefinitionId}
+			</If>
+			<If Test="processDefinitionKey != null">
+				and D.KEY_ = #{processDefinitionKey}
+			</If>
+			<If Test="processDefinitionKeyLike != null">
+				and D.KEY_ like #{processDefinitionKeyLike}${wildcardEscapeClause}
+			</If>
+			<If Test="processDefinitionKeyLikeIgnoreCase != null">
+				and lower(D.KEY_) like #{processDefinitionKeyLikeIgnoreCase}${wildcardEscapeClause}
+			</If>
+			<If Test="processDefinitionKeys != null and CollectionUtil.IsNotEmpty(processDefinitionKeys)">
+				and D.KEY_ in
+				<For Key="item" Index="index" Property="processDefinitionKeys" Open="(" Separator="," Close=")">
+					#{item}${index}
+				</For>
+			</If>
+			<If Test="processDefinitionName != null">
+				and D.NAME_ = #{processDefinitionName}
+			</If>
+			<If Test="processDefinitionNameLike != null">
+				and D.NAME_ like #{processDefinitionNameLike}${wildcardEscapeClause}
+			</If>
+			<If Test="processCategoryInList != null and CollectionUtil.IsNotEmpty(processCategoryInList)">
+				and D.CATEGORY_ IN
+				<For Key="processCategory" Index="index" Property="processCategoryInList"
+						 Open="(" Separator="," Close=")">
+					#{processCategory}${index}
+				</For>
+			</If>
+			<If Test="processCategoryNotInList != null and CollectionUtil.IsNotEmpty(processCategoryNotInList)">
+				and D.CATEGORY_ NOT IN
+				<For Key="processCategory" Index="index" Property="processCategoryNotInList"
+						 Open="(" Separator="," Close=")">
+					#{processCategory}${index}
+				</For>
+			</If>
+			<If Test="deploymentId != null">
+				and DEPLOY_P.DEPLOYMENT_ID_ = #{deploymentId}
+			</If>
+			<If Test="deploymentIds != null and CollectionUtil.IsNotEmpty(deploymentIds)">
+				and DEPLOY_P.DEPLOYMENT_ID_ IN
+				<For Key="deployment" Index="index" Property="deploymentIds"
+						 Open="(" Separator="," Close=")">
+					#{deployment}${index}
+				</For>
+			</If>
+			<If Test="dueDate != null">
+				and RES.DUE_DATE_ = #{dueDate}
+			</If>
+			<If Test="dueBefore != null">
+				and RES.DUE_DATE_ &lt; #{dueBefore}
+			</If>
+			<If Test="dueAfter != null">
+				and RES.DUE_DATE_ &gt; #{dueAfter}
+			</If>
+			<If Test="withoutDueDate">
+				and RES.DUE_DATE_ is null
+			</If>
+			<If Test="dueDate != null or dueBefore != null or dueAfter != null">
+				and RES.DUE_DATE_ is not null
+			</If>
+			<If Test="category != null">
+				and RES.CATEGORY_ = #{category}
+			</If>
+			<If Test="excludeSubtasks">
+				and RES.PARENT_TASK_ID_ IS NULL
+			</If>
+			<If Test="!bothCandidateAndAssigned and (candidateUser != null or candidateGroups != null)">
+				and RES.ASSIGNEE_ is null
+				and I.TYPE_ = 'candidate'
+				and
+				(
+				<If Test="candidateUser != null">
+					I.USER_ID_ = #{candidateUser}
+				</If>
+				<If Test="candidateUser != null and candidateGroups != null and CollectionUtil.IsNotEmpty(candidateGroups)">
+					or
+				</If>
+				<If Test="candidateGroups != null and CollectionUtil.IsNotEmpty(candidateGroups)">
+					I.GROUP_ID_ IN
+					<For Key="group" Property="candidateGroups" Open="(" Separator="," Close=")">
+						#{group}
+					</For>
+				</If>
+				)
+			</If>
+			<If Test="involvedUser != null">
+				and
+				(
+				exists(select LINK.USER_ID_ from ACT_RU_IDENTITYLINK LINK where USER_ID_ = #{involvedUser} and LINK.TASK_ID_ = RES.ID_)
+				or RES.ASSIGNEE_ = #{involvedUser}
+				or RES.OWNER_ = #{involvedUser}
+				)
+			</If>
+			<If Test="involvedGroups != null and CollectionUtil.IsNotEmpty(involvedGroups)">
+				and
+				(
+				I.TYPE_ = 'participant'
+				and
+				I.GROUP_ID_ IN
+				<For Key="group" Property="involvedGroups" Open="(" Separator="," Close=")">
+					#{group}
+				</For>
+				)
+			</If>
+			<For Key="queryVariableValue" Property="queryVariableValues" Index="index">
+				<Trim>
+					<If Test="!queryVariableValue.local">
+						<!-- When process instance variable is queried for, taskId should be null -->
+						and A${index}.TASK_ID_ is null
+					</If>
+					<If Test="queryVariableValue.name != null">
+						<!-- Match-all variable-names when name is null -->
+						and A${index}.NAME_= #{queryVariableValue.name}
+					</If>
+					<If Test="queryVariableValue.name == null">
+						and A${index}.NAME_ is not null
+					</If>
+					<If Test="!queryVariableValue.type=='null'">
+						and A${index}.TYPE_ = #{queryVariableValue.type}
+					</If>
 
-          <!-- Variable value -->
-          <If Test="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
-            <Switch>
-              <Case Test="queryVariableValue.operator=='EQUALS_IGNORE_CASE' or queryVariableValue.operator=='NOT_EQUALS_IGNORE_CASE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">
-                and lower(A${index}.TEXT_)
-              </Case>
-              <Default>
-                and A${index}.TEXT_
-              </Default>
-            </Switch>
-            <Switch>
-              <Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">LIKE</Case>
-              <Default>
-                <Include RefId="executionVariableOperator" />
-              </Default>
-            </Switch>
-            #{queryVariableValue.textValue}
-            <Switch>
-              <Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">${wildcardEscapeClause}</Case>
-            </Switch>
-          </If>
-          <If Test="queryVariableValue.textValue2 != null">
-            and A${index}.TEXT2_
-            <Switch>
-              <Case Test="queryVariableValue.operator=='LIKE'">LIKE</Case>
-              <Default>
-                <Include RefId="executionVariableOperator" />
-              </Default>
-            </Switch>
-            #{queryVariableValue.textValue2}
-            <Switch>
-              <Case Test="queryVariableValue.operator='LIKE'">${wildcardEscapeClause}</Case>
-            </Switch>
-          </If>
-          <If Test="queryVariableValue.longValue != null">
-            and A${index}.LONG_
-            <Include RefId="executionVariableOperator" />
-            #{queryVariableValue.longValue}
-          </If>
-          <If Test="queryVariableValue.doubleValue != null">
-            and A${index}.DOUBLE_
-            <Include RefId="executionVariableOperator" />
-            #{queryVariableValue.doubleValue}
-          </If>
-          <!-- Null variable type -->
-          <If Test="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
-            <Switch>
-              <Case Test="queryVariableValue.operator=='NOT_EQUALS'">
-                and (A${index}.TEXT_ is not null or A${index}.TEXT2_ is not null or A${index}.LONG_ is not null or A${index}.DOUBLE_ is not null or A${index}.BYTEARRAY_ID_ is not null)
-              </Case>
-              <Default>
-                and A${index}.TEXT_ is null and A${index}.TEXT2_ is null and A${index}.LONG_ is null and A${index}.DOUBLE_ is null and A${index}.BYTEARRAY_ID_ is null
-              </Default>
-            </Switch>
-          </If>
-        </Trim>
-      </For>
-      <If Test="suspensionState != null">
-        <If Test="suspensionState.stateCode == 1">
-          and RES.SUSPENSION_STATE_ = 1
-        </If>
-        <If Test="suspensionState.stateCode == 2">
-          and RES.SUSPENSION_STATE_ = 2
-        </If>
-      </If>
-      <If Test="tenantId != null">
-        and RES.TENANT_ID_ = #{tenantId}
-      </If>
-      <If Test="tenantIdLike != null">
-        and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
-      </If>
-      <If Test="withoutTenantId">
-        and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
-      </If>
-      <Switch>
-        <Case Test="bothCandidateAndAssigned">
-          <!-- if dbIdentityUsed set true in process engine configuration -->
-          <If Test="userIdForCandidateAndAssignee != null and candidateGroups == null">
-            and (RES.ASSIGNEE_ = #{userIdForCandidateAndAssignee} or (RES.ASSIGNEE_ is null and (I.USER_ID_ = #{userIdForCandidateAndAssignee} ) ) )
-          </If>
-          <!-- if dbIdentityUsed set false in process engine configuration of using custom session factory of GroupIdentityManager -->
-          <If Test="candidateGroups != null">
-            and (RES.ASSIGNEE_ = #{userIdForCandidateAndAssignee}
-            or (RES.ASSIGNEE_ is null
-            and I.TYPE_ = 'candidate' and (I.USER_ID_ = #{userIdForCandidateAndAssignee}
-            <If Test="CollectionUtil.IsNotEmpty(candidateGroups)">
-              or I.GROUP_ID_ IN
-              <For Key="group" Property="candidateGroups" Open="(" Separator="," Close=")">
-                #{group}
-              </For>
-            </If>
-            )))
-          </If>
-        </Case>
-      </Switch>
-      <For Key="orQueryObject" Property="orQueryObjects">
-        and
-        <Trim Prefix="(" Suffix=")">
-          <If Test="orQueryObject.taskId != null">
-            RES.ID_ = #{orQueryObject.taskId}
-          </If>
-          <If Test="orQueryObject.name != null">
-            or RES.NAME_ = #{orQueryObject.name}
-          </If>
-          <If Test="orQueryObject.nameLike != null">
-            or RES.NAME_ like #{orQueryObject.nameLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.nameLikeIgnoreCase != null">
-            or lower(RES.NAME_) like #{orQueryObject.nameLikeIgnoreCase}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.nameList != null and CollectionUtil.IsNotEmpty(orQueryObject.nameList)">
-            or RES.NAME_ IN
-            <For Key="name" Index="index" Property="orQueryObject.nameList"
-                    Open="(" Separator="," Close=")">
-              #{name}
-            </For>
-          </If>
-          <If Test="orQueryObject.nameListIgnoreCase != null and CollectionUtil.IsNotEmpty(orQueryObject.nameListIgnoreCase)">
-            or lower(RES.NAME_) IN
-            <For Key="name" Index="index" Property="orQueryObject.nameListIgnoreCase"
-                     Open="(" Separator="," Close=")">
-              #{name}
-            </For>
-          </If>
-          <If Test="orQueryObject.description != null">
-            or RES.DESCRIPTION_ = #{orQueryObject.description}
-          </If>
-          <If Test="orQueryObject.descriptionLike != null">
-            or RES.DESCRIPTION_ like #{orQueryObject.descriptionLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.descriptionLikeIgnoreCase != null">
-            or lower(RES.DESCRIPTION_) like #{orQueryObject.descriptionLikeIgnoreCase}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.priority != null">
-            or RES.PRIORITY_ = #{orQueryObject.priority}
-          </If>
-          <If Test="orQueryObject.minPriority != null">
-            or RES.PRIORITY_ &gt;= #{orQueryObject.minPriority}
-          </If>
-          <If Test="orQueryObject.maxPriority != null">
-            or RES.PRIORITY_ &lt;= #{orQueryObject.maxPriority}
-          </If>
-          <If Test="orQueryObject.assignee != null">
-            or RES.ASSIGNEE_ = #{orQueryObject.assignee}
-          </If>
-          <If Test="orQueryObject.assigneeLike != null">
-            or RES.ASSIGNEE_ like #{orQueryObject.assigneeLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.assigneeLikeIgnoreCase != null">
-            or lower(RES.ASSIGNEE_) like #{orQueryObject.assigneeLikeIgnoreCase}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.assigneeIds != null and CollectionUtil.IsNotEmpty(orQueryObject.assigneeIds)">
-            or RES.ASSIGNEE_ IN
-            <For Key="assigneeId" Index="index" Property="orQueryObject.assigneeIds"
-                     Open="(" Separator="," Close=")">
-              #{assigneeId}
-            </For>
-          </If>
-          <If Test="orQueryObject.owner != null">
-            or RES.OWNER_ = #{orQueryObject.owner}
-          </If>
-          <If Test="orQueryObject.ownerLike != null">
-            or RES.OWNER_ like #{orQueryObject.ownerLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.ownerLikeIgnoreCase != null">
-            or RES.OWNER_ like #{orQueryObject.ownerLikeIgnoreCase}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.unassigned">
-            or RES.ASSIGNEE_ IS NULL
-          </If>
-          <If Test="orQueryObject.noDelegationState">
-            or RES.DELEGATION_ IS NULL
-          </If>
-          <If Test="orQueryObject.delegationState != null">
-            or RES.DELEGATION_ = #{orQueryObject.delegationStateString}
-          </If>
-          <If Test="orQueryObject.processInstanceId != null">
-            or RES.PROC_INST_ID_ = #{orQueryObject.processInstanceId}
-          </If>
-          <If Test="orQueryObject.processInstanceIds != null and CollectionUtil.IsNotEmpty(orQueryObject.processInstanceIds)">
-            or RES.PROC_INST_ID_ IN
-            <For Key="processInstance" Index="index" Property="orQueryObject.processInstanceIds"
-                     Open="(" Separator="," Close=")">
-              #{processInstance}
-            </For>
-          </If>
-          <If Test="orQueryObject.processInstanceBusinessKey != null">
-            or E_OR${orIndex}.BUSINESS_KEY_ = #{orQueryObject.processInstanceBusinessKey}
-          </If>
-          <If Test="orQueryObject.processInstanceBusinessKeyLike != null">
-            or E_OR${orIndex}.BUSINESS_KEY_ like #{orQueryObject.processInstanceBusinessKeyLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
-            or lower(E.BUSINESS_KEY_) like #{orQueryObject.processInstanceBusinessKeyLikeIgnoreCase}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.executionId != null">
-            or RES.EXECUTION_ID_ = #{orQueryObject.executionId}
-          </If>
-          <If Test="orQueryObject.createTime != null">
-            or RES.CREATE_TIME_ = #{orQueryObject.createTime}
-          </If>
-          <If Test="orQueryObject.createTimeBefore != null">
-            or RES.CREATE_TIME_ &lt; #{orQueryObject.createTimeBefore}
-          </If>
-          <If Test="orQueryObject.createTimeAfter != null">
-            or RES.CREATE_TIME_ &gt; #{orQueryObject.createTimeAfter}
-          </If>
-          <If Test="orQueryObject.key != null">
-            or RES.TASK_DEF_KEY_ = #{orQueryObject.key}
-          </If>
-          <If Test="orQueryObject.keyLike != null">
-            or RES.TASK_DEF_KEY_ like #{orQueryObject.keyLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.processDefinitionId != null">
-            or RES.PROC_DEF_ID_ = #{orQueryObject.processDefinitionId}
-          </If>
-          <If Test="orQueryObject.processDefinitionKey != null">
-            or D_OR${orIndex}.KEY_ = #{orQueryObject.processDefinitionKey}
-          </If>
-          <If Test="orQueryObject.processDefinitionKeyLike != null">
-            or D_OR${orIndex}.KEY_ like #{orQueryObject.processDefinitionKeyLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.processDefinitionKeyLikeIgnoreCase != null">
-            or lower(D_OR${orIndex}.KEY_) like #{orQueryObject.processDefinitionKeyLikeIgnoreCase}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys)">
-            or D_OR${orIndex}.KEY_ in
-            <For Key="item" Index="index" Property="orQueryObject.processDefinitionKeys" Open="(" Separator="," Close=")">
-              #{item}
-            </For>
-          </If>
-          <If Test="orQueryObject.processDefinitionName != null">
-            or D_OR${orIndex}.NAME_ = #{orQueryObject.processDefinitionName}
-          </If>
-          <If Test="orQueryObject.processDefinitionNameLike != null">
-            or D_OR${orIndex}.NAME_ like #{orQueryObject.processDefinitionNameLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.processCategoryInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryInList)">
-            or D_OR${orIndex}.CATEGORY_ IN
-            <For Key="processCategory" Index="index" Property="orQueryObject.processCategoryInList"
-                     Open="(" Separator="," Close=")">
-              #{processCategory}
-            </For>
-          </If>
-          <If Test="orQueryObject.processCategoryNotInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryNotInList)">
-            or D_OR${orIndex}.CATEGORY_ NOT IN
-            <For Key="processCategory" Index="index" Property="orQueryObject.processCategoryNotInList"
-                     Open="(" Separator="," Close=")">
-              #{processCategory}
-            </For>
-          </If>
-          <If Test="orQueryObject.deploymentId != null">
-            or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = #{orQueryObject.deploymentId}
-          </If>
-          <If Test="orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds)">
-            or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ IN
-            <For Key="deployment" Index="index" Property="orQueryObject.deploymentIds" Open="(" Separator="," Close=")">
-              #{deployment}
-            </For>
-          </If>
-          <If Test="orQueryObject.dueDate != null">
-            or RES.DUE_DATE_ = #{orQueryObject.dueDate}
-          </If>
-          <If Test="orQueryObject.dueBefore != null">
-            or (RES.DUE_DATE_ &lt; #{orQueryObject.dueBefore} and RES.DUE_DATE_ is not null)
-          </If>
-          <If Test="orQueryObject.dueAfter != null">
-            or (RES.DUE_DATE_ &gt; #{orQueryObject.dueAfter} and RES.DUE_DATE_ is not null)
-          </If>
-          <If Test="orQueryObject.withoutDueDate">
-            or RES.DUE_DATE_ is null
-          </If>
-          <If Test="orQueryObject.category != null">
-            or RES.CATEGORY_ = #{orQueryObject.category}
-          </If>
-          <If Test="orQueryObject.excludeSubtasks">
-            or RES.PARENT_TASK_ID_ IS NULL
-          </If>
+					<!-- Variable value -->
+					<If Test="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
+						<Switch>
+							<Case Test="queryVariableValue.operator=='EQUALS_IGNORE_CASE' or queryVariableValue.operator=='NOT_EQUALS_IGNORE_CASE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">
+								and lower(A${index}.TEXT_)
+							</Case>
+							<Default>
+								and A${index}.TEXT_
+							</Default>
+						</Switch>
+						<Switch>
+							<Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">LIKE</Case>
+							<Default>
+								<Include RefId="executionVariableOperator" />
+							</Default>
+						</Switch>
+						#{queryVariableValue.textValue}
+						<Switch>
+							<Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">${wildcardEscapeClause}</Case>
+						</Switch>
+					</If>
+					<If Test="queryVariableValue.textValue2 != null">
+						and A${index}.TEXT2_
+						<Switch>
+							<Case Test="queryVariableValue.operator=='LIKE'">LIKE</Case>
+							<Default>
+								<Include RefId="executionVariableOperator" />
+							</Default>
+						</Switch>
+						#{queryVariableValue.textValue2}
+						<Switch>
+							<Case Test="queryVariableValue.operator='LIKE'">${wildcardEscapeClause}</Case>
+						</Switch>
+					</If>
+					<If Test="queryVariableValue.longValue != null">
+						and A${index}.LONG_
+						<Include RefId="executionVariableOperator" />
+						#{queryVariableValue.longValue}
+					</If>
+					<If Test="queryVariableValue.doubleValue != null">
+						and A${index}.DOUBLE_
+						<Include RefId="executionVariableOperator" />
+						#{queryVariableValue.doubleValue}
+					</If>
+					<!-- Null variable type -->
+					<If Test="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
+						<Switch>
+							<Case Test="queryVariableValue.operator=='NOT_EQUALS'">
+								and (A${index}.TEXT_ is not null or A${index}.TEXT2_ is not null or A${index}.LONG_ is not null or A${index}.DOUBLE_ is not null or A${index}.BYTEARRAY_ID_ is not null)
+							</Case>
+							<Default>
+								and A${index}.TEXT_ is null and A${index}.TEXT2_ is null and A${index}.LONG_ is null and A${index}.DOUBLE_ is null and A${index}.BYTEARRAY_ID_ is null
+							</Default>
+						</Switch>
+					</If>
+				</Trim>
+			</For>
+			<If Test="suspensionState != null">
+				<If Test="suspensionState.stateCode == 1">
+					and RES.SUSPENSION_STATE_ = 1
+				</If>
+				<If Test="suspensionState.stateCode == 2">
+					and RES.SUSPENSION_STATE_ = 2
+				</If>
+			</If>
+			<If Test="tenantId != null">
+				and RES.TENANT_ID_ = #{tenantId}
+			</If>
+			<If Test="tenantIdLike != null">
+				and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
+			</If>
+			<If Test="withoutTenantId">
+				and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
+			</If>
+			<Switch>
+				<Case Test="bothCandidateAndAssigned">
+					<!-- if dbIdentityUsed set true in process engine configuration -->
+					<If Test="userIdForCandidateAndAssignee != null and candidateGroups == null">
+						and (RES.ASSIGNEE_ = #{userIdForCandidateAndAssignee} or (RES.ASSIGNEE_ is null and (I.USER_ID_ = #{userIdForCandidateAndAssignee} ) ) )
+					</If>
+					<!-- if dbIdentityUsed set false in process engine configuration of using custom session factory of GroupIdentityManager -->
+					<If Test="candidateGroups != null">
+						and (RES.ASSIGNEE_ = #{userIdForCandidateAndAssignee}
+						or (RES.ASSIGNEE_ is null
+						and I.TYPE_ = 'candidate' and (I.USER_ID_ = #{userIdForCandidateAndAssignee}
+						<If Test="CollectionUtil.IsNotEmpty(candidateGroups)">
+							or I.GROUP_ID_ IN
+							<For Key="group" Property="candidateGroups" Open="(" Separator="," Close=")">
+								#{group}
+							</For>
+						</If>
+						)))
+					</If>
+				</Case>
+			</Switch>
+			<For Key="orQueryObject" Property="orQueryObjects">
+				and
+				<Trim Prefix="(" Suffix=")">
+					<If Test="orQueryObject.taskId != null">
+						RES.ID_ = #{orQueryObject.taskId}
+					</If>
+					<If Test="orQueryObject.name != null">
+						or RES.NAME_ = #{orQueryObject.name}
+					</If>
+					<If Test="orQueryObject.nameLike != null">
+						or RES.NAME_ like #{orQueryObject.nameLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.nameLikeIgnoreCase != null">
+						or lower(RES.NAME_) like #{orQueryObject.nameLikeIgnoreCase}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.nameList != null and CollectionUtil.IsNotEmpty(orQueryObject.nameList)">
+						or RES.NAME_ IN
+						<For Key="name" Index="index" Property="orQueryObject.nameList"
+								Open="(" Separator="," Close=")">
+							#{name}
+						</For>
+					</If>
+					<If Test="orQueryObject.nameListIgnoreCase != null and CollectionUtil.IsNotEmpty(orQueryObject.nameListIgnoreCase)">
+						or lower(RES.NAME_) IN
+						<For Key="name" Index="index" Property="orQueryObject.nameListIgnoreCase"
+								 Open="(" Separator="," Close=")">
+							#{name}
+						</For>
+					</If>
+					<If Test="orQueryObject.description != null">
+						or RES.DESCRIPTION_ = #{orQueryObject.description}
+					</If>
+					<If Test="orQueryObject.descriptionLike != null">
+						or RES.DESCRIPTION_ like #{orQueryObject.descriptionLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.descriptionLikeIgnoreCase != null">
+						or lower(RES.DESCRIPTION_) like #{orQueryObject.descriptionLikeIgnoreCase}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.priority != null">
+						or RES.PRIORITY_ = #{orQueryObject.priority}
+					</If>
+					<If Test="orQueryObject.minPriority != null">
+						or RES.PRIORITY_ &gt;= #{orQueryObject.minPriority}
+					</If>
+					<If Test="orQueryObject.maxPriority != null">
+						or RES.PRIORITY_ &lt;= #{orQueryObject.maxPriority}
+					</If>
+					<If Test="orQueryObject.assignee != null">
+						or RES.ASSIGNEE_ = #{orQueryObject.assignee}
+					</If>
+					<If Test="orQueryObject.assigneeLike != null">
+						or RES.ASSIGNEE_ like #{orQueryObject.assigneeLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.assigneeLikeIgnoreCase != null">
+						or lower(RES.ASSIGNEE_) like #{orQueryObject.assigneeLikeIgnoreCase}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.assigneeIds != null and CollectionUtil.IsNotEmpty(orQueryObject.assigneeIds)">
+						or RES.ASSIGNEE_ IN
+						<For Key="assigneeId" Index="index" Property="orQueryObject.assigneeIds"
+								 Open="(" Separator="," Close=")">
+							#{assigneeId}
+						</For>
+					</If>
+					<If Test="orQueryObject.owner != null">
+						or RES.OWNER_ = #{orQueryObject.owner}
+					</If>
+					<If Test="orQueryObject.ownerLike != null">
+						or RES.OWNER_ like #{orQueryObject.ownerLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.ownerLikeIgnoreCase != null">
+						or RES.OWNER_ like #{orQueryObject.ownerLikeIgnoreCase}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.unassigned">
+						or RES.ASSIGNEE_ IS NULL
+					</If>
+					<If Test="orQueryObject.noDelegationState">
+						or RES.DELEGATION_ IS NULL
+					</If>
+					<If Test="orQueryObject.delegationState != null">
+						or RES.DELEGATION_ = #{orQueryObject.delegationStateString}
+					</If>
+					<If Test="orQueryObject.processInstanceId != null">
+						or RES.PROC_INST_ID_ = #{orQueryObject.processInstanceId}
+					</If>
+					<If Test="orQueryObject.processInstanceIds != null and CollectionUtil.IsNotEmpty(orQueryObject.processInstanceIds)">
+						or RES.PROC_INST_ID_ IN
+						<For Key="processInstance" Index="index" Property="orQueryObject.processInstanceIds"
+								 Open="(" Separator="," Close=")">
+							#{processInstance}
+						</For>
+					</If>
+					<If Test="orQueryObject.processInstanceBusinessKey != null">
+						or E_OR${orIndex}.BUSINESS_KEY_ = #{orQueryObject.processInstanceBusinessKey}
+					</If>
+					<If Test="orQueryObject.processInstanceBusinessKeyLike != null">
+						or E_OR${orIndex}.BUSINESS_KEY_ like #{orQueryObject.processInstanceBusinessKeyLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
+						or lower(E.BUSINESS_KEY_) like #{orQueryObject.processInstanceBusinessKeyLikeIgnoreCase}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.executionId != null">
+						or RES.EXECUTION_ID_ = #{orQueryObject.executionId}
+					</If>
+					<If Test="orQueryObject.createTime != null">
+						or RES.CREATE_TIME_ = #{orQueryObject.createTime}
+					</If>
+					<If Test="orQueryObject.createTimeBefore != null">
+						or RES.CREATE_TIME_ &lt; #{orQueryObject.createTimeBefore}
+					</If>
+					<If Test="orQueryObject.createTimeAfter != null">
+						or RES.CREATE_TIME_ &gt; #{orQueryObject.createTimeAfter}
+					</If>
+					<If Test="orQueryObject.key != null">
+						or RES.TASK_DEF_KEY_ = #{orQueryObject.key}
+					</If>
+					<If Test="orQueryObject.keyLike != null">
+						or RES.TASK_DEF_KEY_ like #{orQueryObject.keyLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.processDefinitionId != null">
+						or RES.PROC_DEF_ID_ = #{orQueryObject.processDefinitionId}
+					</If>
+					<If Test="orQueryObject.processDefinitionKey != null">
+						or D_OR${orIndex}.KEY_ = #{orQueryObject.processDefinitionKey}
+					</If>
+					<If Test="orQueryObject.processDefinitionKeyLike != null">
+						or D_OR${orIndex}.KEY_ like #{orQueryObject.processDefinitionKeyLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.processDefinitionKeyLikeIgnoreCase != null">
+						or lower(D_OR${orIndex}.KEY_) like #{orQueryObject.processDefinitionKeyLikeIgnoreCase}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys)">
+						or D_OR${orIndex}.KEY_ in
+						<For Key="item" Index="index" Property="orQueryObject.processDefinitionKeys" Open="(" Separator="," Close=")">
+							#{item}
+						</For>
+					</If>
+					<If Test="orQueryObject.processDefinitionName != null">
+						or D_OR${orIndex}.NAME_ = #{orQueryObject.processDefinitionName}
+					</If>
+					<If Test="orQueryObject.processDefinitionNameLike != null">
+						or D_OR${orIndex}.NAME_ like #{orQueryObject.processDefinitionNameLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.processCategoryInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryInList)">
+						or D_OR${orIndex}.CATEGORY_ IN
+						<For Key="processCategory" Index="index" Property="orQueryObject.processCategoryInList"
+								 Open="(" Separator="," Close=")">
+							#{processCategory}
+						</For>
+					</If>
+					<If Test="orQueryObject.processCategoryNotInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryNotInList)">
+						or D_OR${orIndex}.CATEGORY_ NOT IN
+						<For Key="processCategory" Index="index" Property="orQueryObject.processCategoryNotInList"
+								 Open="(" Separator="," Close=")">
+							#{processCategory}
+						</For>
+					</If>
+					<If Test="orQueryObject.deploymentId != null">
+						or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = #{orQueryObject.deploymentId}
+					</If>
+					<If Test="orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds)">
+						or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ IN
+						<For Key="deployment" Index="index" Property="orQueryObject.deploymentIds" Open="(" Separator="," Close=")">
+							#{deployment}
+						</For>
+					</If>
+					<If Test="orQueryObject.dueDate != null">
+						or RES.DUE_DATE_ = #{orQueryObject.dueDate}
+					</If>
+					<If Test="orQueryObject.dueBefore != null">
+						or (RES.DUE_DATE_ &lt; #{orQueryObject.dueBefore} and RES.DUE_DATE_ is not null)
+					</If>
+					<If Test="orQueryObject.dueAfter != null">
+						or (RES.DUE_DATE_ &gt; #{orQueryObject.dueAfter} and RES.DUE_DATE_ is not null)
+					</If>
+					<If Test="orQueryObject.withoutDueDate">
+						or RES.DUE_DATE_ is null
+					</If>
+					<If Test="orQueryObject.category != null">
+						or RES.CATEGORY_ = #{orQueryObject.category}
+					</If>
+					<If Test="orQueryObject.excludeSubtasks">
+						or RES.PARENT_TASK_ID_ IS NULL
+					</If>
 
-          <If Test="!orQueryObject.bothCandidateAndAssigned and (orQueryObject.candidateUser != null or orQueryObject.candidateGroups != null)">
-            or (RES.ASSIGNEE_ is null
-            and I_OR${orIndex}.TYPE_ = 'candidate'
-            and
-            (
-            <If Test="orQueryObject.candidateUser != null">
-              I_OR${orIndex}.USER_ID_ = #{orQueryObject.candidateUser}
-            </If>
-            <If Test="orQueryObject.candidateUser != null and orQueryObject.candidateGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.candidateGroups)">
-              or
-            </If>
-            <If Test="orQueryObject.candidateGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.candidateGroups)">
-              I_OR${orIndex}.GROUP_ID_ IN
-              <For Key="group" Index="index" Property="orQueryObject.candidateGroups"
-                       Open="(" Separator="," Close=")">
-                #{group}
-              </For>
-            </If>
-            ))
-          </If>
-          <If Test="orQueryObject.involvedUser != null">
-            or
-            (
-            exists(select LINK.USER_ID_ from ACT_RU_IDENTITYLINK LINK where USER_ID_ =
-            #{orQueryObject.involvedUser} and LINK.TASK_ID_ = RES.ID_)
-            or RES.ASSIGNEE_ = #{orQueryObject.involvedUser}
-            or RES.OWNER_ = #{orQueryObject.involvedUser}
-            )
-          </If>
-          <If Test="orQueryObject.involvedGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.involvedGroups)">
-            or (
-            I_OR${orIndex}.TYPE_ = 'participant'
-            and
-            I_OR${orIndex}.GROUP_ID_ IN
-            <For Key="group" Index="index" Property="orQueryObject.involvedGroups" Open="(" Separator="," Close=")">
-              #{group}
-            </For>
-            )
-          </If>
-          <For Key="queryVariableValue" Property="orQueryObject.queryVariableValues" Index="orIndex">
-            or
-            <Trim Prefix="(" PrefixOverrides="AND" Suffix=")">
-              <Switch>
-                <Case Test="!queryVariableValue.local">
-                  <Bind Name="orLocal" Value="''" />
-                  <!-- When process instance variable is queried for, taskId should be null -->
-                  and A_OR${orIndex}.TASK_ID_ is null
-                </Case>
-                <Default>
-                  <Bind Name="orLocal" Value="'L_'" />
-                </Default>
-              </Switch>
-              <If Test="queryVariableValue.name != null">
-                <!-- Match-all variable-names when name is null -->
-                and A_${orLocal}OR${orIndex}.NAME_= #{queryVariableValue.name}
-              </If>
-              <If Test="queryVariableValue.name == null">
-                and A_${orLocal}OR${orIndex}.NAME_ is not null
-              </If>
-              <If Test="!queryVariableValue.type=='null'">
-                and A_${orLocal}OR${orIndex}.TYPE_ = #{queryVariableValue.type}
-              </If>
-              <!-- Variable value -->
-              <If Test="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
-                <Switch>
-                  <Case Test="queryVariableValue.operator=='EQUALS_IGNORE_CASE' or queryVariableValue.operator=='NOT_EQUALS_IGNORE_CASE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">
-                    and lower(A_${orLocal}OR${orIndex}.TEXT_)
-                  </Case>
-                  <Default>
-                    and A_${orLocal}OR${orIndex}.TEXT_
-                  </Default>
-                </Switch>
-                <Switch>
-                  <Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">LIKE</Case>
-                  <Default>
-                    <Include RefId="executionVariableOperator" />
-                  </Default>
-                </Switch>
-                #{queryVariableValue.textValue}
-                <Switch>
-                  <Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">${wildcardEscapeClause}</Case>
-                </Switch>
-              </If>
-              <If Test="queryVariableValue.textValue2 != null">
-                and A_${orLocal}OR${orIndex}.TEXT2_
-                <Switch>
-                  <Case Test="queryVariableValue.operator=='LIKE'">LIKE</Case>
-                  <Default>
-                    <Include RefId="executionVariableOperator" />
-                  </Default>
-                </Switch>
-                #{queryVariableValue.textValue2}
-                <Switch>
-                  <Case Test="queryVariableValue.operator=='LIKE'">${wildcardEscapeClause}</Case>
-                </Switch>
-              </If>
-              <If Test="queryVariableValue.longValue != null">
-                and A_${orLocal}OR${orIndex}.LONG_
-                <Include RefId="executionVariableOperator" />
-                #{queryVariableValue.longValue}
-              </If>
-              <If Test="queryVariableValue.doubleValue != null">
-                and A_${orLocal}OR${orIndex}.DOUBLE_
-                <Include RefId="executionVariableOperator" />
-                #{queryVariableValue.doubleValue}
-              </If>
-              <!-- Null variable type -->
-              <If Test="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
-                <Switch>
-                  <Case Test="queryVariableValue.operator=='NOT_EQUALS'">
-                    and (A_${orLocal}OR${orIndex}.TEXT_ is not null or A_${orLocal}OR${orIndex}.TEXT2_ is not null or A_${orLocal}OR${orIndex}.LONG_ is not null or A_${orLocal}OR${orIndex}.DOUBLE_ is not null or A_${orLocal}OR${orIndex}.BYTEARRAY_ID_ is not null)
-                  </Case>
-                  <Default>
-                    and A_${orLocal}OR${orIndex}.TEXT_ is null and A_${orLocal}OR${orIndex}.TEXT2_ is null and A_${orLocal}OR${orIndex}.LONG_ is null and A_${orLocal}OR${orIndex}.DOUBLE_ is null and A_${orLocal}OR${orIndex}.BYTEARRAY_ID_ is null
-                  </Default>
-                </Switch>
-              </If>
-            </Trim>
-          </For>
-          <If Test="orQueryObject.suspensionState != null">
-            <If Test="orQueryObject.suspensionState.stateCode == 1">
-              or RES.SUSPENSION_STATE_ = 1
-            </If>
-            <If Test="orQueryObject.suspensionState.stateCode == 2">
-              or RES.SUSPENSION_STATE_ = 2
-            </If>
-          </If>
-          <If Test="orQueryObject.tenantId != null">
-            or RES.TENANT_ID_ = #{orQueryObject.tenantId}
-          </If>
-          <If Test="orQueryObject.tenantIdLike != null">
-            or RES.TENANT_ID_ like #{orQueryObject.tenantIdLike}${wildcardEscapeClause}
-          </If>
-          <If Test="orQueryObject.withoutTenantId">
-            or (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
-          </If>
-          <Switch>
-            <Case Test="orQueryObject.bothCandidateAndAssigned">
-              <!-- if dbIdentityUsed set true in process engine configuration -->
-              <If Test="orQueryObject.userIdForCandidateAndAssignee != null">
-                <If Test="orQueryObject.candidateGroups == null">
-                  or (RES.ASSIGNEE_ = #{orQueryObject.userIdForCandidateAndAssignee} or (RES.ASSIGNEE_ is null and (I_OR${orIndex}.USER_ID_ = #{orQueryObject.userIdForCandidateAndAssignee}
-                  or I_OR${orIndex}.GROUP_ID_ IN (select g.GROUP_ID_ from ACT_ID_MEMBERSHIP g where g.USER_ID_ = #{orQueryObject.userIdForCandidateAndAssignee} ) ) ) )
-                </If>
-              </If>
-              <!-- if dbIdentityUsed set false in process engine configuration of using custom session factory of GroupIdentityManager -->
-              <If Test="orQueryObject.candidateGroups != null">
-                or (RES.ASSIGNEE_ = #{orQueryObject.userIdForCandidateAndAssignee}
-                or (RES.ASSIGNEE_ is null
-                and I_OR${orIndex}.TYPE_ = 'candidate' and (I_OR${orIndex}.USER_ID_ = #{orQueryObject.userIdForCandidateAndAssignee}
-                <If Test="CollectionUtil.IsNotEmpty(orQueryObject.candidateGroups)">
-                  or I_OR${orIndex}.GROUP_ID_ IN
-                  <For Key="group" Index="index" Property="orQueryObject.candidateGroups"
-                           Open="(" Separator="," Close=")">
-                    #{group}
-                  </For>
-                </If>
-                )))
-              </If>
-            </Case>
-          </Switch>
-        </Trim>
-      </For>
-    </Where>
-  </Statement>
+					<If Test="!orQueryObject.bothCandidateAndAssigned and (orQueryObject.candidateUser != null or orQueryObject.candidateGroups != null)">
+						or (RES.ASSIGNEE_ is null
+						and I_OR${orIndex}.TYPE_ = 'candidate'
+						and
+						(
+						<If Test="orQueryObject.candidateUser != null">
+							I_OR${orIndex}.USER_ID_ = #{orQueryObject.candidateUser}
+						</If>
+						<If Test="orQueryObject.candidateUser != null and orQueryObject.candidateGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.candidateGroups)">
+							or
+						</If>
+						<If Test="orQueryObject.candidateGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.candidateGroups)">
+							I_OR${orIndex}.GROUP_ID_ IN
+							<For Key="group" Index="index" Property="orQueryObject.candidateGroups"
+									 Open="(" Separator="," Close=")">
+								#{group}
+							</For>
+						</If>
+						))
+					</If>
+					<If Test="orQueryObject.involvedUser != null">
+						or
+						(
+						exists(select LINK.USER_ID_ from ACT_RU_IDENTITYLINK LINK where USER_ID_ =
+						#{orQueryObject.involvedUser} and LINK.TASK_ID_ = RES.ID_)
+						or RES.ASSIGNEE_ = #{orQueryObject.involvedUser}
+						or RES.OWNER_ = #{orQueryObject.involvedUser}
+						)
+					</If>
+					<If Test="orQueryObject.involvedGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.involvedGroups)">
+						or (
+						I_OR${orIndex}.TYPE_ = 'participant'
+						and
+						I_OR${orIndex}.GROUP_ID_ IN
+						<For Key="group" Index="index" Property="orQueryObject.involvedGroups" Open="(" Separator="," Close=")">
+							#{group}
+						</For>
+						)
+					</If>
+					<For Key="queryVariableValue" Property="orQueryObject.queryVariableValues" Index="orIndex">
+						or
+						<Trim Prefix="(" PrefixOverrides="AND" Suffix=")">
+							<Switch>
+								<Case Test="!queryVariableValue.local">
+									<Bind Name="orLocal" Value="''" />
+									<!-- When process instance variable is queried for, taskId should be null -->
+									and A_OR${orIndex}.TASK_ID_ is null
+								</Case>
+								<Default>
+									<Bind Name="orLocal" Value="'L_'" />
+								</Default>
+							</Switch>
+							<If Test="queryVariableValue.name != null">
+								<!-- Match-all variable-names when name is null -->
+								and A_${orLocal}OR${orIndex}.NAME_= #{queryVariableValue.name}
+							</If>
+							<If Test="queryVariableValue.name == null">
+								and A_${orLocal}OR${orIndex}.NAME_ is not null
+							</If>
+							<If Test="!queryVariableValue.type=='null'">
+								and A_${orLocal}OR${orIndex}.TYPE_ = #{queryVariableValue.type}
+							</If>
+							<!-- Variable value -->
+							<If Test="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
+								<Switch>
+									<Case Test="queryVariableValue.operator=='EQUALS_IGNORE_CASE' or queryVariableValue.operator=='NOT_EQUALS_IGNORE_CASE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">
+										and lower(A_${orLocal}OR${orIndex}.TEXT_)
+									</Case>
+									<Default>
+										and A_${orLocal}OR${orIndex}.TEXT_
+									</Default>
+								</Switch>
+								<Switch>
+									<Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">LIKE</Case>
+									<Default>
+										<Include RefId="executionVariableOperator" />
+									</Default>
+								</Switch>
+								#{queryVariableValue.textValue}
+								<Switch>
+									<Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">${wildcardEscapeClause}</Case>
+								</Switch>
+							</If>
+							<If Test="queryVariableValue.textValue2 != null">
+								and A_${orLocal}OR${orIndex}.TEXT2_
+								<Switch>
+									<Case Test="queryVariableValue.operator=='LIKE'">LIKE</Case>
+									<Default>
+										<Include RefId="executionVariableOperator" />
+									</Default>
+								</Switch>
+								#{queryVariableValue.textValue2}
+								<Switch>
+									<Case Test="queryVariableValue.operator=='LIKE'">${wildcardEscapeClause}</Case>
+								</Switch>
+							</If>
+							<If Test="queryVariableValue.longValue != null">
+								and A_${orLocal}OR${orIndex}.LONG_
+								<Include RefId="executionVariableOperator" />
+								#{queryVariableValue.longValue}
+							</If>
+							<If Test="queryVariableValue.doubleValue != null">
+								and A_${orLocal}OR${orIndex}.DOUBLE_
+								<Include RefId="executionVariableOperator" />
+								#{queryVariableValue.doubleValue}
+							</If>
+							<!-- Null variable type -->
+							<If Test="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
+								<Switch>
+									<Case Test="queryVariableValue.operator=='NOT_EQUALS'">
+										and (A_${orLocal}OR${orIndex}.TEXT_ is not null or A_${orLocal}OR${orIndex}.TEXT2_ is not null or A_${orLocal}OR${orIndex}.LONG_ is not null or A_${orLocal}OR${orIndex}.DOUBLE_ is not null or A_${orLocal}OR${orIndex}.BYTEARRAY_ID_ is not null)
+									</Case>
+									<Default>
+										and A_${orLocal}OR${orIndex}.TEXT_ is null and A_${orLocal}OR${orIndex}.TEXT2_ is null and A_${orLocal}OR${orIndex}.LONG_ is null and A_${orLocal}OR${orIndex}.DOUBLE_ is null and A_${orLocal}OR${orIndex}.BYTEARRAY_ID_ is null
+									</Default>
+								</Switch>
+							</If>
+						</Trim>
+					</For>
+					<If Test="orQueryObject.suspensionState != null">
+						<If Test="orQueryObject.suspensionState.stateCode == 1">
+							or RES.SUSPENSION_STATE_ = 1
+						</If>
+						<If Test="orQueryObject.suspensionState.stateCode == 2">
+							or RES.SUSPENSION_STATE_ = 2
+						</If>
+					</If>
+					<If Test="orQueryObject.tenantId != null">
+						or RES.TENANT_ID_ = #{orQueryObject.tenantId}
+					</If>
+					<If Test="orQueryObject.tenantIdLike != null">
+						or RES.TENANT_ID_ like #{orQueryObject.tenantIdLike}${wildcardEscapeClause}
+					</If>
+					<If Test="orQueryObject.withoutTenantId">
+						or (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
+					</If>
+					<Switch>
+						<Case Test="orQueryObject.bothCandidateAndAssigned">
+							<!-- if dbIdentityUsed set true in process engine configuration -->
+							<If Test="orQueryObject.userIdForCandidateAndAssignee != null">
+								<If Test="orQueryObject.candidateGroups == null">
+									or (RES.ASSIGNEE_ = #{orQueryObject.userIdForCandidateAndAssignee} or (RES.ASSIGNEE_ is null and (I_OR${orIndex}.USER_ID_ = #{orQueryObject.userIdForCandidateAndAssignee}
+									or I_OR${orIndex}.GROUP_ID_ IN (select g.GROUP_ID_ from ACT_ID_MEMBERSHIP g where g.USER_ID_ = #{orQueryObject.userIdForCandidateAndAssignee} ) ) ) )
+								</If>
+							</If>
+							<!-- if dbIdentityUsed set false in process engine configuration of using custom session factory of GroupIdentityManager -->
+							<If Test="orQueryObject.candidateGroups != null">
+								or (RES.ASSIGNEE_ = #{orQueryObject.userIdForCandidateAndAssignee}
+								or (RES.ASSIGNEE_ is null
+								and I_OR${orIndex}.TYPE_ = 'candidate' and (I_OR${orIndex}.USER_ID_ = #{orQueryObject.userIdForCandidateAndAssignee}
+								<If Test="CollectionUtil.IsNotEmpty(orQueryObject.candidateGroups)">
+									or I_OR${orIndex}.GROUP_ID_ IN
+									<For Key="group" Index="index" Property="orQueryObject.candidateGroups"
+											 Open="(" Separator="," Close=")">
+										#{group}
+									</For>
+								</If>
+								)))
+							</If>
+						</Case>
+					</Switch>
+				</Trim>
+			</For>
+		</Where>
+	</Statement>
 
-  <Statement Id="selectTaskWithVariablesByQueryCriteriaSql">
-    from ACT_RU_TASK RES
-    <Switch>
-      <Case Test="includeTaskLocalVariables and includeProcessVariables">
-        left outer join ACT_RU_VARIABLE VAR ON RES.ID_ = VAR.TASK_ID_ or RES.PROC_INST_ID_ = VAR.EXECUTION_ID_
-      </Case>
-      <Default>
-        <IsTrue Property="includeTaskLocalVariables">
-          left outer join ACT_RU_VARIABLE VAR ON RES.ID_ = VAR.TASK_ID_
-        </IsTrue>
-        <IsTrue Property="includeProcessVariables">
-          left outer join ACT_RU_VARIABLE VAR ON RES.PROC_INST_ID_ = VAR.EXECUTION_ID_ and VAR.TASK_ID_ is null
-        </IsTrue>
-      </Default>
-    </Switch>
-    <Include RefId="commonSelectTaskByQueryCriteriaSql"/>
-  </Statement>
+	<Statement Id="selectTaskWithVariablesByQueryCriteriaSql">
+		from ACT_RU_TASK RES
+		<Switch>
+			<Case Test="includeTaskLocalVariables and includeProcessVariables">
+				left outer join ACT_RU_VARIABLE VAR ON RES.ID_ = VAR.TASK_ID_ or RES.PROC_INST_ID_ = VAR.EXECUTION_ID_
+			</Case>
+			<Default>
+				<IsTrue Property="includeTaskLocalVariables">
+					left outer join ACT_RU_VARIABLE VAR ON RES.ID_ = VAR.TASK_ID_
+				</IsTrue>
+				<IsTrue Property="includeProcessVariables">
+					left outer join ACT_RU_VARIABLE VAR ON RES.PROC_INST_ID_ = VAR.EXECUTION_ID_ and VAR.TASK_ID_ is null
+				</IsTrue>
+			</Default>
+		</Switch>
+		<Include RefId="commonSelectTaskByQueryCriteriaSql"/>
+	</Statement>
 
-  <Statement Id="selectTaskByQueryCriteriaSql">
-    from ACT_RU_TASK RES
-    <Include RefId="commonSelectTaskByQueryCriteriaSql"/>
-  </Statement>
+	<Statement Id="selectTaskByQueryCriteriaSql">
+		from ACT_RU_TASK RES
+		<Include RefId="commonSelectTaskByQueryCriteriaSql"/>
+	</Statement>
 
-  <Select Id="selectTask" ResultMap="taskResultMap">
-    select * from ACT_RU_TASK where ID_ = #{id}
-  </Select>
+	<Select Id="selectTask" ResultMap="taskResultMap">
+		select * from ACT_RU_TASK where ID_ = #{id}
+	</Select>
 
-  <Select Id="selectTasksByParentTaskId" ResultMap="taskResultMap">
-    select * from ACT_RU_TASK where PARENT_TASK_ID_ = #{parentTaskId}
-  </Select>
+	<Select Id="selectTasksByParentTaskId" ResultMap="taskResultMap">
+		select * from ACT_RU_TASK where PARENT_TASK_ID_ = #{parentTaskId}
+	</Select>
 
-  <Select Id="selectTasksByExecutionId" ResultMap="taskResultMap">
-    select distinct T.*
-    from ACT_RU_TASK T
-    where T.EXECUTION_ID_ = #{executionId}
-  </Select>
+	<Select Id="selectTasksByExecutionId" ResultMap="taskResultMap">
+		select distinct T.*
+		from ACT_RU_TASK T
+		where T.EXECUTION_ID_ = #{executionId}
+	</Select>
 
-  <Select Id="selectTasksByProcessInstanceId" ResultMap="taskResultMap">
-    select T.*
-    from ACT_RU_TASK T
-    where T.PROC_INST_ID_ = #{processInstanceId}
-  </Select>
+	<Select Id="selectTasksByProcessInstanceId" ResultMap="taskResultMap">
+		select T.*
+		from ACT_RU_TASK T
+		where T.PROC_INST_ID_ = #{processInstanceId}
+	</Select>
 
-  <!-- Using distinct here because a task can appear multiple times in a resultset when -->
-  <Select Id="selectTaskByQueryCriteria" ResultMap="taskResultMap">
-    ${limitBefore}
-    select distinct ${top100} RES.* ${limitBetween}
-    <Include RefId="selectTaskByQueryCriteriaSql"/>
-    ${orderBy}
-    ${limitAfter}
-  </Select>
+	<!-- Using distinct here because a task can appear multiple times in a resultset when -->
+	<Select Id="selectTaskByQueryCriteria" ResultMap="taskResultMap">
+		${limitBefore}
+		select distinct ${top100} RES.* ${limitBetween}
+		<Include RefId="selectTaskByQueryCriteriaSql"/>
+		${orderBy}
+		${limitAfter}
+	</Select>
 
-  <Select Id="selectTaskCountByQueryCriteria">
-    select count(distinct RES.ID_)
-    <Include RefId="selectTaskByQueryCriteriaSql"/>
-  </Select>
+	<Select Id="selectTaskCountByQueryCriteria">
+		select count(distinct RES.ID_)
+		<Include RefId="selectTaskByQueryCriteriaSql"/>
+	</Select>
 
-  <Select Id="selectTaskWithVariablesByQueryCriteria" ResultMap="taskAndVariablesResultMap">
-    ${limitBefore}
-    select ${top100} RES.*,
-    VAR.ID_ as VAR_ID_, VAR.NAME_ as VAR_NAME_, VAR.TYPE_ as VAR_TYPE_, VAR.REV_ as VAR_REV_,
-    VAR.PROC_INST_ID_ as VAR_PROC_INST_ID_, VAR.EXECUTION_ID_ as VAR_EXECUTION_ID_, VAR.TASK_ID_ as VAR_TASK_ID_,
-    VAR.BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_, VAR.DOUBLE_ as VAR_DOUBLE_,
-    VAR.TEXT_ as VAR_TEXT_, VAR.TEXT2_ as VAR_TEXT2_, VAR.LONG_ as VAR_LONG_
-    ${limitBetween}
-    <Include RefId="selectTaskWithVariablesByQueryCriteriaSql"/>
-    ${orderBy}
-    ${limitAfter}
-  </Select>
+	<Select Id="selectTaskWithVariablesByQueryCriteria" ResultMap="taskAndVariablesResultMap">
+		${limitBefore}
+		select ${top100} RES.*,
+		VAR.ID_ as VAR_ID_, VAR.NAME_ as VAR_NAME_, VAR.TYPE_ as VAR_TYPE_, VAR.REV_ as VAR_REV_,
+		VAR.PROC_INST_ID_ as VAR_PROC_INST_ID_, VAR.EXECUTION_ID_ as VAR_EXECUTION_ID_, VAR.TASK_ID_ as VAR_TASK_ID_,
+		VAR.BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_, VAR.DOUBLE_ as VAR_DOUBLE_,
+		VAR.TEXT_ as VAR_TEXT_, VAR.TEXT2_ as VAR_TEXT2_, VAR.LONG_ as VAR_LONG_
+		${limitBetween}
+		<Include RefId="selectTaskWithVariablesByQueryCriteriaSql"/>
+		${orderBy}
+		${limitAfter}
+	</Select>
 
-  <Select Id="selectTaskWithVariablesByQueryCriteria_mssql_or_db2" ResultMap="taskAndVariablesResultMap">
-    ${limitBefore}
-    select distinct ${top100} TEMPRES_ID_ as ID_, TEMPRES_REV_ as REV_, TEMPRES_NAME_ as NAME_,
-    TEMPRES_PARENT_TASK_ID_ as PARENT_TASK_ID_, TEMPRES_DESCRIPTION_ as DESCRIPTION_,
-    TEMPRES_PRIORITY_ as PRIORITY_, TEMPRES_CREATE_TIME_ as CREATE_TIME_,
-    TEMPRES_OWNER_ as OWNER_, TEMPRES_ASSIGNEE_ as ASSIGNEE_, TEMPRES_ASSIGNEE_USER_ as ASSIGNEE_USER_,TEMPRES_DELEGATION_ as DELEGATION_,
-    TEMPRES_FORM_KEY_ as FORM_KEY_, TEMPRES_EXECUTION_ID_ as EXECUTION_ID_, TEMPRES_PROC_INST_ID_ as PROC_INST_ID_,
-    TEMPRES_PROC_DEF_ID_ as PROC_DEF_ID_, TEMPRES_TASK_DEF_KEY_ as TASK_DEF_KEY_,
-    TEMPRES_DUE_DATE_ as DUE_DATE_, TEMPRES_SUSPENSION_STATE_ as SUSPENSION_STATE_, TEMPRES_CATEGORY_ as CATEGORY_,
-    TEMPVAR_ID_ as VAR_ID_, TEMPVAR_NAME_ as VAR_NAME_, TEMPVAR_TYPE_ as VAR_TYPE_, TEMPVAR_REV_ as VAR_REV_,
-    TEMPVAR_PROC_INST_ID_ as VAR_PROC_INST_ID_, TEMPVAR_EXECUTION_ID_ as VAR_EXECUTION_ID_, TEMPVAR_TASK_ID_ as VAR_TASK_ID_,
-    TEMPVAR_BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_, TEMPVAR_DOUBLE_ as VAR_DOUBLE_,
-    TEMPVAR_TEXT_ as VAR_TEXT_, TEMPVAR_TEXT2_ as VAR_TEXT2_, TEMPVAR_LONG_ as VAR_LONG_
-    ${limitOuterJoinBetween}
-    RES.ID_ as TEMPRES_ID_, RES.REV_ as TEMPRES_REV_, RES.NAME_ as TEMPRES_NAME_,
-    RES.PARENT_TASK_ID_ as TEMPRES_PARENT_TASK_ID_, RES.DESCRIPTION_ as TEMPRES_DESCRIPTION_,
-    RES.PRIORITY_ as TEMPRES_PRIORITY_, RES.CREATE_TIME_ as TEMPRES_CREATE_TIME_,
-    RES.OWNER_ as TEMPRES_OWNER_, RES.ASSIGNEE_ as TEMPRES_ASSIGNEE_, RES.ASSIGNEE_USER_ as TEMPRES_ASSIGNEE_USER_, RES.DELEGATION_ as TEMPRES_DELEGATION_,
-    RES.FORM_KEY_ as TEMPRES_FORM_KEY_, RES.EXECUTION_ID_ as TEMPRES_EXECUTION_ID_, RES.PROC_INST_ID_ as TEMPRES_PROC_INST_ID_,
-    RES.PROC_DEF_ID_ as TEMPRES_PROC_DEF_ID_, RES.TASK_DEF_KEY_ as TEMPRES_TASK_DEF_KEY_,
-    RES.DUE_DATE_ as TEMPRES_DUE_DATE_, RES.SUSPENSION_STATE_ as TEMPRES_SUSPENSION_STATE_, RES.CATEGORY_ as TEMPRES_CATEGORY_,
-    VAR.ID_ as TEMPVAR_ID_, VAR.NAME_ as TEMPVAR_NAME_, VAR.TYPE_ as TEMPVAR_TYPE_, VAR.REV_ as TEMPVAR_REV_,
-    VAR.PROC_INST_ID_ as TEMPVAR_PROC_INST_ID_, VAR.EXECUTION_ID_ as TEMPVAR_EXECUTION_ID_, VAR.TASK_ID_ as TEMPVAR_TASK_ID_,
-    VAR.BYTEARRAY_ID_ as TEMPVAR_BYTEARRAY_ID_, VAR.DOUBLE_ as TEMPVAR_DOUBLE_,
-    VAR.TEXT_ as TEMPVAR_TEXT_, VAR.TEXT2_ as TEMPVAR_TEXT2_, VAR.LONG_ as TEMPVAR_LONG_
-    <Include RefId="selectTaskWithVariablesByQueryCriteriaSql"/>
-    ${orderBy}
-    ${limitAfter}
-  </Select>
+	<Select Id="selectTaskWithVariablesByQueryCriteria_mssql_or_db2" ResultMap="taskAndVariablesResultMap">
+		${limitBefore}
+		select distinct ${top100} TEMPRES_ID_ as ID_, TEMPRES_REV_ as REV_, TEMPRES_NAME_ as NAME_,
+		TEMPRES_PARENT_TASK_ID_ as PARENT_TASK_ID_, TEMPRES_DESCRIPTION_ as DESCRIPTION_,
+		TEMPRES_PRIORITY_ as PRIORITY_, TEMPRES_CREATE_TIME_ as CREATE_TIME_,
+		TEMPRES_OWNER_ as OWNER_, TEMPRES_ASSIGNEE_ as ASSIGNEE_, TEMPRES_ASSIGNEE_USER_ as ASSIGNEE_USER_,TEMPRES_DELEGATION_ as DELEGATION_,
+		TEMPRES_FORM_KEY_ as FORM_KEY_, TEMPRES_EXECUTION_ID_ as EXECUTION_ID_, TEMPRES_PROC_INST_ID_ as PROC_INST_ID_,
+		TEMPRES_PROC_DEF_ID_ as PROC_DEF_ID_, TEMPRES_TASK_DEF_KEY_ as TASK_DEF_KEY_,
+		TEMPRES_DUE_DATE_ as DUE_DATE_, TEMPRES_SUSPENSION_STATE_ as SUSPENSION_STATE_, TEMPRES_CATEGORY_ as CATEGORY_,
+		TEMPVAR_ID_ as VAR_ID_, TEMPVAR_NAME_ as VAR_NAME_, TEMPVAR_TYPE_ as VAR_TYPE_, TEMPVAR_REV_ as VAR_REV_,
+		TEMPVAR_PROC_INST_ID_ as VAR_PROC_INST_ID_, TEMPVAR_EXECUTION_ID_ as VAR_EXECUTION_ID_, TEMPVAR_TASK_ID_ as VAR_TASK_ID_,
+		TEMPVAR_BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_, TEMPVAR_DOUBLE_ as VAR_DOUBLE_,
+		TEMPVAR_TEXT_ as VAR_TEXT_, TEMPVAR_TEXT2_ as VAR_TEXT2_, TEMPVAR_LONG_ as VAR_LONG_
+		${limitOuterJoinBetween}
+		RES.ID_ as TEMPRES_ID_, RES.REV_ as TEMPRES_REV_, RES.NAME_ as TEMPRES_NAME_,
+		RES.PARENT_TASK_ID_ as TEMPRES_PARENT_TASK_ID_, RES.DESCRIPTION_ as TEMPRES_DESCRIPTION_,
+		RES.PRIORITY_ as TEMPRES_PRIORITY_, RES.CREATE_TIME_ as TEMPRES_CREATE_TIME_,
+		RES.OWNER_ as TEMPRES_OWNER_, RES.ASSIGNEE_ as TEMPRES_ASSIGNEE_, RES.ASSIGNEE_USER_ as TEMPRES_ASSIGNEE_USER_, RES.DELEGATION_ as TEMPRES_DELEGATION_,
+		RES.FORM_KEY_ as TEMPRES_FORM_KEY_, RES.EXECUTION_ID_ as TEMPRES_EXECUTION_ID_, RES.PROC_INST_ID_ as TEMPRES_PROC_INST_ID_,
+		RES.PROC_DEF_ID_ as TEMPRES_PROC_DEF_ID_, RES.TASK_DEF_KEY_ as TEMPRES_TASK_DEF_KEY_,
+		RES.DUE_DATE_ as TEMPRES_DUE_DATE_, RES.SUSPENSION_STATE_ as TEMPRES_SUSPENSION_STATE_, RES.CATEGORY_ as TEMPRES_CATEGORY_,
+		VAR.ID_ as TEMPVAR_ID_, VAR.NAME_ as TEMPVAR_NAME_, VAR.TYPE_ as TEMPVAR_TYPE_, VAR.REV_ as TEMPVAR_REV_,
+		VAR.PROC_INST_ID_ as TEMPVAR_PROC_INST_ID_, VAR.EXECUTION_ID_ as TEMPVAR_EXECUTION_ID_, VAR.TASK_ID_ as TEMPVAR_TASK_ID_,
+		VAR.BYTEARRAY_ID_ as TEMPVAR_BYTEARRAY_ID_, VAR.DOUBLE_ as TEMPVAR_DOUBLE_,
+		VAR.TEXT_ as TEMPVAR_TEXT_, VAR.TEXT2_ as TEMPVAR_TEXT2_, VAR.LONG_ as TEMPVAR_LONG_
+		<Include RefId="selectTaskWithVariablesByQueryCriteriaSql"/>
+		${orderBy}
+		${limitAfter}
+	</Select>
 
-  <Select Id="selectTaskByNativeQuery" ResultMap="taskResultMap">
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitBefore}
-    </IsEqual>
-    ${sql}
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitAfter}
-    </IsEqual>
-  </Select>
+	<Select Id="selectTaskByNativeQuery" ResultMap="taskResultMap">
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitBefore}
+		</IsEqual>
+		${sql}
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitAfter}
+		</IsEqual>
+	</Select>
 
-  <Select Id="selectTaskByNativeQuery_mssql_or_db2" ResultMap="taskResultMap">
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitBeforeNativeQuery}
-    </IsEqual>
-    ${sql}
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitAfter}
-    </IsEqual>
-  </Select>
+	<Select Id="selectTaskByNativeQuery_mssql_or_db2" ResultMap="taskResultMap">
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitBeforeNativeQuery}
+		</IsEqual>
+		${sql}
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitAfter}
+		</IsEqual>
+	</Select>
 
-  <Select Id="selectTaskCountByNativeQuery" resultType="long">
-    ${sql}
-  </Select>
+	<Select Id="selectTaskCountByNativeQuery" resultType="long">
+		${sql}
+	</Select>
 
 
 </SmartSqlMap>

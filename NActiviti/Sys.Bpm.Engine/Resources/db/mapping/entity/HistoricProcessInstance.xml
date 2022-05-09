@@ -16,31 +16,31 @@
 
 <SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricProcessInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
-  <!-- HISTORIC PROCESS INSTANCE RESULT MAP -->
+	<!-- HISTORIC PROCESS INSTANCE RESULT MAP -->
 
-  <ResultMap Id="historicProcessInstanceResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricProcessInstanceEntityImpl,Sys.Bpm.Engine">
-    <Result Property="id" Column="ID_" />
-    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
-    <Result Property="businessKey" Column="BUSINESS_KEY_" />
-    <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
-    <Result Property="processDefinitionName" Column="PROC_DEF_NAME_" />
-    <Result Property="processDefinitionKey" Column="PROC_DEF_KEY_" />
-    <Result Property="processDefinitionVersion" Column="PROC_DEF_VERSION_" />
-    <Result Property="deploymentId" Column="DEPLOYMENT_ID_" />
-    <Result Property="startTime" Column="START_TIME_" />
-    <Result Property="endTime" Column="END_TIME_" />
-    <Result Property="durationInMillis" Column="DURATION_" />
-    <Result Property="startUserId" Column="START_USER_ID_" />
-    <Result Property="startUser" Column="START_USER_" />
-    <Result Property="startActivityId" Column="START_ACT_ID_" />
-    <Result Property="endActivityId" Column="END_ACT_ID_" />
-    <Result Property="superProcessInstanceId" Column="SUPER_PROCESS_INSTANCE_ID_" />
-    <Result Property="deleteReason" Column="DELETE_REASON_" />
-    <Result Property="tenantId" Column="TENANT_ID_" />
-    <Result Property="name" Column="NAME_" />
-  </ResultMap>
+	<ResultMap Id="historicProcessInstanceResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricProcessInstanceEntityImpl,Sys.Bpm.Engine">
+		<Result Property="id" Column="ID_" />
+		<Result Property="processInstanceId" Column="PROC_INST_ID_" />
+		<Result Property="businessKey" Column="BUSINESS_KEY_" />
+		<Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
+		<Result Property="processDefinitionName" Column="PROC_DEF_NAME_" />
+		<Result Property="processDefinitionKey" Column="PROC_DEF_KEY_" />
+		<Result Property="processDefinitionVersion" Column="PROC_DEF_VERSION_" />
+		<Result Property="deploymentId" Column="DEPLOYMENT_ID_" />
+		<Result Property="startTime" Column="START_TIME_" />
+		<Result Property="endTime" Column="END_TIME_" />
+		<Result Property="durationInMillis" Column="DURATION_" />
+		<Result Property="startUserId" Column="START_USER_ID_" />
+		<Result Property="startUser" Column="START_USER_" />
+		<Result Property="startActivityId" Column="START_ACT_ID_" />
+		<Result Property="endActivityId" Column="END_ACT_ID_" />
+		<Result Property="superProcessInstanceId" Column="SUPER_PROCESS_INSTANCE_ID_" />
+		<Result Property="deleteReason" Column="DELETE_REASON_" />
+		<Result Property="tenantId" Column="TENANT_ID_" />
+		<Result Property="name" Column="NAME_" />
+	</ResultMap>
 
-  <!--<collection property="queryVariables" column="EXECUTION_ID_" javaType="ArrayList" ofType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricVariableInstanceEntity">
+	<!--<collection property="queryVariables" column="EXECUTION_ID_" javaType="ArrayList" ofType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricVariableInstanceEntity">
       <Result Property="id" Column="VAR_ID_" />
       <Result Property="name" Column="VAR_NAME_" />
       <Result Property="variableType" Column="VAR_TYPE_" />
@@ -54,639 +54,639 @@
       <Result Property="textValue2" Column="VAR_TEXT2_" />
       <Result Property="longValue" Column="VAR_LONG_" />
     </collection>-->
-  <ResultMap Id="historicProcessInstanceAndVariablesResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricProcessInstanceEntityImpl,Sys.Bpm.Engine">
-    <Result Property="id" Column="ID_" />
-    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
-    <Result Property="businessKey" Column="BUSINESS_KEY_" />
-    <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
-    <Result Property="processDefinitionName" Column="PROC_DEF_NAME_" />
-    <Result Property="processDefinitionKey" Column="PROC_DEF_KEY_" />
-    <Result Property="processDefinitionVersion" Column="PROC_DEF_VERSION_" />
-    <Result Property="deploymentId" Column="DEPLOYMENT_ID_" />
-    <Result Property="startTime" Column="START_TIME_" />
-    <Result Property="endTime" Column="END_TIME_" />
-    <Result Property="durationInMillis" Column="DURATION_" />
-    <Result Property="startUserId" Column="START_USER_ID_" />
-    <Result Property="startUser" Column="START_USER_" />
-    <Result Property="startActivityId" Column="START_ACT_ID_" />
-    <Result Property="endActivityId" Column="END_ACT_ID_" />
-    <Result Property="superProcessInstanceId" Column="SUPER_PROCESS_INSTANCE_ID_" />
-    <Result Property="deleteReason" Column="DELETE_REASON_" />
-    <Result Property="tenantId" Column="TENANT_ID_" />
-    <Result Property="name" Column="NAME_" />
-  </ResultMap>
+	<ResultMap Id="historicProcessInstanceAndVariablesResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricProcessInstanceEntityImpl,Sys.Bpm.Engine">
+		<Result Property="id" Column="ID_" />
+		<Result Property="processInstanceId" Column="PROC_INST_ID_" />
+		<Result Property="businessKey" Column="BUSINESS_KEY_" />
+		<Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
+		<Result Property="processDefinitionName" Column="PROC_DEF_NAME_" />
+		<Result Property="processDefinitionKey" Column="PROC_DEF_KEY_" />
+		<Result Property="processDefinitionVersion" Column="PROC_DEF_VERSION_" />
+		<Result Property="deploymentId" Column="DEPLOYMENT_ID_" />
+		<Result Property="startTime" Column="START_TIME_" />
+		<Result Property="endTime" Column="END_TIME_" />
+		<Result Property="durationInMillis" Column="DURATION_" />
+		<Result Property="startUserId" Column="START_USER_ID_" />
+		<Result Property="startUser" Column="START_USER_" />
+		<Result Property="startActivityId" Column="START_ACT_ID_" />
+		<Result Property="endActivityId" Column="END_ACT_ID_" />
+		<Result Property="superProcessInstanceId" Column="SUPER_PROCESS_INSTANCE_ID_" />
+		<Result Property="deleteReason" Column="DELETE_REASON_" />
+		<Result Property="tenantId" Column="TENANT_ID_" />
+		<Result Property="name" Column="NAME_" />
+	</ResultMap>
 
-  <!-- HISTORIC PROCESS INSTANCE INSERT -->
+	<!-- HISTORIC PROCESS INSTANCE INSERT -->
 
-  <Insert Id="insertHistoricProcessInstance" >
-    insert into ACT_HI_PROCINST (
-    ID_,
-    PROC_INST_ID_,
-    BUSINESS_KEY_,
-    PROC_DEF_ID_,
-    START_TIME_,
-    END_TIME_,
-    DURATION_,
-    START_USER_ID_,
-    START_USER_,
-    START_ACT_ID_,
-    END_ACT_ID_,
-    SUPER_PROCESS_INSTANCE_ID_,
-    DELETE_REASON_,
-    TENANT_ID_,
-    NAME_
-    ) values (
-    #{id},
-    #{processInstanceId},
-    #{businessKey},
-    #{processDefinitionId},
-    #{startTime},
-    #{endTime},
-    #{durationInMillis},
-    #{startUserId},
-    #{startUser},
-    #{startActivityId},
-    #{endActivityId},
-    #{superProcessInstanceId},
-    #{deleteReason},
-    #{tenantId},
-    #{name}
-    )
-  </Insert>
+	<Insert Id="insertHistoricProcessInstance" >
+		insert into ACT_HI_PROCINST (
+		ID_,
+		PROC_INST_ID_,
+		BUSINESS_KEY_,
+		PROC_DEF_ID_,
+		START_TIME_,
+		END_TIME_,
+		DURATION_,
+		START_USER_ID_,
+		START_USER_,
+		START_ACT_ID_,
+		END_ACT_ID_,
+		SUPER_PROCESS_INSTANCE_ID_,
+		DELETE_REASON_,
+		TENANT_ID_,
+		NAME_
+		) values (
+		#{id},
+		#{processInstanceId},
+		#{businessKey},
+		#{processDefinitionId},
+		#{startTime},
+		#{endTime},
+		#{durationInMillis},
+		#{startUserId},
+		#{startUser},
+		#{startActivityId},
+		#{endActivityId},
+		#{superProcessInstanceId},
+		#{deleteReason},
+		#{tenantId},
+		#{name}
+		)
+	</Insert>
 
-  <Insert Id="bulkInsertHistoricProcessInstance" >
-    insert into ACT_HI_PROCINST (
-    ID_,
-    PROC_INST_ID_,
-    BUSINESS_KEY_,
-    PROC_DEF_ID_,
-    START_TIME_,
-    END_TIME_,
-    DURATION_,
-    START_USER_ID_,
-    START_USER_,
-    START_ACT_ID_,
-    END_ACT_ID_,
-    SUPER_PROCESS_INSTANCE_ID_,
-    DELETE_REASON_,
-    TENANT_ID_,
-    NAME_
-    ) values
-    <For Property="Items" Key="p" Separator=",">
-      (#{id},
-      #{processInstanceId},
-      #{businessKey},
-      #{processDefinitionId},
-      #{startTime},
-      #{endTime},
-      #{durationInMillis},
-      #{startUserId},
-      #{startUser},
-      #{startActivityId},
-      #{endActivityId},
-      #{superProcessInstanceId},
-      #{deleteReason},
-      #{tenantId},
-      #{name})
-    </For>
-  </Insert>
+	<Insert Id="bulkInsertHistoricProcessInstance" >
+		insert into ACT_HI_PROCINST (
+		ID_,
+		PROC_INST_ID_,
+		BUSINESS_KEY_,
+		PROC_DEF_ID_,
+		START_TIME_,
+		END_TIME_,
+		DURATION_,
+		START_USER_ID_,
+		START_USER_,
+		START_ACT_ID_,
+		END_ACT_ID_,
+		SUPER_PROCESS_INSTANCE_ID_,
+		DELETE_REASON_,
+		TENANT_ID_,
+		NAME_
+		) values
+		<For Property="Items" Key="p" Separator=",">
+			(#{id},
+			#{processInstanceId},
+			#{businessKey},
+			#{processDefinitionId},
+			#{startTime},
+			#{endTime},
+			#{durationInMillis},
+			#{startUserId},
+			#{startUser},
+			#{startActivityId},
+			#{endActivityId},
+			#{superProcessInstanceId},
+			#{deleteReason},
+			#{tenantId},
+			#{name})
+		</For>
+	</Insert>
 
-  <!-- HISTORIC PROCESS INSTANCE UPDATE -->
+	<!-- HISTORIC PROCESS INSTANCE UPDATE -->
 
-  <Update Id="updateHistoricProcessInstance" >
-    update ACT_HI_PROCINST set
-    PROC_DEF_ID_ = #{processDefinitionId},
-    BUSINESS_KEY_ = #{businessKey},
-    START_TIME_ = #{startTime},
-    END_TIME_ = #{endTime},
-    DURATION_ = #{durationInMillis},
-    END_ACT_ID_ = #{endActivityId},
-    DELETE_REASON_ = #{deleteReason},
-    NAME_ = #{name}
-    where ID_ = #{id}
-  </Update>
+	<Update Id="updateHistoricProcessInstance" >
+		update ACT_HI_PROCINST set
+		PROC_DEF_ID_ = #{processDefinitionId},
+		BUSINESS_KEY_ = #{businessKey},
+		START_TIME_ = #{startTime},
+		END_TIME_ = #{endTime},
+		DURATION_ = #{durationInMillis},
+		END_ACT_ID_ = #{endActivityId},
+		DELETE_REASON_ = #{deleteReason},
+		NAME_ = #{name}
+		where ID_ = #{id}
+	</Update>
 
-  <!-- HISTORIC PROCESS INSTANCE DELETE -->
+	<!-- HISTORIC PROCESS INSTANCE DELETE -->
 
-  <Delete Id="deleteHistoricProcessInstance">
-    delete from ACT_HI_PROCINST where PROC_INST_ID_ = #{processInstanceId}
-  </Delete>
+	<Delete Id="deleteHistoricProcessInstance">
+		delete from ACT_HI_PROCINST where PROC_INST_ID_ = #{processInstanceId}
+	</Delete>
 
-  <Delete Id="bulkDeleteHistoricProcessInstance" >
-    delete from ACT_HI_PROCINST where
-    <For Key="procInst" Property="list" Separator=" or ">
-      ID_ = #{id}
-    </For>
-  </Delete>
+	<Delete Id="bulkDeleteHistoricProcessInstance" >
+		delete from ACT_HI_PROCINST where
+		<For Key="procInst" Property="list" Separator=" or ">
+			ID_ = #{id}
+		</For>
+	</Delete>
 
-  <!-- HISTORIC PROCESS INSTANCE SELECT -->
+	<!-- HISTORIC PROCESS INSTANCE SELECT -->
 
-  <Statement Id="executionVariableOperator">
-    <Switch>
-      <Case Property="queryVariableValue.operator == 'EQUALS'">=</Case>
-      <Case Property="queryVariableValue.operator == 'EQUALS_IGNORE_CASE'">=</Case>
-      <Case Property="queryVariableValue.operator == 'NOT_EQUALS'">&lt;&gt;</Case>
-      <Case Property="queryVariableValue.operator == 'NOT_EQUALS_IGNORE_CASE'">&lt;&gt;</Case>
-      <Case Property="queryVariableValue.operator == 'GREATER_THAN'">&gt;</Case>
-      <Case Property="queryVariableValue.operator == 'GREATER_THAN_OR_EQUAL'">&gt;=</Case>
-      <Case Property="queryVariableValue.operator == 'LESS_THAN'">&lt;</Case>
-      <Case Property="queryVariableValue.operator == 'LESS_THAN_OR_EQUAL'">&lt;=</Case>
-    </Switch>
-  </Statement>
+	<Statement Id="executionVariableOperator">
+		<Switch>
+			<Case Property="queryVariableValue.operator == 'EQUALS'">=</Case>
+			<Case Property="queryVariableValue.operator == 'EQUALS_IGNORE_CASE'">=</Case>
+			<Case Property="queryVariableValue.operator == 'NOT_EQUALS'">&lt;&gt;</Case>
+			<Case Property="queryVariableValue.operator == 'NOT_EQUALS_IGNORE_CASE'">&lt;&gt;</Case>
+			<Case Property="queryVariableValue.operator == 'GREATER_THAN'">&gt;</Case>
+			<Case Property="queryVariableValue.operator == 'GREATER_THAN_OR_EQUAL'">&gt;=</Case>
+			<Case Property="queryVariableValue.operator == 'LESS_THAN'">&lt;</Case>
+			<Case Property="queryVariableValue.operator == 'LESS_THAN_OR_EQUAL'">&lt;=</Case>
+		</Switch>
+	</Statement>
 
-  <Statement Id="commonSelectHistoricProcessInstancesByQueryCriteriaSql">
-    <IsTrue Property="involvedGroups != null">
-      inner join ACT_HI_IDENTITYLINK I on I.PROC_INST_ID_ = RES.ID_
-    </IsTrue>
-    <For Property="queryVariableValues" Key="queryVariableValue">
-      inner join ACT_HI_VARINST  A${index} on RES.PROC_INST_ID_ = A${index}.PROC_INST_ID_
-    </For>
-    <For Property="orQueryObjects" Key="orQueryObject">
-      <IsTrue Property="orQueryObject.involvedGroups != null">
-        left join ACT_HI_IDENTITYLINK I_OR${orIndex} on I_OR${orIndex}.PROC_INST_ID_ = RES.ID_
-      </IsTrue>
-      <IsTrue Property="orQueryObject.processKeyNotIn != null || orQueryObject.processDefinitionKey != null || orQueryObject.processDefinitionCategory != null || orQueryObject.processDefinitionName != null || orQueryObject.processDefinitionVersion != null || (orQueryObject.processDefinitionKeyIn != null &amp;&amp; orQueryObject.processDefinitionKeyIn.size() &gt; 0)">
-        inner join ACT_RE_PROCDEF DEF_OR${orIndex} on RES.PROC_DEF_ID_ = DEF_OR${orIndex}.ID_
-      </IsTrue>
-      <IsTrue Property="orQueryObject.deploymentId != null || !CollectionUtil.IsEmpty(orQueryObject.deploymentIds)">
-        left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
-      </IsTrue>
-      <IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.queryVariableValues)">
-        left outer join ACT_HI_VARINST A_OR${orIndex} on RES.PROC_INST_ID_ = A_OR${orIndex}.PROC_INST_ID_
-      </IsFalse>
-    </For>
-    <IsTrue Property="deploymentId != null">
-      left outer join ACT_RE_PROCDEF DEPLOY_P ON RES.PROC_DEF_ID_ = DEPLOY_P.ID_
-    </IsTrue>
-    <IsTrue Property="withJobException">
-      left outer join ACT_RU_JOB JOB ON RES.PROC_INST_ID_ = JOB.PROCESS_INSTANCE_ID_
-    </IsTrue>
-    <Where>
-      <IsTrue Property="processInstanceId != null">
-        RES.PROC_INST_ID_ = #{processInstanceId}
-      </IsTrue>
-      <IsTrue Property="CollectionUtil.IsNotEmpty(processInstanceIds)">
-        and RES.PROC_INST_ID_ in
-        <For Key="item" Property="processInstanceIds" Open="(" Separator="," Close=")">
-          #{item}
-        </For>
-      </IsTrue>
-      <IsTrue Property="processDefinitionId != null">
-        and RES.PROC_DEF_ID_ = #{processDefinitionId}
-      </IsTrue>
-      <IsTrue Property="processDefinitionKey != null">
-        and DEF.KEY_ = #{processDefinitionKey}
-      </IsTrue>
-      <IsFalse Property="CollectionUtil.IsEmpty(processDefinitionKeyIn)">
-        and DEF.KEY_ IN
-        <For Key="definition" Property="processDefinitionKeyIn" Open="(" Separator="," Close=")">
-          #{definition}
-        </For>
-      </IsFalse>
-      <IsTrue Property="processDefinitionVersion != null">
-        and DEF.VERSION_ = #{processDefinitionVersion}
-      </IsTrue>
-      <IsTrue Property="processDefinitionCategory != null">
-        and DEF.CATEGORY_ = #{processDefinitionCategory}
-      </IsTrue>
-      <IsTrue Property="processDefinitionName != null">
-        and DEF.NAME_ = #{processDefinitionName}
-      </IsTrue>
-      <IsTrue Property="businessKey != null">
-        and RES.BUSINESS_KEY_ = #{businessKey}
-      </IsTrue>
-      <IsTrue Property="deploymentId != null">
-        and DEPLOY_P.DEPLOYMENT_ID_ = #{deploymentId}
-      </IsTrue>
-      <IsFalse Property="CollectionUtil.IsEmpty(deploymentIds)">
-        and DEPLOY_P.DEPLOYMENT_ID_ IN
-        <For Key="deployment" Property="deploymentIds"  Open="(" Separator="," Close=")">
-          #{deployment}
-        </For>
-      </IsFalse>
-      <IsTrue Property="startedBefore != null">
-        and RES.START_TIME_ &lt;= #{startedBefore}
-      </IsTrue>
-      <IsTrue Property="startedAfter != null">
-        and RES.START_TIME_ &gt;= #{startedAfter}
-      </IsTrue>
-      <IsTrue Property="finishedBefore != null">
-        and RES.END_TIME_ &lt;= #{finishedBefore}
-      </IsTrue>
-      <IsTrue Property="finishedAfter != null">
-        and RES.END_TIME_ &gt;= #{finishedAfter}
-      </IsTrue>
-      <IsTrue Property="processKeyNotIn != null">
-        <For Property="processKeyNotIn" Key="procDefKey">
-          and DEF.KEY_ not like #{procDefKey}${wildcardEscapeClause}
-        </For>
-      </IsTrue>
-      <IsTrue Property="unfinished">
-        and RES.END_TIME_ IS NULL
-      </IsTrue>
-      <IsTrue Property="finished">
-        and RES.END_TIME_ is not NULL
-      </IsTrue>
-      <IsTrue Property="notDeleted">
-        and RES.DELETE_REASON_ IS NULL
-      </IsTrue>
-      <IsTrue Property="deleted">
-        and RES.DELETE_REASON_ IS NOT NULL
-      </IsTrue>
-      <IsTrue Property="involvedUser != null">
-        and (
-        exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = #{involvedUser} and LINK.PROC_INST_ID_ = RES.ID_)
-        )
-      </IsTrue>
-      <IsFalse Property="CollectionUtil.IsEmpty(involvedGroups)">
-        and
-        (
-        I.TYPE_ = 'participant'
-        and
-        I.GROUP_ID_ IN
-        <For item="group" index="index" collection="involvedGroups" open="(" separator="," close=")">
-          #{group}
-        </For>
-        )
-      </IsFalse>
-      <IsTrue Property="startedBy != null">
-        and RES.START_USER_ID_ = #{startedBy}
-      </IsTrue>
-      <IsTrue Property="superProcessInstanceId != null">
-        and RES.SUPER_PROCESS_INSTANCE_ID_ = #{superProcessInstanceId}
-      </IsTrue>
-      <IsTrue Property="excludeSubprocesses">
-        and RES.SUPER_PROCESS_INSTANCE_ID_ is null
-      </IsTrue>
-      <IsTrue Property="tenantId != null">
-        and RES.TENANT_ID_ = #{tenantId}
-      </IsTrue>
-      <IsTrue Property="tenantIdLike != null">
-        and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
-      </IsTrue>
-      <IsTrue Property="withoutTenantId">
-        and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
-      </IsTrue>
-      <IsTrue Property="name != null">
-        and RES.NAME_ = #{name}
-      </IsTrue>
-      <IsTrue Property="nameLike != null">
-        and RES.NAME_ like #{nameLike}${wildcardEscapeClause}
-      </IsTrue>
-      <IsTrue Property="nameLikeIgnoreCase != null">
-        and lower(RES.NAME_) like #{nameLikeIgnoreCase}${wildcardEscapeClause}
-      </IsTrue>
-      <For Key="orQueryObject" Property="orQueryObjects">
-        and
-        <IsTrue Property="orQueryObject.processInstanceId != null">
-          RES.PROC_INST_ID_ = #{orQueryObject.processInstanceId}
-        </IsTrue>
-        <IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.processInstanceIds)">
-          or RES.PROC_INST_ID_ in
-          <For Key="item" Property="orQueryObject.processInstanceIds">
-            #{item}
-          </For>
-        </IsFalse>
-        <IsTrue Property="orQueryObject.processDefinitionId != null">
-          or RES.PROC_DEF_ID_ = #{orQueryObject.processDefinitionId}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.processDefinitionKey != null">
-          or DEF_OR${orIndex}.KEY_ = #{orQueryObject.processDefinitionKey}
-        </IsTrue>
-        <IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.processDefinitionKeyIn)">
-          or DEF_OR${orIndex}.KEY_ IN
-          <For Key="definition" Property="orQueryObject.processDefinitionKeyIn" Open="(" Separator="," Close=")">
-            #{definition}
-          </For>
-        </IsFalse>
-        <IsTrue Property="orQueryObject.processDefinitionVersion != null">
-          or DEF_OR${orIndex}.VERSION_ = #{orQueryObject.processDefinitionVersion}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.processDefinitionCategory != null">
-          or DEF_OR${orIndex}.CATEGORY_ = #{orQueryObject.processDefinitionCategory}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.processDefinitionName != null">
-          or DEF_OR${orIndex}.NAME_ = #{orQueryObject.processDefinitionName}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.businessKey != null">
-          or RES.BUSINESS_KEY_ = #{orQueryObject.businessKey}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.deploymentId != null">
-          or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = #{orQueryObject.deploymentId}
-        </IsTrue>
-        <IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.deploymentIds)">
-          or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ IN
-          <For Key="deployment" Property="orQueryObject.deploymentIds" Open="(" Separator="," Close=")">
-            #{deployment}
-          </For>
-        </IsFalse>
-        <IsNotNull Property="orQueryObject.startedBefore != null">
-          or RES.START_TIME_ &lt;= #{orQueryObject.startedBefore}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.startedAfter != null">
-          or RES.START_TIME_ &gt;= #{orQueryObject.startedAfter}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.finishedBefore != null">
-          or (RES.END_TIME_ is not NULL and RES.END_TIME_ &lt;= #{orQueryObject.finishedBefore})
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.finishedAfter != null">
-          or (RES.END_TIME_ is not NULL and RES.END_TIME_ &gt;= #{orQueryObject.finishedAfter})
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processKeyNotIn != null">
-          or
-          <For Property="orQueryObject.processKeyNotIn" Key="procDefKey">
-            and DEF_OR${orIndex}.KEY_ not like #{procDefKey}${wildcardEscapeClause}
-          </For>
-        </IsNotNull>
-        <IsTrue Property="orQueryObject.unfinished">
-          or RES.END_TIME_ IS NULL
-        </IsTrue>
-        <IsTrue Property="orQueryObject.finished">
-          or RES.END_TIME_ is not NULL
-        </IsTrue>
-        <IsTrue Property="orQueryObject.notDeleted">
-          or RES.DELETE_REASON_ IS NULL
-        </IsTrue>
-        <IsTrue Property="orQueryObject.deleted">
-          or RES.DELETE_REASON_ IS NOT NULL
-        </IsTrue>
-        <IsTrue Property="orQueryObject.involvedUser != null">
-          or (
-          exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = #{orQueryObject.involvedUser} and LINK.PROC_INST_ID_ = RES.ID_)
-          )
-        </IsTrue>
-        <IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.involvedGroups)">
-          or (
-          I_OR${orIndex}.TYPE_ = 'participant'
-          and
-          I_OR${orIndex}.GROUP_ID_ IN
-          <For Key="group" Property="orQueryObject.involvedGroups" Open="(" Separator="," Close=")">
-            #{group}
-          </For>
-          )
-        </IsFalse>
-        <IsTrue Property="orQueryObject.startedBy != null">
-          or RES.START_USER_ID_ = #{orQueryObject.startedBy}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.superProcessInstanceId != null">
-          or RES.SUPER_PROCESS_INSTANCE_ID_ = #{orQueryObject.superProcessInstanceId}
-        </IsTrue>
-        <IsNotNull Property="orQueryObject.excludeSubprocesses">
-          or RES.SUPER_PROCESS_INSTANCE_ID_ is null
-        </IsNotNull>
-        <IsTrue Property="orQueryObject.tenantId != null">
-          or RES.TENANT_ID_ = #{orQueryObject.tenantId}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.tenantIdLike != null">
-          or RES.TENANT_ID_ like #{orQueryObject.tenantIdLike}${wildcardEscapeClause}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.withoutTenantId">
-          or (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
-        </IsTrue>
-        <IsTrue Property="orQueryObject.name != null">
-          or RES.NAME_ = #{orQueryObject.name}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.nameLike != null">
-          or RES.NAME_ like #{orQueryObject.nameLike}${wildcardEscapeClause}
-        </IsTrue>
-        <IsTrue Property="orQueryObject.nameLikeIgnoreCase != null">
-          or lower(RES.NAME_) like #{orQueryObject.nameLikeIgnoreCase}${wildcardEscapeClause}
-        </IsTrue>
-        <For Property="orQueryObject.queryVariableValues" Key="queryVariableValue">
-          or
-          <IsTrue Property="queryVariableValue.name != null">
-            <!-- Match-all variable-names when name is null -->
-            and A_OR${orIndex}.NAME_= #{queryVariableValue.name}
-          </IsTrue>
-          <IsTrue Property="queryVariableValue.type != 'null'">
-            <!-- When operator is not-equals or type of value is null, type doesn't matter! -->
-            and A_OR${orIndex}.VAR_TYPE_ = #{queryVariableValue.type}
-          </IsTrue>
-          <IsTrue Property="queryVariableValue.textValue != null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
-            <Switch>
-              <Case Property="queryVariableValue.operator == 'EQUALS_IGNORE_CASE' || queryVariableValue.operator == 'NOT_EQUALS_IGNORE_CASE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
-                and lower(A_OR${orIndex}.TEXT_)
-              </Case>
-              <Default>
-                and A_OR${orIndex}.TEXT_
-              </Default>
-            </Switch>
-            <Switch>
-              <Case Property="queryVariableValue.operator == 'LIKE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">LIKE</Case>
-              <Default>
-                <Include RefId="executionVariableOperator" />
-              </Default>
-            </Switch>
-            #{queryVariableValue.textValue}
-            <Switch>
-              <Case Property="queryVariableValue.operator == 'LIKE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
-                ${wildcardEscapeClause}
-              </Case>
-            </Switch>
-          </IsTrue>
-          <IsTrue Property="queryVariableValue.textValue2 != null">
-            and A_OR${orIndex}.TEXT2_
-            <Switch>
-              <Case Property="queryVariableValue.operator == 'LIKE'">LIKE</Case>
-              <Default>
-                <Include RefId="executionVariableOperator" />
-              </Default>
-            </Switch>
-            #{queryVariableValue.textValue2}
-            <Switch>
-              <Case Property="queryVariableValue.operator == 'LIKE'">
-                ${wildcardEscapeClause}
-              </Case>
-            </Switch>
-          </IsTrue>
-          <IsTrue Property="queryVariableValue.longValue != null">
-            and A_OR${orIndex}.LONG_
-            <Include RefId="executionVariableOperator" />
-            #{queryVariableValue.longValue}
-          </IsTrue>
-          <IsTrue Property="queryVariableValue.doubleValue != null">
-            and A_OR${orIndex}.DOUBLE_
-            <Include RefId="executionVariableOperator" />
-            #{queryVariableValue.doubleValue}
-          </IsTrue>
-          <!-- Null variable type -->
-          <IsTrue Property="queryVariableValue.textValue == null &amp;&amp; queryVariableValue.textValue2 == null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
-            <Switch>
-              <Case Property="queryVariableValue.operator == 'NOT_EQUALS'">
-                and (A_OR${orIndex}.TEXT_ is not null or A_OR${orIndex}.TEXT2_ is not null or A_OR${orIndex}.LONG_ is not null or A_OR${orIndex}.DOUBLE_ is not null or A_OR${orIndex}.BYTEARRAY_ID_ is not null)
-              </Case>
-              <Default>
-                and A_OR${orIndex}.TEXT_ is null and A_OR${orIndex}.TEXT2_ is null and A_OR${orIndex}.LONG_ is null and A_OR${orIndex}.DOUBLE_ is null and A_OR${orIndex}.BYTEARRAY_ID_ is null
-              </Default>
-            </Switch>
-          </IsTrue>
-        </For>
-      </For>
-      <IsTrue Property="withJobException">
-        and (JOB.EXCEPTION_MSG_ is not null or  JOB.EXCEPTION_STACK_ID_ is not null)
-      </IsTrue>
-    </Where>
-  </Statement>
+	<Statement Id="commonSelectHistoricProcessInstancesByQueryCriteriaSql">
+		<IsTrue Property="involvedGroups != null">
+			inner join ACT_HI_IDENTITYLINK I on I.PROC_INST_ID_ = RES.ID_
+		</IsTrue>
+		<For Property="queryVariableValues" Key="queryVariableValue">
+			inner join ACT_HI_VARINST  A${index} on RES.PROC_INST_ID_ = A${index}.PROC_INST_ID_
+		</For>
+		<For Property="orQueryObjects" Key="orQueryObject">
+			<IsTrue Property="orQueryObject.involvedGroups != null">
+				left join ACT_HI_IDENTITYLINK I_OR${orIndex} on I_OR${orIndex}.PROC_INST_ID_ = RES.ID_
+			</IsTrue>
+			<IsTrue Property="orQueryObject.processKeyNotIn != null || orQueryObject.processDefinitionKey != null || orQueryObject.processDefinitionCategory != null || orQueryObject.processDefinitionName != null || orQueryObject.processDefinitionVersion != null || (orQueryObject.processDefinitionKeyIn != null &amp;&amp; orQueryObject.processDefinitionKeyIn.size() &gt; 0)">
+				inner join ACT_RE_PROCDEF DEF_OR${orIndex} on RES.PROC_DEF_ID_ = DEF_OR${orIndex}.ID_
+			</IsTrue>
+			<IsTrue Property="orQueryObject.deploymentId != null || !CollectionUtil.IsEmpty(orQueryObject.deploymentIds)">
+				left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
+			</IsTrue>
+			<IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.queryVariableValues)">
+				left outer join ACT_HI_VARINST A_OR${orIndex} on RES.PROC_INST_ID_ = A_OR${orIndex}.PROC_INST_ID_
+			</IsFalse>
+		</For>
+		<IsTrue Property="deploymentId != null">
+			left outer join ACT_RE_PROCDEF DEPLOY_P ON RES.PROC_DEF_ID_ = DEPLOY_P.ID_
+		</IsTrue>
+		<IsTrue Property="withJobException">
+			left outer join ACT_RU_JOB JOB ON RES.PROC_INST_ID_ = JOB.PROCESS_INSTANCE_ID_
+		</IsTrue>
+		<Where>
+			<IsTrue Property="processInstanceId != null">
+				RES.PROC_INST_ID_ = #{processInstanceId}
+			</IsTrue>
+			<IsTrue Property="CollectionUtil.IsNotEmpty(processInstanceIds)">
+				and RES.PROC_INST_ID_ in
+				<For Key="item" Property="processInstanceIds" Open="(" Separator="," Close=")">
+					#{item}
+				</For>
+			</IsTrue>
+			<IsTrue Property="processDefinitionId != null">
+				and RES.PROC_DEF_ID_ = #{processDefinitionId}
+			</IsTrue>
+			<IsTrue Property="processDefinitionKey != null">
+				and DEF.KEY_ = #{processDefinitionKey}
+			</IsTrue>
+			<IsFalse Property="CollectionUtil.IsEmpty(processDefinitionKeyIn)">
+				and DEF.KEY_ IN
+				<For Key="definition" Property="processDefinitionKeyIn" Open="(" Separator="," Close=")">
+					#{definition}
+				</For>
+			</IsFalse>
+			<IsTrue Property="processDefinitionVersion != null">
+				and DEF.VERSION_ = #{processDefinitionVersion}
+			</IsTrue>
+			<IsTrue Property="processDefinitionCategory != null">
+				and DEF.CATEGORY_ = #{processDefinitionCategory}
+			</IsTrue>
+			<IsTrue Property="processDefinitionName != null">
+				and DEF.NAME_ = #{processDefinitionName}
+			</IsTrue>
+			<IsTrue Property="businessKey != null">
+				and RES.BUSINESS_KEY_ = #{businessKey}
+			</IsTrue>
+			<IsTrue Property="deploymentId != null">
+				and DEPLOY_P.DEPLOYMENT_ID_ = #{deploymentId}
+			</IsTrue>
+			<IsFalse Property="CollectionUtil.IsEmpty(deploymentIds)">
+				and DEPLOY_P.DEPLOYMENT_ID_ IN
+				<For Key="deployment" Property="deploymentIds"  Open="(" Separator="," Close=")">
+					#{deployment}
+				</For>
+			</IsFalse>
+			<IsTrue Property="startedBefore != null">
+				and RES.START_TIME_ &lt;= #{startedBefore}
+			</IsTrue>
+			<IsTrue Property="startedAfter != null">
+				and RES.START_TIME_ &gt;= #{startedAfter}
+			</IsTrue>
+			<IsTrue Property="finishedBefore != null">
+				and RES.END_TIME_ &lt;= #{finishedBefore}
+			</IsTrue>
+			<IsTrue Property="finishedAfter != null">
+				and RES.END_TIME_ &gt;= #{finishedAfter}
+			</IsTrue>
+			<IsTrue Property="processKeyNotIn != null">
+				<For Property="processKeyNotIn" Key="procDefKey">
+					and DEF.KEY_ not like #{procDefKey}${wildcardEscapeClause}
+				</For>
+			</IsTrue>
+			<IsTrue Property="unfinished">
+				and RES.END_TIME_ IS NULL
+			</IsTrue>
+			<IsTrue Property="finished">
+				and RES.END_TIME_ is not NULL
+			</IsTrue>
+			<IsTrue Property="notDeleted">
+				and RES.DELETE_REASON_ IS NULL
+			</IsTrue>
+			<IsTrue Property="deleted">
+				and RES.DELETE_REASON_ IS NOT NULL
+			</IsTrue>
+			<IsTrue Property="involvedUser != null">
+				and (
+				exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = #{involvedUser} and LINK.PROC_INST_ID_ = RES.ID_)
+				)
+			</IsTrue>
+			<IsFalse Property="CollectionUtil.IsEmpty(involvedGroups)">
+				and
+				(
+				I.TYPE_ = 'participant'
+				and
+				I.GROUP_ID_ IN
+				<For item="group" index="index" collection="involvedGroups" open="(" separator="," close=")">
+					#{group}
+				</For>
+				)
+			</IsFalse>
+			<IsTrue Property="startedBy != null">
+				and RES.START_USER_ID_ = #{startedBy}
+			</IsTrue>
+			<IsTrue Property="superProcessInstanceId != null">
+				and RES.SUPER_PROCESS_INSTANCE_ID_ = #{superProcessInstanceId}
+			</IsTrue>
+			<IsTrue Property="excludeSubprocesses">
+				and RES.SUPER_PROCESS_INSTANCE_ID_ is null
+			</IsTrue>
+			<IsTrue Property="tenantId != null">
+				and RES.TENANT_ID_ = #{tenantId}
+			</IsTrue>
+			<IsTrue Property="tenantIdLike != null">
+				and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
+			</IsTrue>
+			<IsTrue Property="withoutTenantId">
+				and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
+			</IsTrue>
+			<IsTrue Property="name != null">
+				and RES.NAME_ = #{name}
+			</IsTrue>
+			<IsTrue Property="nameLike != null">
+				and RES.NAME_ like #{nameLike}${wildcardEscapeClause}
+			</IsTrue>
+			<IsTrue Property="nameLikeIgnoreCase != null">
+				and lower(RES.NAME_) like #{nameLikeIgnoreCase}${wildcardEscapeClause}
+			</IsTrue>
+			<For Key="orQueryObject" Property="orQueryObjects">
+				and
+				<IsTrue Property="orQueryObject.processInstanceId != null">
+					RES.PROC_INST_ID_ = #{orQueryObject.processInstanceId}
+				</IsTrue>
+				<IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.processInstanceIds)">
+					or RES.PROC_INST_ID_ in
+					<For Key="item" Property="orQueryObject.processInstanceIds">
+						#{item}
+					</For>
+				</IsFalse>
+				<IsTrue Property="orQueryObject.processDefinitionId != null">
+					or RES.PROC_DEF_ID_ = #{orQueryObject.processDefinitionId}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.processDefinitionKey != null">
+					or DEF_OR${orIndex}.KEY_ = #{orQueryObject.processDefinitionKey}
+				</IsTrue>
+				<IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.processDefinitionKeyIn)">
+					or DEF_OR${orIndex}.KEY_ IN
+					<For Key="definition" Property="orQueryObject.processDefinitionKeyIn" Open="(" Separator="," Close=")">
+						#{definition}
+					</For>
+				</IsFalse>
+				<IsTrue Property="orQueryObject.processDefinitionVersion != null">
+					or DEF_OR${orIndex}.VERSION_ = #{orQueryObject.processDefinitionVersion}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.processDefinitionCategory != null">
+					or DEF_OR${orIndex}.CATEGORY_ = #{orQueryObject.processDefinitionCategory}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.processDefinitionName != null">
+					or DEF_OR${orIndex}.NAME_ = #{orQueryObject.processDefinitionName}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.businessKey != null">
+					or RES.BUSINESS_KEY_ = #{orQueryObject.businessKey}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.deploymentId != null">
+					or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = #{orQueryObject.deploymentId}
+				</IsTrue>
+				<IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.deploymentIds)">
+					or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ IN
+					<For Key="deployment" Property="orQueryObject.deploymentIds" Open="(" Separator="," Close=")">
+						#{deployment}
+					</For>
+				</IsFalse>
+				<IsNotNull Property="orQueryObject.startedBefore != null">
+					or RES.START_TIME_ &lt;= #{orQueryObject.startedBefore}
+				</IsNotNull>
+				<IsNotNull Property="orQueryObject.startedAfter != null">
+					or RES.START_TIME_ &gt;= #{orQueryObject.startedAfter}
+				</IsNotNull>
+				<IsNotNull Property="orQueryObject.finishedBefore != null">
+					or (RES.END_TIME_ is not NULL and RES.END_TIME_ &lt;= #{orQueryObject.finishedBefore})
+				</IsNotNull>
+				<IsNotNull Property="orQueryObject.finishedAfter != null">
+					or (RES.END_TIME_ is not NULL and RES.END_TIME_ &gt;= #{orQueryObject.finishedAfter})
+				</IsNotNull>
+				<IsNotNull Property="orQueryObject.processKeyNotIn != null">
+					or
+					<For Property="orQueryObject.processKeyNotIn" Key="procDefKey">
+						and DEF_OR${orIndex}.KEY_ not like #{procDefKey}${wildcardEscapeClause}
+					</For>
+				</IsNotNull>
+				<IsTrue Property="orQueryObject.unfinished">
+					or RES.END_TIME_ IS NULL
+				</IsTrue>
+				<IsTrue Property="orQueryObject.finished">
+					or RES.END_TIME_ is not NULL
+				</IsTrue>
+				<IsTrue Property="orQueryObject.notDeleted">
+					or RES.DELETE_REASON_ IS NULL
+				</IsTrue>
+				<IsTrue Property="orQueryObject.deleted">
+					or RES.DELETE_REASON_ IS NOT NULL
+				</IsTrue>
+				<IsTrue Property="orQueryObject.involvedUser != null">
+					or (
+					exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = #{orQueryObject.involvedUser} and LINK.PROC_INST_ID_ = RES.ID_)
+					)
+				</IsTrue>
+				<IsFalse Property="CollectionUtil.IsEmpty(orQueryObject.involvedGroups)">
+					or (
+					I_OR${orIndex}.TYPE_ = 'participant'
+					and
+					I_OR${orIndex}.GROUP_ID_ IN
+					<For Key="group" Property="orQueryObject.involvedGroups" Open="(" Separator="," Close=")">
+						#{group}
+					</For>
+					)
+				</IsFalse>
+				<IsTrue Property="orQueryObject.startedBy != null">
+					or RES.START_USER_ID_ = #{orQueryObject.startedBy}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.superProcessInstanceId != null">
+					or RES.SUPER_PROCESS_INSTANCE_ID_ = #{orQueryObject.superProcessInstanceId}
+				</IsTrue>
+				<IsNotNull Property="orQueryObject.excludeSubprocesses">
+					or RES.SUPER_PROCESS_INSTANCE_ID_ is null
+				</IsNotNull>
+				<IsTrue Property="orQueryObject.tenantId != null">
+					or RES.TENANT_ID_ = #{orQueryObject.tenantId}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.tenantIdLike != null">
+					or RES.TENANT_ID_ like #{orQueryObject.tenantIdLike}${wildcardEscapeClause}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.withoutTenantId">
+					or (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
+				</IsTrue>
+				<IsTrue Property="orQueryObject.name != null">
+					or RES.NAME_ = #{orQueryObject.name}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.nameLike != null">
+					or RES.NAME_ like #{orQueryObject.nameLike}${wildcardEscapeClause}
+				</IsTrue>
+				<IsTrue Property="orQueryObject.nameLikeIgnoreCase != null">
+					or lower(RES.NAME_) like #{orQueryObject.nameLikeIgnoreCase}${wildcardEscapeClause}
+				</IsTrue>
+				<For Property="orQueryObject.queryVariableValues" Key="queryVariableValue">
+					or
+					<IsTrue Property="queryVariableValue.name != null">
+						<!-- Match-all variable-names when name is null -->
+						and A_OR${orIndex}.NAME_= #{queryVariableValue.name}
+					</IsTrue>
+					<IsTrue Property="queryVariableValue.type != 'null'">
+						<!-- When operator is not-equals or type of value is null, type doesn't matter! -->
+						and A_OR${orIndex}.VAR_TYPE_ = #{queryVariableValue.type}
+					</IsTrue>
+					<IsTrue Property="queryVariableValue.textValue != null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
+						<Switch>
+							<Case Property="queryVariableValue.operator == 'EQUALS_IGNORE_CASE' || queryVariableValue.operator == 'NOT_EQUALS_IGNORE_CASE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
+								and lower(A_OR${orIndex}.TEXT_)
+							</Case>
+							<Default>
+								and A_OR${orIndex}.TEXT_
+							</Default>
+						</Switch>
+						<Switch>
+							<Case Property="queryVariableValue.operator == 'LIKE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">LIKE</Case>
+							<Default>
+								<Include RefId="executionVariableOperator" />
+							</Default>
+						</Switch>
+						#{queryVariableValue.textValue}
+						<Switch>
+							<Case Property="queryVariableValue.operator == 'LIKE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
+								${wildcardEscapeClause}
+							</Case>
+						</Switch>
+					</IsTrue>
+					<IsTrue Property="queryVariableValue.textValue2 != null">
+						and A_OR${orIndex}.TEXT2_
+						<Switch>
+							<Case Property="queryVariableValue.operator == 'LIKE'">LIKE</Case>
+							<Default>
+								<Include RefId="executionVariableOperator" />
+							</Default>
+						</Switch>
+						#{queryVariableValue.textValue2}
+						<Switch>
+							<Case Property="queryVariableValue.operator == 'LIKE'">
+								${wildcardEscapeClause}
+							</Case>
+						</Switch>
+					</IsTrue>
+					<IsTrue Property="queryVariableValue.longValue != null">
+						and A_OR${orIndex}.LONG_
+						<Include RefId="executionVariableOperator" />
+						#{queryVariableValue.longValue}
+					</IsTrue>
+					<IsTrue Property="queryVariableValue.doubleValue != null">
+						and A_OR${orIndex}.DOUBLE_
+						<Include RefId="executionVariableOperator" />
+						#{queryVariableValue.doubleValue}
+					</IsTrue>
+					<!-- Null variable type -->
+					<IsTrue Property="queryVariableValue.textValue == null &amp;&amp; queryVariableValue.textValue2 == null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
+						<Switch>
+							<Case Property="queryVariableValue.operator == 'NOT_EQUALS'">
+								and (A_OR${orIndex}.TEXT_ is not null or A_OR${orIndex}.TEXT2_ is not null or A_OR${orIndex}.LONG_ is not null or A_OR${orIndex}.DOUBLE_ is not null or A_OR${orIndex}.BYTEARRAY_ID_ is not null)
+							</Case>
+							<Default>
+								and A_OR${orIndex}.TEXT_ is null and A_OR${orIndex}.TEXT2_ is null and A_OR${orIndex}.LONG_ is null and A_OR${orIndex}.DOUBLE_ is null and A_OR${orIndex}.BYTEARRAY_ID_ is null
+							</Default>
+						</Switch>
+					</IsTrue>
+				</For>
+			</For>
+			<IsTrue Property="withJobException">
+				and (JOB.EXCEPTION_MSG_ is not null or  JOB.EXCEPTION_STACK_ID_ is not null)
+			</IsTrue>
+		</Where>
+	</Statement>
 
-  <Statement Id="selectHistoricProcessInstancesByQueryCriteriaSql">
-    from ACT_HI_PROCINST RES
-    left outer join ACT_RE_PROCDEF DEF on RES.PROC_DEF_ID_ = DEF.ID_
-    <Include RefId="commonSelectHistoricProcessInstancesByQueryCriteriaSql"/>
-  </Statement>
+	<Statement Id="selectHistoricProcessInstancesByQueryCriteriaSql">
+		from ACT_HI_PROCINST RES
+		left outer join ACT_RE_PROCDEF DEF on RES.PROC_DEF_ID_ = DEF.ID_
+		<Include RefId="commonSelectHistoricProcessInstancesByQueryCriteriaSql"/>
+	</Statement>
 
-  <Statement Id="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql">
-    from ACT_HI_PROCINST RES
-    left outer join ACT_RE_PROCDEF DEF on RES.PROC_DEF_ID_ = DEF.ID_
-    <IsTrue Property="includeProcessVariables">
-      left outer join ACT_HI_VARINST VAR ON RES.PROC_INST_ID_ = VAR.EXECUTION_ID_ and VAR.TASK_ID_ is null
-    </IsTrue>
-    <Include RefId="commonSelectHistoricProcessInstancesByQueryCriteriaSql"/>
-  </Statement>
+	<Statement Id="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql">
+		from ACT_HI_PROCINST RES
+		left outer join ACT_RE_PROCDEF DEF on RES.PROC_DEF_ID_ = DEF.ID_
+		<IsTrue Property="includeProcessVariables">
+			left outer join ACT_HI_VARINST VAR ON RES.PROC_INST_ID_ = VAR.EXECUTION_ID_ and VAR.TASK_ID_ is null
+		</IsTrue>
+		<Include RefId="commonSelectHistoricProcessInstancesByQueryCriteriaSql"/>
+	</Statement>
 
-  <Select Id="selectHistoricProcessInstance" ResultMap="historicProcessInstanceResultMap">
-    select * from ACT_HI_PROCINST where PROC_INST_ID_ = #{processInstanceId}
-  </Select>
+	<Select Id="selectHistoricProcessInstance" ResultMap="historicProcessInstanceResultMap">
+		select * from ACT_HI_PROCINST where PROC_INST_ID_ = #{processInstanceId}
+	</Select>
 
-  <Select Id="selectHistoricProcessInstanceIdsBySuperProcessInstanceId" ResultMap="historicProcessInstanceResultMap">
-    select *
-    from ACT_HI_PROCINST
-    where SUPER_PROCESS_INSTANCE_ID_ = #{superProcessInstanceId}
-  </Select>
+	<Select Id="selectHistoricProcessInstanceIdsBySuperProcessInstanceId" ResultMap="historicProcessInstanceResultMap">
+		select *
+		from ACT_HI_PROCINST
+		where SUPER_PROCESS_INSTANCE_ID_ = #{superProcessInstanceId}
+	</Select>
 
-  <Select Id="selectHistoricProcessInstanceIdsByProcessDefinitionId"  resultType="string">
-    select ID_
-    from ACT_HI_PROCINST
-    where PROC_DEF_ID_ = #{processDefinitionId}
-  </Select>
+	<Select Id="selectHistoricProcessInstanceIdsByProcessDefinitionId"  resultType="string">
+		select ID_
+		from ACT_HI_PROCINST
+		where PROC_DEF_ID_ = #{processDefinitionId}
+	</Select>
 
 
-  <Select Id="selectHistoricProcessInstancesByQueryCriteria"  ResultMap="historicProcessInstanceResultMap">
-    ${limitBefore}
-    select distinct ${top100} RES.* ${limitBetween}, DEF.KEY_ as PROC_DEF_KEY_, DEF.NAME_ as PROC_DEF_NAME_, DEF.VERSION_ as PROC_DEF_VERSION_, DEF.DEPLOYMENT_ID_ as DEPLOYMENT_ID_
-    <Include RefId="selectHistoricProcessInstancesByQueryCriteriaSql"/>
-    ${orderBy}
-    ${limitAfter}
-  </Select>
+	<Select Id="selectHistoricProcessInstancesByQueryCriteria"  ResultMap="historicProcessInstanceResultMap">
+		${limitBefore}
+		select distinct ${top100} RES.* ${limitBetween}, DEF.KEY_ as PROC_DEF_KEY_, DEF.NAME_ as PROC_DEF_NAME_, DEF.VERSION_ as PROC_DEF_VERSION_, DEF.DEPLOYMENT_ID_ as DEPLOYMENT_ID_
+		<Include RefId="selectHistoricProcessInstancesByQueryCriteriaSql"/>
+		${orderBy}
+		${limitAfter}
+	</Select>
 
-  <Select Id="selectHistoricProcessInstanceCountByQueryCriteria"  resultType="long">
-    select count(distinct RES.ID_)
-    <Include RefId="selectHistoricProcessInstancesByQueryCriteriaSql"/>
-  </Select>
+	<Select Id="selectHistoricProcessInstanceCountByQueryCriteria"  resultType="long">
+		select count(distinct RES.ID_)
+		<Include RefId="selectHistoricProcessInstancesByQueryCriteriaSql"/>
+	</Select>
 
-  <Select Id="selectHistoricProcessInstancesWithVariablesByQueryCriteria"  ResultMap="historicProcessInstanceAndVariablesResultMap">
-    ${limitBefore}
-    select distinct ${top100} RES.*, DEF.KEY_ as PROC_DEF_KEY_, DEF.NAME_ as PROC_DEF_NAME_, DEF.VERSION_ as PROC_DEF_VERSION_, DEF.DEPLOYMENT_ID_ as DEPLOYMENT_ID_,
-    VAR.ID_ as VAR_ID_,
-    VAR.NAME_ as VAR_NAME_,
-    VAR.VAR_TYPE_ as VAR_TYPE_,
-    VAR.REV_ as VAR_REV_,
-    VAR.PROC_INST_ID_ as VAR_PROC_INST_ID_,
-    VAR.EXECUTION_ID_ as VAR_EXECUTION_ID_,
-    VAR.TASK_ID_ as VAR_TASK_ID_,
-    VAR.BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_,
-    VAR.DOUBLE_ as VAR_DOUBLE_,
-    VAR.TEXT_ as VAR_TEXT_,
-    VAR.TEXT2_ as VAR_TEXT2_,
-    VAR.LAST_UPDATED_TIME_ as VAR_LAST_UPDATED_TIME_,
-    VAR.LONG_ as VAR_LONG_
-    ${limitBetween}
-    <Include RefId="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql"/>
-    ${orderBy}
-    ${limitAfter}
-  </Select>
+	<Select Id="selectHistoricProcessInstancesWithVariablesByQueryCriteria"  ResultMap="historicProcessInstanceAndVariablesResultMap">
+		${limitBefore}
+		select distinct ${top100} RES.*, DEF.KEY_ as PROC_DEF_KEY_, DEF.NAME_ as PROC_DEF_NAME_, DEF.VERSION_ as PROC_DEF_VERSION_, DEF.DEPLOYMENT_ID_ as DEPLOYMENT_ID_,
+		VAR.ID_ as VAR_ID_,
+		VAR.NAME_ as VAR_NAME_,
+		VAR.VAR_TYPE_ as VAR_TYPE_,
+		VAR.REV_ as VAR_REV_,
+		VAR.PROC_INST_ID_ as VAR_PROC_INST_ID_,
+		VAR.EXECUTION_ID_ as VAR_EXECUTION_ID_,
+		VAR.TASK_ID_ as VAR_TASK_ID_,
+		VAR.BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_,
+		VAR.DOUBLE_ as VAR_DOUBLE_,
+		VAR.TEXT_ as VAR_TEXT_,
+		VAR.TEXT2_ as VAR_TEXT2_,
+		VAR.LAST_UPDATED_TIME_ as VAR_LAST_UPDATED_TIME_,
+		VAR.LONG_ as VAR_LONG_
+		${limitBetween}
+		<Include RefId="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql"/>
+		${orderBy}
+		${limitAfter}
+	</Select>
 
-  <Select Id="selectHistoricProcessInstancesWithVariablesByQueryCriteria_mssql_or_db2"  ResultMap="historicProcessInstanceAndVariablesResultMap">
-    ${limitBefore}
-    select distinct ${top100} TEMPRES_ID_ as ID_,
-    TEMPRES_BUSINESS_KEY_ as BUSINESS_KEY_,
-    TEMPRES_PROC_DEF_ID_ as PROC_DEF_ID_,
-    TEMPRES_START_TIME_ as START_TIME_,
-    TEMPRES_END_TIME_ as END_TIME_,
-    TEMPRES_DURATION_ as DURATION_,
-    TEMPRES_START_USER_ID_ as START_USER_ID_,
-    TEMPRES_START_USER_ as START_USER_,
-    TEMPRES_START_ACT_ID_ as START_ACT_ID_,
-    TEMPRES_END_ACT_ID_ as END_ACT_ID_,
-    TEMPRES_SUPER_PROCESS_INSTANCE_ID_ as SUPER_PROCESS_INSTANCE_ID_,
-    TEMPRES_DELETE_REASON_ as DELETE_REASON_,
-    TEMPRES_NAME_ as NAME_,
-    TEMPRES_TENANT_ID_ as TENANT_ID_,
-    TEMPRES_PROC_DEF_KEY_ as PROC_DEF_KEY_,
-    TEMPRES_PROC_DEF_NAME_ as PROC_DEF_NAME_,
-    TEMPRES_PROC_DEF_VERSION_ as PROC_DEF_VERSION_,
-    TEMPRES_DEPLOYMENT_ID_ as DEPLOYMENT_ID_,
-    TEMPVAR_ID_ as VAR_ID_,
-    TEMPVAR_NAME_ as VAR_NAME_,
-    TEMPVAR_TYPE_ as VAR_TYPE_,
-    TEMPVAR_REV_ as VAR_REV_,
-    TEMPVAR_PROC_INST_ID_ as VAR_PROC_INST_ID_,
-    TEMPVAR_EXECUTION_ID_ as VAR_EXECUTION_ID_,
-    TEMPVAR_TASK_ID_ as VAR_TASK_ID_,
-    TEMPVAR_BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_,
-    TEMPVAR_DOUBLE_ as VAR_DOUBLE_,
-    TEMPVAR_TEXT_ as VAR_TEXT_,
-    TEMPVAR_TEXT2_ as VAR_TEXT2_,
-    TEMPVAR_LAST_UPDATED_TIME_ as VAR_LAST_UPDATED_TIME_,
-    TEMPVAR_LONG_ as VAR_LONG_
-    ${limitOuterJoinBetween}
-    RES.ID_ as TEMPRES_ID_,
-    RES.BUSINESS_KEY_ as TEMPRES_BUSINESS_KEY_,
-    RES.PROC_DEF_ID_ as TEMPRES_PROC_DEF_ID_,
-    RES.PROC_INST_ID_ as TEMPRES_PROC_INST_ID_,
-    RES.START_TIME_ as TEMPRES_START_TIME_,
-    RES.END_TIME_ as TEMPRES_END_TIME_,
-    RES.DURATION_ as TEMPRES_DURATION_,
-    RES.START_USER_ID_ as TEMPRES_START_USER_ID_,
-    RES.START_USER_ as TEMPRES_START_USER_,
-    RES.START_ACT_ID_ as TEMPRES_START_ACT_ID_,
-    RES.END_ACT_ID_ as TEMPRES_END_ACT_ID_,
-    RES.SUPER_PROCESS_INSTANCE_ID_ as TEMPRES_SUPER_PROCESS_INSTANCE_ID_,
-    RES.DELETE_REASON_ as TEMPRES_DELETE_REASON_,
-    RES.NAME_ as TEMPRES_NAME_,
-    RES.TENANT_ID_ as TEMPRES_TENANT_ID_,
-    DEF.KEY_ as TEMPRES_PROC_DEF_KEY_,
-    DEF.NAME_ as TEMPRES_PROC_DEF_NAME_,
-    DEF.VERSION_ as TEMPRES_PROC_DEF_VERSION_,
-    DEF.DEPLOYMENT_ID_ as TEMPRES_DEPLOYMENT_ID_,
-    VAR.ID_ as TEMPVAR_ID_,
-    VAR.NAME_ as TEMPVAR_NAME_,
-    VAR.VAR_TYPE_ as TEMPVAR_TYPE_,
-    VAR.REV_ as TEMPVAR_REV_,
-    VAR.PROC_INST_ID_ as TEMPVAR_PROC_INST_ID_,
-    VAR.EXECUTION_ID_ as TEMPVAR_EXECUTION_ID_,
-    VAR.TASK_ID_ as TEMPVAR_TASK_ID_,
-    VAR.BYTEARRAY_ID_ as TEMPVAR_BYTEARRAY_ID_,
-    VAR.DOUBLE_ as TEMPVAR_DOUBLE_,
-    VAR.TEXT_ as TEMPVAR_TEXT_,
-    VAR.TEXT2_ as TEMPVAR_TEXT2_,
-    VAR.LAST_UPDATED_TIME_ as TEMPVAR_LAST_UPDATED_TIME_,
-    VAR.LONG_ as TEMPVAR_LONG_
-    <Include RefId="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql"/>
-    ${orderBy}
-    ${limitAfter}
-  </Select>
+	<Select Id="selectHistoricProcessInstancesWithVariablesByQueryCriteria_mssql_or_db2"  ResultMap="historicProcessInstanceAndVariablesResultMap">
+		${limitBefore}
+		select distinct ${top100} TEMPRES_ID_ as ID_,
+		TEMPRES_BUSINESS_KEY_ as BUSINESS_KEY_,
+		TEMPRES_PROC_DEF_ID_ as PROC_DEF_ID_,
+		TEMPRES_START_TIME_ as START_TIME_,
+		TEMPRES_END_TIME_ as END_TIME_,
+		TEMPRES_DURATION_ as DURATION_,
+		TEMPRES_START_USER_ID_ as START_USER_ID_,
+		TEMPRES_START_USER_ as START_USER_,
+		TEMPRES_START_ACT_ID_ as START_ACT_ID_,
+		TEMPRES_END_ACT_ID_ as END_ACT_ID_,
+		TEMPRES_SUPER_PROCESS_INSTANCE_ID_ as SUPER_PROCESS_INSTANCE_ID_,
+		TEMPRES_DELETE_REASON_ as DELETE_REASON_,
+		TEMPRES_NAME_ as NAME_,
+		TEMPRES_TENANT_ID_ as TENANT_ID_,
+		TEMPRES_PROC_DEF_KEY_ as PROC_DEF_KEY_,
+		TEMPRES_PROC_DEF_NAME_ as PROC_DEF_NAME_,
+		TEMPRES_PROC_DEF_VERSION_ as PROC_DEF_VERSION_,
+		TEMPRES_DEPLOYMENT_ID_ as DEPLOYMENT_ID_,
+		TEMPVAR_ID_ as VAR_ID_,
+		TEMPVAR_NAME_ as VAR_NAME_,
+		TEMPVAR_TYPE_ as VAR_TYPE_,
+		TEMPVAR_REV_ as VAR_REV_,
+		TEMPVAR_PROC_INST_ID_ as VAR_PROC_INST_ID_,
+		TEMPVAR_EXECUTION_ID_ as VAR_EXECUTION_ID_,
+		TEMPVAR_TASK_ID_ as VAR_TASK_ID_,
+		TEMPVAR_BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_,
+		TEMPVAR_DOUBLE_ as VAR_DOUBLE_,
+		TEMPVAR_TEXT_ as VAR_TEXT_,
+		TEMPVAR_TEXT2_ as VAR_TEXT2_,
+		TEMPVAR_LAST_UPDATED_TIME_ as VAR_LAST_UPDATED_TIME_,
+		TEMPVAR_LONG_ as VAR_LONG_
+		${limitOuterJoinBetween}
+		RES.ID_ as TEMPRES_ID_,
+		RES.BUSINESS_KEY_ as TEMPRES_BUSINESS_KEY_,
+		RES.PROC_DEF_ID_ as TEMPRES_PROC_DEF_ID_,
+		RES.PROC_INST_ID_ as TEMPRES_PROC_INST_ID_,
+		RES.START_TIME_ as TEMPRES_START_TIME_,
+		RES.END_TIME_ as TEMPRES_END_TIME_,
+		RES.DURATION_ as TEMPRES_DURATION_,
+		RES.START_USER_ID_ as TEMPRES_START_USER_ID_,
+		RES.START_USER_ as TEMPRES_START_USER_,
+		RES.START_ACT_ID_ as TEMPRES_START_ACT_ID_,
+		RES.END_ACT_ID_ as TEMPRES_END_ACT_ID_,
+		RES.SUPER_PROCESS_INSTANCE_ID_ as TEMPRES_SUPER_PROCESS_INSTANCE_ID_,
+		RES.DELETE_REASON_ as TEMPRES_DELETE_REASON_,
+		RES.NAME_ as TEMPRES_NAME_,
+		RES.TENANT_ID_ as TEMPRES_TENANT_ID_,
+		DEF.KEY_ as TEMPRES_PROC_DEF_KEY_,
+		DEF.NAME_ as TEMPRES_PROC_DEF_NAME_,
+		DEF.VERSION_ as TEMPRES_PROC_DEF_VERSION_,
+		DEF.DEPLOYMENT_ID_ as TEMPRES_DEPLOYMENT_ID_,
+		VAR.ID_ as TEMPVAR_ID_,
+		VAR.NAME_ as TEMPVAR_NAME_,
+		VAR.VAR_TYPE_ as TEMPVAR_TYPE_,
+		VAR.REV_ as TEMPVAR_REV_,
+		VAR.PROC_INST_ID_ as TEMPVAR_PROC_INST_ID_,
+		VAR.EXECUTION_ID_ as TEMPVAR_EXECUTION_ID_,
+		VAR.TASK_ID_ as TEMPVAR_TASK_ID_,
+		VAR.BYTEARRAY_ID_ as TEMPVAR_BYTEARRAY_ID_,
+		VAR.DOUBLE_ as TEMPVAR_DOUBLE_,
+		VAR.TEXT_ as TEMPVAR_TEXT_,
+		VAR.TEXT2_ as TEMPVAR_TEXT2_,
+		VAR.LAST_UPDATED_TIME_ as TEMPVAR_LAST_UPDATED_TIME_,
+		VAR.LONG_ as TEMPVAR_LONG_
+		<Include RefId="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql"/>
+		${orderBy}
+		${limitAfter}
+	</Select>
 
-  <Select Id="selectHistoricProcessInstanceByNativeQuery"  ResultMap="historicProcessInstanceResultMap">
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitBefore}
-    </IsEqual>
-    ${sql}
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitAfter}
-    </IsEqual>
-  </Select>
+	<Select Id="selectHistoricProcessInstanceByNativeQuery"  ResultMap="historicProcessInstanceResultMap">
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitBefore}
+		</IsEqual>
+		${sql}
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitAfter}
+		</IsEqual>
+	</Select>
 
-  <Select Id="selectHistoricProcessInstanceByNativeQuery_mssql_or_db2"  ResultMap="historicProcessInstanceResultMap">
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitBeforeNativeQuery}
-    </IsEqual>
-    ${sql}
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitAfter}
-    </IsEqual>
-  </Select>
+	<Select Id="selectHistoricProcessInstanceByNativeQuery_mssql_or_db2"  ResultMap="historicProcessInstanceResultMap">
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitBeforeNativeQuery}
+		</IsEqual>
+		${sql}
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitAfter}
+		</IsEqual>
+	</Select>
 
-  <Select Id="selectHistoricProcessInstanceCountByNativeQuery" >
-    ${sql}
-  </Select>
+	<Select Id="selectHistoricProcessInstanceCountByNativeQuery" >
+		${sql}
+	</Select>
 </SmartSqlMap>

@@ -73,12 +73,9 @@ namespace Sys.Workflow.Engine.Impl.Scripting
         {
             get
             {
-                lock (syncRoot)
+                if (scriptEngineFactory is null)
                 {
-                    if (scriptEngineFactory is null)
-                    {
-                        scriptEngineFactory = new JuelScriptEngineFactory();
-                    }
+                    scriptEngineFactory = new JuelScriptEngineFactory();
                 }
                 return scriptEngineFactory;
             }

@@ -19,7 +19,7 @@ namespace SmartSql.DbSession
         private readonly ILogger _logger;
         private readonly ILoggerFactory _loggerFactory;
         private readonly DbProviderFactory _dbProviderFactory;
-        private AsyncLocal<IDbConnectionSession> _staticSession = new AsyncLocal<IDbConnectionSession>();
+        private readonly static AsyncLocal<IDbConnectionSession> _staticSession = new AsyncLocal<IDbConnectionSession>();
 
         public DbConnectionSessionStore(ILoggerFactory loggerFactory
             , DbProviderFactory dbProviderFactory)
@@ -54,9 +54,9 @@ namespace SmartSql.DbSession
 
         public IDbConnectionSession GetOrAddDbSession(IDataSource dataSource)
         {
-            if (LocalSession is object) 
+            if (LocalSession is object)
             {
-                return LocalSession; 
+                return LocalSession;
             }
             return CreateDbSession(dataSource);
         }

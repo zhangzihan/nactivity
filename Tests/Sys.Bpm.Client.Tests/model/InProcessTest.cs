@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using SmartSql.Abstractions;
 using Sys.Workflow.Bpmn.Converters;
 using Sys.Workflow.Bpmn.Models;
 using Sys.Workflow.Engine;
@@ -9,6 +10,7 @@ using Sys.Workflow.Engine.Impl.Cmd;
 using Sys.Workflow.Engine.Impl.Identities;
 using Sys.Workflow.Engine.Impl.Interceptor;
 using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Impl.Variable;
 using Sys.Workflow.Engine.Repository;
 using Sys.Workflow.Engine.Runtime;
 using Sys.Workflow.Engine.Tasks;
@@ -52,6 +54,56 @@ namespace Sys.Workflow.Client.Tests.Models
             };
 
             processEngine = ProcessEngineFactory.CreateProcessEngine(processEngineConfig);
+        }
+
+        [InlineData(70)]
+        [Theory]
+        public void SmartSqlTest(int counter)
+        {
+            var ex = Record.Exception(() =>
+            {
+                ISmartSqlMapper sqlMapper = ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>();
+                var type = typeof(HistoricVariableInstanceEntityImpl);
+                var dbFactory = (processEngine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl).DbSqlSessionFactory;
+                var statement = dbFactory.GetBulkUpdateStatement(type, dbFactory.DatabaseType, ref type);
+                HistoricVariableInstanceEntityImpl[] items = new HistoricVariableInstanceEntityImpl[counter];
+                for (var idx = 0; idx < counter; idx++)
+                {
+                    items[idx] = new HistoricVariableInstanceEntityImpl
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = $"Name_{idx}",
+                        VariableType = new NullType(),
+                        Revision = idx,
+                    };
+                }
+                var reqContext = new RequestContext()
+                {
+                    Scope = "Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricVariableInstanceEntityImpl",
+                    SqlId = statement,
+                    Request = new
+                    {
+                        Items = items
+                    }
+                };
+                reqContext.Setup(sqlMapper.SmartSqlOptions.SmartSqlContext, sqlMapper.SqlBuilder);
+                var dbsession = sqlMapper.BeginTransaction(reqContext, System.Data.IsolationLevel.ReadCommitted);
+                var dbCommand = sqlMapper.SmartSqlOptions.PreparedCommand.Prepare(dbsession, reqContext);
+                try
+                {
+                    dbCommand.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                finally
+                {
+                    dbsession.RollbackTransaction();
+                    dbCommand.Connection.Close();
+                }
+            });
+
         }
 
         [Theory]

@@ -6,12 +6,13 @@ using System.Reflection.Emit;
 using SmartSql.Abstractions;
 using System.Collections;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
 
 namespace SmartSql.DyRepository
 {
     public class RepositoryFactory : IRepositoryFactory
     {
-        private IDictionary<Type, object> _cachedRepository = new Dictionary<Type, object>();
+        private ConcurrentDictionary<Type, object> _cachedRepository = new ConcurrentDictionary<Type, object>();
 
         private AssemblyBuilder _assemblyBuilder;
         private ModuleBuilder _moduleBuilder;
@@ -36,27 +37,22 @@ namespace SmartSql.DyRepository
             _moduleBuilder = _assemblyBuilder.DefineDynamicModule(assemblyName + ".dll");
         }
 
-        private object syncRoot = new object();
-
         public object CreateInstance(Type interfaceType, ISmartSqlMapper smartSqlMapper)
         {
             if (!_cachedRepository.ContainsKey(interfaceType))
             {
-                lock (syncRoot)
+                if (!_cachedRepository.ContainsKey(interfaceType))
                 {
-                    if (!_cachedRepository.ContainsKey(interfaceType))
+                    if (_logger.IsEnabled(LogLevel.Debug))
                     {
-                        if (_logger.IsEnabled(LogLevel.Debug))
-                        {
-                            _logger.LogDebug($"RepositoryFactory.CreateInstance :InterfaceType.FullName:[{interfaceType.FullName}] Start");
-                        }
-                        var implType = _repositoryBuilder.BuildRepositoryImpl(interfaceType);
-                        var obj = Activator.CreateInstance(implType, new object[] { smartSqlMapper });
-                        _cachedRepository.Add(interfaceType, obj);
-                        if (_logger.IsEnabled(LogLevel.Debug))
-                        {
-                            _logger.LogDebug($"RepositoryFactory.CreateInstance :InterfaceType.FullName:[{interfaceType.FullName}],ImplType.FullName:[{implType.FullName}] End");
-                        }
+                        _logger.LogDebug($"RepositoryFactory.CreateInstance :InterfaceType.FullName:[{interfaceType.FullName}] Start");
+                    }
+                    var implType = _repositoryBuilder.BuildRepositoryImpl(interfaceType);
+                    var obj = Activator.CreateInstance(implType, new object[] { smartSqlMapper });
+                    _cachedRepository.TryAdd(interfaceType, obj);
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                    {
+                        _logger.LogDebug($"RepositoryFactory.CreateInstance :InterfaceType.FullName:[{interfaceType.FullName}],ImplType.FullName:[{implType.FullName}] End");
                     }
                 }
             }

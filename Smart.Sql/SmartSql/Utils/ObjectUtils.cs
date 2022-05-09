@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,15 +10,14 @@ namespace SmartSql.Utils
 {
     public static class ObjectUtils
     {
-        private static readonly object _syncObj = new object();
-        private static Dictionary<string, Func<object, Dictionary<string, object>>> _cachedConvert = new Dictionary<string, Func<object, Dictionary<string, object>>>();
+        private static ConcurrentDictionary<string, Func<object, Dictionary<string, object>>> _cachedConvert = new ConcurrentDictionary<string, Func<object, Dictionary<string, object>>>();
 
         public static Dictionary<string, object> ToDictionary(object sourceObj, bool ignorePropNameCase)
         {
             if (sourceObj is IDictionary s)
             {
                 Dictionary<string, object> dict = ignorePropNameCase ? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) : new Dictionary<string, object>();
-                foreach(var key in s.Keys)
+                foreach (var key in s.Keys)
                 {
                     dict.Add(key.ToString(), s[key]);
                 }
@@ -30,18 +30,12 @@ namespace SmartSql.Utils
         public static Func<object, Dictionary<string, object>> GetDictionaryConvert(Type sourceType, bool ignorePropNameCase)
         {
             string key = $"{sourceType.GUID.ToString("N")}_{ignorePropNameCase}";
-            if (!_cachedConvert.ContainsKey(key))
+            if (!_cachedConvert.TryGetValue(key, out var obj))
             {
-                lock (_syncObj)
-                {
-                    if (!_cachedConvert.ContainsKey(key))
-                    {
-                        var impl = CreateDictionaryConvertConvertImpl(sourceType, ignorePropNameCase);
-                        _cachedConvert.Add(key, impl);
-                    }
-                }
+                obj = CreateDictionaryConvertConvertImpl(sourceType, ignorePropNameCase);
+                _cachedConvert.TryAdd(key, obj);
             }
-            return _cachedConvert[key];
+            return obj;
         }
 
         private static readonly Type _dicType = typeof(Dictionary<string, object>);
@@ -49,6 +43,7 @@ namespace SmartSql.Utils
         private static readonly MethodInfo _addItemDicMentod = _dicType.GetMethod("Add");
         private static readonly MethodInfo _get_CurrentCultureIgnoreCase_StringComparer = typeof(StringComparer).GetMethod("get_CurrentCultureIgnoreCase");
         private static readonly MethodInfo _get_CurrentCulture_StringComparer = typeof(StringComparer).GetMethod("get_CurrentCulture");
+
         private static Func<object, Dictionary<string, object>> CreateDictionaryConvertConvertImpl(Type sourceType, bool ignorePropNameCase)
         {
             Type returnType = _dicType;

@@ -16,210 +16,210 @@
 
 <SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricDetailEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
-  <!-- HISTORIC DETAILS RESULTMAP -->
+	<!-- HISTORIC DETAILS RESULTMAP -->
 
-  <!--<discriminator javaType="string" column="TYPE_">
+	<!--<discriminator javaType="string" column="TYPE_">
       <case value="VariableUpdate" ResultMap="historicVariableUpdateResultMap"/> 
       <case value="FormProperty" ResultMap="historicFormPropertyResultMap"/> 
     </discriminator>-->
 
-  <ResultMap Id="historicDetailResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricDetailEntityImpl,Sys.Bpm.Engine">
-    <Result Property="id" Column="ID_" />
-    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
-    <Result Property="activityInstanceId" Column="ACT_INST_ID_" />
-    <Result Property="executionId" Column="EXECUTION_ID_" />
-    <Result Property="taskId" Column="TASK_ID_" />
-    <Result Property="time" Column="TIME_" />
-  </ResultMap>
+	<ResultMap Id="historicDetailResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricDetailEntityImpl,Sys.Bpm.Engine">
+		<Result Property="id" Column="ID_" />
+		<Result Property="processInstanceId" Column="PROC_INST_ID_" />
+		<Result Property="activityInstanceId" Column="ACT_INST_ID_" />
+		<Result Property="executionId" Column="EXECUTION_ID_" />
+		<Result Property="taskId" Column="TASK_ID_" />
+		<Result Property="time" Column="TIME_" />
+	</ResultMap>
 
-  <ResultMap Id="historicVariableUpdateResultMap" extends="historicDetailResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricDetailVariableInstanceUpdateEntityImpl,Sys.Bpm.Engine">
-    <Result Property="name" Column="NAME_" />
-    <Result Property="revision" Column="REV_" />
-    <Result Property="variableType" Column="VAR_TYPE_" />
-    <Result Property="activityId" Column="ACTIVITY_ID_" />
-    <Result Property="byteArrayRef" Column="BYTEARRAY_ID_" />
-    <Result Property="doubleValue" Column="DOUBLE_" />
-    <Result Property="textValue" Column="TEXT_" />
-    <Result Property="textValue2" Column="TEXT2_" />
-    <Result Property="longValue" Column="LONG_" />
-  </ResultMap>
+	<ResultMap Id="historicVariableUpdateResultMap" extends="historicDetailResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricDetailVariableInstanceUpdateEntityImpl,Sys.Bpm.Engine">
+		<Result Property="name" Column="NAME_" />
+		<Result Property="revision" Column="REV_" />
+		<Result Property="variableType" Column="VAR_TYPE_" />
+		<Result Property="activityId" Column="ACTIVITY_ID_" />
+		<Result Property="byteArrayRef" Column="BYTEARRAY_ID_" />
+		<Result Property="doubleValue" Column="DOUBLE_" />
+		<Result Property="textValue" Column="TEXT_" />
+		<Result Property="textValue2" Column="TEXT2_" />
+		<Result Property="longValue" Column="LONG_" />
+	</ResultMap>
 
-  <ResultMap Id="historicFormPropertyResultMap" extends="historicDetailResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricFormPropertyEntityImpl,Sys.Bpm.Engine">
-    <Result Property="propertyId" Column="NAME_" />
-    <Result Property="propertyValue" Column="TEXT_" />
-  </ResultMap>
+	<ResultMap Id="historicFormPropertyResultMap" extends="historicDetailResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricFormPropertyEntityImpl,Sys.Bpm.Engine">
+		<Result Property="propertyId" Column="NAME_" />
+		<Result Property="propertyValue" Column="TEXT_" />
+	</ResultMap>
 
-  <ParameterMap Id="insupVariableInstance">
-    <Parameter Property="byteArrayRef" TypeHandler="二进制引用" />
-  </ParameterMap>
+	<ParameterMap Id="insupVariableInstance">
+		<Parameter Property="byteArrayRef" TypeHandler="二进制引用" />
+	</ParameterMap>
 
 
-  <!-- HISTORIC DETAILS INSERT -->
+	<!-- HISTORIC DETAILS INSERT -->
 
-  <Insert Id="insertHistoricFormProperty">
-    insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, ACT_INST_ID_, EXECUTION_ID_, TASK_ID_, TIME_, NAME_, TEXT_)
-    values (
-    #{id},
-    'FormProperty',
-    #{processInstanceId},
-    #{activityInstanceId},
-    #{executionId},
-    #{taskId},
-    #{time},
-    #{propertyId},
-    #{propertyValue}
-    )
-  </Insert>
+	<Insert Id="insertHistoricFormProperty">
+		insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, ACT_INST_ID_, EXECUTION_ID_, TASK_ID_, TIME_, NAME_, TEXT_)
+		values (
+		#{id},
+		'FormProperty',
+		#{processInstanceId},
+		#{activityInstanceId},
+		#{executionId},
+		#{taskId},
+		#{time},
+		#{propertyId},
+		#{propertyValue}
+		)
+	</Insert>
 
-  <Insert Id="bulkInsertHistoricFormProperty">
-    insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, ACT_INST_ID_, EXECUTION_ID_, TASK_ID_, TIME_, NAME_, TEXT_)
-    values
-    <For Property="Items" Key="p" Separator=",">
-      (#{id},
-      #{detailType},
-      #{processInstanceId},
-      #{activityInstanceId},
-      #{executionId},
-      #{taskId},
-      #{time},
-      #{propertyId},
-      #{propertyValue})
-    </For>
-  </Insert>
+	<Insert Id="bulkInsertHistoricFormProperty">
+		insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, ACT_INST_ID_, EXECUTION_ID_, TASK_ID_, TIME_, NAME_, TEXT_)
+		values
+		<For Property="Items" Key="p" Separator=",">
+			(#{id},
+			#{detailType},
+			#{processInstanceId},
+			#{activityInstanceId},
+			#{executionId},
+			#{taskId},
+			#{time},
+			#{propertyId},
+			#{propertyValue})
+		</For>
+	</Insert>
 
-  <Insert Id="insertHistoricDetailVariableInstanceUpdate" ParameterMap="insupVariableInstance">
-    insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, EXECUTION_ID_, ACT_INST_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, TIME_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_)
-    values (
-    #{id},
-    'VariableUpdate',
-    #{processInstanceId},
-    #{executionId},
-    #{activityInstanceId},
-    #{taskId},
-    #{variableName},
-    #{revision},
-    #{variableType},
-    #{time},
-    #{byteArrayRef},
-    #{doubleValue},
-    #{longValue},
-    #{textValue},
-    #{textValue2}
-    )
-  </Insert>
+	<Insert Id="insertHistoricDetailVariableInstanceUpdate" ParameterMap="insupVariableInstance">
+		insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, EXECUTION_ID_, ACT_INST_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, TIME_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_)
+		values (
+		#{id},
+		'VariableUpdate',
+		#{processInstanceId},
+		#{executionId},
+		#{activityInstanceId},
+		#{taskId},
+		#{variableName},
+		#{revision},
+		#{variableType},
+		#{time},
+		#{byteArrayRef},
+		#{doubleValue},
+		#{longValue},
+		#{textValue},
+		#{textValue2}
+		)
+	</Insert>
 
-  <Insert Id="bulkInsertHistoricDetailVariableInstanceUpdate" ParameterMap="insupVariableInstance">
-    insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, EXECUTION_ID_, ACT_INST_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, TIME_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_)
-    values
-    <For Property="Items" Key="p" Separator=",">
-      (#{id},
-      #{detailType},
-      #{processInstanceId},
-      #{executionId},
-      #{activityInstanceId},
-      #{taskId},
-      #{variableName},
-      #{revision},
-      #{variableType},
-      #{time},
-      #{byteArrayRef},
-      #{doubleValue},
-      #{longValue},
-      #{textValue},
-      #{textValue2})
-    </For>
-  </Insert>
+	<Insert Id="bulkInsertHistoricDetailVariableInstanceUpdate" ParameterMap="insupVariableInstance">
+		insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, EXECUTION_ID_, ACT_INST_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, TIME_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_)
+		values
+		<For Property="Items" Key="p" Separator=",">
+			(#{id},
+			#{detailType},
+			#{processInstanceId},
+			#{executionId},
+			#{activityInstanceId},
+			#{taskId},
+			#{variableName},
+			#{revision},
+			#{variableType},
+			#{time},
+			#{byteArrayRef},
+			#{doubleValue},
+			#{longValue},
+			#{textValue},
+			#{textValue2})
+		</For>
+	</Insert>
 
-  <!-- HISTORIC DETAILS DELETE -->
+	<!-- HISTORIC DETAILS DELETE -->
 
-  <Update Id="deleteHistoricDetailAssignment">
-    delete from ACT_HI_DETAIL where ID_ = #{id}
-  </Update>
+	<Update Id="deleteHistoricDetailAssignment">
+		delete from ACT_HI_DETAIL where ID_ = #{id}
+	</Update>
 
-  <Update Id="deleteHistoricDetailTransitionInstance">
-    delete from ACT_HI_DETAIL where ID_ = #{id}
-  </Update>
+	<Update Id="deleteHistoricDetailTransitionInstance">
+		delete from ACT_HI_DETAIL where ID_ = #{id}
+	</Update>
 
-  <Update Id="deleteHistoricDetailVariableInstanceUpdate">
-    delete from ACT_HI_DETAIL where ID_ = #{id}
-  </Update>
+	<Update Id="deleteHistoricDetailVariableInstanceUpdate">
+		delete from ACT_HI_DETAIL where ID_ = #{id}
+	</Update>
 
-  <Update Id="deleteHistoricFormProperty">
-    delete from ACT_HI_DETAIL where ID_ = #{id}
-  </Update>
+	<Update Id="deleteHistoricFormProperty">
+		delete from ACT_HI_DETAIL where ID_ = #{id}
+	</Update>
 
-  <!-- HISTORIC VARIABLE UPDATE SELECT -->
+	<!-- HISTORIC VARIABLE UPDATE SELECT -->
 
-  <Statement Id="selectHistoricDetailsByQueryCriteriaSql">
-    from ACT_HI_DETAIL RES
-    <Where>
-      <IsNotNull Property="id">
-        RES.ID_ = #{id}
-      </IsNotNull>
-      <IsNotNull Property="processInstanceId">
-        RES.PROC_INST_ID_ = #{processInstanceId}
-      </IsNotNull>
-      <IsNotNull Property="executionId">
-        RES.EXECUTION_ID_ = #{executionId}
-      </IsNotNull>
-      <IsNotNull Property="activityId">
-        and RES.ACT_INST_ID_ = #{activityId}
-      </IsNotNull>
-      <IsNotNull Property="activityInstanceId">
-        and RES.ACT_INST_ID_ = #{activityInstanceId}
-      </IsNotNull>
-      <Switch>
-        <Case Property="taskId">
-          and RES.TASK_ID_ = #{taskId}
-        </Case>
-        <Default>
-          <IsTrue Property="excludeTaskRelated">
-            and RES.TASK_ID_ is null
-          </IsTrue>
-        </Default>
-      </Switch>
+	<Statement Id="selectHistoricDetailsByQueryCriteriaSql">
+		from ACT_HI_DETAIL RES
+		<Where>
+			<IsNotNull Property="id">
+				RES.ID_ = #{id}
+			</IsNotNull>
+			<IsNotNull Property="processInstanceId">
+				RES.PROC_INST_ID_ = #{processInstanceId}
+			</IsNotNull>
+			<IsNotNull Property="executionId">
+				RES.EXECUTION_ID_ = #{executionId}
+			</IsNotNull>
+			<IsNotNull Property="activityId">
+				and RES.ACT_INST_ID_ = #{activityId}
+			</IsNotNull>
+			<IsNotNull Property="activityInstanceId">
+				and RES.ACT_INST_ID_ = #{activityInstanceId}
+			</IsNotNull>
+			<Switch>
+				<Case Property="taskId">
+					and RES.TASK_ID_ = #{taskId}
+				</Case>
+				<Default>
+					<IsTrue Property="excludeTaskRelated">
+						and RES.TASK_ID_ is null
+					</IsTrue>
+				</Default>
+			</Switch>
 
-      <IsNotNull Property="type">
-        and RES.TYPE_ = #{type}
-      </IsNotNull>
-    </Where>
-  </Statement>
-  
-  <Select Id="selectHistoricDetailByTaskId" ResultMap="historicDetailResultMap">
-    select * from ACT_HI_DETAIL
-    where TASK_ID_ = #{taskId}
-  </Select>
-  
-  <Select Id="selectHistoricDetailByProcessInstanceId" ResultMap="historicDetailResultMap">
-    select * from ACT_HI_DETAIL
-    where PROC_INST_ID_ = #{processInstanceId}
-  </Select>
+			<IsNotNull Property="type">
+				and RES.TYPE_ = #{type}
+			</IsNotNull>
+		</Where>
+	</Statement>
 
-  <Select Id="selectHistoricDetailsByQueryCriteria" ResultMap="historicDetailResultMap">
-    ${limitBefore}
-    select ${top100} RES.* ${limitBetween}
-    <Include RefId="selectHistoricDetailsByQueryCriteriaSql"/>
-    ${orderBy}
-    ${limitAfter}
-  </Select>
+	<Select Id="selectHistoricDetailByTaskId" ResultMap="historicDetailResultMap">
+		select * from ACT_HI_DETAIL
+		where TASK_ID_ = #{taskId}
+	</Select>
 
-  <Select Id="selectHistoricDetailCountByQueryCriteria">
-    select count(RES.ID_)
-    <Include RefId="selectHistoricDetailsByQueryCriteriaSql"/>
-  </Select>
+	<Select Id="selectHistoricDetailByProcessInstanceId" ResultMap="historicDetailResultMap">
+		select * from ACT_HI_DETAIL
+		where PROC_INST_ID_ = #{processInstanceId}
+	</Select>
 
-  <Select Id="selectHistoricDetailByNativeQuery" ResultMap="historicDetailResultMap">
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitBefore}
-    </IsEqual>
-    ${sql}
-    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
-      ${limitAfter}
-    </IsEqual>
-  </Select>
+	<Select Id="selectHistoricDetailsByQueryCriteria" ResultMap="historicDetailResultMap">
+		${limitBefore}
+		select ${top100} RES.* ${limitBetween}
+		<Include RefId="selectHistoricDetailsByQueryCriteriaSql"/>
+		${orderBy}
+		${limitAfter}
+	</Select>
 
-  <Select Id="selectHistoricDetailCountByNativeQuery">
-    ${sql}
-  </Select>
+	<Select Id="selectHistoricDetailCountByQueryCriteria">
+		select count(RES.ID_)
+		<Include RefId="selectHistoricDetailsByQueryCriteriaSql"/>
+	</Select>
+
+	<Select Id="selectHistoricDetailByNativeQuery" ResultMap="historicDetailResultMap">
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitBefore}
+		</IsEqual>
+		${sql}
+		<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+			${limitAfter}
+		</IsEqual>
+	</Select>
+
+	<Select Id="selectHistoricDetailCountByNativeQuery">
+		${sql}
+	</Select>
 
 </SmartSqlMap>

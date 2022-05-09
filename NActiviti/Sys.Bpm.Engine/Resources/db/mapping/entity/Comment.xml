@@ -15,146 +15,146 @@
   -->
 
 <SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.CommentEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
-  
-  <!-- COMMENT RESULTMAP -->
-    
-  <ResultMap Id="commentResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.CommentEntityImpl,Sys.Bpm.Engine">
-    <Result Property="id" Column="ID_" />
-    <Result Property="type" Column="TYPE_" />
-    <Result Property="userId" Column="USER_ID_" />
-    <Result Property="time" Column="TIME_" />
-    <Result Property="taskId" Column="TASK_ID_" />
-    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
-    <Result Property="action" Column="ACTION_" />
-    <Result Property="message" Column="MESSAGE_" />
-    <Result Property="fullMessageBytes" Column="FULL_MSG_" TypeHandler="文件" />
-  </ResultMap>
 
-  <ParameterMap Id="byteArrayParameterMap">
-    <Parameter Property="fullMessageBytes" TypeHandler="文件" />
-  </ParameterMap>
-    
-  <!-- COMMENT INSERT -->
+	<!-- COMMENT RESULTMAP -->
 
-  <Insert Id="insertComment" ParameterMap="byteArrayParameterMap">
-    insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
-    values (#{id},
-      #{type},
-      #{time},
-      #{userId},
-      #{taskId},
-      #{processInstanceId},
-      #{action},
-      #{message},
-      #{fullMessageBytes})
-  </Insert>
+	<ResultMap Id="commentResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.CommentEntityImpl,Sys.Bpm.Engine">
+		<Result Property="id" Column="ID_" />
+		<Result Property="type" Column="TYPE_" />
+		<Result Property="userId" Column="USER_ID_" />
+		<Result Property="time" Column="TIME_" />
+		<Result Property="taskId" Column="TASK_ID_" />
+		<Result Property="processInstanceId" Column="PROC_INST_ID_" />
+		<Result Property="action" Column="ACTION_" />
+		<Result Property="message" Column="MESSAGE_" />
+		<Result Property="fullMessageBytes" Column="FULL_MSG_" TypeHandler="文件" />
+	</ResultMap>
 
-  <Insert Id="insertComment_postgres" ParameterMap="byteArrayParameterMap">
-    insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
-    values (#{id},
-      #{type},
-      #{time},
-      #{userId},
-      #{taskId},
-      #{processInstanceId},
-      #{action},
-      #{message},
-      #{fullMessageBytes})
-  </Insert>
+	<ParameterMap Id="byteArrayParameterMap">
+		<Parameter Property="fullMessageBytes" TypeHandler="文件" />
+	</ParameterMap>
+
+	<!-- COMMENT INSERT -->
+
+	<Insert Id="insertComment" ParameterMap="byteArrayParameterMap">
+		insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
+		values (#{id},
+		#{type},
+		#{time},
+		#{userId},
+		#{taskId},
+		#{processInstanceId},
+		#{action},
+		#{message},
+		#{fullMessageBytes})
+	</Insert>
+
+	<Insert Id="insertComment_postgres" ParameterMap="byteArrayParameterMap">
+		insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
+		values (#{id},
+		#{type},
+		#{time},
+		#{userId},
+		#{taskId},
+		#{processInstanceId},
+		#{action},
+		#{message},
+		#{fullMessageBytes})
+	</Insert>
 
 
-  <ParameterMap Id="bulkByteArrayParameterMap">
-    <Parameter Property="(Items_)?bytes(_p\d)" TypeHandler="文件" />
-  </ParameterMap>
+	<ParameterMap Id="bulkByteArrayParameterMap">
+		<Parameter Property="(Items_)?bytes(_p\d)" TypeHandler="文件" />
+	</ParameterMap>
 
-  <Insert Id="bulkInsertComment" ParameterMap="bulkByteArrayParameterMap">
-    insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
-    values 
-      <For  Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (#{id},
-         #{type},
-         #{time},
-         #{userId},
-         #{taskId},
-         #{processInstanceId},
-         #{action},
-         #{message},
-         #{fullMessageBytes})
-      </For>
-  </Insert>
-  
-  <!-- COMMENT DELETE -->
+	<Insert Id="bulkInsertComment" ParameterMap="bulkByteArrayParameterMap">
+		insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
+		values
+		<For  Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
+			(#{id},
+			#{type},
+			#{time},
+			#{userId},
+			#{taskId},
+			#{processInstanceId},
+			#{action},
+			#{message},
+			#{fullMessageBytes})
+		</For>
+	</Insert>
 
-  <Delete Id="deleteComment">
-    delete from ACT_HI_COMMENT where ID_ = #{id}
-  </Delete>
+	<!-- COMMENT DELETE -->
 
-  <Delete Id="deleteCommentsByTaskId">
-    delete from ACT_HI_COMMENT where TASK_ID_ = #{taskId} 
-  </Delete>
+	<Delete Id="deleteComment">
+		delete from ACT_HI_COMMENT where ID_ = #{id}
+	</Delete>
 
-  <Delete Id="deleteCommentsByProcessInstanceId">
-    delete from ACT_HI_COMMENT where PROC_INST_ID_ = #{processInstanceId} 
-  </Delete>
-  
-  <!-- COMMENT SELECT -->
+	<Delete Id="deleteCommentsByTaskId">
+		delete from ACT_HI_COMMENT where TASK_ID_ = #{taskId}
+	</Delete>
 
-  <Select Id="selectComment" ResultMap="commentResultMap">
-    select * 
-    from ACT_HI_COMMENT 
-    where ID_ = #{parameter}
-  </Select>
-  
-  <Select Id="selectCommentsByTaskId" ResultMap="commentResultMap">
-    select * 
-    from ACT_HI_COMMENT 
-    where TASK_ID_ = #{parameter}
-      and TYPE_ = 'comment'
-    order by TIME_ desc
-  </Select>
-  
-  <Select Id="selectCommentsByTaskIdAndType" ResultMap="commentResultMap">
-  	select *
-  	from ACT_HI_COMMENT
-  	where TASK_ID_ = #{taskId}
-  		and TYPE_ = #{type}
-  	order by TIME_ desc
-  </Select>
-  
-  <Select Id="selectCommentsByType" ResultMap="commentResultMap">
-  	select *
-  	from ACT_HI_COMMENT
-  	where TYPE_ = #{type}
-  	order by TIME_ desc
-  </Select>
+	<Delete Id="deleteCommentsByProcessInstanceId">
+		delete from ACT_HI_COMMENT where PROC_INST_ID_ = #{processInstanceId}
+	</Delete>
 
-  <Select Id="selectEventsByTaskId" ResultMap="commentResultMap">
-    select * 
-    from ACT_HI_COMMENT 
-    where TASK_ID_ = #{taskId}
-    order by TIME_ desc
-  </Select>
-  
-  <Select Id="selectEventsByProcessInstanceId" ResultMap="commentResultMap">
-    select * 
-    from ACT_HI_COMMENT 
-    where PROC_INST_ID_ = #{processInstanceId}
-    order by TIME_ desc
-  </Select>
+	<!-- COMMENT SELECT -->
 
-  <Select Id="selectCommentsByProcessInstanceId" ResultMap="commentResultMap">
-    select * 
-    from ACT_HI_COMMENT 
-    where PROC_INST_ID_ = #{processInstanceId}
-    order by TIME_ desc
-  </Select>
+	<Select Id="selectComment" ResultMap="commentResultMap">
+		select *
+		from ACT_HI_COMMENT
+		where ID_ = #{parameter}
+	</Select>
 
-  <Select Id="selectCommentsByProcessInstanceIdAndType" ResultMap="commentResultMap">
-    select *
-    from ACT_HI_COMMENT
-    where PROC_INST_ID_ = #{processInstanceId}
-    and TYPE_ = #{type}
-    order by TIME_ desc
-  </Select>
-  
+	<Select Id="selectCommentsByTaskId" ResultMap="commentResultMap">
+		select *
+		from ACT_HI_COMMENT
+		where TASK_ID_ = #{parameter}
+		and TYPE_ = 'comment'
+		order by TIME_ desc
+	</Select>
+
+	<Select Id="selectCommentsByTaskIdAndType" ResultMap="commentResultMap">
+		select *
+		from ACT_HI_COMMENT
+		where TASK_ID_ = #{taskId}
+		and TYPE_ = #{type}
+		order by TIME_ desc
+	</Select>
+
+	<Select Id="selectCommentsByType" ResultMap="commentResultMap">
+		select *
+		from ACT_HI_COMMENT
+		where TYPE_ = #{type}
+		order by TIME_ desc
+	</Select>
+
+	<Select Id="selectEventsByTaskId" ResultMap="commentResultMap">
+		select *
+		from ACT_HI_COMMENT
+		where TASK_ID_ = #{taskId}
+		order by TIME_ desc
+	</Select>
+
+	<Select Id="selectEventsByProcessInstanceId" ResultMap="commentResultMap">
+		select *
+		from ACT_HI_COMMENT
+		where PROC_INST_ID_ = #{processInstanceId}
+		order by TIME_ desc
+	</Select>
+
+	<Select Id="selectCommentsByProcessInstanceId" ResultMap="commentResultMap">
+		select *
+		from ACT_HI_COMMENT
+		where PROC_INST_ID_ = #{processInstanceId}
+		order by TIME_ desc
+	</Select>
+
+	<Select Id="selectCommentsByProcessInstanceIdAndType" ResultMap="commentResultMap">
+		select *
+		from ACT_HI_COMMENT
+		where PROC_INST_ID_ = #{processInstanceId}
+		and TYPE_ = #{type}
+		order by TIME_ desc
+	</Select>
+
 </SmartSqlMap>

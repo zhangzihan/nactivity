@@ -2,106 +2,113 @@
 
 <SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.ByteArrayEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
-  <!-- BYTE ARRAY RESULTMAP -->
-    
-    <ResultMap Id="byteArrayResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.ByteArrayEntityImpl,Sys.Bpm.Engine">
-      <Result Property="id" Column="ID_" />
-      <Result Property="revision" Column="REV_" />
-      <Result Property="name" Column="NAME_" />
-      <Result Property="bytes" Column="BYTES_" TypeHandler="二进制" />
-    </ResultMap>
+	<!-- BYTE ARRAY RESULTMAP -->
 
-  <ParameterMap Id="byteArrayParameterMap">
-    <Parameter Property="bytes" TypeHandler="二进制" />
-  </ParameterMap>
+	<ResultMap Id="byteArrayResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.ByteArrayEntityImpl,Sys.Bpm.Engine">
+		<Result Property="id" Column="ID_" />
+		<Result Property="revision" Column="REV_" />
+		<Result Property="name" Column="NAME_" />
+		<Result Property="bytes" Column="BYTES_" TypeHandler="二进制" />
+	</ResultMap>
 
-  <!-- BYTE ARRAY INSERT -->
-  
-  <Insert Id="insertByteArray" ParameterMap="byteArrayParameterMap">
-    insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
-    values (
-    #{id},
-    1,
-    #{name},
-    #{bytes},
-    #{deploymentId}
-    )
-  </Insert>
+	<ParameterMap Id="byteArrayParameterMap">
+		<Parameter Property="bytes" TypeHandler="二进制" />
+	</ParameterMap>
+
+	<!-- BYTE ARRAY INSERT -->
+
+	<Insert Id="insertByteArray" ParameterMap="byteArrayParameterMap">
+		insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
+		values (
+		#{id},
+		1,
+		#{name},
+		#{bytes},
+		#{deploymentId}
+		)
+	</Insert>
 
 
-  <ParameterMap Id="bulkByteArrayParameterMap">
-    <Parameter Property="(Items_)?bytes(_p\d)" TypeHandler="二进制" />
-  </ParameterMap>
-  
-  <Insert Id="bulkInsertByteArray" ParameterMap="bulkByteArrayParameterMap">
-    insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
-    values
-    <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator="," >
-      (#{id},
-      1,
-      #{name},
-      #{bytes},
-      #{deploymentId})
-    </For>
-  </Insert>
+	<ParameterMap Id="bulkByteArrayParameterMap">
+		<Parameter Property="(Items_)?bytes(_p\d)" TypeHandler="二进制" />
+	</ParameterMap>
 
-  <!-- BYTE ARRAY UPDATE -->
+	<Insert Id="bulkInsertByteArray" ParameterMap="bulkByteArrayParameterMap">
+		insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
+		values
+		<For Prepend="" Key="p" Open="" Close="" Property="Items" Separator="," >
+			(#{id},
+			1,
+			#{name},
+			#{bytes},
+			#{deploymentId})
+		</For>
+	</Insert>
 
-  <Update Id="updateByteArray" ParameterMap="byteArrayParameterMap">
-    update ACT_GE_BYTEARRAY
-    set
-    REV_ = #{revisionNext},
-    BYTES_ = #{bytes}
-    where ID_ = #{id}
-    and REV_ = #{revision}
-  </Update>
+	<!-- BYTE ARRAY UPDATE -->
 
-  <!-- BYTE ARRAY DELETE -->
+	<Update Id="updateByteArray" ParameterMap="byteArrayParameterMap">
+		update ACT_GE_BYTEARRAY
+		set
+		REV_ = #{revisionNext},
+		BYTES_ = #{bytes}
+		where ID_ = #{id}
+		and REV_ = #{revision}
+	</Update>
 
-  <Select Id="selectByteArrays" ResultMap="byteArrayResultMap">
-    select * from ACT_GE_BYTEARRAY 
-  </Select>
-  
-  <Select Id="selectBytesOfByteArray" ResultMap="byteArrayResultMap">
-    select BYTES_ from ACT_GE_BYTEARRAY where ID_ = #{id} and REV_ = #{revision}
-  </Select>
+	<!-- BYTE ARRAY DELETE -->
 
-  <Delete Id="deleteByteArraysForDeployment">
-    delete from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = #{id} and REV_ = #{revision}
-  </Delete>
+	<Select Id="selectByteArrays" ResultMap="byteArrayResultMap">
+		select * from ACT_GE_BYTEARRAY
+	</Select>
 
-  <Delete Id="deleteByteArray">
-    delete from ACT_GE_BYTEARRAY where ID_ = #{id} and REV_ = #{revision}
-  </Delete>
+	<Select Id="selectBytesOfByteArray" ResultMap="byteArrayResultMap">
+		select BYTES_ from ACT_GE_BYTEARRAY where ID_ = #{id} and REV_ = #{revision}
+	</Select>
 
-  <Delete Id="deleteByteArrayNoRevisionCheck">
-    delete from ACT_GE_BYTEARRAY where ID_ = #{id}
-  </Delete>
+	<Delete Id="deleteByteArraysForDeployment">
+		delete from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = #{id} and REV_ = #{revision}
+	</Delete>
 
-  <!-- BYTE ARRAY SELECT -->
+	<Delete Id="deleteByteArray">
+		delete from ACT_GE_BYTEARRAY where ID_ = #{id} and REV_ = #{revision}
+	</Delete>
 
-  <Select Id="selectByteArray" ResultMap="byteArrayResultMap">
-    select * from ACT_GE_BYTEARRAY where ID_ = #{id}
-  </Select>
+	<Delete Id="bulkDeleteWithRevisionByteArray">
+		delete from ACT_GE_BYTEARRAY where
+		<For Property="Items" Key="P" Separator=" or ">
+			(ID_ = #{id} and REV_ = #{revision})
+		</For>
+	</Delete>
 
-  <Update Id="updateByteArray_postgres">
-    update ACT_GE_BYTEARRAY
-    set
-    REV_ = #{revisionNext},
-    BYTES_ = #{bytes}
-    where ID_ = #{id}
-    and REV_ = #{revision}
-  </Update>
+	<Delete Id="deleteByteArrayNoRevisionCheck">
+		delete from ACT_GE_BYTEARRAY where ID_ = #{id}
+	</Delete>
 
-  <Insert Id="insertByteArray_postgres">
-    insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
-    values (
-    #{id},
-    1,
-    #{name},
-    #{bytes},
-    #{deploymentId}
-    )
-  </Insert>
-  
+	<!-- BYTE ARRAY SELECT -->
+
+	<Select Id="selectByteArray" ResultMap="byteArrayResultMap">
+		select * from ACT_GE_BYTEARRAY where ID_ = #{id}
+	</Select>
+
+	<Update Id="updateByteArray_postgres">
+		update ACT_GE_BYTEARRAY
+		set
+		REV_ = #{revisionNext},
+		BYTES_ = #{bytes}
+		where ID_ = #{id}
+		and REV_ = #{revision}
+	</Update>
+
+	<Insert Id="insertByteArray_postgres">
+		insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
+		values (
+		#{id},
+		1,
+		#{name},
+		#{bytes},
+		#{deploymentId}
+		)
+	</Insert>
+
 </SmartSqlMap>

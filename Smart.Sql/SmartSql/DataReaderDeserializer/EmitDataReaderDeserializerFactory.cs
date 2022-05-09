@@ -11,18 +11,13 @@ namespace SmartSql.DataReaderDeserializer
 
         }
 
-        private readonly object syncRoot = new object();
-
         public IDataReaderDeserializer Create()
         {
             if (_dataReaderDeserializer is null)
             {
-                lock (syncRoot)
+                if (_dataReaderDeserializer is null)
                 {
-                    if (_dataReaderDeserializer is null)
-                    {
-                        _dataReaderDeserializer = new EmitDataReaderDeserializer();
-                    }
+                    _dataReaderDeserializer = new EmitDataReaderDeserializer();
                 }
             }
             return _dataReaderDeserializer;

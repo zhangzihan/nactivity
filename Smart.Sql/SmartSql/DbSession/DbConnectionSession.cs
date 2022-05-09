@@ -41,26 +41,27 @@ namespace SmartSql.DbSession
             DataSource = dataSource;
             CreateConnection();
         }
+
         public void BeginTransaction()
         {
-            //if (_logger.IsEnabled(LogLevel.Debug))
-            //{
-            //    _logger.LogDebug("BeginTransaction.");
-            //}
-            OpenConnection();
-            Transaction = Connection.BeginTransaction();
-            LifeCycle = DbSessionLifeCycle.Scoped;
+            BeginTransaction(IsolationLevel.ReadCommitted);
         }
+
         public void BeginTransaction(IsolationLevel isolationLevel)
         {
-            //if (_logger.IsEnabled(LogLevel.Debug))
-            //{
-            //    _logger.LogDebug("BeginTransaction.");
-            //}
-            OpenConnection();
-            Transaction = Connection.BeginTransaction(isolationLevel);
-            LifeCycle = DbSessionLifeCycle.Scoped;
+            try
+            {
+                OpenConnection();
+                Transaction = Connection.BeginTransaction(isolationLevel);
+                LifeCycle = DbSessionLifeCycle.Scoped;
+            }
+            catch
+            {
+                LifeCycle = DbSessionLifeCycle.Transient;
+                throw;
+            }
         }
+
         public void CreateConnection()
         {
             Connection = DbProviderFactory.CreateConnection();
@@ -71,10 +72,6 @@ namespace SmartSql.DbSession
         {
             if ((Connection is object) && (Connection.State != ConnectionState.Closed))
             {
-                //if (_logger.IsEnabled(LogLevel.Debug))
-                //{
-                //    _logger.LogDebug($"CloseConnection {Connection.GetHashCode()}:{DataSource.Name} ");
-                //}
                 Connection.Close();
                 Connection.Dispose();
             }
@@ -83,23 +80,27 @@ namespace SmartSql.DbSession
 
         public void CommitTransaction()
         {
-            //if (_logger.IsEnabled(LogLevel.Debug))
-            //{
-            //    _logger.LogDebug("CommitTransaction.");
-            //}
-            if (Transaction is null)
+            try
             {
-                if (_logger.IsEnabled(LogLevel.Error))
+                if (Transaction is null)
                 {
-                    _logger.LogError("Before CommitTransaction,Please BeginTransaction first!");
+                    if (_logger.IsEnabled(LogLevel.Error))
+                    {
+                        _logger.LogError("Before CommitTransaction,Please BeginTransaction first!");
+                    }
+                    throw new SmartSqlException("Before CommitTransaction,Please BeginTransaction first!");
                 }
-                throw new SmartSqlException("Before CommitTransaction,Please BeginTransaction first!");
+                Transaction.Commit();
+                Transaction.Dispose();
+                Transaction = null;
+                LifeCycle = DbSessionLifeCycle.Transient;
+                CloseConnection();
             }
-            Transaction.Commit();
-            Transaction.Dispose();
-            Transaction = null;
-            LifeCycle = DbSessionLifeCycle.Transient;
-            CloseConnection();
+            catch
+            {
+                LifeCycle = DbSessionLifeCycle.Transient;
+                throw;
+            }
         }
 
         public void Dispose()
@@ -111,11 +112,6 @@ namespace SmartSql.DbSession
         {
             if (disposing)
             {
-                //if (_logger.IsEnabled(LogLevel.Warning))
-                //{
-                //    _logger.LogWarning("Dispose.");
-                //}
-
                 if (Transaction is object)
                 {
                     if (Connection.State != ConnectionState.Closed)
@@ -136,10 +132,6 @@ namespace SmartSql.DbSession
             {
                 try
                 {
-                    //if (_logger.IsEnabled(LogLevel.Debug))
-                    //{
-                    //    _logger.LogDebug($"OpenConnection {Connection.GetHashCode()} to {DataSource.Name} .");
-                    //}
                     Connection.Open();
                 }
                 catch (Exception ex)
@@ -164,10 +156,6 @@ namespace SmartSql.DbSession
             {
                 try
                 {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                    {
-                        _logger.LogDebug($"OpenConnection {Connection.GetHashCode()} to {DataSource.Name} .");
-                    }
                     var connAsync = Connection as DbConnection;
                     await connAsync.OpenAsync(cancellationToken).ConfigureAwait(false);
                 }
@@ -186,10 +174,6 @@ namespace SmartSql.DbSession
 
         public void RollbackTransaction()
         {
-            //if (_logger.IsEnabled(LogLevel.Debug))
-            //{
-            //    _logger.LogDebug("RollbackTransaction .");
-            //}
             if (Transaction is null)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
@@ -218,20 +202,12 @@ namespace SmartSql.DbSession
 
         public void Begin()
         {
-            //if (_logger.IsEnabled(LogLevel.Debug))
-            //{
-            //    _logger.LogDebug("Begin .");
-            //}
             LifeCycle = DbSessionLifeCycle.Scoped;
             OpenConnection();
         }
 
         public void End()
         {
-            //if (_logger.IsEnabled(LogLevel.Debug))
-            //{
-            //    _logger.LogDebug("End .");
-            //}
             LifeCycle = DbSessionLifeCycle.Transient;
             CloseConnection();
         }

@@ -2,169 +2,192 @@
 
 <SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
-  <!-- VARIABLE INSTANCE RESULTMAP -->
+	<!-- VARIABLE INSTANCE RESULTMAP -->
 
-  <ResultMap Id="variableInstanceResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntityImpl,Sys.Bpm.Engine">
-    <Result Property="id" Column="ID_" />
-    <Result Property="revision" Column="REV_" />
-    <Result Property="type" Column="TYPE_" TypeHandler="变量类型" />
-    <Result Property="name" Column="NAME_" />
-    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
-    <Result Property="executionId" Column="EXECUTION_ID_" />
-    <Result Property="taskId" Column="TASK_ID_" />
-    <Result Property="activityId" Column="ACTIVITY_ID_" />
-    <Result Property="isActive" Column="IS_ACTIVE_" />
-    <Result Property="isConcurrencyScope" Column="IS_CONCURRENCY_SCOPE_" />
-    <Result Property="byteArrayRef" Column="BYTEARRAY_ID_" TypeHandler="二进制引用" />
-    <Result Property="doubleValue" Column="DOUBLE_" />
-    <Result Property="textValue" Column="TEXT_" />
-    <Result Property="textValue2" Column="TEXT2_" />
-    <Result Property="longValue" Column="LONG_" />
-  </ResultMap>
+	<ResultMap Id="variableInstanceResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntityImpl,Sys.Bpm.Engine">
+		<Result Property="id" Column="ID_" />
+		<Result Property="revision" Column="REV_" />
+		<Result Property="type" Column="TYPE_" TypeHandler="变量类型" />
+		<Result Property="name" Column="NAME_" />
+		<Result Property="processInstanceId" Column="PROC_INST_ID_" />
+		<Result Property="executionId" Column="EXECUTION_ID_" />
+		<Result Property="taskId" Column="TASK_ID_" />
+		<Result Property="activityId" Column="ACTIVITY_ID_" />
+		<Result Property="isActive" Column="IS_ACTIVE_" />
+		<Result Property="isConcurrencyScope" Column="IS_CONCURRENCY_SCOPE_" />
+		<Result Property="byteArrayRef" Column="BYTEARRAY_ID_" TypeHandler="二进制引用" />
+		<Result Property="doubleValue" Column="DOUBLE_" />
+		<Result Property="textValue" Column="TEXT_" />
+		<Result Property="textValue2" Column="TEXT2_" />
+		<Result Property="longValue" Column="LONG_" />
+	</ResultMap>
 
-  <ParameterMap Id="insupVariableInstance">
-    <Parameter Property="(Items_)?byteArrayRef(_p\d)?" TypeHandler="二进制引用" />
-    <Parameter Property="(Items_)?type(_p\d)?" TypeHandler="变量类型" />
-  </ParameterMap>
+	<ParameterMap Id="insupVariableInstance">
+		<Parameter Property="(Items_)?byteArrayRef(_p\d)?" TypeHandler="二进制引用" />
+		<Parameter Property="(Items_)?type(_p\d)?" TypeHandler="变量类型" />
+	</ParameterMap>
 
-  <!-- VARIABLE INSTANCE INSERT -->
+	<!-- VARIABLE INSTANCE INSERT -->
 
-  <Insert Id="insertVariableInstance" ParameterMap="insupVariableInstance">
-    insert into ACT_RU_VARIABLE (ID_, REV_,
-    TYPE_, NAME_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, BYTEARRAY_ID_,
-    DOUBLE_, LONG_ , TEXT_, TEXT2_)
-    values (
-    #{id},
-    1,
-    #{type},
-    #{name},
-    #{processInstanceId},
-    #{executionId},
-    #{taskId},
-    #{byteArrayRef},
-    #{doubleValue},
-    #{longValue},
-    #{textValue},
-    #{textValue2}
-    )
-  </Insert>
+	<Insert Id="insertVariableInstance" ParameterMap="insupVariableInstance">
+		insert into ACT_RU_VARIABLE (ID_, REV_,
+		TYPE_, NAME_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, BYTEARRAY_ID_,
+		DOUBLE_, LONG_ , TEXT_, TEXT2_)
+		values (
+		#{id},
+		1,
+		#{type},
+		#{name},
+		#{processInstanceId},
+		#{executionId},
+		#{taskId},
+		#{byteArrayRef},
+		#{doubleValue},
+		#{longValue},
+		#{textValue},
+		#{textValue2}
+		)
+	</Insert>
 
-  <Insert Id="bulkInsertVariableInstance" ParameterMap="insupVariableInstance">
-    INSERT INTO ACT_RU_VARIABLE (ID_, REV_,
-    TYPE_, NAME_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, BYTEARRAY_ID_,
-    DOUBLE_, LONG_ , TEXT_, TEXT2_) VALUES
-    <For Property="Items" Key="p" Separator=",">
-      (#{id},
-      1,
-      #{type},
-      #{name},
-      #{processInstanceId},
-      #{executionId},
-      #{taskId},
-      #{byteArrayRef},
-      #{doubleValue},
-      #{longValue},
-      #{textValue},
-      #{textValue2})
-    </For>
-  </Insert>
+	<Insert Id="bulkInsertVariableInstance" ParameterMap="insupVariableInstance">
+		INSERT INTO ACT_RU_VARIABLE (ID_, REV_,
+		TYPE_, NAME_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, BYTEARRAY_ID_,
+		DOUBLE_, LONG_ , TEXT_, TEXT2_) VALUES
+		<For Property="Items" Key="p" Separator=",">
+			(#{id},
+			1,
+			#{type},
+			#{name},
+			#{processInstanceId},
+			#{executionId},
+			#{taskId},
+			#{byteArrayRef},
+			#{doubleValue},
+			#{longValue},
+			#{textValue},
+			#{textValue2})
+		</For>
+	</Insert>
 
-  <!-- VARIABLE INSTANCE UPDATE -->
+	<!-- VARIABLE INSTANCE UPDATE -->
 
-  <Update Id="updateVariableInstance" ParameterMap="insupVariableInstance">
-    update ACT_RU_VARIABLE
-    set
-    REV_ = #{revisionNext},
-    EXECUTION_ID_ = #{executionId},
-    BYTEARRAY_ID_ = #{byteArrayRef},
-    TYPE_ =  #{type},
-    DOUBLE_ = #{doubleValue},
-    LONG_ = #{longValue},
-    TEXT_ = #{textValue},
-    TEXT2_ = #{textValue2}
-    where ID_ = #{id}
-    and REV_ = #{revision}
-  </Update>
+	<Update Id="updateVariableInstance" ParameterMap="insupVariableInstance">
+		update ACT_RU_VARIABLE
+		set
+		REV_ = #{revisionNext},
+		EXECUTION_ID_ = #{executionId},
+		BYTEARRAY_ID_ = #{byteArrayRef},
+		TYPE_ =  #{type},
+		DOUBLE_ = #{doubleValue},
+		LONG_ = #{longValue},
+		TEXT_ = #{textValue},
+		TEXT2_ = #{textValue2}
+		where ID_ = #{id}
+		and REV_ = #{revision}
+	</Update>
 
-  <!-- VARIABLE INSTANCE DELETE -->
+	<Update Id="mssqlBulkUpdateVariableInstance" ParameterMap="insupVariableInstance">
+		<For Property="Items" Key="p" Separator=";">
+			update ACT_RU_VARIABLE set
+			REV_ = #{revisionNext},
+			EXECUTION_ID_ = #{executionId},
+			BYTEARRAY_ID_ = #{byteArrayRef},
+			TYPE_ =  #{type},
+			DOUBLE_ = #{doubleValue},
+			LONG_ = #{longValue},
+			TEXT_ = #{textValue},
+			TEXT2_ = #{textValue2}
+			where ID_ = #{id}
+			and REV_ = #{revision}
+		</For>
+	</Update>
 
-  <Delete Id="deleteVariableInstance">
-    delete from ACT_RU_VARIABLE where ID_ = #{id} and REV_ = #{revision}
-  </Delete>
+	<!-- VARIABLE INSTANCE DELETE -->
 
-  <Delete Id="bulkDeleteVariableInstance">
-    delete from ACT_RU_VARIABLE where
-    <For Key="p" Property="Items" Separator=" or ">
-      ID_ = #{id}
-    </For>
-  </Delete>
+	<Delete Id="deleteVariableInstance">
+		delete from ACT_RU_VARIABLE where ID_ = #{id} and REV_ = #{revision}
+	</Delete>
 
-  <!-- VARIABLE INSTANCE SELECT -->
+	<Delete Id="bulkDeleteWithRevisionVariableInstance">
+		delete from ACT_RU_VARIABLE where 
+		<For Key="P" Property="Items" Separator=" or ">
+			(ID_ = #{id} and REV_ = #{revision})
+		</For>
+	</Delete>
 
-  <Select Id="selectVariableInstance" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE where ID_ = #{id}
-  </Select>
+	<Delete Id="bulkDeleteVariableInstance">
+		delete from ACT_RU_VARIABLE where
+		<For Key="p" Property="Items" Separator=" or ">
+			ID_ = #{id}
+		</For>
+	</Delete>
 
-  <Select Id="selectVariablesByExecutionId" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE
-    where EXECUTION_ID_ = #{executionId}
-    and TASK_ID_ is null
-  </Select>
+	<!-- VARIABLE INSTANCE SELECT -->
 
-  <Select Id="selectVariablesByExecutionIds" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE
-    where TASK_ID_ is null
-    and EXECUTION_ID_ in
-    <For Key="item" Property="executionIds" Open="(" Separator="," Close=")">
-     #{item}
-    </For>
-  </Select>
+	<Select Id="selectVariableInstance" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE where ID_ = #{id}
+	</Select>
 
-  <Select Id="selectVariableInstanceByExecutionAndName" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE
-    where EXECUTION_ID_ = #{executionId} and NAME_= #{name} and TASK_ID_ is null
-  </Select>
+	<Select Id="selectVariablesByExecutionId" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE
+		where EXECUTION_ID_ = #{executionId}
+		and TASK_ID_ is null
+	</Select>
 
-  <Select Id="selectVariableInstancesByExecutionAndNames" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE
-    where EXECUTION_ID_ = #{executionId} and TASK_ID_ is null
-    <If Test="parameter.names != null and CollectionUtil.IsNotEmpty(parameter.names)">
-      and (
-      <For Property="names" Key="name" Separator=" or ">
-        NAME_= #{name}
-      </For>
-      )
-    </If>
-  </Select>
+	<Select Id="selectVariablesByExecutionIds" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE
+		where TASK_ID_ is null
+		and EXECUTION_ID_ in
+		<For Key="item" Property="executionIds" Open="(" Separator="," Close=")">
+			#{item}
+		</For>
+	</Select>
 
-  <Select Id="selectVariablesByTaskId" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE where
-    TASK_ID_ = #{taskId}
-  </Select>
+	<Select Id="selectVariableInstanceByExecutionAndName" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE
+		where EXECUTION_ID_ = #{executionId} and NAME_= #{name} and TASK_ID_ is null
+	</Select>
 
-  <Select Id="selectVariablesByTaskIds" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE
-    where TASK_ID_ in
-    <For Key="item" Property="ids" Open="(" Separator="," Close=")">
-      #{item}
-    </For>
-  </Select>
+	<Select Id="selectVariableInstancesByExecutionAndNames" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE
+		where EXECUTION_ID_ = #{executionId} and TASK_ID_ is null
+		<If Test="parameter.names != null and CollectionUtil.IsNotEmpty(parameter.names)">
+			and (
+			<For Property="names" Key="name" Separator=" or ">
+				NAME_= #{name}
+			</For>
+			)
+		</If>
+	</Select>
 
-  <Select Id="selectVariableInstanceByTaskAndName" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE
-    where TASK_ID_ = #{taskId} and NAME_= #{name}
-  </Select>
+	<Select Id="selectVariablesByTaskId" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE where
+		TASK_ID_ = #{taskId}
+	</Select>
 
-  <Select Id="selectVariableInstancesByTaskAndNames" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE
-    where TASK_ID_ = #{taskId}
-    <If Property="names != null and CollectionUtil.IsNotEmpty(names)">
-      and (
-      <For Property="names" Key="name" Separator=" or ">
-        NAME_= #{name}
-      </For>
-      )
-    </If>
-  </Select>
+	<Select Id="selectVariablesByTaskIds" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE
+		where TASK_ID_ in
+		<For Key="item" Property="ids" Open="(" Separator="," Close=")">
+			#{item}
+		</For>
+	</Select>
+
+	<Select Id="selectVariableInstanceByTaskAndName" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE
+		where TASK_ID_ = #{taskId} and NAME_= #{name}
+	</Select>
+
+	<Select Id="selectVariableInstancesByTaskAndNames" ResultMap="variableInstanceResultMap">
+		select * from ACT_RU_VARIABLE
+		where TASK_ID_ = #{taskId}
+		<If Property="names != null and CollectionUtil.IsNotEmpty(names)">
+			and (
+			<For Property="names" Key="name" Separator=" or ">
+				NAME_= #{name}
+			</For>
+			)
+		</If>
+	</Select>
 
 </SmartSqlMap>

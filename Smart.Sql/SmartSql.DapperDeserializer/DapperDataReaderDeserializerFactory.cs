@@ -10,18 +10,13 @@ namespace SmartSql.DapperDeserializer
     {
         private IDataReaderDeserializer _dataReaderDeserializer;
 
-        private object syncRoot = new object();
-
         public IDataReaderDeserializer Create()
         {
             if (_dataReaderDeserializer is null)
             {
-                lock (syncRoot)
+                if (_dataReaderDeserializer is null)
                 {
-                    if (_dataReaderDeserializer is null)
-                    {
-                        _dataReaderDeserializer = new DapperDataReaderDeserializer();
-                    }
+                    _dataReaderDeserializer = new DapperDataReaderDeserializer();
                 }
             }
             return _dataReaderDeserializer;

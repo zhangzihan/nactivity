@@ -88,6 +88,13 @@
       where ID_ = #{id} and REV_ = #{revision}
     </Delete>
 
+	<Delete Id="bulkDeleteWithRevisionAttachment">
+		delete from ACT_HI_ATTACHMENT where 
+		<For Property="Items" Key="P" Separator=" or ">
+			(ID_ = #{id} and REV_ = #{revision})
+		</For>
+	</Delete>
+
     <!-- ATTACHMENT SELECT -->
 
     <Select Id="selectAttachment" ResultMap="attachmentResultMap">

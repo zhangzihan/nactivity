@@ -693,7 +693,7 @@ namespace Sys.Workflow.Client.Tests.Expression
             context.Name = "test";
             Assert.Equal("test", context.Name);
             //context.IIF = typeof(Test1).GetMethod("IIF");
-            
+
             //context.IIF = new Func<bool, object, object, object>((b, arg1, arg2) =>
             //{
             //    return b ? arg1 : arg2;
@@ -743,5 +743,136 @@ namespace Sys.Workflow.Client.Tests.Expression
             Assert.Equal("true", str.ToString());
         }
 
+        [Fact]
+        public void TestMethodResolutionWithLargeNumberOfParametersDoesNotThrow()
+        {
+            int expectedResult = 150;
+            int result = 0;
+
+            Foo foo = new Foo();
+            string expression = $"MethodWithParamArray({string.Join(", ", Enumerable.Range(0, expectedResult))})";
+
+            var ex = Record.Exception(() =>
+            {
+                result = (int)ExpressionEvaluator.GetValue(foo, expression);
+            });
+            Assert.Null(ex);
+
+            Assert.Equal(expectedResult, result);
+        }
+
+    }
+
+    internal sealed class Bar
+    {
+        private int[] numbers = new int[] { 1, 2, 3 };
+
+        public int this[int index]
+        {
+            get { return numbers[index]; }
+        }
+    }
+
+    internal class Foo
+    {
+        private FooType type;
+        private Nullable<DateTime> nullableDate;
+        private Nullable<Int32> nullableInt;
+
+        public Foo() : this(FooType.One)
+        {
+        }
+
+        public Foo(FooType type)
+        {
+            this.type = type;
+        }
+
+        public Foo(params string[] values)
+        {
+        }
+
+        public Foo(bool flag, params string[] values)
+        {
+        }
+
+        public Foo(int flag, Bar[] bars)
+        {
+        }
+
+        public Foo(int flag, ICollection bars)
+        {
+            throw new InvalidOperationException("should have selected ctor(int, Bar[])");
+        }
+
+        public string this[Bar[] bars]
+        {
+            get { return "ExactMatch"; }
+        }
+
+        public string this[ICollection bars]
+        {
+            get { return "AssignableMatch"; }
+        }
+
+        public object this[int foo, string key]
+        {
+            get { return key + "_" + foo; }
+        }
+
+        public FooType Type
+        {
+            get { return type; }
+        }
+
+        public DateTime? NullableDate
+        {
+            get { return nullableDate; }
+            set { nullableDate = value; }
+        }
+
+        public int? NullableInt
+        {
+            get { return nullableInt; }
+            set { nullableInt = value; }
+        }
+
+        public string MethodWithSimilarArguments(int flags, Bar[] bars)
+        {
+            return "ExactMatch";
+        }
+
+        public string MethodWithSimilarArguments(int flags, ICollection bar)
+        {
+            return "AssignableMatch";
+        }
+
+        public string MethodWithArrayArgument(string[] values)
+        {
+            return string.Join("|", values);
+        }
+
+        public string MethodWithParamArray(params string[] values)
+        {
+            return string.Join("|", values);
+        }
+
+        public string MethodWithParamArray(bool uppercase, params string[] values)
+        {
+            string ret = string.Join("|", values);
+            return (uppercase ? ret.ToUpper() : ret);
+        }
+
+        public int MethodWithParamArray(params int[] values)
+        {
+            return values.Length;
+        }
+    }
+
+    internal enum FooType
+    {
+        One,
+        Two,
+        Three
     }
 }

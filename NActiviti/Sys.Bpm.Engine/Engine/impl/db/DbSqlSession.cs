@@ -266,19 +266,6 @@ namespace Sys.Workflow.Engine.Impl.DB
             dec.AddOrUpdate(entity.Id, entity, (id, ent) => entity);
             entity.Deleted = true;
 
-            //if (insertedObjects is object && insertedObjects.TryGetValue(clazz, out var insObj))
-            //{
-            //    if (insObj.TryGetValue(entity.Id, out IEntity insEntity))
-            //    {
-            //        insObj.Remove(entity.Id);
-            //    }
-            //}
-
-            //IEntity updEntity = updatedObjects?.FirstOrDefault(x => string.Compare(x.Id, entity.Id, true) == 0);
-            //if (updEntity is object)
-            //{
-            //    updatedObjects.Remove(updEntity);
-            //}
             return entity;
         }
 
@@ -527,11 +514,6 @@ namespace Sys.Workflow.Engine.Impl.DB
             DetermineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
             RemoveUnnecessaryOperations();
 
-            if (log.IsEnabled(LogLevel.Debug))
-            {
-                DebugFlush();
-            }
-
             if (insertedObjects.Count == 0 && updatedObjects.Count == 0 && deletedObjects.Count == 0)
             {
                 return;
@@ -540,7 +522,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             if (SqlMapper.SessionStore.LocalSession is null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
             {
                 // 使用TransactionScope控制事务提交
-                //SqlMapper.BeginTransaction();
+                SqlMapper.BeginTransaction();
 
                 RemoveInstanceIncludeHis();
             }
@@ -642,46 +624,6 @@ namespace Sys.Workflow.Engine.Impl.DB
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected virtual void DebugFlush()
-        {
-            //log.LogDebug("Flushing dbSqlSession");
-            //int nrOfInserts = 0, nrOfUpdates = 0, nrOfDeletes = 0;
-            //foreach (Dictionary<string, IEntity> insertedObjectMap in insertedObjects.Values)
-            //{
-            //    foreach (IEntity insertedObject in insertedObjectMap.Values)
-            //    {
-            //        log.LogDebug($"  insert {insertedObject}");
-            //        nrOfInserts++;
-            //    }
-            //}
-            //foreach (IEntity updatedObject in updatedObjects)
-            //{
-            //    log.LogDebug($"  update {updatedObject}");
-            //    nrOfUpdates++;
-            //}
-            //foreach (Dictionary<string, IEntity> deletedObjectMap in deletedObjects.Values)
-            //{
-            //    foreach (IEntity deletedObject in deletedObjectMap.Values)
-            //    {
-            //        log.LogDebug($"  delete {deletedObject} with id {deletedObject.Id}");
-            //        nrOfDeletes++;
-            //    }
-            //}
-            //foreach (ICollection<BulkDeleteOperation> bulkDeleteOperationList in bulkDeleteOperations.Values)
-            //{
-            //    foreach (BulkDeleteOperation bulkDeleteOperation in bulkDeleteOperationList)
-            //    {
-            //        log.LogDebug($"  {bulkDeleteOperation}");
-            //        nrOfDeletes++;
-            //    }
-            //}
-            //log.LogDebug($"flush summary: {nrOfInserts} insert, {nrOfUpdates} update, {nrOfDeletes} delete.");
-            //log.LogDebug($"now executing flush...");
         }
 
         /// <summary>
@@ -889,7 +831,6 @@ namespace Sys.Workflow.Engine.Impl.DB
                 throw new ActivitiException("no insert statement for " + entity.GetType() + " in the ibatis mapping files");
             }
 
-            //log.LogDebug($"inserting: {entity}");
             SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, insertStatement, entity));
 
             // See https://activiti.atlassian.net/browse/ACT-1290
@@ -906,12 +847,10 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// <param name="clazz"></param>
         protected virtual void FlushBulkInsert(ICollection<IEntity> entities, Type clazz)
         {
-            if ((entities?.Count).GetValueOrDefault() == 0)
+            if (false == entities?.Any())
             {
                 return;
             }
-
-            bool b = entities.Any(x => x.GetType() == typeof(TaskEntityImpl));
 
             Type managedType = clazz;
             string insertStatement = dbSqlSessionFactory.GetBulkInsertStatement(clazz, ref managedType);
@@ -923,7 +862,6 @@ namespace Sys.Workflow.Engine.Impl.DB
 
             IEnumerator<IEntity> entityIterator = entities.GetEnumerator();
             bool? hasRevision = null;
-
             while (entityIterator.MoveNext())
             {
                 IList<IEntity> subList = new List<IEntity>();
@@ -971,30 +909,61 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         protected virtual void FlushUpdates()
         {
-            foreach (IEntity updatedObject in updatedObjects)
+            var groups = updatedObjects.GroupBy(x => x.GetType());
+            var sqlContext = SqlMapper.SmartSqlOptions.SmartSqlContext;
+            foreach (var gup in groups)
             {
-                Type managedType = updatedObject.GetType();
-                string updateStatement = dbSqlSessionFactory.GetUpdateStatement(managedType, ref managedType);
-                updateStatement = dbSqlSessionFactory.MapStatement(updateStatement);
-
-                if (string.IsNullOrWhiteSpace(updateStatement))
+                Type managedType = gup.Key;
+                string updateStatement = dbSqlSessionFactory.GetBulkUpdateStatement(managedType, ref managedType);
+                var requestContext = DbSqlSessionFactory.CreateRequestContext(managedType.FullName, updateStatement, null);
+                if (sqlContext.MappedStatement.ContainsKey(requestContext.FullSqlId))
                 {
-                    throw new ActivitiException("no update statement for " + updatedObject.GetType() + " in the ibatis mapping files");
+                    requestContext.Request = new
+                    {
+                        Items = gup.Select(x => x)
+                    };
+                    int updatedRecords = SqlMapper.Execute(requestContext);
+                    if (updatedRecords == 0)
+                    {
+                        log.LogWarning("【update】:" + managedType + " was updated by another transaction concurrently");
+                        continue;
+                    }
+
+                    foreach (var updatedObject in gup)
+                    {
+                        // See https://activiti.atlassian.net/browse/ACT-1290
+                        if (updatedObject is IHasRevision revision)
+                        {
+                            revision.Revision = revision.RevisionNext;
+                        }
+                    }
                 }
-
-                //log.LogDebug($"updating: {updatedObject}");
-                int updatedRecords = SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, updateStatement, updatedObject));
-                if (updatedRecords == 0)
+                else
                 {
-                    log.LogWarning("【update】:" + updatedObject + " was updated by another transaction concurrently");
-                    continue;
-                    //throw new ActivitiOptimisticLockingException(updatedObject + " was updated by another transaction concurrently");
-                }
+                    updateStatement = dbSqlSessionFactory.GetUpdateStatement(managedType, ref managedType);
+                    updateStatement = dbSqlSessionFactory.MapStatement(updateStatement);
+                    requestContext.SqlId = updateStatement;
+                    if (!sqlContext.MappedStatement.ContainsKey(requestContext.FullSqlId))
+                    {
+                        throw new ActivitiException("no update statement for " + managedType + " in the ibatis mapping files");
+                    }
 
-                // See https://activiti.atlassian.net/browse/ACT-1290
-                if (updatedObject is IHasRevision revision)
-                {
-                    revision.Revision = revision.RevisionNext;
+                    foreach (var updatedObject in gup)
+                    {
+                        requestContext.Request = updatedObject;
+                        int updatedRecords = SqlMapper.Execute(requestContext);
+                        if (updatedRecords == 0)
+                        {
+                            log.LogWarning("【update】:" + updatedObject + " was updated by another transaction concurrently");
+                            continue;
+                        }
+
+                        // See https://activiti.atlassian.net/browse/ACT-1290
+                        if (updatedObject is IHasRevision revision)
+                        {
+                            revision.Revision = revision.RevisionNext;
+                        }
+                    }
                 }
             }
             updatedObjects.Clear();
@@ -1015,7 +984,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             {
                 if (deletedObjects.TryGetValue(entityClass, out var dec))
                 {
-                    FlushDeleteEntities(entityClass, dec.Values);
+                    FlushDeleteEntities(dec.Values);
                     deletedObjects.TryRemove(entityClass, out _);
                 }
                 FlushBulkDeletes(entityClass);
@@ -1027,7 +996,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 foreach (Type entityClass in deletedObjects.Keys)
                 {
                     deletedObjects.TryGetValue(entityClass, out var dec);
-                    FlushDeleteEntities(entityClass, dec.Values);
+                    FlushDeleteEntities(dec.Values);
                     FlushBulkDeletes(entityClass);
                 }
             }
@@ -1056,28 +1025,53 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         /// <param name="entityClass"></param>
         /// <param name="entitiesToDelete"></param>
-        protected virtual void FlushDeleteEntities(Type entityClass, IEnumerable<IEntity> entities)
+        protected virtual void FlushDeleteEntities(IEnumerable<IEntity> entities)
         {
-            IList<IEntity> entitiesToDelete = entities.ToList();
-            foreach (IEntity entity in entitiesToDelete)
+            if (!entities.Any())
             {
-                Type managedType = entity.GetType();
-                string deleteStatement = dbSqlSessionFactory.GetDeleteStatement(managedType, ref managedType);
+                return;
+            }
 
-                if (string.IsNullOrWhiteSpace(deleteStatement))
+            IList<IEntity> entitiesToDelete = entities.ToList();
+            Type entityClass = entities.First().GetType();
+            string deleteStatement;
+            var isRevision = entitiesToDelete.First() is IHasRevision;
+            if (isRevision)
+            {
+                deleteStatement = DbSqlSessionFactory.GetBulkDeleteWithRevisionStatement(entityClass, ref entityClass);
+            }
+            else
+            {
+                deleteStatement = DbSqlSessionFactory.GetBulkDeleteStatement(entityClass, ref entityClass);
+            }
+
+            var requestContext = dbSqlSessionFactory.CreateRequestContext(entityClass.FullName, deleteStatement, null);
+            if (SqlMapper.SmartSqlOptions.SmartSqlContext.MappedStatement.ContainsKey(requestContext.FullSqlId))
+            {
+                requestContext.Request = new
                 {
-                    throw new ActivitiException("no delete statement for " + entity.GetType() + " in the ibatis mapping files");
-                }
-
-                // It only makes sense to check for optimistic locking exceptions
-                // for objects that actually have a revision
-
-                int nrOfRowsDeleted = SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, deleteStatement, entity));
-
-                if (entity is IHasRevision && nrOfRowsDeleted == 0)
+                    Items = entitiesToDelete
+                };
+                SqlMapper.Execute(requestContext);
+            }
+            else
+            {
+                foreach (IEntity entity in entitiesToDelete)
                 {
-                    log.LogWarning("【delete】: " + entity + " was updated by another transaction concurrently");
-                    //throw new ActivitiOptimisticLockingException(entity + " was updated by another transaction concurrently");
+                    deleteStatement = dbSqlSessionFactory.GetDeleteStatement(entityClass, ref entityClass);
+                    if (string.IsNullOrWhiteSpace(deleteStatement))
+                    {
+                        throw new ActivitiException("no delete statement for " + entity.GetType() + " in the ibatis mapping files");
+                    }
+
+                    // It only makes sense to check for optimistic locking exceptions
+                    // for objects that actually have a revision
+                    int nrOfRowsDeleted = SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(entityClass.FullName, deleteStatement, entity));
+                    if (entity is IHasRevision && nrOfRowsDeleted == 0)
+                    {
+                        log.LogWarning("【delete】: " + entity + " was updated by another transaction concurrently");
+                        //throw new ActivitiOptimisticLockingException(entity + " was updated by another transaction concurrently");
+                    }
                 }
             }
         }
@@ -1096,10 +1090,10 @@ namespace Sys.Workflow.Engine.Impl.DB
         public virtual void Commit()
         {
             // 使用TransactoinScope控制事务提交
-            //if (SqlMapper.SessionStore?.LocalSession is object)
-            //{
-            //    SqlMapper.CommitTransaction();
-            //}
+            if (SqlMapper.SessionStore?.LocalSession is object)
+            {
+                SqlMapper.CommitTransaction();
+            }
         }
 
         /// <summary>
@@ -1518,7 +1512,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 // Taking care of -SNAPSHOT version in development
                 if (nextVersion.EndsWith("-SNAPSHOT", StringComparison.Ordinal))
                 {
-                    nextVersion = nextVersion.Substring(0, nextVersion.Length - "-SNAPSHOT".Length);
+                    nextVersion = nextVersion[..^"-SNAPSHOT".Length];
                 }
 
                 dbVersion = dbVersion.Replace(".", "");
@@ -1540,7 +1534,6 @@ namespace Sys.Workflow.Engine.Impl.DB
         {
             string databaseType = dbSqlSessionFactory.DatabaseType;
             return $"resources/db/{directory}/activiti.{databaseType}.{operation}.{component}.sql";
-            //"org/activiti/db/" + directory + "/activiti." + databaseType + "." + operation + "." + component + ".sql";
         }
 
         /// <summary>
@@ -1583,28 +1576,6 @@ namespace Sys.Workflow.Engine.Impl.DB
                 byte[] bytes = IoUtil.ReadInputStream(inputStream, resourceName);
                 string ddlStatements = StringHelper.NewString(bytes);
 
-                // Special DDL handling for certain databases
-                //try
-                //{
-                //    if (Mysql)
-                //    {
-                //        DatabaseMetaData databaseMetaData = connection.MetaData;
-                //        int majorVersion = databaseMetaData.DatabaseMajorVersion;
-                //        int minorVersion = databaseMetaData.DatabaseMinorVersion;
-                //        //log.info("Found MySQL: majorVersion=" + majorVersion + " minorVersion=" + minorVersion);
-
-                //        // Special care for MySQL < 5.6
-                //        if (majorVersion <= 5 && minorVersion < 6)
-                //        {
-                //            ddlStatements = updateDdlForMySqlVersionLowerThan56(ddlStatements);
-                //        }
-                //    }
-                //}
-                //catch (Exception e)
-                //{
-                //    //log.info("Could not get database metadata", e);
-                //}
-
                 IDataSource ds = ProcessEngineServiceProvider.Resolve<IDataSource>();
 
                 StringReader reader = new StringReader(ddlStatements);
@@ -1615,15 +1586,15 @@ namespace Sys.Workflow.Engine.Impl.DB
                 {
                     if (line.StartsWith("# ", StringComparison.Ordinal))
                     {
-                        log.LogDebug(line.Substring(2));
+                        log.LogDebug(line[2..]);
                     }
                     else if (line.StartsWith("-- ", StringComparison.Ordinal))
                     {
-                        log.LogDebug(line.Substring(3));
+                        log.LogDebug(line[3..]);
                     }
                     else if (line.StartsWith("execute class ", StringComparison.Ordinal))
                     {
-                        string upgradestepClassName = line.Substring("execute class ".Length).Trim();
+                        string upgradestepClassName = line["execute class ".Length..].Trim();
                         IDbUpgradeStep dbUpgradeStep = null;
                         try
                         {
@@ -1659,7 +1630,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                             }
                             else
                             {
-                                sqlStatement = AddSqlStatementPiece(sqlStatement, line.Substring(0, line.Length - 1));
+                                sqlStatement = AddSqlStatementPiece(sqlStatement, line[0..^1]);
                             }
 
                             IDbCommand command = ds.Connection.CreateCommand();

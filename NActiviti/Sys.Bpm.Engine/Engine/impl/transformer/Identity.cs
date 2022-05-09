@@ -17,21 +17,13 @@ namespace Sys.Workflow.Engine.Impl.Transformers
     /// 
     public class Identity : AbstractTransformer
     {
-
-        private static Identity instance = new Identity();
+        private static readonly Identity instance = new Identity();
 
         public static Identity Instance
         {
             get
             {
-                lock (typeof(Identity))
-                {
-                    if (instance is null)
-                    {
-                        instance = new Identity();
-                    }
-                    return instance;
-                }
+                return instance;
             }
         }
 

@@ -58,7 +58,7 @@ namespace SmartSql
                 {
                     _logger.LogDebug($"StatementMap: Path:{SqlMapConfig.Path} Load MappedStatements Start!");
                 }
-                MappedStatement = new Dictionary<string, Statement>();
+                MappedStatement = new Dictionary<string, Statement>(StringComparer.OrdinalIgnoreCase);
                 foreach (var sqlmap in smartSqlMaps)
                 {
                     InitSqlMapStatementMap(sqlmap);
