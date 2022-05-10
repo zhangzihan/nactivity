@@ -25,8 +25,8 @@
   <ItemGroup>
     <PackageReference Include="Com.Ctrip.Framework.Apollo.Configuration" Version="2.4.0" />
     <PackageReference Include="CS-Script.Core" Version="2.0.0" />
-    <PackageReference Include="DatabaseSchemaReader" Version="2.7.11" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.1.0" />
+    <PackageReference Include="DatabaseSchemaReader" Version="2.7.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />

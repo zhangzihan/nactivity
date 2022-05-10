@@ -1,27 +1,19 @@
-﻿using Moq;
+﻿using Spring.Core.TypeResolution;
+using Spring.Expressions.Processors;
+using Spring.Util;
+using Sys.Expressions;
+using Sys.Workflow.Engine.Api;
 using Sys.Workflow.Engine.Impl.Util;
-using Spring.Core.TypeResolution;
-using Spring.Expressions;
+using Sys.Workflow.Services.Api.Commands;
 using Sys.Workflow.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-using Sys.Workflow.Services.Api.Commands;
-using Newtonsoft.Json.Linq;
-using Sys.Workflow.Engine.Api;
-using Newtonsoft.Json;
-using System.Reflection;
-using Spring.Expressions.Processors;
 using System.Dynamic;
-using System.Runtime.CompilerServices;
-using Microsoft.CSharp.RuntimeBinder;
-using MSExpr = AdaptiveExpressions;
-using Sys.Expressions;
+using System.Linq;
+using System.Reflection;
+using Xunit;
 using ExpressionEvaluator = Spring.Expressions.ExpressionEvaluator;
-using System.Linq.Expressions;
 
 namespace Sys.Workflow.Client.Tests.Expression
 {
@@ -40,14 +32,14 @@ namespace Sys.Workflow.Client.Tests.Expression
 
             //LambdaExpression
 
-            //TypeRegistry.RegisterType(typeof(CollectionUtil));
-            //TypeRegistry.RegisterType(typeof(ConfigUtil));
-            //TypeRegistry.RegisterType(typeof(DateTimeHelper));
-            //TypeRegistry.RegisterType(typeof(UrlUtil));
-            //TypeRegistry.RegisterType(typeof(Math));
-            //TypeRegistry.RegisterType(typeof(String));
-            //TypeRegistry.RegisterType(typeof(MathHelper));
-            //TypeRegistry.RegisterType(typeof(NumberUtils));
+            TypeRegistry.RegisterType(typeof(CollectionUtil));
+            TypeRegistry.RegisterType(typeof(ConfigUtil));
+            TypeRegistry.RegisterType(typeof(DateTimeHelper));
+            TypeRegistry.RegisterType(typeof(UrlUtil));
+            TypeRegistry.RegisterType(typeof(Math));
+            TypeRegistry.RegisterType(typeof(String));
+            TypeRegistry.RegisterType(typeof(MathHelper));
+            TypeRegistry.RegisterType(typeof(NumberUtils));
         }
 
         class ObjectData
