@@ -14,10 +14,14 @@
  */
 namespace Sys.Workflow.Engine.Impl.Scripting
 {
+    using CSScriptLib;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Sys.Workflow.Engine.Delegate;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using System;
     using System.Collections.Concurrent;
+    using System.Text;
 
     /// <summary>
     /// 
@@ -27,15 +31,16 @@ namespace Sys.Workflow.Engine.Impl.Scripting
         //private readonly ScriptEngineManager scriptEngineManager;
         //protected internal ScriptBindingsFactory scriptBindingsFactory;
 
+        public const string DEFAULT_SCRIPTING_LANGUAGE = "C#";
         protected internal bool cacheScriptingEngines = true;
-        protected static internal ConcurrentDictionary<string, dynamic> cachedEngines;
+        protected static internal ConcurrentDictionary<string, MethodDelegate<object>> cachedEngines;
 
         /// <summary>
         /// 
         /// </summary>
         public ScriptingEngines()
         {
-            cachedEngines = new ConcurrentDictionary<string, dynamic>();
+            cachedEngines = new ConcurrentDictionary<string, MethodDelegate<object>>();
         }
 
         /// <summary>
@@ -73,9 +78,28 @@ namespace Sys.Workflow.Engine.Impl.Scripting
         /// <returns></returns>
         protected virtual object Evaluate(string script, IExecutionEntity execution, IDictionary<string, object> bindings)
         {
-            //CSScriptLib.CSScript.RoslynEvaluator.
-            //return null;
-            throw new NotImplementedException();
+            script = $"object Evaluator(Sys.Workflow.Engine.Impl.Persistence.Entity.IExecutionEntity args)" +
+            $"{{{script} return true;}}";
+            MethodDelegate<object> func;
+            if (CacheScriptingEngines)
+            {
+                func = cachedEngines.GetOrAdd(script, script =>
+                {
+                    return CSScript.Evaluator
+                        .ReferenceDomainAssemblies()
+                        .CreateDelegate<object>(script);
+                });
+            }
+            else
+            {
+                func = CSScript.Evaluator
+                        .ReferenceDomainAssemblies()
+                        .CreateDelegate<object>(script);
+            }
+
+            var result = func(execution);
+
+            return result;
         }
 
         /// <summary>

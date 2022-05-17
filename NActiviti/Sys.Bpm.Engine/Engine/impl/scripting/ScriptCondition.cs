@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Scripting
             {
                 throw new ActivitiException("condition script returns null: " + expression);
             }
-            if (!(result is bool))
+            if (result is not bool)
             {
                 throw new ActivitiException("condition script returns non-Boolean: " + result + " (" + result.GetType().FullName + ")");
             }

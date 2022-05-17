@@ -1,142 +1,144 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Sys.Workflow</RootNamespace>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <OutputPath>bin</OutputPath>
-    <Version>1.0.0.2</Version>
-    <DocumentationFile>bin\Sys.Bpm.Engine.xml</DocumentationFile>
-    <Product>Sys.Bpm.Engine</Product>
-    <Description>Sys.Bpm.Engine</Description>
-    <PackageId>Sys.Bpm.Engine</PackageId>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Sys.Bpm.Engine</PackageReleaseNotes>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Company>Sys.Bpm.Engine</Company>
-    <Authors>Sys.Bpm.Engine</Authors>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>Sys.Workflow</RootNamespace>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<OutputPath>bin</OutputPath>
+		<Version>1.0.0.2</Version>
+		<DocumentationFile>bin\Sys.Bpm.Engine.xml</DocumentationFile>
+		<Product>Sys.Bpm.Engine</Product>
+		<Description>Sys.Bpm.Engine</Description>
+		<PackageId>Sys.Bpm.Engine</PackageId>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<PackageReleaseNotes>Sys.Bpm.Engine</PackageReleaseNotes>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+		<Company>Sys.Bpm.Engine</Company>
+		<Authors>Sys.Bpm.Engine</Authors>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
 	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Com.Ctrip.Framework.Apollo.Configuration" Version="2.4.0" />
-    <PackageReference Include="CS-Script.Core" Version="2.0.0" />
-    <PackageReference Include="DatabaseSchemaReader" Version="2.7.3" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
-    <PackageReference Include="MySqlConnector" Version="2.0.0" />
-    <PackageReference Include="NewId" Version="3.0.3" />
-    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Com.Ctrip.Framework.Apollo.Configuration" Version="2.4.0" />
+		<PackageReference Include="CS-Script" Version="4.4.5" />
+		<PackageReference Include="DatabaseSchemaReader" Version="2.7.3" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.2.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+		<PackageReference Include="MySqlConnector" Version="2.0.0" />
+		<PackageReference Include="NewId" Version="3.0.3" />
+		<PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+		<PackageReference Include="System.Data.Common" Version="4.3.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
-    <Compile Remove="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
-    <Compile Remove="Engine\impl\cfg\multitenant\TenantAwareDataSource.cs" />
-    <Compile Remove="Engine\impl\cfg\SpringBeanFactoryProxyMap.cs" />
-    <Compile Remove="Engine\impl\el\ActivitiFunctionMapper.cs" />
-    <Compile Remove="Engine\impl\el\DynamicBeanPropertyELResolver.cs" />
-    <Compile Remove="Engine\impl\el\ExpressionFactoryResolver.cs" />
-    <Compile Remove="Engine\impl\interceptor\JtaRetryInterceptor.cs" />
-    <Compile Remove="Engine\impl\interceptor\JtaTransactionInterceptor.cs" />
-    <Compile Remove="Engine\impl\scripting\JuelScriptEngine.cs" />
-    <Compile Remove="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
-    <Compile Remove="Engine\impl\scripting\ScriptBindings.cs" />
-    <Compile Remove="Engine\impl\scripting\ScriptBindingsFactory.cs" />
-    <Compile Remove="Image\impl\DefaultProcessDiagramCanvas.cs" />
-    <Compile Remove="Image\impl\DefaultProcessDiagramGenerator.cs" />
-    <Compile Remove="Image\impl\icon\BusinessRuleTaskIconType.cs" />
-    <Compile Remove="Image\impl\icon\CompensateIconType.cs" />
-    <Compile Remove="Image\impl\icon\CompensateThrowIconType.cs" />
-    <Compile Remove="Image\impl\icon\ErrorIconType.cs" />
-    <Compile Remove="Image\impl\icon\ErrorThrowIconType.cs" />
-    <Compile Remove="Image\impl\icon\IconType.cs" />
-    <Compile Remove="Image\impl\icon\ManualTaskIconType.cs" />
-    <Compile Remove="Image\impl\icon\MessageIconType.cs" />
-    <Compile Remove="Image\impl\icon\ReceiveTaskIconType.cs" />
-    <Compile Remove="Image\impl\icon\ScriptTaskIconType.cs" />
-    <Compile Remove="Image\impl\icon\SendTaskIconType.cs" />
-    <Compile Remove="Image\impl\icon\ServiceTaskIconType.cs" />
-    <Compile Remove="Image\impl\icon\SignalIconType.cs" />
-    <Compile Remove="Image\impl\icon\SignalThrowIconType.cs" />
-    <Compile Remove="Image\impl\icon\TaskIconType.cs" />
-    <Compile Remove="Image\impl\icon\TimerIconType.cs" />
-    <Compile Remove="Image\impl\icon\UserTaskIconType.cs" />
-    <Compile Remove="Image\impl\ProcessDiagramDOMGroupManager.cs" />
-    <Compile Remove="Image\impl\ProcessDiagramSVGGraphics2D.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
+		<Compile Remove="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
+		<Compile Remove="Engine\impl\cfg\multitenant\TenantAwareDataSource.cs" />
+		<Compile Remove="Engine\impl\cfg\SpringBeanFactoryProxyMap.cs" />
+		<Compile Remove="Engine\impl\el\ActivitiFunctionMapper.cs" />
+		<Compile Remove="Engine\impl\el\DynamicBeanPropertyELResolver.cs" />
+		<Compile Remove="Engine\impl\el\ExpressionFactoryResolver.cs" />
+		<Compile Remove="Engine\impl\interceptor\JtaRetryInterceptor.cs" />
+		<Compile Remove="Engine\impl\interceptor\JtaTransactionInterceptor.cs" />
+		<Compile Remove="Engine\impl\scripting\JuelScriptEngine.cs" />
+		<Compile Remove="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
+		<Compile Remove="Engine\impl\scripting\ScriptBindings.cs" />
+		<Compile Remove="Engine\impl\scripting\ScriptBindingsFactory.cs" />
+		<Compile Remove="Image\impl\DefaultProcessDiagramCanvas.cs" />
+		<Compile Remove="Image\impl\DefaultProcessDiagramGenerator.cs" />
+		<Compile Remove="Image\impl\icon\BusinessRuleTaskIconType.cs" />
+		<Compile Remove="Image\impl\icon\CompensateIconType.cs" />
+		<Compile Remove="Image\impl\icon\CompensateThrowIconType.cs" />
+		<Compile Remove="Image\impl\icon\ErrorIconType.cs" />
+		<Compile Remove="Image\impl\icon\ErrorThrowIconType.cs" />
+		<Compile Remove="Image\impl\icon\IconType.cs" />
+		<Compile Remove="Image\impl\icon\ManualTaskIconType.cs" />
+		<Compile Remove="Image\impl\icon\MessageIconType.cs" />
+		<Compile Remove="Image\impl\icon\ReceiveTaskIconType.cs" />
+		<Compile Remove="Image\impl\icon\ScriptTaskIconType.cs" />
+		<Compile Remove="Image\impl\icon\SendTaskIconType.cs" />
+		<Compile Remove="Image\impl\icon\ServiceTaskIconType.cs" />
+		<Compile Remove="Image\impl\icon\SignalIconType.cs" />
+		<Compile Remove="Image\impl\icon\SignalThrowIconType.cs" />
+		<Compile Remove="Image\impl\icon\TaskIconType.cs" />
+		<Compile Remove="Image\impl\icon\TimerIconType.cs" />
+		<Compile Remove="Image\impl\icon\UserTaskIconType.cs" />
+		<Compile Remove="Image\impl\ProcessDiagramDOMGroupManager.cs" />
+		<Compile Remove="Image\impl\ProcessDiagramSVGGraphics2D.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="resources\activiti.cfg.json" />
-    <None Remove="resources\db\mapping\entity\Group.xml" />
-    <None Remove="resources\db\mapping\entity\IdentityInfo.xml" />
-    <None Remove="resources\db\mapping\entity\User.xml" />
-    <None Remove="resources\db\sql\importdata.mysql.sql" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="resources\activiti.cfg.json" />
+		<None Remove="resources\db\mapping\entity\Group.xml" />
+		<None Remove="resources\db\mapping\entity\IdentityInfo.xml" />
+		<None Remove="resources\db\mapping\entity\User.xml" />
+		<None Remove="resources\db\sql\importdata.mysql.sql" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="resources\**\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="resources\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
-    <None Include="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
-    <None Include="Engine\impl\cfg\multitenant\TenantAwareDataSource.cs" />
-    <None Include="Engine\impl\cfg\SpringBeanFactoryProxyMap.cs" />
-    <None Include="Engine\impl\el\ActivitiFunctionMapper.cs" />
-    <None Include="Engine\impl\el\DynamicBeanPropertyELResolver.cs" />
-    <None Include="Engine\impl\el\ExpressionFactoryResolver.cs" />
-    <None Include="Engine\impl\interceptor\JtaRetryInterceptor.cs" />
-    <None Include="Engine\impl\interceptor\JtaTransactionInterceptor.cs" />
-    <None Include="Engine\impl\scripting\JuelScriptEngine.cs" />
-    <None Include="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
-    <None Include="Engine\impl\scripting\ScriptBindings.cs" />
-    <None Include="Engine\impl\scripting\ScriptBindingsFactory.cs" />
-    <None Include="Image\impl\DefaultProcessDiagramCanvas.cs" />
-    <None Include="Image\impl\DefaultProcessDiagramGenerator.cs" />
-    <None Include="Image\impl\icon\BusinessRuleTaskIconType.cs" />
-    <None Include="Image\impl\icon\CompensateIconType.cs" />
-    <None Include="Image\impl\icon\CompensateThrowIconType.cs" />
-    <None Include="Image\impl\icon\ErrorIconType.cs" />
-    <None Include="Image\impl\icon\ErrorThrowIconType.cs" />
-    <None Include="Image\impl\icon\IconType.cs" />
-    <None Include="Image\impl\icon\ManualTaskIconType.cs" />
-    <None Include="Image\impl\icon\MessageIconType.cs" />
-    <None Include="Image\impl\icon\ReceiveTaskIconType.cs" />
-    <None Include="Image\impl\icon\ScriptTaskIconType.cs" />
-    <None Include="Image\impl\icon\SendTaskIconType.cs" />
-    <None Include="Image\impl\icon\ServiceTaskIconType.cs" />
-    <None Include="Image\impl\icon\SignalIconType.cs" />
-    <None Include="Image\impl\icon\SignalThrowIconType.cs" />
-    <None Include="Image\impl\icon\TaskIconType.cs" />
-    <None Include="Image\impl\icon\TimerIconType.cs" />
-    <None Include="Image\impl\icon\UserTaskIconType.cs" />
-    <None Include="Image\impl\ProcessDiagramDOMGroupManager.cs" />
-    <None Include="Image\impl\ProcessDiagramSVGGraphics2D.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
+		<None Include="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
+		<None Include="Engine\impl\cfg\multitenant\TenantAwareDataSource.cs" />
+		<None Include="Engine\impl\cfg\SpringBeanFactoryProxyMap.cs" />
+		<None Include="Engine\impl\el\ActivitiFunctionMapper.cs" />
+		<None Include="Engine\impl\el\DynamicBeanPropertyELResolver.cs" />
+		<None Include="Engine\impl\el\ExpressionFactoryResolver.cs" />
+		<None Include="Engine\impl\interceptor\JtaRetryInterceptor.cs" />
+		<None Include="Engine\impl\interceptor\JtaTransactionInterceptor.cs" />
+		<None Include="Engine\impl\scripting\JuelScriptEngine.cs" />
+		<None Include="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
+		<None Include="Engine\impl\scripting\ScriptBindings.cs" />
+		<None Include="Engine\impl\scripting\ScriptBindingsFactory.cs" />
+		<None Include="Image\impl\DefaultProcessDiagramCanvas.cs" />
+		<None Include="Image\impl\DefaultProcessDiagramGenerator.cs" />
+		<None Include="Image\impl\icon\BusinessRuleTaskIconType.cs" />
+		<None Include="Image\impl\icon\CompensateIconType.cs" />
+		<None Include="Image\impl\icon\CompensateThrowIconType.cs" />
+		<None Include="Image\impl\icon\ErrorIconType.cs" />
+		<None Include="Image\impl\icon\ErrorThrowIconType.cs" />
+		<None Include="Image\impl\icon\IconType.cs" />
+		<None Include="Image\impl\icon\ManualTaskIconType.cs" />
+		<None Include="Image\impl\icon\MessageIconType.cs" />
+		<None Include="Image\impl\icon\ReceiveTaskIconType.cs" />
+		<None Include="Image\impl\icon\ScriptTaskIconType.cs" />
+		<None Include="Image\impl\icon\SendTaskIconType.cs" />
+		<None Include="Image\impl\icon\ServiceTaskIconType.cs" />
+		<None Include="Image\impl\icon\SignalIconType.cs" />
+		<None Include="Image\impl\icon\SignalThrowIconType.cs" />
+		<None Include="Image\impl\icon\TaskIconType.cs" />
+		<None Include="Image\impl\icon\TimerIconType.cs" />
+		<None Include="Image\impl\icon\UserTaskIconType.cs" />
+		<None Include="Image\impl\ProcessDiagramDOMGroupManager.cs" />
+		<None Include="Image\impl\ProcessDiagramSVGGraphics2D.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Smart.Sql\SmartSql.DapperDeserializer\SmartSql.DapperDeserializer.csproj" />
-    <ProjectReference Include="..\..\Smart.Sql\SmartSql.DIExtension\SmartSql.DIExtension.csproj" />
-    <ProjectReference Include="..\..\Smart.Sql\SmartSql.DyRepository\SmartSql.DyRepository.csproj" />
-    <ProjectReference Include="..\..\Smart.Sql\SmartSql.TypeHandler\SmartSql.TypeHandler.csproj" />
-    <ProjectReference Include="..\..\Smart.Sql\SmartSql\SmartSql.csproj" />
-    <ProjectReference Include="..\Sys.Bpm.Engine.API\Sys.Bpm.Engine.API.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Smart.Sql\SmartSql.DapperDeserializer\SmartSql.DapperDeserializer.csproj" />
+		<ProjectReference Include="..\..\Smart.Sql\SmartSql.DIExtension\SmartSql.DIExtension.csproj" />
+		<ProjectReference Include="..\..\Smart.Sql\SmartSql.DyRepository\SmartSql.DyRepository.csproj" />
+		<ProjectReference Include="..\..\Smart.Sql\SmartSql.TypeHandler\SmartSql.TypeHandler.csproj" />
+		<ProjectReference Include="..\..\Smart.Sql\SmartSql\SmartSql.csproj" />
+		<ProjectReference Include="..\Sys.Bpm.Engine.API\Sys.Bpm.Engine.API.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DependencyInjection\Cache\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="DependencyInjection\Cache\" />
+	</ItemGroup>
 
 </Project>

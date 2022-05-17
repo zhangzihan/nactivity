@@ -89,7 +89,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
             {
                 JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(scriptTaskId, execution.ProcessDefinitionId);
-                if (taskElementProperties is object && taskElementProperties[DynamicBpmnConstants.SCRIPT_TASK_SCRIPT] is object)
+                if (taskElementProperties is not null && taskElementProperties[DynamicBpmnConstants.SCRIPT_TASK_SCRIPT] is not null)
                 {
                     string overrideScript = taskElementProperties[DynamicBpmnConstants.SCRIPT_TASK_SCRIPT].ToString();
                     if (!string.IsNullOrWhiteSpace(overrideScript) && !overrideScript.Equals(script))
@@ -104,7 +104,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 object result = scriptingEngines.Evaluate(script, execution);
 
-                if (resultVariable is object)
+                if (resultVariable is not null)
                 {
                     execution.SetVariable(resultVariable, result);
                 }

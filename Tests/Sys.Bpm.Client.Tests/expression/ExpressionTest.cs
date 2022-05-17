@@ -3,8 +3,11 @@ using Spring.Expressions.Processors;
 using Spring.Util;
 using Sys.Expressions;
 using Sys.Workflow.Engine.Api;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Impl.Scripting;
 using Sys.Workflow.Engine.Impl.Util;
 using Sys.Workflow.Services.Api.Commands;
+using Sys.Workflow.Test;
 using Sys.Workflow.Util;
 using System;
 using System.Collections;
@@ -20,6 +23,13 @@ namespace Sys.Workflow.Client.Tests.Expression
     public class ExpressionTest
     {
         private ExpressionTypeRegistry typeRegistry = null;
+
+        private static IntegrationTestContext ctx;
+
+        static ExpressionTest()
+        {
+            ctx = IntegrationTestContext.CreateDefaultUnitTestContext();
+        }
 
         public ExpressionTest()
         {
@@ -45,6 +55,17 @@ namespace Sys.Workflow.Client.Tests.Expression
         class ObjectData
         {
             public int ReviewDays { get; set; }
+        }
+
+        [Fact]
+        public void TestScriptingEngines()
+        {
+            var eval = ctx.Resolve<IScriptingEngines>();
+            IExecutionEntity execution = ExecutionEntityImpl.CreateWithEmptyRelationshipCollections();
+            execution.Name = "test";
+            var res = eval.Evaluate("return args.Name == \"test\";", execution);
+
+            Assert.True((bool)res);
         }
 
         [Fact]

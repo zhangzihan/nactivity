@@ -21,6 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
     using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
     using Sys.Workflow.Engine.Impl.Bpmn.Helper;
     using Sys.Workflow.Engine.Impl.Delegate;
+    using Sys.Workflow.Engine.Impl.Scripting;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -286,7 +287,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
             string language = scriptTask.ScriptFormat;
             if (language is null)
             {
-                //language = ScriptingEngines.DEFAULT_SCRIPTING_LANGUAGE;
+                language = ScriptingEngines.DEFAULT_SCRIPTING_LANGUAGE;
             }
             return new ScriptTaskActivityBehavior(scriptTask.Id, scriptTask.Script, language, scriptTask.ResultVariable, scriptTask.AutoStoreVariables);
         }
