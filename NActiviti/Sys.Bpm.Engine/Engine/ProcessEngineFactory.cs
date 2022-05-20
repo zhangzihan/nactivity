@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine
             {
                 log.LogError(e, $"Exception while initializing process engine: {e.Message}");
                 _ = new ProcessEngineInfoImpl(null, e.StackTrace);
-                throw e;
+                throw;
             }
 
             processEngineInfos.Add(processEngineInfo);

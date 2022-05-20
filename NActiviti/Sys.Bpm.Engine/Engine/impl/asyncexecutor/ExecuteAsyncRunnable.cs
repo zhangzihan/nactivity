@@ -190,7 +190,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             catch (Exception t)
             {
                 log.LogError(t, $"Error while unlocking exclusive job {job.Id}");
-                throw t;
+                throw;
             }
         }
 

@@ -517,8 +517,7 @@ namespace Sys.Workflow.Test
             });
 
             IMvcBuilder mvcBuilder = services.AddMvc()
-                .AddProcessEngineRestServices(Configuration)
-                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+                .AddProcessEngineRestServices(Configuration);
 
             mvcBuilder.AddApplicationPart(GetType().Assembly);
 

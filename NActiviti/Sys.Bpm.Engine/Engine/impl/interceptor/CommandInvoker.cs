@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             catch (Exception ex)
             {
                 log.LogError($"{(command is null ? "command is null " : command.GetType().FullName)} execute failed!");
-                throw ex;
+                throw;
             }
         }
 

@@ -108,7 +108,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 

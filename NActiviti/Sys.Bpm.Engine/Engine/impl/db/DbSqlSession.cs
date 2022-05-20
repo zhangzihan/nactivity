@@ -216,7 +216,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             catch (Exception ex)
             {
                 log.LogError(ex, $"插入错误managedType={managedType?.GetType()}&entityType={entity?.GetType()}&clazz={clazz}&entiyId={entity.Id}");
-                throw ex;
+                throw;
             }
         }
 

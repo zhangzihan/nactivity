@@ -20,7 +20,7 @@ namespace SmartSql
             catch (Exception ex)
             {
                 sqlMapper.RollbackTransaction();
-                throw ex;
+                throw;
             }
         }
 
@@ -35,7 +35,7 @@ namespace SmartSql
             catch (Exception ex)
             {
                 sqlMapper.RollbackTransaction();
-                throw ex;
+                throw;
             }
         }
 
@@ -50,7 +50,7 @@ namespace SmartSql
             catch (Exception ex)
             {
                 sqlMapper.RollbackTransaction();
-                throw ex;
+                throw;
             }
         }
 
@@ -65,7 +65,7 @@ namespace SmartSql
             catch (Exception ex)
             {
                 sqlMapper.RollbackTransaction();
-                throw ex;
+                throw;
             }
         }
     }

@@ -117,7 +117,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                     {
                         LogMDC.PutMDCExecution(execution);
                     }
-                    throw e;
+                    throw;
                 }
             }
             else

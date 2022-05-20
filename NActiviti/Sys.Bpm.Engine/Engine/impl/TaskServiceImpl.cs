@@ -244,7 +244,7 @@ namespace Sys.Workflow.Engine.Impl
             catch (Exception ex)
             {
                 logger.LogError(ex.Message, ex);
-                throw ex;
+                throw;
             }
         }
 

@@ -137,7 +137,7 @@ namespace Sys.Workflow
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw;
                 }
             });
 

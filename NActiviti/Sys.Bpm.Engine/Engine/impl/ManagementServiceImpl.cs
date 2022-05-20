@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl
             {
                 if (e is ActivitiException)
                 {
-                    throw e;
+                    throw;
                 }
                 else
                 {

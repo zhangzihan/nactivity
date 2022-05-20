@@ -260,7 +260,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 {
                     if (!ErrorPropagation.MapException(e, execution, mapExceptions))
                     {
-                        throw e;
+                        throw;
                     }
                 }
             }

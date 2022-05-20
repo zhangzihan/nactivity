@@ -190,7 +190,7 @@ namespace SmartSql.DbSession
             catch (Exception ex)
             {
                 _logger.LogError(new EventId(ex.HResult), ex, ex.Message);
-                throw ex;
+                throw;
             }
             finally
             {

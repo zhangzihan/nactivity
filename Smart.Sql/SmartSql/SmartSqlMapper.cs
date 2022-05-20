@@ -193,7 +193,7 @@ namespace SmartSql
             catch (Exception ex)
             {
                 _logger.LogError(ex.HelpLink, ex, ex.Message);
-                throw ex;
+                throw;
             }
             finally
             {
