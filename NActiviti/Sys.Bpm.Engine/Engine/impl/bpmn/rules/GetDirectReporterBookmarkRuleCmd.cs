@@ -14,6 +14,7 @@ using Sys.Workflow.Engine.Impl.Interceptor;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using Sys.Workflow.Engine.History;
+using Sys.Workflow.Services.Api.Commands;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
@@ -37,16 +38,14 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
 
             string id = Condition.QueryCondition.FirstOrDefault().Id;
             string[] users = null;
-            var hisService = commandContext.ProcessEngineConfiguration.HistoryService;
             if (string.IsNullOrWhiteSpace(id))
             {
-                var uid = hisService.CreateHistoricProcessInstanceQuery()
-                    .SetProcessInstanceId(this.Execution.ProcessInstanceId)
-                    .SingleResult().StartUserId;
+                var uid = this.Execution.GetVariable<string>(WorkflowVariable.PROCESS_START_USERID);
                 users = new string[] { uid };
             }
             else
             {
+                var hisService = commandContext.ProcessEngineConfiguration.HistoryService;
                 users = hisService.CreateHistoricTaskInstanceQuery()
                     .SetProcessInstanceId(this.Execution.ProcessInstanceId)
                     .SetTaskDefinitionKey(id)
