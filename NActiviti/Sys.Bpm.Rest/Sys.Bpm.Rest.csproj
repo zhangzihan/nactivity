@@ -27,6 +27,7 @@
     <Compile Remove="core\SecurityPoliciesProcessDefinitionRestrictionApplier.cs" />
     <Compile Remove="core\SecurityPoliciesProcessInstanceRestrictionApplier.cs" />
     <Compile Remove="core\SecurityPoliciesRestrictionApplier.cs" />
+    <Compile Remove="Test\ProcessTestController.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +36,7 @@
     <None Include="core\SecurityPoliciesProcessDefinitionRestrictionApplier.cs" />
     <None Include="core\SecurityPoliciesProcessInstanceRestrictionApplier.cs" />
     <None Include="core\SecurityPoliciesRestrictionApplier.cs" />
+    <None Include="Test\ProcessTestController.cs" />
   </ItemGroup>
 
   <ItemGroup>
