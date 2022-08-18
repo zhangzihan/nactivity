@@ -87,7 +87,7 @@ namespace Sys.Workflow.Client.Tests.Models
                     }
                 };
                 reqContext.Setup(sqlMapper.SmartSqlOptions.SmartSqlContext, sqlMapper.SqlBuilder);
-                var dbsession = sqlMapper.BeginTransaction(reqContext, System.Data.IsolationLevel.ReadCommitted);
+                var dbsession = sqlMapper.BeginTransaction(reqContext, System.Data.IsolationLevel.RepeatableRead);
                 var dbCommand = sqlMapper.SmartSqlOptions.PreparedCommand.Prepare(dbsession, reqContext);
                 try
                 {

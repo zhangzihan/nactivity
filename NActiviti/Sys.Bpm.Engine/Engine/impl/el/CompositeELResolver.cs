@@ -52,9 +52,9 @@ namespace Sys.Workflow.Engine.Impl.EL
             for (int l = this.resolvers.Count; i < l; ++i)
             {
                 Type type = this.resolvers[i].GetCommonPropertyType(context, @base);
-                if (type is object)
+                if (type is not null)
                 {
-                    if (result is object && !type.IsAssignableFrom(result))
+                    if (result is not null && !type.IsAssignableFrom(result))
                     {
                         if (!result.IsAssignableFrom(type))
                         {

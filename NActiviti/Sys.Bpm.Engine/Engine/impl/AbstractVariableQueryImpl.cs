@@ -210,17 +210,17 @@ namespace Sys.Workflow.Engine.Impl
                         throw new ActivitiIllegalArgumentException("Booleans and null cannot be used in 'less than or equal' condition");
                 }
 
-                if (@operator == QueryOperator.EQUALS_IGNORE_CASE && !(value is string))
+                if (@operator == QueryOperator.EQUALS_IGNORE_CASE && value is not string)
                 {
                     throw new ActivitiIllegalArgumentException("Only string values can be used with 'equals ignore case' condition");
                 }
 
-                if (@operator == QueryOperator.NOT_EQUALS_IGNORE_CASE && !(value is string))
+                if (@operator == QueryOperator.NOT_EQUALS_IGNORE_CASE && value is not string)
                 {
                     throw new ActivitiIllegalArgumentException("Only string values can be used with 'not equals ignore case' condition");
                 }
 
-                if ((@operator == QueryOperator.LIKE || @operator == QueryOperator.LIKE_IGNORE_CASE) && !(value is string))
+                if ((@operator == QueryOperator.LIKE || @operator == QueryOperator.LIKE_IGNORE_CASE) && value is not string)
                 {
                     throw new ActivitiIllegalArgumentException("Only string values can be used with 'like' condition");
                 }

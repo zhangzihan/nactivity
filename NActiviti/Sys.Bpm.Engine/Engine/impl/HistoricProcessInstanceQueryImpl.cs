@@ -765,7 +765,7 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (specialOrderBy is object && specialOrderBy.Length > 0)
+                if (specialOrderBy is not null && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                     specialOrderBy = specialOrderBy.Replace("VAR.", "TEMPVAR_");
@@ -812,21 +812,21 @@ namespace Sys.Workflow.Engine.Impl
             processInstanceEntity.LocalizedName = null;
             processInstanceEntity.LocalizedDescription = null;
 
-            if (_locale is object && processInstance.ProcessDefinitionId is object)
+            if (_locale is not null && processInstance.ProcessDefinitionId is not null)
             {
                 IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(processInstanceEntity.ProcessDefinitionId);
                 JToken languageNode = Context.GetLocalizationElementProperties(_locale, processDefinition.Key, processInstanceEntity.ProcessDefinitionId, _withLocalizationFallback);
 
-                if (languageNode is object)
+                if (languageNode is not null)
                 {
                     JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                    if (languageNameNode is object)
+                    if (languageNameNode is not null)
                     {
                         processInstanceEntity.LocalizedName = languageNameNode.ToString();
                     }
 
                     JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                    if (languageDescriptionNode is object)
+                    if (languageDescriptionNode is not null)
                     {
                         processInstanceEntity.LocalizedDescription = languageDescriptionNode.ToString();
                     }

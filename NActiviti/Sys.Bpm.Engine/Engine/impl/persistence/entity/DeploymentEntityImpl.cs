@@ -72,7 +72,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IDictionary<string, IResourceEntity> GetResources()
         {
             var ctx = Context.CommandContext;
-            if (resources is null && id is object && ctx is object)
+            if (resources is null && id is not null && ctx is object)
             {
                 IList<IResourceEntity> resourcesList = ctx.ResourceEntityManager.FindResourcesByDeploymentId(id);
                 resources = new Dictionary<string, IResourceEntity>();

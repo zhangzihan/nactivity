@@ -102,7 +102,7 @@ namespace Sys.Workflow.Engine.Debug
                 FlattenTree();
             }
 
-            if (flattenedListIterator.Current is object)
+            if (flattenedListIterator.Current is not null)
             {
                 flattenedList.Remove(flattenedListIterator.Current);
             }

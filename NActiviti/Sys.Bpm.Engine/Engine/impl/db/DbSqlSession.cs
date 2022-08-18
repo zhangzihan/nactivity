@@ -47,7 +47,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         protected internal class DataObject
         {
-            private readonly Dictionary<string, IEntity> objects = new Dictionary<string, IEntity>();
+            private readonly Dictionary<string, IEntity> objects = new();
             /// <summary>
             /// 
             /// </summary>
@@ -107,12 +107,14 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// <summary>
         /// 
         /// </summary>
-        private static readonly Regex CLEAN_VERSION_REGEX = new Regex("\\d\\.\\d*");
+        private static readonly Regex CLEAN_VERSION_REGEX = new("\\d\\.\\d*");
 
         /// <summary>
         /// 
         /// </summary>
         protected internal static readonly IList<ActivitiVersion> ACTIVITI_VERSIONS = DbSqlSessionVersion.ACTIVITI_VERSIONS;
+
+        private readonly object syncRoot = new();
 
         /// <summary>
         /// 
@@ -300,7 +302,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement, object parameter, Page page, bool useCache = true)
         {
-            if (page is object)
+            if (page is not null)
             {
                 return SelectList<TEntityImpl, TOut>(statement, parameter, page.FirstResult, page.MaxResults, useCache);
             }
@@ -324,12 +326,12 @@ namespace Sys.Workflow.Engine.Impl.DB
         public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement, ListQueryParameterObject parameter, Page page, bool useCache = true)
         {
 
-            ListQueryParameterObject parameterToUse = new ListQueryParameterObject()
+            ListQueryParameterObject parameterToUse = new()
             {
                 Parameter = parameter
             };
 
-            if (page is object)
+            if (page is not null)
             {
                 parameterToUse.FirstResult = page.FirstResult;
                 parameterToUse.MaxResults = page.MaxResults;
@@ -471,7 +473,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             {
                 return loadedObjects;
             }
-            if (!(loadedObjects[0] is IEntity))
+            if (loadedObjects[0] is not IEntity)
             {
                 return loadedObjects;
             }
@@ -511,30 +513,33 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual void Flush()
         {
-            DetermineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
-            RemoveUnnecessaryOperations();
-
-            if (insertedObjects.Count == 0 && updatedObjects.Count == 0 && deletedObjects.Count == 0)
+            lock (syncRoot)
             {
-                return;
+                DetermineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
+                RemoveUnnecessaryOperations();
+
+                if (insertedObjects.IsEmpty && updatedObjects.Count == 0 && deletedObjects.IsEmpty)
+                {
+                    return;
+                }
+
+                if (SqlMapper.SessionStore.LocalSession is null && (!insertedObjects.IsEmpty || updatedObjects.Count > 0 || !deletedObjects.IsEmpty))
+                {
+                    // 使用TransactionScope控制事务提交
+                    SqlMapper.BeginTransaction();
+
+                    RemoveInstanceIncludeHis();
+                }
+
+                FlushInserts();
+                FlushUpdates();
+                FlushDeletes();
             }
-
-            if (SqlMapper.SessionStore.LocalSession is null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
-            {
-                // 使用TransactionScope控制事务提交
-                SqlMapper.BeginTransaction();
-
-                RemoveInstanceIncludeHis();
-            }
-
-            FlushInserts();
-            FlushUpdates();
-            FlushDeletes();
         }
 
         private void RemoveInstanceIncludeHis()
         {
-            if (insertedObjects.Count == 0)
+            if (insertedObjects.IsEmpty)
             {
                 return;
             }
@@ -657,7 +662,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         protected virtual void FlushInserts()
         {
-            if (insertedObjects.Count == 0)
+            if (insertedObjects.IsEmpty)
             {
                 return;
             }
@@ -673,7 +678,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             }
 
             // Next, in case of custom entities or we've screwed up and forgotten some entity
-            if (insertedObjects.Count > 0)
+            if (!insertedObjects.IsEmpty)
             {
                 foreach (Type entityClass in insertedObjects.Keys)
                 {
@@ -721,7 +726,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             IDictionary<string, IList<IExecutionEntity>> parentToChildrenMapping = new Dictionary<string, IList<IExecutionEntity>>();
 
             ICollection<IEntity> executionCollection = executionEntities.Values;
-            foreach (IExecutionEntity currentExecutionEntity in executionCollection)
+            foreach (IExecutionEntity currentExecutionEntity in executionCollection.Cast<IExecutionEntity>())
             {
                 string parentId = currentExecutionEntity.ParentId;
                 string superExecutionId = currentExecutionEntity.SuperExecutionId;
@@ -738,16 +743,16 @@ namespace Sys.Workflow.Engine.Impl.DB
 
             // Loop over all entities, and insert in the correct order
             ISet<string> handledExecutionIds = new HashSet<string>();//executionEntities.Count);
-            foreach (IExecutionEntity currentExecutionEntity in executionCollection)
+            foreach (IExecutionEntity currentExecutionEntity in executionCollection.Cast<IExecutionEntity>())
             {
                 string executionId = currentExecutionEntity.Id;
 
                 if (!handledExecutionIds.Contains(executionId))
                 {
                     string parentId = childToParentExecutionMapping[executionId];
-                    if (parentId is object)
+                    if (parentId is not null)
                     {
-                        while (parentId is object)
+                        while (parentId is not null)
                         {
                             string newParentId = childToParentExecutionMapping[parentId];
                             if (newParentId is null)
@@ -758,10 +763,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                         }
                     }
 
-                    if (parentId is null)
-                    {
-                        parentId = executionId;
-                    }
+                    parentId ??= executionId;
 
                     if (executionEntities.ContainsKey(parentId) && !handledExecutionIds.Contains(parentId))
                     {
@@ -871,10 +873,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     IEntity entity = entityIterator.Current;
                     subList.Add(entity);
 
-                    if (hasRevision is null)
-                    {
-                        hasRevision = entity is IHasRevision;
-                    }
+                    hasRevision ??= entity is IHasRevision;
                     index++;
                 } while (entityIterator.MoveNext() && index < dbSqlSessionFactory.MaxNrOfStatementsInBulkInsert);
 
@@ -925,7 +924,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     int updatedRecords = SqlMapper.Execute(requestContext);
                     if (updatedRecords == 0)
                     {
-                        log.LogWarning("【update】:" + managedType + " was updated by another transaction concurrently");
+                        log.LogWarning("【update】:{managedType} was updated by another transaction concurrently", managedType);
                         continue;
                     }
 
@@ -954,7 +953,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                         int updatedRecords = SqlMapper.Execute(requestContext);
                         if (updatedRecords == 0)
                         {
-                            log.LogWarning("【update】:" + updatedObject + " was updated by another transaction concurrently");
+                            log.LogWarning("【update】:{updatedObject} was updated by another transaction concurrently", updatedObject);
                             continue;
                         }
 
@@ -974,7 +973,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         protected virtual void FlushDeletes()
         {
-            if (deletedObjects.Count == 0 && bulkDeleteOperations.Count == 0)
+            if (deletedObjects.IsEmpty && bulkDeleteOperations.IsEmpty)
             {
                 return;
             }
@@ -991,7 +990,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             }
 
             // Next, in case of custom entities or we've screwed up and forgotten some entity
-            if (deletedObjects.Count > 0)
+            if (!deletedObjects.IsEmpty)
             {
                 foreach (Type entityClass in deletedObjects.Keys)
                 {
@@ -1069,7 +1068,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     int nrOfRowsDeleted = SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(entityClass.FullName, deleteStatement, entity));
                     if (entity is IHasRevision && nrOfRowsDeleted == 0)
                     {
-                        log.LogWarning("【delete】: " + entity + " was updated by another transaction concurrently");
+                        log.LogWarning("【delete】: {entity} was updated by another transaction concurrently", entity);
                         //throw new ActivitiOptimisticLockingException(entity + " was updated by another transaction concurrently");
                     }
                 }
@@ -1133,7 +1132,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     errorMessage = AddMissingComponent(errorMessage, "history");
                 }
 
-                if (errorMessage is object)
+                if (errorMessage is not null)
                 {
                     throw new ActivitiException("Activiti database problem: " + errorMessage);
                 }
@@ -1385,13 +1384,13 @@ namespace Sys.Workflow.Engine.Impl.DB
             try
             {
                 string catalog = this.connectionMetadataDefaultCatalog;
-                if (dbSqlSessionFactory.DatabaseCatalog is object && dbSqlSessionFactory.DatabaseCatalog.Length > 0)
+                if (dbSqlSessionFactory.DatabaseCatalog is not null && dbSqlSessionFactory.DatabaseCatalog.Length > 0)
                 {
                     catalog = dbSqlSessionFactory.DatabaseCatalog;
                 }
 
                 string schema = this.connectionMetadataDefaultSchema;
-                if (dbSqlSessionFactory.DatabaseSchema is object && dbSqlSessionFactory.DatabaseSchema.Length > 0)
+                if (dbSqlSessionFactory.DatabaseSchema is not null && dbSqlSessionFactory.DatabaseSchema.Length > 0)
                 {
                     schema = dbSqlSessionFactory.DatabaseSchema;
                 }
@@ -1403,12 +1402,12 @@ namespace Sys.Workflow.Engine.Impl.DB
                     tableName = tableName.ToLower();
                 }
 
-                if (schema is object && "oracle".Equals(databaseType))
+                if (schema is not null && "oracle".Equals(databaseType))
                 {
                     schema = schema.ToUpper();
                 }
 
-                if (catalog is object && catalog.Length == 0)
+                if (catalog is not null && catalog.Length == 0)
                 {
                     catalog = null;
                 }
@@ -1452,7 +1451,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             else if (cleanDbVersion.CompareTo(cleanEngineVersion) == 0)
             {
                 // Versions don't match exactly, possibly snapshot is being used
-                log.LogWarning($"Engine-version is the same, but not an exact match: {versionInDatabase} vs. {ProcessEngineConstants.VERSION}. Not performing database-upgrade.");
+                log.LogWarning("Engine-version is the same, but not an exact match: {versionInDatabase} vs. {ProcessEngineConstants.VERSION}. Not performing database-upgrade.", versionInDatabase, ProcessEngineConstants.VERSION);
                 return false;
             }
             return true;
@@ -1502,7 +1501,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         {
             ActivitiVersion activitiVersion = ACTIVITI_VERSIONS[currentDatabaseVersionsIndex];
             string dbVersion = activitiVersion.MainVersion;
-            log.LogInformation($"upgrading activiti {component} schema from {dbVersion} to {ProcessEngineConstants.VERSION}");
+            log.LogInformation("upgrading activiti {component} schema from {dbVersion} to {ProcessEngineConstants.VERSION}", component, dbVersion, ProcessEngineConstants.VERSION);
 
             // Actual execution of schema DDL SQL
             for (int i = currentDatabaseVersionsIndex + 1; i < ACTIVITI_VERSIONS.Count; i++)
@@ -1517,7 +1516,7 @@ namespace Sys.Workflow.Engine.Impl.DB
 
                 dbVersion = dbVersion.Replace(".", "");
                 nextVersion = nextVersion.Replace(".", "");
-                log.LogInformation($"Upgrade needed: {dbVersion} -> {nextVersion}. Looking for schema update resource for component '{component}'");
+                log.LogInformation("Upgrade needed: {dbVersion} -> {nextVersion}. Looking for schema update resource for component '{component}'", dbVersion, nextVersion, component);
                 ExecuteSchemaResource("upgrade", component, GetResourceForDbOperation("upgrade", "upgradestep." + dbVersion + ".to." + nextVersion, component), true);
                 dbVersion = nextVersion;
             }
@@ -1551,7 +1550,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 {
                     if (isOptional)
                     {
-                        log.LogInformation($"no schema resource {resourceName} for {operation}");
+                        log.LogInformation("no schema resource {resourceName} for {operation}", resourceName, operation);
                     }
                     else
                     {
@@ -1578,11 +1577,11 @@ namespace Sys.Workflow.Engine.Impl.DB
 
                 IDataSource ds = ProcessEngineServiceProvider.Resolve<IDataSource>();
 
-                StringReader reader = new StringReader(ddlStatements);
+                StringReader reader = new(ddlStatements);
                 string line = ReadNextTrimmedLine(reader);
                 bool inOraclePlsqlBlock = false;
 
-                while (line is object)
+                while (line is not null)
                 {
                     if (line.StartsWith("# ", StringComparison.Ordinal))
                     {
@@ -1606,7 +1605,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                         }
                         try
                         {
-                            log.LogDebug($"executing upgrade step java class {upgradestepClassName}");
+                            log.LogDebug("executing upgrade step java class {upgradestepClassName}", upgradestepClassName);
                             dbUpgradeStep.Execute(this);
                         }
                         catch (Exception e)
@@ -1640,7 +1639,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                             try
                             {
                                 // no logging needed as the connection will log it
-                                log.LogDebug($"SQL {sqlStatement}");
+                                log.LogDebug("SQL {sqlStatement}", sqlStatement);
                                 command.ExecuteNonQuery();
                             }
                             catch (Exception e)
@@ -1650,7 +1649,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                                     exception = e;
                                     exceptionSqlStatement = sqlStatement;
                                 }
-                                log.LogError(e, $"problem during schema {operation}, statement {sqlStatement}");
+                                log.LogError(e, "problem during schema {operation}, statement {sqlStatement}", operation, sqlStatement);
                             }
                             finally
                             {
@@ -1667,12 +1666,12 @@ namespace Sys.Workflow.Engine.Impl.DB
                     line = ReadNextTrimmedLine(reader);
                 }
 
-                if (exception is object)
+                if (exception is not null)
                 {
                     throw exception;
                 }
 
-                log.LogDebug($"activiti db schema {operation} for component {component} successful");
+                log.LogDebug("activiti db schema {operation} for component {component} successful", operation, component);
             }
             catch (Exception e)
             {
@@ -1718,7 +1717,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         protected virtual bool IsMissingTablesException(Exception e)
         {
             string exceptionMessage = e.Message;
-            if (e.Message is object)
+            if (e.Message is not null)
             {
                 // Matches message returned from H2
                 if ((exceptionMessage.IndexOf("Table", StringComparison.Ordinal) != -1) && (exceptionMessage.IndexOf("not found", StringComparison.Ordinal) != -1))
@@ -1747,7 +1746,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         public virtual void PerformSchemaOperationsProcessEngineBuild()
         {
             string databaseSchemaUpdate = Context.ProcessEngineConfiguration.DatabaseSchemaUpdate;
-            log.LogDebug("Executing performSchemaOperationsProcessEngineBuild with setting " + databaseSchemaUpdate);
+            log.LogDebug("Executing performSchemaOperationsProcessEngineBuild with setting {databaseSchemaUpdate}", databaseSchemaUpdate);
 #if DEBUG
             if (ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_DROP_CREATE.Equals(databaseSchemaUpdate))
             {

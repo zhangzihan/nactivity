@@ -27,7 +27,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
             foreach (SubProcess subProcess in subProcesses)
             {
 
-                if (!(subProcess is EventSubProcess))
+                if (subProcess is not EventSubProcess)
                 {
 
                     // Verify start events

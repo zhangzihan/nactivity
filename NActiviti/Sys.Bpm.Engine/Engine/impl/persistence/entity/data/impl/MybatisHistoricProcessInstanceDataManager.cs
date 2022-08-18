@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             int maxResults = hisQuery.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (hisQuery.ProcessInstanceVariablesLimit is object)
+            if (hisQuery.ProcessInstanceVariablesLimit is not null)
             {
                 hisQuery.MaxResults = hisQuery.ProcessInstanceVariablesLimit.GetValueOrDefault();
             }

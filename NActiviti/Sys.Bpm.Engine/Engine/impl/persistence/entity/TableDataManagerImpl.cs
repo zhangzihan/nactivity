@@ -164,13 +164,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     //}
 
                     string catalog = null;
-                    if (ProcessEngineConfiguration.DatabaseCatalog is object && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
+                    if (ProcessEngineConfiguration.DatabaseCatalog is not null && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
                     {
                         catalog = ProcessEngineConfiguration.DatabaseCatalog;
                     }
 
                     string schema = null;
-                    if (ProcessEngineConfiguration.DatabaseSchema is object && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
+                    if (ProcessEngineConfiguration.DatabaseSchema is not null && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
                     {
                         if ("oracle".Equals(DbSqlSession.DbSqlSessionFactory.DatabaseType))
                         {
@@ -258,13 +258,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
 
                 string catalog = null;
-                if (ProcessEngineConfiguration.DatabaseCatalog is object && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
+                if (ProcessEngineConfiguration.DatabaseCatalog is not null && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
                 {
                     catalog = ProcessEngineConfiguration.DatabaseCatalog;
                 }
 
                 string schema = null;
-                if (ProcessEngineConfiguration.DatabaseSchema is object && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
+                if (ProcessEngineConfiguration.DatabaseSchema is not null && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
                 {
                     if ("oracle".Equals(DbSqlSession.DbSqlSessionFactory.DatabaseType))
                     {

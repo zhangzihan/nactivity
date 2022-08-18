@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual IComment Execute(ICommandContext commandContext)
         {
             // Validate task
-            if (taskId is object)
+            if (taskId is not null)
             {
                 ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
@@ -65,7 +65,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
             }
 
-            if (processInstanceId is object)
+            if (processInstanceId is not null)
             {
                 IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 

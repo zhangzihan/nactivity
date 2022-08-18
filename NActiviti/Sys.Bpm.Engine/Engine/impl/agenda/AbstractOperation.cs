@@ -93,11 +93,11 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// </summary>
         protected internal virtual FlowElement GetCurrentFlowElement(IExecutionEntity execution)
         {
-            if (execution.CurrentFlowElement is object)
+            if (execution.CurrentFlowElement is not null)
             {
                 return execution.CurrentFlowElement;
             }
-            else if (execution.CurrentActivityId is object)
+            else if (execution.CurrentActivityId is not null)
             {
                 string processDefinitionId = execution.ProcessDefinitionId;
                 Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);

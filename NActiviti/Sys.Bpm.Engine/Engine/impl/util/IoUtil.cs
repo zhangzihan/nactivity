@@ -92,7 +92,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             try
             {
-                if (stream is object)
+                if (stream is not null)
                 {
                     stream.Close();
                 }

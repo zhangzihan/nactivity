@@ -32,7 +32,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                     eventDefinition = throwEvent.EventDefinitions[0];
                 }
 
-                if (eventDefinition is not null && !(eventDefinition is SignalEventDefinition) && !(eventDefinition is CompensateEventDefinition) && !(eventDefinition is MessageEventDefinition))
+                if (eventDefinition is not null && eventDefinition is not SignalEventDefinition && eventDefinition is not CompensateEventDefinition && eventDefinition is not MessageEventDefinition)
                 {
                     AddError(errors, ProblemsConstants.THROW_EVENT_INVALID_EVENTDEFINITION, process, throwEvent, ProcessValidatorResource.THROW_EVENT_INVALID_EVENTDEFINITION);
                 }

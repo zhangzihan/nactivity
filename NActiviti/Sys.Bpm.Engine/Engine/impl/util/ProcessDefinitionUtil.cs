@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             if (checkCacheOnly)
             {
                 ProcessDefinitionCacheEntry cacheEntry = processEngineConfiguration.ProcessDefinitionCache.Get(processDefinitionId);
-                if (cacheEntry is object)
+                if (cacheEntry is not null)
                 {
                     return cacheEntry.ProcessDefinition;
                 }
@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static Process GetProcess(string processDefinitionId)
         {
-            if (Context.ProcessEngineConfiguration is object)
+            if (Context.ProcessEngineConfiguration is not null)
             {
                 DeploymentManager deploymentManager = Context.ProcessEngineConfiguration.DeploymentManager;
 
@@ -72,7 +72,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static BpmnModel GetBpmnModel(string processDefinitionId)
         {
-            if (Context.ProcessEngineConfiguration is object)
+            if (Context.ProcessEngineConfiguration is not null)
             {
                 DeploymentManager deploymentManager = Context.ProcessEngineConfiguration.DeploymentManager;
 
@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         public static BpmnModel GetBpmnModelFromCache(string processDefinitionId)
         {
             ProcessDefinitionCacheEntry cacheEntry = Context.ProcessEngineConfiguration.ProcessDefinitionCache.Get(processDefinitionId);
-            if (cacheEntry is object)
+            if (cacheEntry is not null)
             {
                 return cacheEntry.BpmnModel;
             }

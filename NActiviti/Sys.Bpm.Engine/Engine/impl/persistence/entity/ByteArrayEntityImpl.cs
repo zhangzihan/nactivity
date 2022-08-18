@@ -78,7 +78,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override string ToString()
         {
-            return "ByteArrayEntity[id=" + Id + ", name=" + name + ", size=" + (bytes is object ? bytes.Length : 0) + "]";
+            return "ByteArrayEntity[id=" + Id + ", name=" + name + ", size=" + (bytes is not null ? bytes.Length : 0) + "]";
         }
 
         // Wrapper for a byte array, needed to do byte array comparisons

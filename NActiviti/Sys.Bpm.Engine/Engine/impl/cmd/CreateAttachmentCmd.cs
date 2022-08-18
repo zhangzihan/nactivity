@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual IAttachment Execute(ICommandContext commandContext)
         {
-            if (processInstanceId is object)
+            if (processInstanceId is not null)
             {
                 VerifyExecutionParameters(commandContext);
             }
@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             commandContext.AttachmentEntityManager.Insert(attachment, false);
 
-            if (content is object)
+            if (content is not null)
             {
                 byte[] bytes = IoUtil.ReadInputStream(content, attachmentName);
                 IByteArrayEntity byteArray = commandContext.ByteArrayEntityManager.Create();
@@ -86,7 +86,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 // Forced to fetch the process-instance to associate the right
                 // process definition
                 string processDefinitionId = null;
-                if (attachment.ProcessInstanceId is object)
+                if (attachment.ProcessInstanceId is not null)
                 {
                     IExecutionEntity process = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                     if (process is object)

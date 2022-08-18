@@ -2729,7 +2729,7 @@ namespace Spring.Objects.Factory.Support
             {
                 get
                 {
-                    if (!(LogicalThreadContext.GetData(name) is HashSet<string> set))
+                    if (LogicalThreadContext.GetData(name) is not HashSet<string> set)
                     {
                         set = new HashSet<string>();
                         LogicalThreadContext.SetData(name, set);

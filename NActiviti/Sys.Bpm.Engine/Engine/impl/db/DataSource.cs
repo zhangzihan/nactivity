@@ -44,7 +44,7 @@ namespace Sys.Data
             this.oldOption = options.CurrentValue;
             this.options.OnChange((opts) =>
             {
-                if (opts != this.oldOption && this.changed is object)
+                if (opts != this.oldOption && this.changed is not null)
                 {
                     this.oldOption = opts;
                     this.changed(this);

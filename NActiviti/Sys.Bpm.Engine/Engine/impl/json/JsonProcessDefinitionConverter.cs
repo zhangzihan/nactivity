@@ -35,11 +35,11 @@ namespace Sys.Workflow.Engine.Impl.Json
             {
                 ["id"] = processDefinitionEntity.Id
             };
-            if (processDefinitionEntity.Key is object)
+            if (processDefinitionEntity.Key is not null)
             {
                 jsonObject["key"] = processDefinitionEntity.Key;
             }
-            if (processDefinitionEntity.DeploymentId is object)
+            if (processDefinitionEntity.DeploymentId is not null)
             {
                 jsonObject["deploymentId"] = processDefinitionEntity.DeploymentId;
             }

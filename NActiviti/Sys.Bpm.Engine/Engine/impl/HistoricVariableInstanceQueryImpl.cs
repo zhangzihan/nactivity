@@ -106,11 +106,11 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricVariableInstanceQuery SetExcludeTaskVariables()
         {
-            if (taskId_ is object)
+            if (taskId_ is not null)
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskId together with excludeTaskVariables");
             }
-            if (taskIds_ is object)
+            if (taskIds_ is not null)
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskIds together with excludeTaskVariables");
             }
@@ -206,7 +206,7 @@ namespace Sys.Workflow.Engine.Impl
 
         protected internal virtual void EnsureVariablesInitialized()
         {
-            if (this.queryVariableValue is object)
+            if (this.queryVariableValue is not null)
             {
                 IVariableTypes variableTypes = Context.ProcessEngineConfiguration.VariableTypes;
                 queryVariableValue.Initialize(variableTypes);

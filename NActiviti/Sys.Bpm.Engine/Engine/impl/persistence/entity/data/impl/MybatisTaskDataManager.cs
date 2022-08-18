@@ -75,7 +75,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             int maxResults = taskQueyImpl.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (taskQueyImpl.TaskVariablesLimit is object)
+            if (taskQueyImpl.TaskVariablesLimit is not null)
             {
                 taskQueyImpl.MaxResults = taskQueyImpl.TaskVariablesLimit.GetValueOrDefault();
             }

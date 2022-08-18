@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual bool DoInsert(IJobEntity jobEntity, bool fireCreateEvent)
         {
             // add link to execution
-            if (jobEntity.ExecutionId is object)
+            if (jobEntity.ExecutionId is not null)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution is object)
@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     execution.Jobs.Add(jobEntity);
 
                     // Inherit tenant if (if applicable)
-                    if (execution.TenantId is object)
+                    if (execution.TenantId is not null)
                     {
                         jobEntity.TenantId = execution.TenantId;
                     }
@@ -149,7 +149,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override void Delete(IJobEntity entity, bool fireDeleteEvent)
         {
-            if (entity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
+            if (entity.ExecutionId is not null && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ExecutionId);
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
@@ -166,7 +166,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// </summary>
         protected internal virtual void RemoveExecutionLink(IJobEntity jobEntity)
         {
-            if (jobEntity.ExecutionId is object)
+            if (jobEntity.ExecutionId is not null)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution is object)

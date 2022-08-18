@@ -199,11 +199,11 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
 
             // Set processInstance name
-            if (processInstanceName is object)
+            if (processInstanceName is not null)
             {
                 processInstance.Name = processInstanceName;
             }
-            else if (title is object)
+            else if (title is not null)
             {
                 processInstanceName = title;
                 processInstance.Name = title;

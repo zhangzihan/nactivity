@@ -129,7 +129,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // Actually deploy
             commandContext.ProcessEngineConfiguration.DeploymentManager.Deploy(deployment, deploymentSettings);
 
-            if (deploymentBuilder.ProcessDefinitionsActivationDate is object)
+            if (deploymentBuilder.ProcessDefinitionsActivationDate is not null)
             {
                 ScheduleProcessDefinitionActivation(commandContext, deployment);
             }

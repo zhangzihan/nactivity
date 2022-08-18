@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             historicVariableUpdate.DoubleValue = variableInstance.DoubleValue;
             historicVariableUpdate.LongValue = variableInstance.LongValue;
 
-            if (variableInstance.Bytes is object)
+            if (variableInstance.Bytes is not null)
             {
                 historicVariableUpdate.Bytes = variableInstance.Bytes;
             }

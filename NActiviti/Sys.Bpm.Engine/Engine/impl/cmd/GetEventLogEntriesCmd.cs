@@ -37,9 +37,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 return commandContext.EventLogEntryEntityManager.FindEventLogEntriesByProcessInstanceId(processInstanceId);
 
             }
-            else if (startLogNr is object)
+            else if (startLogNr is not null)
             {
-                return commandContext.EventLogEntryEntityManager.FindEventLogEntries(startLogNr.Value, pageSize is object ? pageSize.Value : -1);
+                return commandContext.EventLogEntryEntityManager.FindEventLogEntries(startLogNr.Value, pageSize is not null ? pageSize.Value : -1);
 
             }
             else

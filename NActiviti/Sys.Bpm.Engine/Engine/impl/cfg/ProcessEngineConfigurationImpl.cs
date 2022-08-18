@@ -1396,7 +1396,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                     interceptors.Add(transactionInterceptor);
                 }
 
-                if (commandContextFactory is object)
+                if (commandContextFactory is not null)
                 {
                     //CommandContext拦截器，进行命令的保存
                     interceptors.Add(new CommandContextInterceptor(commandContextFactory, this));
@@ -1617,7 +1617,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             lock (syncRoot)
             {
                 string wildcardEscapeClause = "";
-                if ((!(databaseWildcardEscapeCharacter is null)) && (databaseWildcardEscapeCharacter.Length != 0))
+                if ((databaseWildcardEscapeCharacter is not null) && (databaseWildcardEscapeCharacter.Length != 0))
                 {
                     wildcardEscapeClause = " escape '" + databaseWildcardEscapeCharacter + "'";
                 }
@@ -2511,7 +2511,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 defaultAsyncExecutor.KeepAliveTime = asyncExecutorThreadKeepAliveTime;
 
                 // Threadpool queue
-                if (asyncExecutorThreadPoolQueue is object)
+                if (asyncExecutorThreadPoolQueue is not null)
                 {
                     defaultAsyncExecutor.ThreadPoolQueue = asyncExecutorThreadPoolQueue;
                 }
@@ -2527,7 +2527,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 // Job locking
                 defaultAsyncExecutor.TimerLockTimeInMillis = asyncExecutorTimerLockTimeInMillis;
                 defaultAsyncExecutor.AsyncJobLockTimeInMillis = asyncExecutorAsyncJobLockTimeInMillis;
-                if (!(asyncExecutorLockOwner is null))
+                if (asyncExecutorLockOwner is not null)
                 {
                     defaultAsyncExecutor.LockOwner = asyncExecutorLockOwner;
                 }

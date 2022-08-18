@@ -57,7 +57,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 commandContext.ProcessDefinitionInfoEntityManager.InsertProcessDefinitionInfo(definitionInfoEntity);
             }
 
-            if (infoNode is object)
+            if (infoNode is not null)
             {
                 try
                 {

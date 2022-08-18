@@ -198,7 +198,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
                 {
                     object parameter = GetValue(contextObject, taskRequest, execution.Variables);
 
-                    if (parameter is object)
+                    if (parameter is not null)
                     {
                         string strParam = parameter.ToString();
 

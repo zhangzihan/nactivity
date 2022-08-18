@@ -14,7 +14,7 @@
         
         public override void Closing(ICommandContext commandContext)
         {
-            if (commandContext.Exception is object)
+            if (commandContext.Exception is not null)
             {
                 return; // Not interested in events about exceptions
             }

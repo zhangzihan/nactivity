@@ -63,7 +63,7 @@ namespace Sys.Workflow.Engine.Debug
                 while (index < children.Count)
                 {
                     ExecutionTreeNode result = GetTreeNode(executionId, children[index]);
-                    if (result is object)
+                    if (result is not null)
                     {
                         return result;
                     }
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Debug
 
         public override string ToString()
         {
-            return root is object ? root.ToString() : "";
+            return root is not null ? root.ToString() : "";
         }
 
         IEnumerator IEnumerable.GetEnumerator()

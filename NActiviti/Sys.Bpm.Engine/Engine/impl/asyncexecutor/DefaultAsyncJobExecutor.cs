@@ -348,15 +348,15 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
 
                 logger.LogInformation($"Shutting down the default async job executor [{this.GetType().FullName}].");
 
-                if (timerJobRunnable is object)
+                if (timerJobRunnable is not null)
                 {
                     timerJobRunnable.Stop();
                 }
-                if (asyncJobsDueRunnable is object)
+                if (asyncJobsDueRunnable is not null)
                 {
                     asyncJobsDueRunnable.Stop();
                 }
-                if (resetExpiredJobsRunnable is object)
+                if (resetExpiredJobsRunnable is not null)
                 {
                     resetExpiredJobsRunnable.Stop();
                 }
@@ -448,7 +448,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// Stops the acquisition thread </summary>
         protected internal virtual void StopJobAcquisitionThread()
         {
-            if (asyncJobAcquisitionThread is object)
+            if (asyncJobAcquisitionThread is not null)
             {
                 try
                 {
@@ -467,7 +467,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// </summary>
         protected internal virtual void StopTimerAcquisitionThread()
         {
-            if (timerJobAcquisitionThread is object)
+            if (timerJobAcquisitionThread is not null)
             {
                 try
                 {
@@ -496,7 +496,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// Stops the reset expired jobs thread </summary>
         protected internal virtual void StopResetExpiredJobsThread()
         {
-            if (resetExpiredJobThread is object)
+            if (resetExpiredJobThread is not null)
             {
                 try
                 {

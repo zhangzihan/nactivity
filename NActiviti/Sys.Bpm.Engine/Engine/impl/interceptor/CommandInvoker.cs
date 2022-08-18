@@ -77,7 +77,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             while (!commandContext.Agenda.Empty)
             {
                 AbstractOperation runnable = commandContext.Agenda.NextOperation();
-                if (runnable is object)
+                if (runnable is not null)
                 {
                     ExecuteOperation(runnable);
                 }

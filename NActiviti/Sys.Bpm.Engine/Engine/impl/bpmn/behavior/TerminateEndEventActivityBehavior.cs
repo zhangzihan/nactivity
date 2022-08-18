@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 commandContext.HistoryManager.RecordProcessInstanceEnd(scopeExecutionEntity.Id, deleteReason, execution.CurrentActivityId);
 
             }
-            else if (scopeExecutionEntity.CurrentFlowElement is object && scopeExecutionEntity.CurrentFlowElement is SubProcess)
+            else if (scopeExecutionEntity.CurrentFlowElement is not null && scopeExecutionEntity.CurrentFlowElement is SubProcess)
             { // SubProcess
 
                 SubProcess subProcess = (SubProcess)scopeExecutionEntity.CurrentFlowElement;
@@ -109,7 +109,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
 
             }
-            else if (scopeExecutionEntity.ParentId is null && scopeExecutionEntity.SuperExecutionId is object)
+            else if (scopeExecutionEntity.ParentId is null && scopeExecutionEntity.SuperExecutionId is not null)
             { // CallActivity
 
                 IExecutionEntity callActivityExecution = scopeExecutionEntity.SuperExecution;
@@ -148,7 +148,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 // Fire event
                 ProcessEngineConfigurationImpl config = Context.ProcessEngineConfiguration;
-                if (config is object && config.EventDispatcher.Enabled)
+                if (config is not null && config.EventDispatcher.Enabled)
                 {
                     config.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED, historicActivityInstance));
                 }
@@ -190,7 +190,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                if ((execution.ProcessInstanceType && execution.SuperExecutionId is null) || (execution.ParentId is null && execution.SuperExecutionId is object))
+                if ((execution.ProcessInstanceType && execution.SuperExecutionId is null) || (execution.ParentId is null && execution.SuperExecutionId is not null))
                 {
                     Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateCancelledEvent(execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, execution.CurrentFlowElement));
                 }

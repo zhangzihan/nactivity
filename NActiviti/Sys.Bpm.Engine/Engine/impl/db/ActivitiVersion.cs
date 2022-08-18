@@ -86,7 +86,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (!(obj is ActivitiVersion))
+            if (obj is not ActivitiVersion)
             {
                 return false;
             }

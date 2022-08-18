@@ -160,7 +160,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             JToken definitionInfoNode = GetProcessDefinitionInfoNode(processDefinitionId);
             JToken elementProperties = null;
-            if (definitionInfoNode is object)
+            if (definitionInfoNode is not null)
             {
                 elementProperties = ProcessEngineConfiguration.DynamicBpmnService.GetBpmnElementProperties(id, definitionInfoNode);
             }
@@ -179,7 +179,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             JToken definitionInfoNode = GetProcessDefinitionInfoNode(processDefinitionId);
             JToken localizationProperties = null;
-            if (definitionInfoNode is object)
+            if (definitionInfoNode is not null)
             {
                 if (!useFallback)
                 {
@@ -194,7 +194,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
                     {
                         localizationProperties = ProcessEngineConfiguration.DynamicBpmnService.GetLocalizationElementProperties("zh-cn", id, definitionInfoNode);// locale.toLanguageTag(), id, definitionInfoNode);
 
-                        if (localizationProperties is object)
+                        if (localizationProperties is not null)
                         {
                             break;
                         }

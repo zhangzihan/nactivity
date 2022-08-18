@@ -221,7 +221,7 @@ namespace Sys.Workflow.Engine.Impl.Repositories
                              .Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EVENT_START, BpmnXMLConstants.BPMN2_NAMESPACE))
                              .FirstOrDefault();
 
-                        if (start is object)
+                        if (start is not null)
                         {
                             string formKey = start.Attribute(XName.Get(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE))?.Value;
 

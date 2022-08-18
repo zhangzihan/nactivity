@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             ICommentEntityManager commentManager = commandContext.CommentEntityManager;
 
-            if (commentId is object)
+            if (commentId is not null)
             {
                 // Delete for an individual comment
                 IComment comment = commentManager.FindComment(commentId);
@@ -49,12 +49,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     throw new ActivitiObjectNotFoundException("Comment with id '" + commentId + "' doesn't exists.", typeof(IComment));
                 }
 
-                if (comment.ProcessInstanceId is object)
+                if (comment.ProcessInstanceId is not null)
                 {
                     commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(comment.ProcessInstanceId);
 
                 }
-                else if (comment.TaskId is object)
+                else if (comment.TaskId is not null)
                 {
                     commandContext.TaskEntityManager.FindById<ITask>(new KeyValuePair<string, object>("id", comment.TaskId));
                 }
@@ -65,13 +65,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 // Delete all comments on a task of process
                 List<IComment> comments = new List<IComment>();
-                if (processInstanceId is object)
+                if (processInstanceId is not null)
                 {
                     commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
                     comments.AddRange(commentManager.FindCommentsByProcessInstanceId(processInstanceId));
                 }
-                if (taskId is object)
+                if (taskId is not null)
                 {
                     commandContext.TaskEntityManager.FindById<ITask>(new KeyValuePair<string, object>("id", taskId));
                     comments.AddRange(commentManager.FindCommentsByTaskId(taskId));

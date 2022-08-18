@@ -156,7 +156,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger
                 eventHandlerClass = eventHandlers[@event.Type];
             }
 
-            if (eventHandlerClass is object)
+            if (eventHandlerClass is not null)
             {
                 return InstantiateEventHandler(@event, eventHandlerClass);
             }

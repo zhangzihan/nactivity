@@ -61,7 +61,7 @@ namespace Spring.Expressions
 
             if (right.getFirstChild() is LambdaExpressionNode)
             {
-                if (!(left.getFirstChild() is VariableNode))
+                if (left.getFirstChild() is not VariableNode)
                 {
                     throw new ArgumentException("Lambda expression can only be assigned to a global variable.");
                 }

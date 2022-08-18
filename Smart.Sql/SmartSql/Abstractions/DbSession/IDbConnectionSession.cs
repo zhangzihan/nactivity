@@ -16,8 +16,8 @@ namespace SmartSql.Abstractions.DbSession
     {
         Guid Id { get; }
         IDataSource DataSource { get; }
-        IDbConnection Connection { get; }
-        IDbTransaction Transaction { get; }
+        DbConnection Connection { get; }
+        DbTransaction Transaction { get; }
         void OpenConnection();
         void CloseConnection();
         DbSessionLifeCycle LifeCycle { get; set; }

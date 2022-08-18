@@ -55,13 +55,13 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public override object GetValue(IValueFields valueFields)
         {
             object cachedObject = valueFields.CachedValue;
-            if (cachedObject is object)
+            if (cachedObject is not null)
             {
                 return cachedObject;
             }
 
             byte[] bytes = (byte[])base.GetValue(valueFields);
-            if (bytes is object)
+            if (bytes is not null)
             {
                 object deserializedObject = Deserialize(bytes, valueFields);
                 valueFields.CachedValue = deserializedObject;

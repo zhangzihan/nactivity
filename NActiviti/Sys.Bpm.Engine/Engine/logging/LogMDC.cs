@@ -40,19 +40,19 @@
         {            
             logger.Value ??= new Dictionary<string, object>();
             IDictionary<string, object> mdc = logger.Value;
-            if (e.Id is object)
+            if (e.Id is not null)
             {
                 mdc.Add(LOG_MDC_EXECUTION_ID, e.Id);
             }
-            if (e.ProcessDefinitionId is object)
+            if (e.ProcessDefinitionId is not null)
             {
                 mdc.Add(LOG_MDC_PROCESSDEFINITION_ID, e.ProcessDefinitionId);
             }
-            if (e.ProcessInstanceId is object)
+            if (e.ProcessInstanceId is not null)
             {
                 mdc.Add(LOG_MDC_PROCESSINSTANCE_ID, e.ProcessInstanceId);
             }
-            if (e.ProcessInstanceBusinessKey is object)
+            if (e.ProcessInstanceBusinessKey is not null)
             {
                 mdc.Add(LOG_MDC_BUSINESS_KEY, e.ProcessInstanceBusinessKey);
             }

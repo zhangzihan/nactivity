@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     }
 
                 }
-                else if (processDefinitionKey is object && (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
+                else if (processDefinitionKey is not null && (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
                 {
                     processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKey(processDefinitionKey);
                     if (processDefinition is null)
@@ -129,7 +129,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     }
 
                 }
-                else if (processDefinitionKey is object && tenantId is object && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+                else if (processDefinitionKey is not null && tenantId is not null && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
                 {
                     processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
                     if (processDefinition is null)

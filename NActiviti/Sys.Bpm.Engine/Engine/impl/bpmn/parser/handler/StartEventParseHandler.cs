@@ -32,7 +32,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
 
         protected internal override void ExecuteParse(BpmnParse bpmnParse, StartEvent element)
         {
-            if (element.SubProcess is object && element.SubProcess is EventSubProcess)
+            if (element.SubProcess is not null && element.SubProcess is EventSubProcess)
             {
                 if (CollectionUtil.IsNotEmpty(element.EventDefinitions))
                 {

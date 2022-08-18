@@ -42,7 +42,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 {
 
                     EventDefinition eventDefinition = boundaryEvent.EventDefinitions[0];
-                    if (!(eventDefinition is TimerEventDefinition) && !(eventDefinition is ErrorEventDefinition) && !(eventDefinition is SignalEventDefinition) && !(eventDefinition is CancelEventDefinition) && !(eventDefinition is MessageEventDefinition) && !(eventDefinition is CompensateEventDefinition))
+                    if (eventDefinition is not TimerEventDefinition && eventDefinition is not ErrorEventDefinition && eventDefinition is not SignalEventDefinition && eventDefinition is not CancelEventDefinition && eventDefinition is not MessageEventDefinition && eventDefinition is not CompensateEventDefinition)
                     {
 
                         AddError(errors, ProblemsConstants.BOUNDARY_EVENT_INVALID_EVENT_DEFINITION, process, boundaryEvent, ProcessValidatorResource.BOUNDARY_EVENT_INVALID_EVENT_DEFINITION);
@@ -53,7 +53,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                     {
 
                         FlowElement attachedToFlowElement = bpmnModel.GetFlowElement(boundaryEvent.AttachedToRefId);
-                        if (!(attachedToFlowElement is Transaction))
+                        if (attachedToFlowElement is not Transaction)
                         {
                             AddError(errors, ProblemsConstants.BOUNDARY_EVENT_CANCEL_ONLY_ON_TRANSACTION, process, boundaryEvent, ProcessValidatorResource.BOUNDARY_EVENT_CANCEL_ONLY_ON_TRANSACTION);
                         }

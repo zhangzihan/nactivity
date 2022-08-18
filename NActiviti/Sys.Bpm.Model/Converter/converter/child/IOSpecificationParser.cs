@@ -36,7 +36,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
         public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
 
-            if (!(parentElement is Activity) && !(parentElement is Process))
+            if (parentElement is not Activity && parentElement is not Process)
             {
                 return;
             }

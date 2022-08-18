@@ -46,22 +46,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     ["type"] = this.type
                 };
 
-                if (this.userId is object)
+                if (this.userId is not null)
                 {
                     persistentState["userId"] = this.userId;
                 }
 
-                if (this.groupId is object)
+                if (this.groupId is not null)
                 {
                     persistentState["groupId"] = this.groupId;
                 }
 
-                if (this.taskId is object)
+                if (this.taskId is not null)
                 {
                     persistentState["taskId"] = this.taskId;
                 }
 
-                if (this.processInstanceId is object)
+                if (this.processInstanceId is not null)
                 {
                     persistentState["processInstanceId"] = this.processInstanceId;
                 }
@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                return userId is object;
+                return userId is not null;
             }
         }
 
@@ -82,7 +82,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                return groupId is object;
+                return groupId is not null;
             }
         }
 
@@ -107,7 +107,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                if (groupId is object && value is object)
+                if (groupId is not null && value is not null)
                 {
                     throw new ActivitiException("Cannot assign a userId to a task assignment that already has a groupId");
                 }
@@ -124,7 +124,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                if (userId is object && value is object)
+                if (userId is not null && value is not null)
                 {
                     throw new ActivitiException("Cannot assign a groupId to a task assignment that already has a userId");
                 }

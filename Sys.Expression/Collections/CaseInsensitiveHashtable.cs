@@ -84,7 +84,7 @@ namespace Spring.Collections
         /// <returns></returns>
         protected override int GetHash(object key)
         {
-            if (!(key is string)) return key.GetHashCode();
+            if (key is not string) return key.GetHashCode();
             return _culture.TextInfo.ToLower((string) key).GetHashCode();
         }
 
@@ -93,7 +93,7 @@ namespace Spring.Collections
         /// </summary>
         protected override bool KeyEquals(object item, object key)
         {
-            if (!(key is string))
+            if (key is not string)
             {
                 return Equals(item,key);
             }

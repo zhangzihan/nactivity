@@ -58,7 +58,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                fullMessage = value is object ? StringHelper.NewString(value) : null;
+                fullMessage = value is not null ? StringHelper.NewString(value) : null;
             }
         }
 
@@ -107,7 +107,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (string part in value)
                 {
-                    if (part is object)
+                    if (part is not null)
                     {
                         stringBuilder.Append(part.Replace(MESSAGE_PARTS_MARKER, " | "));
                         stringBuilder.Append(MESSAGE_PARTS_MARKER);

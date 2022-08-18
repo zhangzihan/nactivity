@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
                     string varBusiKey = string.Format(SUBPROCESS_BUSINESS_KEY, execution.Id);
 
-                    if (GetVariable<object>(miRoot, varBusiKey) is object)
+                    if (GetVariable<object>(miRoot, varBusiKey) is not null)
                     {
                         return;
                     }

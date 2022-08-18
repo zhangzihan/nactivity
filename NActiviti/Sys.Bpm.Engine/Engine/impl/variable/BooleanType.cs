@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         /// <returns></returns>
         public override object GetValue(IValueFields valueFields)
         {
-            if (valueFields.LongValue is object)
+            if (valueFields.LongValue is not null)
             {
                 return valueFields.LongValue == 1;
             }

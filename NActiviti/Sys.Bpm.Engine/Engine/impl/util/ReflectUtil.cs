@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             // no class is found in any of them
             Exception throwable = null;
 
-            if (classLoader is object)
+            if (classLoader is not null)
             {
                 try
                 {
@@ -110,7 +110,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             System.IO.Stream resourceStream = null;
             ClassLoader classLoader = CustomClassLoader;
-            if (classLoader is object)
+            if (classLoader is not null)
             {
                 resourceStream = classLoader.GetResourceAsStream(name);
             }
@@ -128,7 +128,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             Uri url = null;
             ClassLoader classLoader = CustomClassLoader;
-            if (classLoader is object)
+            if (classLoader is not null)
             {
                 url = classLoader.GetResource(name);
             }
@@ -193,7 +193,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 // for some reason getDeclaredFields doesn't search superclasses
                 // (which getFields() does ... but that gives only public fields)
                 Type superClass = clazz.BaseType;
-                if (superClass is object)
+                if (superClass is not null)
                 {
                     return GetField(fieldName, superClass);
                 }
@@ -266,7 +266,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 }
             }
             Type superClass = clazz.BaseType;
-            if (superClass is object)
+            if (superClass is not null)
             {
                 return FindMethod(superClass, methodName, args);
             }
@@ -324,7 +324,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
             for (int i = 0; i < parameterTypes.Length; i++)
             {
-                if ((args[i] is object) && (!parameterTypes[i].IsAssignableFrom(args[i].GetType())))
+                if ((args[i] is not null) && (!parameterTypes[i].IsAssignableFrom(args[i].GetType())))
                 {
                     return false;
                 }
@@ -337,10 +337,10 @@ namespace Sys.Workflow.Engine.Impl.Util
             get
             {
                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-                if (processEngineConfiguration is object)
+                if (processEngineConfiguration is not null)
                 {
                     ClassLoader classLoader = processEngineConfiguration.ClassLoader;
-                    if (classLoader is object)
+                    if (classLoader is not null)
                     {
                         return classLoader;
                     }

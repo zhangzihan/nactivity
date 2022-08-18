@@ -48,7 +48,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         public virtual void LeaveIntermediateCatchEvent(IExecutionEntity execution)
         {
             EventGateway eventGateway = GetPrecedingEventBasedGateway(execution);
-            if (eventGateway is object)
+            if (eventGateway is not null)
             {
                 DeleteOtherEventsRelatedToEventBasedGateway(execution, eventGateway);
             }
@@ -101,7 +101,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ISet<string> eventActivityIds = new HashSet<string>();//outgoingSequenceFlows.Count - 1); // -1, the event being triggered does not need to be deleted
             foreach (SequenceFlow outgoingSequenceFlow in outgoingSequenceFlows)
             {
-                if (outgoingSequenceFlow.TargetFlowElement is object && !outgoingSequenceFlow.TargetFlowElement.Id.Equals(execution.CurrentActivityId))
+                if (outgoingSequenceFlow.TargetFlowElement is not null && !outgoingSequenceFlow.TargetFlowElement.Id.Equals(execution.CurrentActivityId))
                 {
                     eventActivityIds.Add(outgoingSequenceFlow.TargetFlowElement.Id);
                 }

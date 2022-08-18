@@ -281,7 +281,7 @@ namespace SmartSql
         #region Transaction
         public IDbConnectionSession BeginTransaction()
         {
-            return BeginTransaction(IsolationLevel.Unspecified);
+            return BeginTransaction(IsolationLevel.RepeatableRead);
         }
 
         public IDbConnectionSession BeginTransaction(IsolationLevel isolationLevel)
@@ -296,7 +296,7 @@ namespace SmartSql
 
         public IDbConnectionSession BeginTransaction(RequestContext context)
         {
-            return BeginTransaction(context, IsolationLevel.Unspecified);
+            return BeginTransaction(context, IsolationLevel.RepeatableRead);
         }
 
         public IDbConnectionSession BeginTransaction(RequestContext context, IsolationLevel isolationLevel)

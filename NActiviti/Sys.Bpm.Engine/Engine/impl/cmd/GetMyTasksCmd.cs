@@ -46,7 +46,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             var query = taskService.CreateTaskQuery()
                 .SetTaskCandidateOrAssigned(assignee);
 
-            if (businessKey is object)
+            if (businessKey is not null)
             {
                 query.SetProcessInstanceBusinessKey(businessKey);
             }

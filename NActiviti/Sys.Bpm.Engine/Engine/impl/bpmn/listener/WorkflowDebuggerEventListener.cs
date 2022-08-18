@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listener
                 ExecutionTree eTree = ExecutionTreeUtil.BuildExecutionTree(execution);
                 ExecutionTrace = eTree.ToString();
             }
-            if (exception is object)
+            if (exception is not null)
             {
                 LogLevel = LogLevel.Error;
             }

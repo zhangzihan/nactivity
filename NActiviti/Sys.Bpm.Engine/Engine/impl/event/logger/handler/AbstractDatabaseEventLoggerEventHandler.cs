@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
 
             // Current user
             string userId = Authentication.AuthenticatedUser.Id;
-            if (userId is object)
+            if (userId is not null)
             {
                 eventLogEntry.UserId = userId;
                 PutInMapIfNotNull(data, "userId", userId);
@@ -112,7 +112,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
 
         public virtual void PutInMapIfNotNull(IDictionary<string, object> map, string key, object value)
         {
-            if (value is object)
+            if (value is not null)
             {
                 map[key] = value;
             }

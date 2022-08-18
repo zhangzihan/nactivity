@@ -96,7 +96,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
         protected internal virtual void CreateAssociation(BpmnParse bpmnParse, Association association)
         {
             BpmnModel bpmnModel = bpmnParse.BpmnModel;
-            if (bpmnModel.GetArtifact(association.SourceRef) is object || bpmnModel.GetArtifact(association.TargetRef) is object)
+            if (bpmnModel.GetArtifact(association.SourceRef) is not null || bpmnModel.GetArtifact(association.TargetRef) is not null)
             {
 
                 // connected to a text annotation so skipping it

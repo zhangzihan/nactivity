@@ -107,7 +107,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             // check that the new process definition version contains the current activity
             Process process = ProcessDefinitionUtil.GetProcess(newProcessDefinition.Id);
-            if (execution.ActivityId is object && process.GetFlowElement(execution.ActivityId, true) is null)
+            if (execution.ActivityId is not null && process.GetFlowElement(execution.ActivityId, true) is null)
             {
                 throw new ActivitiException("The new process definition " + "(key = '" + newProcessDefinition.Key + "') " + "does not contain the current activity " + "(id = '" + execution.ActivityId + "') " + "of the process instance " + "(id = '" + processInstanceId + "').");
             }

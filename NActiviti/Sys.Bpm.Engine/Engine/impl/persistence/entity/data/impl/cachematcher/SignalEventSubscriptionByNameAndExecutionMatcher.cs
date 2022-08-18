@@ -34,11 +34,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             string eventName = @params[nameof(eventName)]?.ToString();
             string executionId = @params[nameof(executionId)]?.ToString();
 
-            return eventSubscriptionEntity.EventType is object &&
+            return eventSubscriptionEntity.EventType is not null &&
                 eventSubscriptionEntity.EventType.Equals(SignalEventSubscriptionEntityFields.EVENT_TYPE) &&
-                eventSubscriptionEntity.ExecutionId is object &&
+                eventSubscriptionEntity.ExecutionId is not null &&
                 string.Compare(eventSubscriptionEntity.ExecutionId, executionId, true) == 0 &&
-                eventSubscriptionEntity.EventName is object &&
+                eventSubscriptionEntity.EventName is not null &&
                 string.Compare(eventSubscriptionEntity.EventName, eventName, true) == 0;
         }
     }

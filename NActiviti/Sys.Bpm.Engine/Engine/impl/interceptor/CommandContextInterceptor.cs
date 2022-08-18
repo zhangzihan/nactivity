@@ -46,7 +46,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             bool contextReused = false;
             // We need to check the exception, because the transaction can be in a
             // rollback state, and some other command is being fired to compensate (eg. decrementing job retries)
-            if (!config.ContextReusePossible || context is null || context.Exception is object)
+            if (!config.ContextReusePossible || context is null || context.Exception is not null)
             {
                 context = CommandContextFactory.CreateCommandContext<T>(command);
             }

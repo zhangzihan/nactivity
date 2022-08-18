@@ -35,7 +35,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 if (startEvent.EventDefinitions is object && startEvent.EventDefinitions.Count > 0)
                 {
                     EventDefinition eventDefinition = startEvent.EventDefinitions[0];
-                    if (!(eventDefinition is MessageEventDefinition) && !(eventDefinition is TimerEventDefinition) && !(eventDefinition is SignalEventDefinition))
+                    if (eventDefinition is not MessageEventDefinition && eventDefinition is not TimerEventDefinition && eventDefinition is not SignalEventDefinition)
                     {
                         AddError(errors, ProblemsConstants.START_EVENT_INVALID_EVENT_DEFINITION, process, startEvent, ProcessValidatorResource.START_EVENT_INVALID_EVENT_DEFINITION);
                     }

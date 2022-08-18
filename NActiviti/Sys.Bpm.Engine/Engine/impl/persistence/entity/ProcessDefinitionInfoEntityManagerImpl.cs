@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void DeleteInfoJson(IProcessDefinitionInfoEntity processDefinitionInfo)
         {
-            if (processDefinitionInfo.InfoJsonId is object)
+            if (processDefinitionInfo.InfoJsonId is not null)
             {
                 ByteArrayRef @ref = new ByteArrayRef(processDefinitionInfo.InfoJsonId);
                 @ref.Delete();

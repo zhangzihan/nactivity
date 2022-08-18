@@ -99,7 +99,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ICollection<BoundaryEvent> boundaryEvents = process.FindFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (boundaryEvent.AttachedToRefId is object && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
+                if (boundaryEvent.AttachedToRefId is not null && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
                 {
                     results.Add(boundaryEvent);
                 }
@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         protected internal virtual bool HasMultiInstanceCharacteristics()
         {
-            return multiInstanceActivityBehavior is object;
+            return multiInstanceActivityBehavior is not null;
         }
 
         public virtual MultiInstanceActivityBehavior MultiInstanceActivityBehavior

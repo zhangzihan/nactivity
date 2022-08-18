@@ -343,7 +343,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal virtual void ExecuteMessageJob(IJobEntity jobEntity)
         {
             ExecuteJobHandler(jobEntity);
-            if (jobEntity.Id is object)
+            if (jobEntity.Id is not null)
             {
                 Context.CommandContext.JobEntityManager.Delete(jobEntity);
             }
@@ -358,7 +358,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             ITimerJobEntityManager timerJobEntityManager = processEngineConfiguration.TimerJobEntityManager;
 
             IVariableScope variableScope = null;
-            if (timerEntity.ExecutionId is object)
+            if (timerEntity.ExecutionId is not null)
             {
                 variableScope = ExecutionEntityManager.FindById<VariableScopeImpl>(timerEntity.ExecutionId);
             }
@@ -371,7 +371,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             // set endDate if it was set to the definition
             RestoreExtraData(timerEntity, variableScope);
 
-            if (timerEntity.Duedate is object && !IsValidTime(timerEntity, timerEntity.Duedate.GetValueOrDefault(DateTime.Now), variableScope))
+            if (timerEntity.Duedate is not null && !IsValidTime(timerEntity, timerEntity.Duedate.GetValueOrDefault(DateTime.Now), variableScope))
             {
                 if (logger.IsEnabled(LogLevel.Debug))
                 {
@@ -389,7 +389,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 logger.LogDebug($"Timer {timerEntity.Id} fired. Deleting timer.");
             }
 
-            if (timerEntity.Repeat is object)
+            if (timerEntity.Repeat is not null)
             {
                 ITimerJobEntity newTimerJobEntity = timerJobEntityManager.CreateAndCalculateNextTimer(timerEntity, variableScope);
                 if (newTimerJobEntity is object)
@@ -406,7 +406,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal virtual void ExecuteJobHandler(IJobEntity jobEntity)
         {
             IExecutionEntity execution = null;
-            if (jobEntity.ExecutionId is object)
+            if (jobEntity.ExecutionId is not null)
             {
                 execution = ExecutionEntityManager.FindById<ExecutionEntityImpl>(jobEntity.ExecutionId);
             }
@@ -430,7 +430,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 activityId = TimerEventHandler.GetActivityIdFromConfiguration(timerEntity.JobHandlerConfiguration);
                 string endDateExpressionString = TimerEventHandler.GetEndDateFromConfiguration(timerEntity.JobHandlerConfiguration);
 
-                if (endDateExpressionString is object)
+                if (endDateExpressionString is not null)
                 {
                     IExpression endDateExpression = processEngineConfiguration.ExpressionManager.CreateExpression(endDateExpressionString);
 
@@ -463,7 +463,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             }
 
             int maxIterations = 1;
-            if (timerEntity.ProcessDefinitionId is object)
+            if (timerEntity.ProcessDefinitionId is not null)
             {
                 Process process = ProcessDefinitionUtil.GetProcess(timerEntity.ProcessDefinitionId);
                 maxIterations = GetMaxIterations(process, activityId);
@@ -484,7 +484,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal virtual int GetMaxIterations(Process process, string activityId)
         {
             FlowElement flowElement = process.GetFlowElement(activityId, true);
-            if (flowElement is object)
+            if (flowElement is not null)
             {
                 if (flowElement is Event @event)
                 {
@@ -496,7 +496,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                         {
                             if (eventDefinition is TimerEventDefinition timerEventDefinition)
                             {
-                                if (timerEventDefinition.TimeCycle is object)
+                                if (timerEventDefinition.TimeCycle is not null)
                                 {
                                     return CalculateMaxIterationsValue(timerEventDefinition.TimeCycle);
                                 }
@@ -621,7 +621,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             jobEntity.JobHandlerType = AsyncContinuationJobHandler.TYPE;
 
             // Inherit tenant id (if applicable)
-            if (execution.TenantId is object)
+            if (execution.TenantId is not null)
             {
                 jobEntity.TenantId = execution.TenantId;
             }

@@ -73,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
             get
             {
                 // handlers with error code take precedence over catchall-handlers
-                return precedence + (errorCode is object ? 1 : 0);
+                return precedence + (errorCode is not null ? 1 : 0);
             }
             set
             {

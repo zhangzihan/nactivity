@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         {
             operations.Push(operation);
 
-            if (operation is AbstractOperation)
+            if (operation is not null)
             {
                 IExecutionEntity execution = operation.Execution;
                 if (execution is object)

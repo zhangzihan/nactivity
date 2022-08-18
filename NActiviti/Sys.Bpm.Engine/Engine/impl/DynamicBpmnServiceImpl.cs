@@ -266,7 +266,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             JToken propertiesNode = null;
             JToken bpmnNode = GetBpmnNode(infoNode);
-            if (bpmnNode is object)
+            if (bpmnNode is not null)
             {
                 propertiesNode = (JToken)bpmnNode[id];
             }
@@ -301,10 +301,10 @@ namespace Sys.Workflow.Engine.Impl
         {
             JToken propertiesNode = null;
             JToken localizationNode = GetLocalizationNode(infoNode);
-            if (localizationNode is object)
+            if (localizationNode is not null)
             {
                 JToken languageNode = localizationNode[language];
-                if (languageNode is object)
+                if (languageNode is not null)
                 {
                     propertiesNode = (JToken)languageNode[id];
                 }
@@ -315,10 +315,10 @@ namespace Sys.Workflow.Engine.Impl
         protected internal virtual bool DoesElementPropertyExist(string id, string propertyName, JToken infoNode)
         {
             bool exists = false;
-            if (infoNode[DynamicBpmnConstants.BPMN_NODE] is object && infoNode[DynamicBpmnConstants.BPMN_NODE][id] is object && infoNode[DynamicBpmnConstants.BPMN_NODE][id][propertyName] is object)
+            if (infoNode[DynamicBpmnConstants.BPMN_NODE] is not null && infoNode[DynamicBpmnConstants.BPMN_NODE][id] is not null && infoNode[DynamicBpmnConstants.BPMN_NODE][id][propertyName] is not null)
             {
                 JToken propNode = infoNode.SelectToken($"{DynamicBpmnConstants.BPMN_NODE}.{id}.{propertyName}");
-                if (propNode is object)
+                if (propNode is not null)
                 {
                     exists = true;
                 }

@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual IList<IHistoricIdentityLink> Execute(ICommandContext commandContext)
         {
-            if (taskId is object)
+            if (taskId is not null)
             {
                 return GetLinksForTask(commandContext);
             }
@@ -65,7 +65,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             // Similar to GetIdentityLinksForTask, return assignee and owner as
             // identity link
-            if (task.Assignee is object)
+            if (task.Assignee is not null)
             {
                 IHistoricIdentityLinkEntity identityLink = commandContext.HistoricIdentityLinkEntityManager.Create();
                 identityLink.UserId = task.Assignee;
@@ -73,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 identityLink.Type = IdentityLinkType.ASSIGNEE;
                 identityLinks.Add(identityLink);
             }
-            if (task.Owner is object)
+            if (task.Owner is not null)
             {
                 IHistoricIdentityLinkEntity identityLink = commandContext.HistoricIdentityLinkEntityManager.Create();
                 identityLink.TaskId = task.Id;

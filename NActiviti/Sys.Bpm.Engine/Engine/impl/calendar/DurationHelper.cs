@@ -169,7 +169,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
                 return GetDateAfterRepeat(time);
             }
             // TODO: is this correct?
-            if (end is object)
+            if (end is not null)
             {
                 return end.Value;
             }

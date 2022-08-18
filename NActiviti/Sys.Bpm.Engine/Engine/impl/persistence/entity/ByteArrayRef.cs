@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 if (id is null)
                 {
-                    if (value is object)
+                    if (value is not null)
                     {
                         IByteArrayEntityManager byteArrayEntityManager = Context.CommandContext.ByteArrayEntityManager;
                         entity = byteArrayEntityManager.Create();
@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// </summary>
         public virtual void Delete()
         {
-            if (!deleted && id is object)
+            if (!deleted && id is not null)
             {
                 if (entity is object)
                 {
@@ -143,11 +143,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public void EnsureInitialized()
         {
             var ctx = Context.CommandContext;
-            if (id is object && entity is null)
+            if (id is not null && entity is null)
             {
                 if (ctx is null)
                 {
-                    if (!(ProcessEngineServiceProvider.Resolve<IProcessEngine>().ProcessEngineConfiguration is ProcessEngineConfigurationImpl pi))
+                    if (ProcessEngineServiceProvider.Resolve<IProcessEngine>().ProcessEngineConfiguration is not ProcessEngineConfigurationImpl pi)
                     {
                         return;
                     }

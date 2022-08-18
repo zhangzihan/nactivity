@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected internal ConcurrentDictionary<Type, ISessionFactory> sessionFactories;
 
-        protected internal ConcurrentDictionary<Type, ISession> sessions = new ConcurrentDictionary<Type, ISession>();
+        protected internal ConcurrentDictionary<Type, ISession> sessions = new();
 
         protected internal Exception _exception;
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
@@ -49,9 +49,9 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected internal IActivitiEngineAgenda agenda;
         // The executions involved with the command
-        protected internal ConcurrentDictionary<string, IExecutionEntity> involvedExecutions = new ConcurrentDictionary<string, IExecutionEntity>(StringComparer.OrdinalIgnoreCase);
+        protected internal ConcurrentDictionary<string, IExecutionEntity> involvedExecutions = new(StringComparer.OrdinalIgnoreCase);
         // needs to be a stack, as JavaDelegates can do api calls again
-        protected internal ConcurrentQueue<object> resultStack = new ConcurrentQueue<object>();
+        protected internal ConcurrentQueue<object> resultStack = new();
 
         public CommandContext(ICommand<T1> command, ProcessEngineConfigurationImpl processEngineConfiguration)
         {
@@ -98,7 +98,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                             SetException(exception);
                         }
 
-                        if (_exception is object)
+                        if (_exception is not null)
                         {
                             LogException();
                             ExecuteCloseListenersCloseFailure();
@@ -126,27 +126,9 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 SetException(exception);
             }
 
-            if (_exception is object)
+            if (_exception is not null)
             {
                 RethrowExceptionIfNeeded();
-            }
-
-            static TransactionScope CreateTransactionScope(TransOption opts)
-            {
-                if (Transaction.Current != null)
-                {
-                    var dependentTransaction = Transaction.Current.DependentClone(DependentCloneOption.BlockCommitUntilComplete);
-
-                    return new TransactionScope(dependentTransaction, opts.TransactionTimeout.GetValueOrDefault(TimeSpan.FromMinutes(1)), TransactionScopeAsyncFlowOption.Enabled);
-                }
-                else
-                {
-                    return new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
-                    {
-                        IsolationLevel = IsolationLevel.RepeatableRead,
-                        Timeout = opts.TransactionTimeout.GetValueOrDefault(TimeSpan.FromMinutes(1))
-                    }, TransactionScopeAsyncFlowOption.Enabled);
-                }
             }
         }
 
@@ -170,7 +152,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void RethrowExceptionIfNeeded()
         {
-            if (_exception is Exception)
+            if (_exception is not null)
             {
                 throw _exception;
             }
@@ -182,10 +164,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual void AddCloseListener(ICommandContextCloseListener commandContextCloseListener)
         {
-            if (closeListeners is null)
-            {
-                closeListeners = new List<ICommandContextCloseListener>(1);
-            }
+            closeListeners ??= new List<ICommandContextCloseListener>(1);
             closeListeners.Add(commandContextCloseListener);
         }
 
@@ -199,7 +178,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual bool HasCloseListener(Type type)
         {
-            if (closeListeners is object && closeListeners.Count != 0)
+            if (closeListeners is not null && closeListeners.Count != 0)
             {
                 foreach (ICommandContextCloseListener listener in closeListeners)
                 {
@@ -214,7 +193,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void ExecuteCloseListenersClosing()
         {
-            if (closeListeners is object)
+            if (closeListeners is not null)
             {
                 try
                 {
@@ -232,7 +211,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void ExecuteCloseListenersAfterSessionFlushed()
         {
-            if (closeListeners is object)
+            if (closeListeners is not null)
             {
                 try
                 {
@@ -250,7 +229,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void ExecuteCloseListenersClosed()
         {
-            if (closeListeners is object)
+            if (closeListeners is not null)
             {
                 try
                 {
@@ -268,7 +247,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void ExecuteCloseListenersCloseFailure()
         {
-            if (closeListeners is object)
+            if (closeListeners is not null)
             {
                 try
                 {
@@ -329,16 +308,13 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual void AddAttribute(string key, object value)
         {
-            if (attributes is null)
-            {
-                attributes = new ConcurrentDictionary<string, object>();
-            }
+            attributes ??= new ConcurrentDictionary<string, object>();
             attributes.AddOrUpdate(key, value, (attr, old) => value);
         }
 
         public virtual object GetAttribute(string key)
         {
-            if (attributes is object)
+            if (attributes is not null)
             {
                 attributes.TryGetValue(key, out var value);
                 return value;
@@ -348,7 +324,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual T GetGenericAttribute<T>(string key)
         {
-            if (attributes is object)
+            if (attributes is not null)
             {
                 return (T)GetAttribute(key);
             }
@@ -632,7 +608,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual bool HasInvolvedExecutions()
         {
-            return involvedExecutions.Count > 0;
+            return !involvedExecutions.IsEmpty;
         }
 
         public virtual ICollection<IExecutionEntity> InvolvedExecutions
@@ -703,7 +679,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual object GetResult()
         {
-            if (resultStack.Count == 0)
+            if (resultStack.IsEmpty)
             {
                 return null;
             }

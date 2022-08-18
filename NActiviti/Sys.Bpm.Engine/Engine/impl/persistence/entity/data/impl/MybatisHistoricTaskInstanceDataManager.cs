@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             int maxResults = query.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (query.TaskVariablesLimit is object)
+            if (query.TaskVariablesLimit is not null)
             {
                 query.MaxResults = query.TaskVariablesLimit.GetValueOrDefault();
             }

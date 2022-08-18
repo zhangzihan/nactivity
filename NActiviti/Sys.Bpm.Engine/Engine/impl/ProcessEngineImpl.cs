@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl
             this.sessionFactories = processEngineConfiguration.SessionFactories;
             this.transactionContextFactory = processEngineConfiguration.TransactionContextFactory;
 
-            if (processEngineConfiguration.UsingRelationalDatabase && processEngineConfiguration.DatabaseSchemaUpdate is object)
+            if (processEngineConfiguration.UsingRelationalDatabase && processEngineConfiguration.DatabaseSchemaUpdate is not null)
             {
                 commandExecutor.Execute(processEngineConfiguration.SchemaCommandConfig, new SchemaOperationsProcessEngineBuild());
             }

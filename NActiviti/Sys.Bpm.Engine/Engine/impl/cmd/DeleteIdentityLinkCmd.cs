@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // userId may be null
             if (IdentityLinkType.ASSIGNEE.Equals(type) || IdentityLinkType.OWNER.Equals(type))
             {
-                if (groupId is object)
+                if (groupId is not null)
                 {
                     throw new ActivitiIllegalArgumentException("Incompatible usage: cannot use type '" + type + "' together with a groupId");
                 }

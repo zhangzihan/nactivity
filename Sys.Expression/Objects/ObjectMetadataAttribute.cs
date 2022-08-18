@@ -72,7 +72,7 @@ namespace Spring.Objects
 		    if (this == other) {
 			    return true;
 		    }
-		    if (!(other is ObjectMetadataAttribute)) {
+		    if (other is not ObjectMetadataAttribute) {
 			    return false;
 		    }
 		    var otherMa = (ObjectMetadataAttribute) other;

@@ -39,10 +39,10 @@ namespace SmartSql.DbSession
 
         public void Store(IDbConnectionSession session)
         {
-            if (_staticSession.Value is null)
-            {
+            //if (_staticSession.Value is null)
+            //{
                 _staticSession.Value = session;
-            }
+            //}
         }
         public IDbConnectionSession CreateDbSession(IDataSource dataSource)
         {

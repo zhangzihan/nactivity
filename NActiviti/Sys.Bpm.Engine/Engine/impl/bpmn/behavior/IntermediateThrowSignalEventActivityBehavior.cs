@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         public IntermediateThrowSignalEventActivityBehavior(SignalEventDefinition signalEventDefinition, Signal signal)
         {
-            if (signal is object)
+            if (signal is not null)
             {
                 signalEventName = signal.Name;
                 if (Signal.SCOPE_PROCESS_INSTANCE.Equals(signal.Scope))
@@ -63,7 +63,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ICommandContext commandContext = Context.CommandContext;
 
             string eventSubscriptionName;
-            if (signalEventName is object)
+            if (signalEventName is not null)
             {
                 eventSubscriptionName = signalEventName;
             }

@@ -36,7 +36,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override object GetValue(IValueFields valueFields)
         {
-            if (valueFields.LongValue is object)
+            if (valueFields.LongValue is not null)
             {
                 return (short?)valueFields.LongValue;
             }
@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override void SetValue(object value, IValueFields valueFields)
         {
-            if (value is object)
+            if (value is not null)
             {
                 valueFields.LongValue = ((short?)value).Value;
                 valueFields.TextValue = value.ToString();

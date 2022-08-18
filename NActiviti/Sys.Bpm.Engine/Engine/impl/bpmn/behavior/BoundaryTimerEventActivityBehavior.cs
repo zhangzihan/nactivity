@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         public override void Execute(IExecutionEntity execution)
         {
-            if (!(execution.CurrentFlowElement is BoundaryEvent))
+            if (execution.CurrentFlowElement is not BoundaryEvent)
             {
                 throw new ActivitiException("Programmatic error: " + this.GetType() + " should not be used for anything else than a boundary event");
             }

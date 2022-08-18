@@ -27,7 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
         /// <summary>
         /// 
         /// </summary>
-        protected internal readonly ConcurrentDictionary<Type, IDictionary<string, CachedEntity>> cachedObjects = new ConcurrentDictionary<Type, IDictionary<string, CachedEntity>>();
+        protected internal readonly ConcurrentDictionary<Type, IDictionary<string, CachedEntity>> cachedObjects = new();
 
         /// <summary>
         /// 
@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
                 classCache.TryGetValue(id, out cachedObject);
             }
 
-            if (cachedObject is object)
+            if (cachedObject is not null)
             {
                 return cachedObject.Entity;
             }

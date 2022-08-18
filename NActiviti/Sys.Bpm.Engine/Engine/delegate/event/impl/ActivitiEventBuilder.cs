@@ -218,7 +218,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             {
                 newEvent.ActivityType = ParseActivityType(flowNode);
                 object behaviour = flowNode.Behavior;
-                if (behaviour is object)
+                if (behaviour is not null)
                 {
                     newEvent.BehaviorClass = behaviour.GetType().FullName;
                 }
@@ -348,7 +348,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
                 }
                 else if (persistedObject is IIdentityLinkEntity idLink)
                 {
-                    if (idLink.ProcessDefinitionId is object)
+                    if (idLink.ProcessDefinitionId is not null)
                     {
                         @event.ProcessDefinitionId = idLink.ProcessDefId;
                     }

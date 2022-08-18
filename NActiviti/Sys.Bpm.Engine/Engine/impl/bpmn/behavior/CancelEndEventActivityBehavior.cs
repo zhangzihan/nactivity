@@ -47,11 +47,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 {
                     parentScopeExecution = currentlyExaminedExecution;
                     SubProcess subProcess = (SubProcess)currentlyExaminedExecution.CurrentFlowElement;
-                    if (subProcess.LoopCharacteristics is object)
+                    if (subProcess.LoopCharacteristics is not null)
                     {
                         IExecutionEntity miExecution = parentScopeExecution.Parent;
                         FlowElement miElement = miExecution.CurrentFlowElement;
-                        if (miElement is object && miElement.Id.Equals(subProcess.Id))
+                        if (miElement is not null && miElement.Id.Equals(subProcess.Id))
                         {
                             parentScopeExecution = miExecution;
                         }
@@ -106,7 +106,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 ScopeUtil.CreateCopyOfSubProcessExecutionForCompensation(parentScopeExecution);
 
-                if (subProcess.LoopCharacteristics is object)
+                if (subProcess.LoopCharacteristics is not null)
                 {
                     IList<IExecutionEntity> multiInstanceExecutions = parentScopeExecution.Executions;
                     IList<IExecutionEntity> executionsToDelete = new List<IExecutionEntity>();

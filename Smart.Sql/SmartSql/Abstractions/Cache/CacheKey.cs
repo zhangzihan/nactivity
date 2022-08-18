@@ -20,7 +20,7 @@ namespace SmartSql.Abstractions.Cache
         public override bool Equals(object obj)
         {
             if (this == obj) return true;
-            if (!(obj is CacheKey)) return false;
+            if (obj is not CacheKey) return false;
             CacheKey cacheKey = (CacheKey)obj;
             return cacheKey.Key == Key;
         }

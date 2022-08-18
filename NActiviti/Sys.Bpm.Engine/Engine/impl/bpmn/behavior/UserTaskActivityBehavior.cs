@@ -159,7 +159,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (!string.IsNullOrWhiteSpace(activeTaskDueDate))
             {
                 object dueDate = expressionManager.CreateExpression(activeTaskDueDate).GetValue(execution);
-                if (dueDate is object)
+                if (dueDate is not null)
                 {
                     if (dueDate is DateTime time)
                     {
@@ -191,7 +191,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (!string.IsNullOrWhiteSpace(activeTaskPriority))
             {
                 object priority = expressionManager.CreateExpression(activeTaskPriority).GetValue(execution);
-                if (priority is object)
+                if (priority is not null)
                 {
                     if (priority is string @string)
                     {
@@ -218,7 +218,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (!string.IsNullOrWhiteSpace(activeTaskCategory))
             {
                 object category = expressionManager.CreateExpression(activeTaskCategory).GetValue(execution);
-                if (category is object)
+                if (category is not null)
                 {
                     if (category is string)
                     {
@@ -234,7 +234,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (!string.IsNullOrWhiteSpace(activeTaskFormKey))
             {
                 object formKey = expressionManager.CreateExpression(activeTaskFormKey).GetValue(execution);
-                if (formKey is object)
+                if (formKey is not null)
                 {
                     if (formKey is string)
                     {
@@ -326,7 +326,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 object assigneeExpressionValue = expressionManager.CreateExpression(assignee).GetValue(execution);
                 string assigneeValue = null;
-                if (assigneeExpressionValue is object)
+                if (assigneeExpressionValue is not null)
                 {
                     assigneeValue = assigneeExpressionValue.ToString();
                 }
@@ -352,7 +352,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 object ownerExpressionValue = expressionManager.CreateExpression(owner).GetValue(execution);
                 string ownerValue = null;
-                if (ownerExpressionValue is object)
+                if (ownerExpressionValue is not null)
                 {
                     ownerValue = ownerExpressionValue.ToString();
                 }

@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // since the task.delete cascaded to all associated identityLinks
             // and of course this leads to exception while trying to delete a
             // non-existing identityLink
-            if (task.Assignee is object)
+            if (task.Assignee is not null)
             {
                 IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.Create();
                 identityLink.UserId = task.Assignee;
@@ -59,7 +59,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 identityLink.TaskId = task.Id;
                 identityLinks.Add(identityLink);
             }
-            if (task.Owner is object)
+            if (task.Owner is not null)
             {
                 IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.Create();
                 identityLink.UserId = task.Owner;

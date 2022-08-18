@@ -46,7 +46,7 @@ namespace Sys.Workflow.Engine
 
         private static string GetExceptionMessageMessage(string className, Exception cause)
         {
-            if (cause is Exception)
+            if (cause is not null)
             {
                 return "Class not found: " + className;
             }

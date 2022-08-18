@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             JToken @params = JToken.FromObject(parameter);
             string processInstanceId = @params[nameof(processInstanceId)]?.ToString();
 
-            return executionEntity.ProcessInstanceId is object &&
+            return executionEntity.ProcessInstanceId is not null &&
                 executionEntity.ProcessInstanceId.Equals(processInstanceId, System.StringComparison.OrdinalIgnoreCase) && !executionEntity.IsActive;
         }
     }

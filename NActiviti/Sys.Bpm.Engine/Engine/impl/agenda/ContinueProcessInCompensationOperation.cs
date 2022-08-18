@@ -251,7 +251,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             log.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
 
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is not null && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_STARTED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
             }
@@ -282,7 +282,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
 
             // Firing event that transition is being taken
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is not null && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 FlowElement sourceFlowElement = sequenceFlow.SourceFlowElement;
                 FlowElement targetFlowElement = sequenceFlow.TargetFlowElement;

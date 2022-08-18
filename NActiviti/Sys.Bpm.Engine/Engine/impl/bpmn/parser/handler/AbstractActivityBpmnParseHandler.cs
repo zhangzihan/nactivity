@@ -25,7 +25,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
         {
             base.Parse(bpmnParse, element);
 
-            if (element is Activity && ((Activity)element).LoopCharacteristics is object)
+            if (element is Activity && ((Activity)element).LoopCharacteristics is not null)
             {
                 CreateMultiInstanceLoopCharacteristics(bpmnParse, (Activity)element);
             }

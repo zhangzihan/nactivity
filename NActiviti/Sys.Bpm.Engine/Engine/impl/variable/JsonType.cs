@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public override object GetValue(IValueFields valueFields)
         {
             JToken jsonValue = null;
-            if (valueFields.TextValue is object && valueFields.TextValue.Length > 0)
+            if (valueFields.TextValue is not null && valueFields.TextValue.Length > 0)
             {
                 try
                 {

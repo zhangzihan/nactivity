@@ -77,7 +77,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
                                 // Event
                                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-                                if (processEngineConfiguration is object && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+                                if (processEngineConfiguration is not null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
                                 {
                                     processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.PROCESS_COMPLETED_WITH_ERROR_END_EVENT, processInstanceEntity));
                                 }
@@ -121,7 +121,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 matchingEvent = eventMap[currentExecution.ActivityId][0];
 
                 // Check for multi instance
-                if (currentExecution.ParentId is object && currentExecution.Parent.IsMultiInstanceRoot)
+                if (currentExecution.ParentId is not null && currentExecution.Parent.IsMultiInstanceRoot)
                 {
                     parentExecution = currentExecution.Parent;
                 }
@@ -153,7 +153,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                         IList<Event> events = eventMap[refId];
                         if (CollectionUtil.IsNotEmpty(events) && events[0] is StartEvent)
                         {
-                            if (currentContainer.FindFlowElement(refId) is object)
+                            if (currentContainer.FindFlowElement(refId) is not null)
                             {
                                 matchingEvent = events[0];
                             }
@@ -167,7 +167,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                             matchingEvent = eventMap[parentExecution.ActivityId][0];
 
                             // Check for multi instance
-                            if (parentExecution.ParentId is object && parentExecution.Parent.IsMultiInstanceRoot)
+                            if (parentExecution.ParentId is not null && parentExecution.Parent.IsMultiInstanceRoot)
                             {
                                 parentExecution = parentExecution.Parent;
                             }
@@ -185,7 +185,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 }
             }
 
-            if (matchingEvent is object && parentExecution is object)
+            if (matchingEvent is not null && parentExecution is object)
             {
                 ExecuteEventHandler(matchingEvent, parentExecution, currentExecution, errorId);
             }
@@ -198,10 +198,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         protected internal static void ExecuteEventHandler(Event @event, IExecutionEntity parentExecution, IExecutionEntity currentExecution, string errorId)
         {
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is not null && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(parentExecution.ProcessDefinitionId);
-                if (bpmnModel is object)
+                if (bpmnModel is not null)
                 {
                     bpmnModel.Errors.TryGetValue(errorId, out string errorCode);
                     if (errorCode is null)
@@ -282,7 +282,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             IList<BoundaryEvent> boundaryEvents = process.FindFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (boundaryEvent.AttachedToRefId is object && CollectionUtil.IsNotEmpty(boundaryEvent.EventDefinitions) && boundaryEvent.EventDefinitions[0] is ErrorEventDefinition)
+                if (boundaryEvent.AttachedToRefId is not null && CollectionUtil.IsNotEmpty(boundaryEvent.EventDefinitions) && boundaryEvent.EventDefinitions[0] is ErrorEventDefinition)
                 {
 
                     ErrorEventDefinition errorEventDef = (ErrorEventDefinition)boundaryEvent.EventDefinitions[0];
@@ -310,7 +310,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         public static bool MapException(Exception e, IExecutionEntity execution, IList<MapExceptionEntry> exceptionMap)
         {
             string errorCode = FindMatchingExceptionMapping(e, exceptionMap);
-            if (errorCode is object)
+            if (errorCode is not null)
             {
                 PropagateError(errorCode, execution);
                 return true;
@@ -344,7 +344,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                     if (CollectionUtil.IsNotEmpty(callActivity.MapExceptions))
                     {
                         errorCode = FindMatchingExceptionMapping(e, callActivity.MapExceptions);
-                        if (errorCode is object)
+                        if (errorCode is not null)
                         {
                             PropagateError(errorCode, callActivityExecution);
                             return true;
@@ -398,7 +398,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         protected internal static string RetrieveErrorCode(BpmnModel bpmnModel, string errorCode)
         {
             string finalErrorCode = null;
-            if (errorCode is object && bpmnModel.ContainsErrorRef(errorCode))
+            if (errorCode is not null && bpmnModel.ContainsErrorRef(errorCode))
             {
                 finalErrorCode = bpmnModel.Errors[errorCode];
             }

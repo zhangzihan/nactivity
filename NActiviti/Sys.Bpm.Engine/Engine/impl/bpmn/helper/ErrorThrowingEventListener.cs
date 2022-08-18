@@ -36,7 +36,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 var commandContext = Context.CommandContext;
 
                 IExecutionEntity execution = null;
-                if (@event.ExecutionId is object)
+                if (@event.ExecutionId is not null)
                 {
                     // Get the execution based on the event's execution ID instead 
                     execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(@event.ExecutionId);

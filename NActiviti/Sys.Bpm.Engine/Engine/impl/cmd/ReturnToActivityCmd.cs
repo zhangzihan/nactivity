@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             if (variables is object)
             {
-                if (task.ExecutionId is object)
+                if (task.ExecutionId is not null)
                 {
                     task.ExecutionVariables = variables;
                 }

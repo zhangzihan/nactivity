@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
         public void OnEvent(IActivitiEvent @event)
         {
             if (@event is IActivitiSequenceFlowTakenEvent entity
-                && entity.ExecutionId is object)
+                && entity.ExecutionId is not null)
             {
                 var targetElement = ProcessDefinitionUtil.GetFlowElement(entity.ProcessDefinitionId, entity.TargetActivityId);
                 if (targetElement is UserTask)
@@ -109,7 +109,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                     break;
             }
 
-            if (userTask is object && userTask.HasMultiInstanceLoopCharacteristics())
+            if (userTask is not null && userTask.HasMultiInstanceLoopCharacteristics())
             {
                 var varName = userTask.LoopCharacteristics.GetCollectionVarName();
 

@@ -203,7 +203,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
                     }
                 }
 
-                if (behaviorExtension is object)
+                if (behaviorExtension is not null)
                 {
                     fieldExtensions.Remove(behaviorExtension);
                 }
@@ -268,7 +268,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 
             ruleActivity.Exclude = businessRuleTask.Exclude;
 
-            if (businessRuleTask.ResultVariableName is object && businessRuleTask.ResultVariableName.Length > 0)
+            if (businessRuleTask.ResultVariableName is not null && businessRuleTask.ResultVariableName.Length > 0)
             {
                 ruleActivity.ResultVariable = businessRuleTask.ResultVariableName;
             }

@@ -84,7 +84,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             if (commandContext is object)
             {
                 BpmnModel bpmnModel = ExtractBpmnModelFromEvent(@event);
-                if (bpmnModel is object)
+                if (bpmnModel is not null)
                 {
                     ((ActivitiEventSupport)bpmnModel.EventSupport).DispatchEvent(@event);
                 }
@@ -105,7 +105,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
         {
             BpmnModel result = null;
 
-            if (@event.ProcessDefinitionId is object)
+            if (@event.ProcessDefinitionId is not null)
             {
                 IProcessDefinition processDefinition = ProcessDefinitionUtil.GetProcessDefinition(@event.ProcessDefinitionId, true);
                 if (processDefinition is object)

@@ -97,7 +97,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 //logger.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
 
                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-                if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
+                if (processEngineConfiguration is not null && processEngineConfiguration.EventDispatcher.Enabled)
                 {
                     processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_STARTED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
                 }

@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (commandContext.EventDispatcher.Enabled)
                 {
                     commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_CREATED, task));
-                    if (task.Assignee is object)
+                    if (task.Assignee is not null)
                     {
                         commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
                     }
@@ -127,7 +127,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
                 if (originalOwner != task.Owner)
                 {
-                    if (task.ProcessInstanceId is object)
+                    if (task.ProcessInstanceId is not null)
                     {
                         commandContext.IdentityLinkEntityManager.InvolveUser(task.ProcessInstance, task.Owner, IdentityLinkType.PARTICIPANT);
                     }
@@ -135,7 +135,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
                 if (originalAssignee != task.Assignee)
                 {
-                    if (task.ProcessInstanceId is object)
+                    if (task.ProcessInstanceId is not null)
                     {
                         commandContext.IdentityLinkEntityManager.InvolveUser(task.ProcessInstance, task.Assignee, IdentityLinkType.PARTICIPANT);
                     }

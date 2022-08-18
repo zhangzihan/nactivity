@@ -92,11 +92,11 @@ namespace Sys.Workflow.Engine.Debug
         {
             StringBuilder strb = new StringBuilder();
             strb.Append(ExecutionEntity.Id);
-            if (ExecutionEntity.ActivityId is object)
+            if (ExecutionEntity.ActivityId is not null)
             {
                 strb.Append(" : " + ExecutionEntity.ActivityId);
             }
-            if (ExecutionEntity.ParentId is object)
+            if (ExecutionEntity.ParentId is not null)
             {
                 strb.Append(", parent id " + ExecutionEntity.ParentId);
             }
@@ -140,7 +140,7 @@ namespace Sys.Workflow.Engine.Debug
                 {
                     return sequenceFlow.SourceRef + " -> " + sequenceFlow.TargetRef;
                 }
-                else if (flowElement is object)
+                else if (flowElement is not null)
                 {
                     return flowElement.Id + " (" + flowElement.GetType().Name;
                 }

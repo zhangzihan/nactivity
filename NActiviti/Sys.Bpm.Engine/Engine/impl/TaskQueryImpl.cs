@@ -229,15 +229,15 @@ namespace Sys.Workflow.Engine.Impl
                 }
             }
 
-            if (name is object)
+            if (name is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and name");
             }
-            if (nameLike is object)
+            if (nameLike is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLike");
             }
-            if (nameLikeIgnoreCase is object)
+            if (nameLikeIgnoreCase is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLikeIgnoreCase");
             }
@@ -430,15 +430,15 @@ namespace Sys.Workflow.Engine.Impl
                 }
             }
 
-            if (assignee is object)
+            if (assignee is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssignee");
             }
-            if (assigneeLike is object)
+            if (assigneeLike is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLike");
             }
-            if (assigneeLikeIgnoreCase is object)
+            if (assigneeLikeIgnoreCase is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLikeIgnoreCase");
             }
@@ -620,11 +620,11 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskCandidateOrAssigned(string userIdForCandidateAndAssignee)
         {
-            if (candidateGroup is object)
+            if (candidateGroup is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set candidateGroup");
             }
-            if (candidateUser is object)
+            if (candidateUser is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroup and candidateUser");
             }
@@ -646,11 +646,11 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskCandidateOrAssigned(string userIdForCandidateAndAssignee, IList<string> usersGroups)
         {
-            if (candidateGroup is object)
+            if (candidateGroup is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set candidateGroup");
             }
-            if (candidateUser is object)
+            if (candidateUser is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroup and candidateUser");
             }
@@ -683,7 +683,7 @@ namespace Sys.Workflow.Engine.Impl
                 throw new ActivitiIllegalArgumentException("Candidate group list is empty");
             }
 
-            if (candidateGroup is object)
+            if (candidateGroup is not null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroupIn and candidateGroup");
             }
@@ -761,7 +761,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetProcessInstanceIdIn(string[] processInstanceIds)
         {
-            var ids = processInstanceIds is null ? new List<string>() : processInstanceIds.Where(x => x is object).ToList();
+            var ids = processInstanceIds is null ? new List<string>() : processInstanceIds.Where(x => x is not null).ToList();
 
             if (orActive)
             {
@@ -776,7 +776,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetExecutionIdIn(string[] executionIds)
         {
-            var ids = executionIds is null ? new List<string>() : executionIds.Where(x => x is object).ToList();
+            var ids = executionIds is null ? new List<string>() : executionIds.Where(x => x is not null).ToList();
 
             if (orActive)
             {
@@ -1553,7 +1553,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (candidateGroup is object)
+                if (candidateGroup is not null)
                 {
                     IList<string> candidateGroupList = new List<string>(1)
                     {
@@ -1567,12 +1567,12 @@ namespace Sys.Workflow.Engine.Impl
                     return candidateGroups;
 
                 }
-                else if (candidateUser is object)
+                else if (candidateUser is not null)
                 {
                     return GetGroupsForCandidateUser(candidateUser);
 
                 }
-                else if (userIdForCandidateAndAssignee is object)
+                else if (userIdForCandidateAndAssignee is not null)
                 {
                     return GetGroupsForCandidateUser(userIdForCandidateAndAssignee);
                 }
@@ -1723,7 +1723,7 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (specialOrderBy is object && specialOrderBy.Length > 0)
+                if (specialOrderBy is not null && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                 }
@@ -1776,16 +1776,16 @@ namespace Sys.Workflow.Engine.Impl
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
                 {
                     JToken languageNode = Context.GetLocalizationElementProperties(_locale, task.TaskDefinitionKey, processDefinitionId, _withLocalizationFallback);
-                    if (languageNode is object)
+                    if (languageNode is not null)
                     {
                         JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                        if (languageNameNode is object)
+                        if (languageNameNode is not null)
                         {
                             task.LocalizedName = languageNameNode.ToString();
                         }
 
                         JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                        if (languageDescriptionNode is object)
+                        if (languageDescriptionNode is not null)
                         {
                             task.LocalizedDescription = languageDescriptionNode.ToString();
                         }

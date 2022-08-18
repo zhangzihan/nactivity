@@ -186,7 +186,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ICollection<BoundaryEvent> boundaryEvents = process.FindFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (boundaryEvent.AttachedToRefId is object && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
+                if (boundaryEvent.AttachedToRefId is not null && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
                 {
                     results.Add(boundaryEvent);
                 }
@@ -279,7 +279,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <param name="loopCounter"></param>
         protected internal virtual void ExecuteOriginalBehavior(IExecutionEntity execution, int loopCounter)
         {
-            if (UsesCollection() && collectionElementVariable is object)
+            if (UsesCollection() && collectionElementVariable is not null)
             {
                 ICollection collection = (ICollection)ResolveCollection(execution);
 
@@ -311,20 +311,20 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             object obj = ResolveCollection(execution);
             if (collectionExpression is object)
             {
-                if (!(obj is ICollection))
+                if (obj is not ICollection)
                 {
                     throw new ActivitiIllegalArgumentException(collectionExpression.ExpressionText + "' didn't resolve to a Collection");
                 }
 
             }
-            else if (collectionVariable is object)
+            else if (collectionVariable is not null)
             {
                 if (obj is null)
                 {
                     throw new ActivitiIllegalArgumentException("Variable " + collectionVariable + " is not found");
                 }
 
-                if (!(obj is ICollection))
+                if (obj is not ICollection)
                 {
                     throw new ActivitiIllegalArgumentException("Variable " + collectionVariable + "' is not a Collection");
                 }
@@ -347,7 +347,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 return collectionExpression.GetValue(execution);
             }
-            else if (collectionVariable is object)
+            else if (collectionVariable is not null)
             {
                 return execution.GetVariable(collectionVariable);
             }
@@ -359,7 +359,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <returns></returns>
         protected internal virtual bool UsesCollection()
         {
-            return collectionExpression is object || collectionVariable is object;
+            return collectionExpression is object || collectionVariable is not null;
         }
         /// <summary>
         /// 
@@ -368,7 +368,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <returns></returns>
         protected internal virtual bool IsExtraScopeNeeded(FlowNode flowNode)
         {
-            return flowNode.SubProcess is object;
+            return flowNode.SubProcess is not null;
         }
         /// <summary>
         /// 
@@ -480,7 +480,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             if (log.IsEnabled(LogLevel.Debug))
             {
-                log.LogDebug($"Multi-instance '{(execution.CurrentFlowElement is object ? execution.CurrentFlowElement.Id : "")}' {custom}. Details: loopCounter={loopCounter}, nrOrCompletedInstances={nrOfCompletedInstances},nrOfActiveInstances={nrOfActiveInstances},nrOfInstances={nrOfInstances}");
+                log.LogDebug($"Multi-instance '{(execution.CurrentFlowElement is not null ? execution.CurrentFlowElement.Id : "")}' {custom}. Details: loopCounter={loopCounter}, nrOrCompletedInstances={nrOfCompletedInstances},nrOfActiveInstances={nrOfActiveInstances},nrOfInstances={nrOfInstances}");
             }
         }
         /// <summary>

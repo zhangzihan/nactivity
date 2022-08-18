@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VALUE_SHORT, value);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_SHORT);
 
-                if (value is object)
+                if (value is not null)
                 {
                     PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value.Value);
                     PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_INTEGER);
 
-                if (value is object)
+                if (value is not null)
                 {
                     PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
                     PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value.Value);
@@ -83,7 +83,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_LONG);
 
-                if (value is object)
+                if (value is not null)
                 {
                     PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value.Value);
                 }
@@ -95,7 +95,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_DOUBLE);
 
-                if (value is object)
+                if (value is not null)
                 {
                     PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value.Value);
                     PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
@@ -128,7 +128,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_UUID);
 
             }
-            else if (variableType is SerializableType || (variableEvent.VariableValue is object && (variableEvent.VariableValue is object)))
+            else if (variableType is SerializableType || (variableEvent.VariableValue is not null && (variableEvent.VariableValue is not null)))
             {
 
                 // Last try: serialize it to json

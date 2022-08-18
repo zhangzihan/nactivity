@@ -117,15 +117,15 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     ["isTransfer"] = IsTransfer,
                     ["onlyAssignee"] = OnlyAssignee
                 };
-                if (parentTaskId is object)
+                if (parentTaskId is not null)
                 {
                     persistentState["parentTaskId"] = parentTaskId;
                 }
-                if (dueDate is object)
+                if (dueDate is not null)
                 {
                     persistentState["dueDate"] = dueDate;
                 }
-                if (claimTime is object)
+                if (claimTime is not null)
                 {
                     persistentState["claimTime"] = claimTime;
                 }
@@ -163,7 +163,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (localizedName is object && localizedName.Length > 0)
+                if (localizedName is not null && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -194,7 +194,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (localizedDescription is object && localizedDescription.Length > 0)
+                if (localizedDescription is not null && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -259,7 +259,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return null;
             }
 
-            if (AssigneeUser is object)
+            if (AssigneeUser is not null)
             {
                 assigner = new UserInfo
                 {
@@ -461,7 +461,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (variableInstance.Id is object && variableInstance.TaskId is object)
+                        if (variableInstance.Id is not null && variableInstance.TaskId is not null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -480,7 +480,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (variableInstance.Id is object && variableInstance.TaskId is null)
+                        if (variableInstance.Id is not null && variableInstance.TaskId is null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }

@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             // Continue process (if not a standalone task)
-            if (taskEntity.ExecutionId is object && isTerminateExecution)
+            if (taskEntity.ExecutionId is not null && isTerminateExecution)
             {
                 IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
                 executionEntity.SetVariableLocal(WorkflowVariable.GLOBAL_TERMINATE_TASK_VARNAME, true);

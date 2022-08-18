@@ -56,12 +56,12 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             IExecutionEntity multiInstanceExecution = null;
             IExecutionEntity parentExecution = execution.Parent;
-            if (parentExecution is object && parentExecution.CurrentFlowElement is object)
+            if (parentExecution is object && parentExecution.CurrentFlowElement is not null)
             {
                 FlowElement flowElement = parentExecution.CurrentFlowElement;
                 if (flowElement is Activity activity)
                 {
-                    if (activity.LoopCharacteristics is object)
+                    if (activity.LoopCharacteristics is not null)
                     {
                         multiInstanceExecution = parentExecution;
                     }
@@ -86,7 +86,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 return null;
             }
             IExecutionEntity parentExecution = execution.Parent;
-            if (parentExecution is object && parentExecution.CurrentFlowElement is object)
+            if (parentExecution is object && parentExecution.CurrentFlowElement is not null)
             {
                 return FindRootParent(parentExecution);
             }

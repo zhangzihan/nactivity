@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            if (activitiListener.OnTransaction is object)
+                            if (activitiListener.OnTransaction is not null)
                             {
                                 executionListener = listenerFactory.CreateTransactionDependentDelegateExpressionExecutionListener(activitiListener);
                             }
@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
                         if (executionListener is object)
                         {
-                            if (activitiListener.OnTransaction is object)
+                            if (activitiListener.OnTransaction is not null)
                             {
                                 PlanTransactionDependentExecutionListener(listenerFactory, execution, (ITransactionDependentExecutionListener)executionListener, activitiListener);
                             }
@@ -100,7 +100,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
         public virtual void ExecuteTaskListeners(ITaskEntity taskEntity, string eventType)
         {
-            if (taskEntity.ProcessDefinitionId is object)
+            if (taskEntity.ProcessDefinitionId is not null)
             {
                 Process process = ProcessDefinitionUtil.GetProcess(taskEntity.ProcessDefinitionId);
                 FlowElement flowElement = process.GetFlowElement(taskEntity.TaskDefinitionKey, true);
@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                 {
                     IBaseTaskListener taskListener = CreateTaskListener(activitiListener);
 
-                    if (activitiListener.OnTransaction is object)
+                    if (activitiListener.OnTransaction is not null)
                     {
                         PlanTransactionDependentTaskListener(taskEntity.Execution, (ITransactionDependentTaskListener)taskListener, activitiListener);
                     }
@@ -161,7 +161,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                if (activitiListener.OnTransaction is object)
+                if (activitiListener.OnTransaction is not null)
                 {
                     taskListener = listenerFactory.CreateTransactionDependentDelegateExpressionTaskListener(activitiListener);
                 }

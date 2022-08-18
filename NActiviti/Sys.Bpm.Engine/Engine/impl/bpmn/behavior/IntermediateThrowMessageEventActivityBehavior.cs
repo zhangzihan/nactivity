@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         public IntermediateThrowMessageEventActivityBehavior(MessageEventDefinition messageEventDefinition, Message message)
         {
-            if (message is object)
+            if (message is not null)
             {
                 messageEventName = message.Name;
             }
@@ -58,7 +58,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ICommandContext commandContext = Context.CommandContext;
 
             string eventSubscriptionName;
-            if (messageEventName is object)
+            if (messageEventName is not null)
             {
                 eventSubscriptionName = messageEventName;
             }

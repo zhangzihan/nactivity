@@ -101,7 +101,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             // Continue process (if not a standalone task)
-            if (taskEntity.ExecutionId is object)
+            if (taskEntity.ExecutionId is not null)
             {
                 IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
                 Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());

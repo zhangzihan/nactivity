@@ -137,7 +137,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             {
                 string prop = property.ToString();
                 JToken resultNode = ((JToken)@base)[prop];
-                if (resultNode is object)
+                if (resultNode is not null)
                 {
                     result = ToResult(resultNode);
                 }
@@ -302,7 +302,7 @@ namespace Sys.Workflow.Engine.Impl.EL
                 {
                     token[prop] = @double;
                 }
-                else if (value is object)
+                else if (value is not null)
                 {
                     token[prop] = value.ToString();
                 }

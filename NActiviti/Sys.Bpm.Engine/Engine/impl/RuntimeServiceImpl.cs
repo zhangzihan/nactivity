@@ -679,7 +679,7 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(processInstanceBuilder));
             }
-            else if (processInstanceBuilder.ProcessDefinitionId is object || processInstanceBuilder.ProcessDefinitionKey is object)
+            else if (processInstanceBuilder.ProcessDefinitionId is not null || processInstanceBuilder.ProcessDefinitionKey is not null)
             {
                 return commandExecutor.Execute(new StartProcessInstanceCmd(processInstanceBuilder));
             }

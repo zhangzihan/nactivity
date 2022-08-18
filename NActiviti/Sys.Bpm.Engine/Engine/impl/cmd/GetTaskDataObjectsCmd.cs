@@ -116,26 +116,26 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                         }
                     }
 
-                    if (locale is object && foundDataObject is object)
+                    if (locale is not null && foundDataObject is not null)
                     {
                         JToken languageNode = Context.GetLocalizationElementProperties(locale, foundDataObject.Id, task.ProcessDefinitionId, withLocalizationFallback);
 
-                        if (languageNode is object)
+                        if (languageNode is not null)
                         {
                             JToken nameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                            if (nameNode is object)
+                            if (nameNode is not null)
                             {
                                 localizedName = nameNode.ToString();
                             }
                             JToken descriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                            if (descriptionNode is object)
+                            if (descriptionNode is not null)
                             {
                                 localizedDescription = descriptionNode.ToString();
                             }
                         }
                     }
 
-                    if (foundDataObject is object)
+                    if (foundDataObject is not null)
                     {
                         dataObjects[variableEntity.Name] = new DataObjectImpl(variableEntity.Name, variableEntity.Value, foundDataObject.Documentation, foundDataObject.Type, localizedName, localizedDescription, foundDataObject.Id);
                     }

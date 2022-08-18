@@ -189,7 +189,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                if (executionEntity.ActivityId is object && executionEntity.CurrentFlowElement is object)
+                if (executionEntity.ActivityId is not null && executionEntity.CurrentFlowElement is not null)
                 {
 
                     // Historic activity instance could have been created (but only in cache, never persisted)
@@ -252,7 +252,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 activityId = ((SequenceFlow)(execution.CurrentFlowElement)).SourceFlowElement.Id;
             }
 
-            if (activityId is object)
+            if (activityId is not null)
             {
                 return FindActivityInstance(execution, activityId, createOnNotFound, endTimeMustBeNull);
             }
@@ -292,7 +292,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 }
             }
 
-            if (execution.ParentId is object)
+            if (execution.ParentId is not null)
             {
                 IHistoricActivityInstanceEntity historicActivityInstanceFromParent = FindActivityInstance(execution.Parent, activityId, false, endTimeMustBeNull); // always false for create, we only check if it can be found
                 if (historicActivityInstanceFromParent is object)
@@ -301,7 +301,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 }
             }
 
-            if (createOnNotFound && activityId is object && ((execution.CurrentFlowElement is object && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement is null))
+            if (createOnNotFound && activityId is not null && ((execution.CurrentFlowElement is not null && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement is null))
             {
                 return CreateHistoricActivityInstanceEntity(execution);
             }
@@ -314,7 +314,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             IList<IHistoricActivityInstanceEntity> cachedHistoricActivityInstances = EntityCache.FindInCache(typeof(HistoricActivityInstanceEntityImpl)) as IList<IHistoricActivityInstanceEntity>;
             foreach (IHistoricActivityInstanceEntity cachedHistoricActivityInstance in cachedHistoricActivityInstances ?? new List<IHistoricActivityInstanceEntity>())
             {
-                if (activityId is object && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime is null))
+                if (activityId is not null && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime is null))
                 {
                     if (executionId.Equals(cachedHistoricActivityInstance.ExecutionId))
                     {
@@ -339,7 +339,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             historicActivityInstance.ProcessInstanceId = processInstanceId;
             historicActivityInstance.ExecutionId = execution.Id;
             historicActivityInstance.ActivityId = execution.ActivityId;
-            if (execution.CurrentFlowElement is object)
+            if (execution.CurrentFlowElement is not null)
             {
                 historicActivityInstance.ActivityName = execution.CurrentFlowElement.Name;
                 historicActivityInstance.ActivityType = ParseActivityType(execution.CurrentFlowElement);
@@ -348,7 +348,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             historicActivityInstance.StartTime = now;
 
             // Inherit tenant id (if applicable)
-            if (execution.TenantId is object)
+            if (execution.TenantId is not null)
             {
                 historicActivityInstance.TenantId = execution.TenantId;
             }
@@ -713,7 +713,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
         {
             if (variable is object && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                if (!(EntityCache.FindInCache(variable.GetType(), variable.Id) is IHistoricVariableInstanceEntity historicProcessVariable))
+                if (EntityCache.FindInCache(variable.GetType(), variable.Id) is not IHistoricVariableInstanceEntity historicProcessVariable)
                 {
                     historicProcessVariable = HistoricVariableInstanceEntityManager.FindHistoricVariableInstanceByVariableInstanceId(variable.Id);
                 }
@@ -778,7 +778,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 comment.Type = CommentEntityFields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.TaskId = taskId;
-                if (userId is object || forceNullUserId)
+                if (userId is not null || forceNullUserId)
                 {
                     if (create)
                     {
@@ -822,7 +822,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 comment.Type = CommentEntityFields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.ProcessInstanceId = processInstanceId;
-                if (userId is object || forceNullUserId)
+                if (userId is not null || forceNullUserId)
                 {
                     if (create)
                     {
@@ -892,7 +892,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             // It makes no sense storing historic counterpart for an identity-link
             // that is related
             // to a process-definition only as this is never kept in history
-            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT) && (identityLink.ProcessInstanceId is object || identityLink.TaskId is object))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT) && (identityLink.ProcessInstanceId is not null || identityLink.TaskId is not null))
             {
                 IHistoricIdentityLinkEntity historicIdentityLinkEntity = HistoricIdentityLinkEntityManager.Create();
                 historicIdentityLinkEntity.Id = identityLink.Id;
@@ -945,7 +945,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
         {
             if (variable is object && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                if (!(EntityCache.FindInCache(variable.GetType(), variable.Id) is IHistoricVariableInstanceEntity historicProcessVariable))
+                if (EntityCache.FindInCache(variable.GetType(), variable.Id) is not IHistoricVariableInstanceEntity historicProcessVariable)
                 {
                     historicProcessVariable = HistoricVariableInstanceEntityManager.FindHistoricVariableInstanceByVariableInstanceId(variable.Id);
                 }

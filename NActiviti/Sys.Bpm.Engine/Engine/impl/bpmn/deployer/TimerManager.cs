@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
         protected internal virtual void RemoveObsoleteTimers(IProcessDefinitionEntity processDefinition)
         {
             IList<ITimerJobEntity> jobsToDelete;
-            if (processDefinition.TenantId is object && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
+            if (processDefinition.TenantId is not null && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
                 jobsToDelete = Context.CommandContext.TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionKeyAndTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key, processDefinition.TenantId);
             }
@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                                 {
                                     timerJob.ProcessDefinitionId = processDefinition.Id;
 
-                                    if (processDefinition.TenantId is object)
+                                    if (processDefinition.TenantId is not null)
                                     {
                                         timerJob.TenantId = processDefinition.TenantId;
                                     }

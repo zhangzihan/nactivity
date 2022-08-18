@@ -242,7 +242,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope is object)
+            if (parentScope is not null)
             {
                 variables.PutAll(parentScope.CollectVariables(variables));
             }
@@ -272,7 +272,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope is object)
+            if (parentScope is not null)
             {
                 variables.PutAll(parentScope.CollectVariableInstances(variables));
             }
@@ -523,7 +523,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope is object)
+            if (parentScope is not null)
             {
                 parentScope.CollectVariableNames(variableNames).ToList().ForEach(x =>
                 {
@@ -838,7 +838,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
                 // Otherwise, go up the hierarchy (we're trying to put it as high as possible)
                 VariableScopeImpl parentVariableScope = ParentVariableScope;
-                if (parentVariableScope is object)
+                if (parentVariableScope is not null)
                 {
                     if (sourceExecution is null)
                     {
@@ -893,7 +893,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     {
 
                         VariableScopeImpl parent = ParentVariableScope;
-                        if (parent is object)
+                        if (parent is not null)
                         {
                             if (sourceExecution is null)
                             {
@@ -1031,7 +1031,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return;
             }
             VariableScopeImpl parentVariableScope = ParentVariableScope;
-            if (parentVariableScope is object)
+            if (parentVariableScope is not null)
             {
                 if (sourceActivityExecution is null)
                 {
@@ -1193,7 +1193,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual void SetTransientVariable(string variableName, object variableValue)
         {
             VariableScopeImpl parentVariableScope = ParentVariableScope;
-            if (parentVariableScope is object)
+            if (parentVariableScope is not null)
             {
                 parentVariableScope.SetTransientVariable(variableName, variableValue);
                 return;
@@ -1219,7 +1219,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope is object)
+            if (parentScope is not null)
             {
                 return parentScope.GetTransientVariable(variableName);
             }
@@ -1231,7 +1231,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual IDictionary<string, object> CollectTransientVariables(Dictionary<string, object> variables)
         {
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope is object)
+            if (parentScope is not null)
             {
                 variables.PutAll(parentScope.CollectVariables(variables));
             }
@@ -1271,7 +1271,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return;
             }
             VariableScopeImpl parentVariableScope = ParentVariableScope;
-            if (parentVariableScope is object)
+            if (parentVariableScope is not null)
             {
                 parentVariableScope.RemoveTransientVariable(variableName);
             }
@@ -1281,7 +1281,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             RemoveTransientVariablesLocal();
             VariableScopeImpl parentVariableScope = ParentVariableScope;
-            if (parentVariableScope is object)
+            if (parentVariableScope is not null)
             {
                 parentVariableScope.RemoveTransientVariablesLocal();
             }

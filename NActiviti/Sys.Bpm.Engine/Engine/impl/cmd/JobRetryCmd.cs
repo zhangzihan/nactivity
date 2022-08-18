@@ -131,7 +131,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
             }
 
-            if (exception is object)
+            if (exception is not null)
             {
                 newJobEntity.ExceptionMessage = exception.Message;
                 newJobEntity.ExceptionStacktrace = ExceptionStacktrace;
@@ -151,7 +151,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         protected internal virtual DateTime CalculateDueDate(ICommandContext commandContext, int waitTimeInSeconds, DateTime? oldDate)
         {
             DateTime newDateCal = DateTime.Now;
-            if (oldDate is object)
+            if (oldDate is not null)
             {
                 newDateCal = new DateTime(oldDate.Value.Ticks);
 

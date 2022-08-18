@@ -119,13 +119,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
 
                 bool enableSafeBpmnXml = false;
                 string encoding = null;
-                if (processEngineConfiguration is object)
+                if (processEngineConfiguration is not null)
                 {
                     enableSafeBpmnXml = processEngineConfiguration.EnableSafeBpmnXml;
                     encoding = processEngineConfiguration.XmlEncoding;
                 }
 
-                if (encoding is object)
+                if (encoding is not null)
                 {
                     bpmnModel = converter.ConvertToBpmnModel(streamSource, validateSchema, enableSafeBpmnXml, encoding);
                 }
@@ -387,7 +387,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                             }
                         }
                     }
-                    else if (!(bpmnModel.GetFlowElement(bpmnReference) is FlowNode))
+                    else if (bpmnModel.GetFlowElement(bpmnReference) is not FlowNode)
                     {
                         logger.LogWarning($"Invalid reference in diagram interchange definition: {bpmnReference} does not reference a flow node");
                     }
@@ -403,7 +403,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                             logger.LogWarning($"Invalid reference in diagram interchange definition: could not find {bpmnReference}");
                         }
                     }
-                    else if (!(bpmnModel.GetFlowElement(bpmnReference) is SequenceFlow))
+                    else if (bpmnModel.GetFlowElement(bpmnReference) is not SequenceFlow)
                     {
                         logger.LogWarning($"Invalid reference in diagram interchange definition: {bpmnReference} does not reference a sequence flow");
                     }
@@ -424,7 +424,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
 
                         foreach (string edgeId in bpmnModel.FlowLocationMap.Keys)
                         {
-                            if (bpmnModel.GetFlowElement(edgeId) is object)
+                            if (bpmnModel.GetFlowElement(edgeId) is not null)
                             {
                                 CreateBPMNEdge(edgeId, bpmnModel.GetFlowLocationGraphicInfo(edgeId));
                             }
@@ -447,7 +447,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                 }
                 sequenceFlow.Waypoints = waypoints;
             }
-            else if (bpmnModel.GetArtifact(key) is object)
+            else if (bpmnModel.GetArtifact(key) is not null)
             {
                 // it's an association, so nothing to do
             }

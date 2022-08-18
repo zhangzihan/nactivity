@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Delegate
         /// </summary>
         public static bool IsExecutingExecutionListener(IExecutionEntity execution)
         {
-            return execution.CurrentActivitiListener is object;
+            return execution.CurrentActivitiListener is not null;
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Sys.Workflow.Engine.Delegate
             }
             foreach (FieldExtension fieldExtension in fieldExtensions)
             {
-                if (fieldExtension.FieldName is object && fieldExtension.FieldName.Equals(fieldName))
+                if (fieldExtension.FieldName is not null && fieldExtension.FieldName.Equals(fieldName))
                 {
                     return fieldExtension;
                 }
@@ -222,7 +222,7 @@ namespace Sys.Workflow.Engine.Delegate
             }
             foreach (FieldExtension fieldExtension in fieldExtensions)
             {
-                if (fieldExtension.FieldName is object && fieldExtension.FieldName.Equals(fieldName))
+                if (fieldExtension.FieldName is not null && fieldExtension.FieldName.Equals(fieldName))
                 {
                     return fieldExtension;
                 }
@@ -278,7 +278,7 @@ namespace Sys.Workflow.Engine.Delegate
         /// </summary>
         public static IExpression GetFieldExpression(IDelegateTask task, string fieldName)
         {
-            if (task.CurrentActivitiListener is object)
+            if (task.CurrentActivitiListener is not null)
             {
                 IList<FieldExtension> fieldExtensions = task.CurrentActivitiListener.FieldExtensions;
                 if (fieldExtensions is object && fieldExtensions.Count > 0)
@@ -298,7 +298,7 @@ namespace Sys.Workflow.Engine.Delegate
         public static IExpression GetFlowElementFieldExpression(IExecutionEntity execution, string fieldName)
         {
             FieldExtension fieldExtension = GetFlowElementField(execution, fieldName);
-            if (fieldExtension is object)
+            if (fieldExtension is not null)
             {
                 return CreateExpressionForField(fieldExtension);
             }
@@ -308,7 +308,7 @@ namespace Sys.Workflow.Engine.Delegate
         public static IExpression GetListenerFieldExpression(IExecutionEntity execution, string fieldName)
         {
             FieldExtension fieldExtension = GetListenerField(execution, fieldName);
-            if (fieldExtension is object)
+            if (fieldExtension is not null)
             {
                 return CreateExpressionForField(fieldExtension);
             }

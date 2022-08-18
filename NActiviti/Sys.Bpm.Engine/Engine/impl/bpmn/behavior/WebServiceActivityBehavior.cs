@@ -99,7 +99,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             try
             {
 
-                if (ioSpecification is object)
+                if (ioSpecification is not null)
                 {
                     InitializeIoSpecification(ioSpecification, execution, bpmnModel);
                     if (ioSpecification.DataInputRefs.Count > 0)
@@ -124,10 +124,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 execution.SetVariable(CURRENT_MESSAGE, receivedMessage);
 
-                if (ioSpecification is object && ioSpecification.DataOutputRefs.Count > 0)
+                if (ioSpecification is not null && ioSpecification.DataOutputRefs.Count > 0)
                 {
                     string firstDataOutputName = ioSpecification.DataOutputRefs[0];
-                    if (firstDataOutputName is object)
+                    if (firstDataOutputName is not null)
                     {
                         ItemInstance outputItem = (ItemInstance)execution.GetVariable(firstDataOutputName);
                         outputItem.StructureInstance.LoadFrom(receivedMessage.StructureInstance.ToArray());
@@ -144,7 +144,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 Exception cause = exc;
                 BpmnError error = null;
-                while (cause is object)
+                while (cause is not null)
                 {
                     if (cause is BpmnError)
                     {
@@ -154,11 +154,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     cause = cause.InnerException;
                 }
 
-                if (error is object)
+                if (error is not null)
                 {
                     ErrorPropagation.PropagateError(error, execution);
                 }
-                else if (exc is Exception)
+                else if (exc is not null)
                 {
                     throw (Exception)exc;
                 }

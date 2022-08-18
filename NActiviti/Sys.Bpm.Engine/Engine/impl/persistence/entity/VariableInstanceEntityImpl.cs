@@ -60,23 +60,23 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 PersistentState persistentState = new PersistentState();
-                if (longValue is object)
+                if (longValue is not null)
                 {
                     persistentState["longValue"] = longValue;
                 }
-                if (doubleValue is object)
+                if (doubleValue is not null)
                 {
                     persistentState["doubleValue"] = doubleValue;
                 }
-                if (textValue is object)
+                if (textValue is not null)
                 {
                     persistentState["textValue"] = textValue;
                 }
-                if (textValue2 is object)
+                if (textValue2 is not null)
                 {
                     persistentState["textValue2"] = textValue2;
                 }
-                if (byteArrayRef is object && byteArrayRef.Id is object)
+                if (byteArrayRef is not null && byteArrayRef.Id is not null)
                 {
                     persistentState["byteArrayValueId"] = byteArrayRef.Id;
                 }
@@ -224,7 +224,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (typeName is object)
+                if (typeName is not null)
                 {
                     return typeName;
                 }
@@ -362,23 +362,23 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             sb.Append("id=").Append(Id);
             sb.Append(", name=").Append(name);
             sb.Append(", type=").Append(type is object ? type.TypeName : "null");
-            if (longValue is object)
+            if (longValue is not null)
             {
                 sb.Append(", longValue=").Append(longValue);
             }
-            if (doubleValue is object)
+            if (doubleValue is not null)
             {
                 sb.Append(", doubleValue=").Append(doubleValue);
             }
-            if (textValue is object)
+            if (textValue is not null)
             {
                 sb.Append(", textValue=").Append(textValue.PadLeft(40, ' '));
             }
-            if (textValue2 is object)
+            if (textValue2 is not null)
             {
                 sb.Append(", textValue2=").Append(textValue2.PadLeft(40, ' '));
             }
-            if (byteArrayRef is object && byteArrayRef.Id is object)
+            if (byteArrayRef is not null && byteArrayRef.Id is not null)
             {
                 sb.Append(", byteArrayValueId=").Append(byteArrayRef.Id);
             }

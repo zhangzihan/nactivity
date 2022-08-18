@@ -31,16 +31,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             string eventName = @params[nameof(eventName)]?.ToString();
             string tenantId = @params[nameof(tenantId)]?.ToString();
 
-            return eventSubscriptionEntity.EventType is object &&
+            return eventSubscriptionEntity.EventType is not null &&
                 string.Compare(eventSubscriptionEntity.EventType, SignalEventSubscriptionEntityFields.EVENT_TYPE, true) == 0 &&
-                eventSubscriptionEntity.EventName is object &&
+                eventSubscriptionEntity.EventName is not null &&
                 string.Compare(eventSubscriptionEntity.EventName, eventName?.ToString(), true) == 0 &&
                 (eventSubscriptionEntity.ExecutionId is null ||
-                    (eventSubscriptionEntity.ExecutionId is object &&
+                    (eventSubscriptionEntity.ExecutionId is not null &&
                         eventSubscriptionEntity.Execution is object &&
                             eventSubscriptionEntity.Execution.SuspensionState == SuspensionStateProvider.ACTIVE.StateCode)) &&
-                ((tenantId is object && string.Compare(tenantId?.ToString(), eventSubscriptionEntity.TenantId, true) == 0) ||
-                    (tenantId is object && string.IsNullOrWhiteSpace(eventSubscriptionEntity.TenantId)));
+                ((tenantId is not null && string.Compare(tenantId?.ToString(), eventSubscriptionEntity.TenantId, true) == 0) ||
+                    (tenantId is not null && string.IsNullOrWhiteSpace(eventSubscriptionEntity.TenantId)));
         }
 
     }

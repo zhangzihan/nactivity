@@ -232,7 +232,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
                 {
                     JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
-                    if (taskElementProperties is object && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME] is object)
+                    if (taskElementProperties is not null && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME] is not null)
                     {
                         string overrideClassName = taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME].ToString();
                         if (!string.IsNullOrWhiteSpace(overrideClassName) && !overrideClassName.Equals(className))
@@ -397,7 +397,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         {
             MethodInfo setterMethod = ReflectUtil.GetSetter(declaration.Name, target.GetType(), declaration.Value.GetType());
 
-            if (setterMethod is object)
+            if (setterMethod is not null)
             {
                 try
                 {
@@ -443,7 +443,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public static bool FieldTypeCompatible(FieldDeclaration declaration, FieldInfo field)
         {
-            if (declaration.Value is object)
+            if (declaration.Value is not null)
             {
                 return declaration.Value.GetType().IsAssignableFrom(field.DeclaringType);
             }

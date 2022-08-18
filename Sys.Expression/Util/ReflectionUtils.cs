@@ -1472,7 +1472,7 @@ namespace Spring.Util
         {
             Exception innerEx = ex.InnerException;
             while (innerEx is not null &&
-                !(innerEx is NullReferenceException))
+                innerEx is not NullReferenceException)
             {
                 ex = innerEx;
                 innerEx = innerEx.InnerException;

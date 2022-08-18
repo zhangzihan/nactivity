@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     SetNewRepeat(timerEntity, repeatValue);
                 }
                 DateTime? newTimer = CalculateNextTimer(timerEntity, variableScope);
-                if (newTimer is object && IsValidTime(timerEntity, newTimer, variableScope))
+                if (newTimer is not null && IsValidTime(timerEntity, newTimer, variableScope))
                 {
                     ITimerJobEntity te = CreateTimer(timerEntity);
                     te.Duedate = newTimer;
@@ -122,7 +122,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual bool DoInsert(ITimerJobEntity jobEntity, bool fireCreateEvent)
         {
             // add link to execution
-            if (jobEntity.ExecutionId is object)
+            if (jobEntity.ExecutionId is not null)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution is object)
@@ -130,7 +130,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     execution.TimerJobs.Add(jobEntity);
 
                     // Inherit tenant if (if applicable)
-                    if (execution.TenantId is object)
+                    if (execution.TenantId is not null)
                     {
                         jobEntity.TenantId = execution.TenantId;
                     }
@@ -161,7 +161,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             DeleteExceptionByteArrayRef(jobEntity);
             RemoveExecutionLink(jobEntity);
 
-            if (jobEntity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
+            if (jobEntity.ExecutionId is not null && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(jobEntity.ExecutionId);
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
@@ -183,7 +183,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// </summary>
         protected internal virtual void RemoveExecutionLink(ITimerJobEntity jobEntity)
         {
-            if (jobEntity.ExecutionId is object)
+            if (jobEntity.ExecutionId is not null)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution is object)

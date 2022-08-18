@@ -92,7 +92,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 //JodaTime support
                 duedate = (DateTime?)dueDateValue;
             }
-            else if (dueDateValue is object)
+            else if (dueDateValue is not null)
             {
                 throw new ActivitiException("Timer '" + executionEntity.ActivityId + "' was not configured with a valid duration/time, either hand in a java.util.Date or a String in format 'yyyy-MM-dd'T'hh:mm:ss'");
             }
@@ -103,7 +103,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
 
             ITimerJobEntity timer = null;
-            if (duedate is object)
+            if (duedate is not null)
             {
                 timer = Context.CommandContext.TimerJobEntityManager.Create();
                 timer.JobType = JobFields.JOB_TYPE_TIMER;

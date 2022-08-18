@@ -142,7 +142,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 {
                     string targetRef = sequenceFlow.TargetRef;
                     FlowNode sequenceFlowTarget = (FlowNode)process.GetFlowElement(targetRef, true);
-                    if (sequenceFlowTarget is object && !visitedElements.Contains(sequenceFlowTarget.Id))
+                    if (sequenceFlowTarget is not null && !visitedElements.Contains(sequenceFlowTarget.Id))
                     {
                         bool reachable = IsReachable(process, sequenceFlowTarget, targetElement, visitedElements);
 

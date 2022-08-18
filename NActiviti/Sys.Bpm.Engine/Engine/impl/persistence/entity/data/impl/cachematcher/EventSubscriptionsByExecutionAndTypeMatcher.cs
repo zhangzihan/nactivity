@@ -33,9 +33,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             string eventType = @params[nameof(eventType)]?.ToString();
             string executionId = @params[nameof(executionId)]?.ToString();
 
-            return eventSubscriptionEntity.EventType is object &&
+            return eventSubscriptionEntity.EventType is not null &&
                 eventSubscriptionEntity.EventType.Equals(eventType, StringComparison.OrdinalIgnoreCase) &&
-                eventSubscriptionEntity.ExecutionId is object &&
+                eventSubscriptionEntity.ExecutionId is not null &&
                 eventSubscriptionEntity.ExecutionId.Equals(executionId, StringComparison.OrdinalIgnoreCase);
         }
     }

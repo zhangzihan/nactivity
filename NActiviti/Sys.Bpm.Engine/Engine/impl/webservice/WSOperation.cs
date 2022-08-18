@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Webservice
         {
             MessageInstance message = null;
             MessageDefinition outMessage = operation.OutMessage;
-            if (outMessage is object)
+            if (outMessage is not null)
             {
                 message = outMessage.CreateInstance();
                 message.StructureInstance.LoadFrom(results);

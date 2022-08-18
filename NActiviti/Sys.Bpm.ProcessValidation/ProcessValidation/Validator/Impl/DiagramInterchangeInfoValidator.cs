@@ -40,7 +40,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                             }
                         }
                     }
-                    else if (!(bpmnModel.GetFlowElement(bpmnReference) is FlowNode))
+                    else if (bpmnModel.GetFlowElement(bpmnReference) is not FlowNode)
                     {
                         AddWarning(errors, ProblemsConstants.DI_DOES_NOT_REFERENCE_FLOWNODE, null, bpmnModel.GetFlowElement(bpmnReference), string.Format(ProcessValidatorResource.DI_DOES_NOT_REFERENCE_FLOWNODE, bpmnReference));
                     }
@@ -62,7 +62,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                             AddWarning(errors, ProblemsConstants.DI_INVALID_REFERENCE, null, bpmnModel.GetFlowElement(bpmnReference), string.Format(ProcessValidatorResource.DI_INVALID_REFERENCE, bpmnReference));
                         }
                     }
-                    else if (!(bpmnModel.GetFlowElement(bpmnReference) is SequenceFlow))
+                    else if (bpmnModel.GetFlowElement(bpmnReference) is not SequenceFlow)
                     {
                         AddWarning(errors, ProblemsConstants.DI_DOES_NOT_REFERENCE_SEQ_FLOW, null, bpmnModel.GetFlowElement(bpmnReference), string.Format(ProcessValidatorResource.DI_DOES_NOT_REFERENCE_SEQ_FLOW, bpmnReference));
                     }

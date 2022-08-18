@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         {
             MethodInfo setterMethod = ReflectUtil.GetSetter(declaration.Name, target.GetType(), declaration.Value.GetType());
 
-            if (setterMethod is object)
+            if (setterMethod is not null)
             {
                 try
                 {
@@ -88,7 +88,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public static bool FieldTypeCompatible(FieldDeclaration declaration, FieldInfo field)
         {
-            if (declaration.Value is object)
+            if (declaration.Value is not null)
             {
                 return declaration.Value.GetType().IsAssignableFrom(field.DeclaringType);
             }

@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             if (job.Exclusive)
             {
-                if (job.ExecutionId is object)
+                if (job.ExecutionId is not null)
                 {
                     IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(job.ExecutionId);
                     if (execution is object)

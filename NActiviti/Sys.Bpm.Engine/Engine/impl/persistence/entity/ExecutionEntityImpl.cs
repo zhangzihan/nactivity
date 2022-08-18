@@ -283,7 +283,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             set
             {
                 this.currentFlowElement = value;
-                if (value is object)
+                if (value is not null)
                 {
                     this.activityId = value.Id;
                 }
@@ -475,7 +475,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureProcessInstanceInitialized()
         {
             var ctx = Context.CommandContext;
-            if (processInstance is null && processInstanceId is object && ctx is object)
+            if (processInstance is null && processInstanceId is not null && ctx is object)
             {
                 processInstance = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(processInstanceId);
             }
@@ -517,7 +517,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureParentInitialized()
         {
             var ctx = Context.CommandContext;
-            if (parent is null && parentId is object && ctx is object)
+            if (parent is null && parentId is not null && ctx is object)
             {
                 parent = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(parentId);
             }
@@ -590,7 +590,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureSuperExecutionInitialized()
         {
             var ctx = Context.CommandContext;
-            if (superExecution is null && superExecutionId is object && ctx is object)
+            if (superExecution is null && superExecutionId is not null && ctx is object)
             {
                 superExecution = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(superExecutionId);
             }
@@ -706,7 +706,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         // TODO: this should ideally move to another place  
         protected internal override void InitializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance)
         {
-            if (processInstanceId is object)
+            if (processInstanceId is not null)
             {
                 variableInstance.ProcessInstanceId = processInstanceId;
             }
@@ -758,7 +758,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             // Dispatch event, if needed
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is not null && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_CREATED, variableName, value, result.Type, result.TaskId, result.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
@@ -776,7 +776,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             // Dispatch event, if needed
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is not null && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_UPDATED, variableInstance.Name, value, variableInstance.Type, variableInstance.TaskId, variableInstance.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
@@ -1147,7 +1147,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (localizedName is object && localizedName.Length > 0)
+                if (localizedName is not null && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -1170,7 +1170,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (localizedDescription is object && localizedDescription.Length > 0)
+                if (localizedDescription is not null && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -1262,7 +1262,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (variableInstance.Id is object && variableInstance.TaskId is null)
+                        if (variableInstance.Id is not null && variableInstance.TaskId is null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -1352,7 +1352,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             foreach (ExecutionEntityImpl inst in executions)
             {
                 var variable = variables.FirstOrDefault(x => x.ExecutionId == inst.Id && x.Name == inst.StartUserId);
-                if (variable is object)
+                if (variable is not null)
                 {
                     inst.starter = variable.Value as UserInfo;
                 }
@@ -1381,7 +1381,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             //由于缓存问题，先不要从变量里获取用户
             if (Context.CommandContext is object && (starter is null || starter.Id != this.startUserId))
             {
-                if (this.VariablesLocal.TryGetValue(this.startUserId, out var userInfo) && userInfo is object)
+                if (this.VariablesLocal.TryGetValue(this.startUserId, out var userInfo) && userInfo is not null)
                 {
                     starter = JToken.FromObject(userInfo).ToObject<UserInfo>();
 
@@ -1584,11 +1584,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     strb.Append("Execution[ id '" + Id + "' ]");
                 }
-                if (activityId is object)
+                if (activityId is not null)
                 {
                     strb.Append(" - activity '" + activityId);
                 }
-                if (parentId is object)
+                if (parentId is not null)
                 {
                     strb.Append(" - parent '" + parentId + "'");
                 }

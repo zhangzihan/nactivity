@@ -176,7 +176,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             {
                 IExecutionEntity executionToContinue = null;
 
-                if (subProcess is object)
+                if (subProcess is not null)
                 {
 
                     // In case of ending a subprocess: go up in the scopes and continue via the parent scope
@@ -278,7 +278,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// <returns></returns>
         protected internal virtual IExecutionEntity HandleRegularExecutionEnd(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution)
         {
-            if (!parentExecution.ProcessInstanceType && !(parentExecution.CurrentFlowElement is SubProcess))
+            if (!parentExecution.ProcessInstanceType && parentExecution.CurrentFlowElement is not SubProcess)
             {
                 parentExecution.CurrentFlowElement = execution.CurrentFlowElement;
             }
@@ -357,7 +357,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             if (executionEntity.CurrentFlowElement is EndEvent)
             {
                 SubProcess subProcess = ((EndEvent)execution.CurrentFlowElement).SubProcess;
-                return !executionEntity.Parent.ProcessInstanceType && subProcess is object && subProcess.LoopCharacteristics is object && subProcess.Behavior is MultiInstanceActivityBehavior;
+                return !executionEntity.Parent.ProcessInstanceType && subProcess is not null && subProcess.LoopCharacteristics is not null && subProcess.Behavior is MultiInstanceActivityBehavior;
             }
             return false;
         }
@@ -401,7 +401,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // Filter out the boundary events
             foreach (IExecutionEntity activeExecution in executions)
             {
-                if (!(activeExecution.CurrentFlowElement is BoundaryEvent))
+                if (activeExecution.CurrentFlowElement is not BoundaryEvent)
                 {
                     activeExecutions++;
                 }
@@ -423,7 +423,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
 
             foreach (IExecutionEntity activeExecution in executions)
             {
-                if (!(activeExecution.CurrentFlowElement is BoundaryEvent))
+                if (activeExecution.CurrentFlowElement is not BoundaryEvent)
                 {
                     activeChildExecutions.Add(activeExecution);
                 }

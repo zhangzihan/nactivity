@@ -421,7 +421,7 @@ namespace Sys.Workflow.Engine.Impl
                     .FirstOrDefault();
             }
 
-            return task is object;
+            return task is not null;
         }
 
         public virtual bool TryGetTask(string taskId, out ITask task)
@@ -435,7 +435,7 @@ namespace Sys.Workflow.Engine.Impl
                 task = CreateTaskQuery().SetTaskId(taskId).SingleResult();
             }
 
-            return task is object;
+            return task is not null;
         }
 
         public virtual void SetVariable(string taskId, string variableName, object value)

@@ -28,7 +28,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
         }
         public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
-            if (!(parentElement is Event))
+            if (parentElement is not Event)
             {
                 return;
             }

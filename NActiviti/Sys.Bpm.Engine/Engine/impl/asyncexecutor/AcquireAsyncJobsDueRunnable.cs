@@ -84,7 +84,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 {
                     AcquiredJobEntities acquiredJobs = commandExecutor.Execute(new AcquireJobsCmd(asyncExecutor));
 
-                    if (acquiredJobs is object)
+                    if (acquiredJobs is not null)
                     {
                         bool allJobsSuccessfullyOffered = true;
                         foreach (IJobEntity job in acquiredJobs.Jobs)

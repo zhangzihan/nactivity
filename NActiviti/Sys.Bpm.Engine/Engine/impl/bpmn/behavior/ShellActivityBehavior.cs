@@ -74,23 +74,23 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 commandStr
             };
 
-            if (arg1Str is object)
+            if (arg1Str is not null)
             {
                 argList.Add(arg1Str);
             }
-            if (arg2Str is object)
+            if (arg2Str is not null)
             {
                 argList.Add(arg2Str);
             }
-            if (arg3Str is object)
+            if (arg3Str is not null)
             {
                 argList.Add(arg3Str);
             }
-            if (arg4Str is object)
+            if (arg4Str is not null)
             {
                 argList.Add(arg4Str);
             }
-            if (arg5Str is object)
+            if (arg5Str is not null)
             {
                 argList.Add(arg5Str);
             }
@@ -129,7 +129,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (expression is object)
             {
                 object value = expression.GetValue(execution);
-                if (value is object)
+                if (value is not null)
                 {
                     return value.ToString();
                 }

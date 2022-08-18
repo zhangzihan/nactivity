@@ -59,7 +59,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
             if (currentElement is BoundaryEvent)
             {
                 BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
-                if (boundaryEvent.CancelActivity && boundaryEvent.AttachedToRef is object)
+                if (boundaryEvent.CancelActivity && boundaryEvent.AttachedToRef is not null)
                 {
 
                     if (!processedElements.Contains(boundaryEvent.Id))

@@ -44,7 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             string processInstanceId = attachment.ProcessInstanceId;
             string processDefinitionId = null;
-            if (attachment.ProcessInstanceId is object)
+            if (attachment.ProcessInstanceId is not null)
             {
                 IExecutionEntity process = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                 if (process is object)
@@ -55,12 +55,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             commandContext.AttachmentEntityManager.Delete(attachment, false);
 
-            if (attachment.ContentId is object)
+            if (attachment.ContentId is not null)
             {
                 commandContext.ByteArrayEntityManager.DeleteByteArrayById(attachment.ContentId);
             }
 
-            if (attachment.TaskId is object)
+            if (attachment.TaskId is not null)
             {
                 commandContext.HistoryManager.CreateAttachmentComment(attachment.TaskId, attachment.ProcessInstanceId, attachment.Name, false);
             }

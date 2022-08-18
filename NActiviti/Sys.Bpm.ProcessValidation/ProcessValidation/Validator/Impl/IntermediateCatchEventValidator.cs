@@ -38,7 +38,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 }
                 else
                 {
-                    if (!(eventDefinition is TimerEventDefinition) && !(eventDefinition is SignalEventDefinition) && !(eventDefinition is MessageEventDefinition))
+                    if (eventDefinition is not TimerEventDefinition && eventDefinition is not SignalEventDefinition && eventDefinition is not MessageEventDefinition)
                     {
                         AddError(errors, ProblemsConstants.INTERMEDIATE_CATCH_EVENT_INVALID_EVENTDEFINITION, process, intermediateCatchEvent, ProcessValidatorResource.INTERMEDIATE_CATCH_EVENT_INVALID_EVENTDEFINITION);
                     }

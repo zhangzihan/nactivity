@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static bool IsEmpty(object @param)
         {
-            if (!(param is IEnumerable collection))
+            if (param is not IEnumerable collection)
             {
                 return true;
             }

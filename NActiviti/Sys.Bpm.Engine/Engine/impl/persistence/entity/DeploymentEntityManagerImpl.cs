@@ -275,7 +275,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             SignalEventDefinition signalEventDefinition = (SignalEventDefinition)eventDefinition;
             ISignalEventSubscriptionEntity subscriptionEntity = EventSubscriptionEntityManager.CreateSignalEventSubscription();
             Signal signal = bpmnModel.GetSignal(signalEventDefinition.SignalRef);
-            if (signal is object)
+            if (signal is not null)
             {
                 subscriptionEntity.EventName = signal.Name;
             }

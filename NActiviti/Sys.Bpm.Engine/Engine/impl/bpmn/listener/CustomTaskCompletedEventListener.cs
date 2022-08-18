@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
                     string usr = users.FirstOrDefault(x => x.Equals(taskEntity.Assignee, StringComparison.OrdinalIgnoreCase));
 
-                    if (usr is object)
+                    if (usr is not null)
                     {
                         users.Remove(usr);
                         parent.SetLoopVariable(collection, users);

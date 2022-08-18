@@ -161,9 +161,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual bool HasMultiInstanceParent(FlowNode flowNode)
         {
             bool hasMultiInstanceParent = false;
-            if (flowNode.SubProcess is object)
+            if (flowNode.SubProcess is not null)
             {
-                if (flowNode.SubProcess.LoopCharacteristics is object)
+                if (flowNode.SubProcess.LoopCharacteristics is not null)
                 {
                     hasMultiInstanceParent = true;
                 }
@@ -184,12 +184,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             IExecutionEntity multiInstanceExecution = null;
             IExecutionEntity parentExecution = execution.Parent;
-            if (parentExecution is object && parentExecution.CurrentFlowElement is object)
+            if (parentExecution is object && parentExecution.CurrentFlowElement is not null)
             {
                 FlowElement flowElement = parentExecution.CurrentFlowElement;
                 if (flowElement is Activity activity)
                 {
-                    if (activity.LoopCharacteristics is object)
+                    if (activity.LoopCharacteristics is not null)
                     {
                         multiInstanceExecution = parentExecution;
                     }

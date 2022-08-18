@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 {
                     task.VariablesLocal = variables;
                 }
-                else if (task.ExecutionId is object)
+                else if (task.ExecutionId is not null)
                 {
                     task.ExecutionVariables = variables;
                 }

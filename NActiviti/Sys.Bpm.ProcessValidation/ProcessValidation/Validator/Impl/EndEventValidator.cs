@@ -36,7 +36,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                     {
 
                         IFlowElementsContainer parent = process.FindParent(endEvent);
-                        if (!(parent is Transaction))
+                        if (parent is not Transaction)
                         {
                             AddError(errors, ProblemsConstants.END_EVENT_CANCEL_ONLY_INSIDE_TRANSACTION, process, endEvent, ProcessValidatorResource.END_EVENT_CANCEL_ONLY_INSIDE_TRANSACTION);
                         }

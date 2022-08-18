@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (@operator is object)
+                if (@operator is not null)
                 {
                     return @operator.ToString();
                 }

@@ -106,7 +106,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var ctx = Context.CommandContext;
-                if (execution is null && executionId is object && ctx is object)
+                if (execution is null && executionId is not null && ctx is object)
                 {
                     execution = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(executionId);
                 }
@@ -209,12 +209,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return true;
             }
 
-            if (a is null && b is object)
+            if (a is null && b is not null)
             {
                 return false;
             }
 
-            if (a is object && b is null)
+            if (a is not null && b is null)
             {
                 return false;
             }

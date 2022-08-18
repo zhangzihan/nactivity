@@ -67,7 +67,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence
         /// <returns></returns>
         public object ToParameterValue(object value)
         {
-            if (value is null || !(value is ByteArrayRef))
+            if (value is null || value is not ByteArrayRef)
             {
                 return DBNull.Value;
             }

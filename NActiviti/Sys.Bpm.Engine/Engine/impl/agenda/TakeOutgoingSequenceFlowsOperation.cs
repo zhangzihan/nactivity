@@ -117,7 +117,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
 
                 commandContext.HistoryManager.RecordActivityEnd(execution, null);
 
-                if (!(execution.CurrentFlowElement is SubProcess))
+                if (execution.CurrentFlowElement is not SubProcess)
                 {
                     Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
                 }
@@ -165,7 +165,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // Check if there is a default sequence flow
             if (outgoingSequenceFlows.Count == 0 && evaluateConditions)
             { // The elements that set this to false also have no support for default sequence flow
-                if (defaultSequenceFlowId is object)
+                if (defaultSequenceFlowId is not null)
                 {
                     foreach (SequenceFlow sequenceFlow in flowNode.OutgoingFlows)
                     {
@@ -211,7 +211,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 {
                     for (int i = 1; i < outgoingSequenceFlows.Count; i++)
                     {
-                        IExecutionEntity parent = execution.ParentId is object ? execution.Parent : execution;
+                        IExecutionEntity parent = execution.ParentId is not null ? execution.Parent : execution;
                         IExecutionEntity outgoingExecutionEntity = commandContext.ExecutionEntityManager.CreateChildExecution(parent);
 
                         SequenceFlow outgoingSequenceFlow = outgoingSequenceFlows[i];
@@ -238,7 +238,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         {
             bool completeAdhocSubProcess = false;
             AdhocSubProcess adhocSubProcess = (AdhocSubProcess)flowNode.ParentContainer;
-            if (adhocSubProcess.CompletionCondition is object)
+            if (adhocSubProcess.CompletionCondition is not null)
             {
                 IExpression expr = Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(adhocSubProcess.CompletionCondition);
                 bool adHoc = Convert.ToBoolean(expr.GetValue(execution));
@@ -339,7 +339,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// <param name="currentFlowElement"></param>
         protected internal virtual void CleanupExecutions(FlowElement currentFlowElement)
         {
-            if (execution.ParentId is object && execution.IsScope)
+            if (execution.ParentId is not null && execution.IsScope)
             {
                 // If the execution is a scope (and not a process instance), the scope must first be
                 // destroyed before we can continue and follow the sequence flow
@@ -383,7 +383,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// </summary>
         protected internal virtual IExecutionEntity FindNextParentScopeExecutionWithAllEndedChildExecutions(IExecutionEntity executionEntity, IExecutionEntity executionEntityToIgnore)
         {
-            if (executionEntity.ParentId is object)
+            if (executionEntity.ParentId is not null)
             {
                 IExecutionEntity scopeExecutionEntity = executionEntity.Parent;
 

@@ -72,13 +72,13 @@ namespace Sys.Workflow.Engine.Impl.Util
 
                     process.WaitForExit();
 
-                    if (ResultVariableStr is object)
+                    if (ResultVariableStr is not null)
                     {
                         string result = process.StandardOutput.ReadToEnd(); //convertStreamToStr(process.StandardOutput);
                         execution.SetVariable(ResultVariableStr, result);
                     }
 
-                    if (ErrorCodeVariableStr is object)
+                    if (ErrorCodeVariableStr is not null)
                     {
                         execution.SetVariable(ErrorCodeVariableStr, Convert.ToString(errorCode));
 
@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         private string ConvertStreamToStr(System.IO.Stream @is)
         {
 
-            if (@is is object)
+            if (@is is not null)
             {
                 return new StreamReader(@is).ReadToEnd();
                 //StringWriter writer = new StringWriter();

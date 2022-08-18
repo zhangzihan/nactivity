@@ -137,7 +137,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 else
                 {
                     // do not include data objects because they do not have a corresponding shape in the BPMNDI data
-                    if (!(element is DataObject) && null != locations[elementId])
+                    if (element is not DataObject && null != locations[elementId])
                     {
                         // must be a shape
                         mainModel.LocationMap[elementId] = locations[elementId];
@@ -187,7 +187,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 else
                 {
                     // do not include data objects because they do not have a corresponding shape in the BPMNDI data
-                    if (!(element is DataObject) && null != locations[elementId])
+                    if (element is not DataObject && null != locations[elementId])
                     {
                         // must be a shape
                         subModel.LocationMap[elementId] = locations[elementId];

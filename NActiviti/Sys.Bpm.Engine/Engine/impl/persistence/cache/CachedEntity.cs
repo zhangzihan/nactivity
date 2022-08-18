@@ -67,7 +67,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
 
         public virtual bool hasChanged()
         {
-            return entity.PersistentState is object && !entity.PersistentState.Equals(originalPersistentState);
+            return entity.PersistentState is not null && !entity.PersistentState.Equals(originalPersistentState);
         }
 
     }

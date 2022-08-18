@@ -15,7 +15,7 @@
         }
         public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
-            if (!(parentElement is Activity))
+            if (parentElement is not Activity)
             {
                 return;
             }

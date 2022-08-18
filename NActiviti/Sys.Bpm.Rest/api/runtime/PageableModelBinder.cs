@@ -117,7 +117,7 @@ namespace Sys.Workflow.Api.Runtime.Shared.Query
             }
             catch (Exception exception)
             {
-                if (!(exception is FormatException) && (exception.InnerException is not null))
+                if (exception is not FormatException && (exception.InnerException is not null))
                 {
                     exception = ExceptionDispatchInfo.Capture(exception.InnerException).SourceException;
                 }

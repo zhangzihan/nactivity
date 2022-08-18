@@ -101,7 +101,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
                 return false;
             }
 
-            if (!(obj is Deployment deploy))
+            if (obj is not Deployment deploy)
             {
                 return false;
             }

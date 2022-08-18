@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public override void SetValue(object value, IValueFields valueFields)
         {
             valueFields.LongValue = (long?)value;
-            if (value is object)
+            if (value is not null)
             {
                 valueFields.TextValue = value.ToString();
             }

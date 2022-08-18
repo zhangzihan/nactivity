@@ -471,7 +471,7 @@ namespace Sys.Workflow.Engine.Impl
                     string activityId = null;
                     if (execution.Id.Equals(execution.ProcessInstanceId))
                     {
-                        if (execution.ProcessDefinitionId is object)
+                        if (execution.ProcessDefinitionId is not null)
                         {
                             IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(execution.ProcessDefinitionId);
                             activityId = processDefinition.Key;
@@ -483,7 +483,7 @@ namespace Sys.Workflow.Engine.Impl
                         activityId = execution.ActivityId;
                     }
 
-                    if (activityId is object)
+                    if (activityId is not null)
                     {
                         Localize(execution, activityId);
                     }
@@ -503,16 +503,16 @@ namespace Sys.Workflow.Engine.Impl
             if (!string.IsNullOrWhiteSpace(locale_Renamed) && !string.IsNullOrWhiteSpace(processDefinitionId))
             {
                 JToken languageNode = Context.GetLocalizationElementProperties(locale_Renamed, activityId, processDefinitionId, withLocalizationFallback_);
-                if (languageNode is object)
+                if (languageNode is not null)
                 {
                     JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                    if (languageNameNode is object)
+                    if (languageNameNode is not null)
                     {
                         executionEntity.LocalizedName = languageNameNode.ToString();
                     }
 
                     JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                    if (languageDescriptionNode is object)
+                    if (languageDescriptionNode is not null)
                     {
                         executionEntity.LocalizedDescription = languageDescriptionNode.ToString();
                     }

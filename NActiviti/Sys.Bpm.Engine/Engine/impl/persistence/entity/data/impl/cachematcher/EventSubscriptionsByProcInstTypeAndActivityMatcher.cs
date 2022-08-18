@@ -34,11 +34,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             string processInstanceId = @params[nameof(processInstanceId)]?.ToString();
             string activityId = @params[nameof(activityId)]?.ToString();
 
-            return eventSubscriptionEntity.EventType is object &&
+            return eventSubscriptionEntity.EventType is not null &&
                 eventSubscriptionEntity.EventType.Equals(eventType, StringComparison.OrdinalIgnoreCase) &&
-                eventSubscriptionEntity.ProcessInstanceId is object &&
+                eventSubscriptionEntity.ProcessInstanceId is not null &&
                 eventSubscriptionEntity.ProcessInstanceId.Equals(processInstanceId, StringComparison.OrdinalIgnoreCase) &&
-                eventSubscriptionEntity.ActivityId is object &&
+                eventSubscriptionEntity.ActivityId is not null &&
                 eventSubscriptionEntity.ActivityId.Equals(activityId, StringComparison.OrdinalIgnoreCase);
         }
 

@@ -44,7 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiIllegalArgumentException("listener is null.");
             }
 
-            if (types is object)
+            if (types is not null)
             {
                 commandContext.ProcessEngineConfiguration.EventDispatcher.AddEventListener(listener, types);
             }

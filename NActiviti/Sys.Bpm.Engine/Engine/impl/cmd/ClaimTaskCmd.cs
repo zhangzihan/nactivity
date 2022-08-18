@@ -40,11 +40,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
-            if (userId is object)
+            if (userId is not null)
             {
                 task.ClaimTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
-                if (task.Assignee is object)
+                if (task.Assignee is not null)
                 {
                     if (!task.Assignee.Equals(userId))
                     {

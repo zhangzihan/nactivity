@@ -47,7 +47,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public override object GetValue(IValueFields valueFields)
         {
             long? longValue = valueFields.LongValue;
-            if (longValue is object)
+            if (longValue is not null)
             {
                 return new DateTime(longValue.Value);
             }
@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override void SetValue(object value, IValueFields valueFields)
         {
-            if (value is object)
+            if (value is not null)
             {
                 valueFields.LongValue = ((DateTime)value).Ticks;
             }

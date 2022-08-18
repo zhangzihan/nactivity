@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 ps[nameof(ExceptionStacktrace)] = ExceptionStacktrace;
                 ps[nameof(ExceptionMessage)] = exceptionMessage;
 
-                if (exceptionByteArrayRef is object)
+                if (exceptionByteArrayRef is not null)
                 {
                     ps["exceptionByteArrayId"] = exceptionByteArrayRef.Id;
                 }

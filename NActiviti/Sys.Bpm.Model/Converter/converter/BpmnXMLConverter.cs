@@ -600,7 +600,7 @@ namespace Sys.Workflow.Bpmn.Converters
                     xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_TRIGGERED_BY, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE);
 
                 }
-                else if (!(subProcess is Transaction))
+                else if (subProcess is not Transaction)
                 {
                     if (subProcess.Asynchronous)
                     {

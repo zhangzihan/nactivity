@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Events
             FlowElement flowElement = execution.CurrentFlowElement;
             if (flowElement is BoundaryEvent boundaryEvent)
             {
-                if (boundaryEvent.AttachedToRef is object)
+                if (boundaryEvent.AttachedToRef is not null)
                 {
                     DispatchActivityCancelled(eventSubscription, execution, boundaryEvent.AttachedToRef, commandContext);
                 }
@@ -119,7 +119,7 @@ namespace Sys.Workflow.Engine.Impl.Events
             foreach (IExecutionEntity childExecution in executionEntities)
             {
 
-                if (!boundaryEventExecution.Id.Equals(childExecution.Id) && childExecution.CurrentFlowElement is object && childExecution.CurrentFlowElement is FlowNode)
+                if (!boundaryEventExecution.Id.Equals(childExecution.Id) && childExecution.CurrentFlowElement is not null && childExecution.CurrentFlowElement is FlowNode)
                 {
 
                     FlowNode flowNode = (FlowNode)childExecution.CurrentFlowElement;

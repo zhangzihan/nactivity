@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             {
                 throw new ActivitiException("condition expression returns null (sequenceFlowId: " + sequenceFlowId + " execution: " + execution + ")");
             }
-            if (!(result is bool))
+            if (result is not bool)
             {
                 throw new ActivitiException("condition expression returns non-Boolean (sequenceFlowId: " + sequenceFlowId + " execution: " + execution + "): " + result + " (" + result.GetType().FullName + ")");
             }

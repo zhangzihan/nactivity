@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiObjectNotFoundException("No execution found for id '" + executionId + "'", typeof(IExecutionEntity));
             }
 
-            if (!(execution.CurrentFlowElement is AdhocSubProcess))
+            if (execution.CurrentFlowElement is not AdhocSubProcess)
             {
                 throw new ActivitiException("The current flow element of the requested execution is not an ad-hoc sub process");
             }

@@ -1140,7 +1140,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get second.................................................
                 st = new SortedSet<int>(seconds.Where(x => x >= sec));
-                if (st is object && st.Count > 0)
+                if (st is not null && st.Count > 0)
                 {
                     sec = ((int?)st.Min).Value;
                 }
@@ -1158,7 +1158,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get minute.................................................
                 st = new SortedSet<int>(minutes.Where(x => x >= min));
-                if (st is object && st.Count > 0)
+                if (st is not null && st.Count > 0)
                 {
                     t = min;
                     min = ((int?)st.Min).Value;
@@ -1182,7 +1182,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get hour...................................................
                 st = new SortedSet<int>(hours.Where(x => x >= hr));
-                if (st is object && st.Count > 0)
+                if (st is not null && st.Count > 0)
                 {
                     t = hr;
                     hr = ((int?)st.Min).Value;
@@ -1298,7 +1298,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
                             mon++;
                         }
                     }
-                    else if (st is object && st.Count > 0)
+                    else if (st is not null && st.Count > 0)
                     {
                         t = day;
                         day = ((int?)st.Min).Value;
@@ -1420,7 +1420,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
                         int dow = ((int?)daysOfWeek.Min).Value; // desired
                                                                 // d-o-w
                         st = new SortedSet<int>(daysOfWeek.Where(x => x >= cDow));
-                        if (st is object && st.Count > 0)
+                        if (st is not null && st.Count > 0)
                         {
                             dow = ((int?)st.Min).Value;
                         }
@@ -1475,7 +1475,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get month...................................................
                 st = new SortedSet<int>(months.Where(x => x >= mon));
-                if (st is object && st.Count > 0)
+                if (st is not null && st.Count > 0)
                 {
                     t = mon;
                     mon = ((int?)st.Min).Value;
@@ -1501,7 +1501,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get year...................................................
                 st = new SortedSet<int>(years.Where(x => x >= year));
-                if (st is object && st.Count > 0)
+                if (st is not null && st.Count > 0)
                 {
                     t = year;
                     year = ((int?)st.Min).Value;
