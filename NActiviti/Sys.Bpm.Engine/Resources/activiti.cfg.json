@@ -1,28 +1,28 @@
 {
   "id": "processEngineConfiguration",
   "type": "Sys.Workflow.Engine.Impl.Cfg.StandaloneProcessEngineConfiguration",
-  //web����Ӧ�ó�������
+  //web主机应用程序名称
   "applicationName": "workflow",
-  //���ݿ���²��ԣ�true=update drop-create create
+  //数据库更新策略，true=update drop-create create
   "databaseSchemaUpdate": "false",
-  //��ѯִ����һ���첽��ҵ��ҵ�ȴ�ʱ�䣨�Ժ���Ϊ��λ��
+  //查询执行下一个异步作业作业等待时间（以毫秒为单位）
   "asyncExecutorDefaultAsyncJobAcquireWaitTime": 15000,
-  //��ѯִ����һ����ʱ����ҵ�ȴ�ʱ�䣨�Ժ���Ϊ��λ��
+  //查询执行下一个计时器作业等待时间（以毫秒为单位）
   "asyncExecutorDefaultTimerJobAcquireWaitTime": 15000,
-  //����ִ���첽��ҵ������֮ǰ���뱣�ֻ״̬��ʱ�䣨�Ժ���Ϊ��λ����
-  //����>0������������ҵִ�е�����±���ʼ�մ������̡߳�
-  //���=0�����߳�������ִ����ҵ�󽫱����١�
+  //用于执行异步作业在销毁之前必须保持活动状态的时间（以毫秒为单位）。
+  //设置>0可以在许多作业执行的情况下避免始终创建新线程。
+  //如果=0，则线程在用于执行作业后将被销毁。
   "asyncExecutorThreadKeepAliveTime": 0,
-  //�Ƿ������첽��ҵִ�й���,������ûᶨʱ��ѯ���ݿ��ѯ��ʱ����,��Ҫ��ʱִ�������������
+  //是否启用异步作业执行功能,如果启用会定时轮询数据库查询定时任务,需要定时执行任务必须启动
   "asyncExecutorActivate": true,
-  //�첽��ҵʧ�����Եȴ�ʱ��(��)
+  //异步作业失败重试等待时间(秒)
   "asyncFailedJobWaitTime": 5,
-  //���ù�����������־����ģʽ
+  //启用工作流调试日志跟踪模式
   "enableVerboseExecutionTreeLogging": true,
   "mailServerPort": "5025",
-  //webapi����ʧ�ܴ������
+  //webapi调用失败错误代码
   "webapiErrorCode": "-1000",
-  //���̶��建����������
+  //流程定义缓存限制数量
   "processDefinitionCacheLimit": -1,
   "mailServers": [
     {
@@ -38,20 +38,20 @@
       }
     }
   ],
-  //bpmn��չ�������ƿռ�
+  //bpmn扩展属性名称空间
   "bpmnExtensionsNamespace": "http://camunda.org/schema/1.0/bpmn",
-  //bpmn��չ����ǰ׺
+  //bpmn扩展属性前缀
   "bpmnExtensionsPrefix": "camunda",
-  //��ʷ��¼���鼶��:none����¼
-  //full:��ȫ��¼����������Ĳ���,����ʱ����,����ϵͳ��Ҫʹ��.
-  //activity:ֻ��¼����ʵ���������������ʱ�ı���ֵ,���̱���ֵ����¼
-  //audit:Ĭ��,��������ʵ���ʵ������ֵ��ͬ���ύ�ı���ֵ(form���������õ��ֶ�,��ϵͳ�ı���ֵ����һ������).
+  //历史记录详情级别:none不记录
+  //full:完全记录这个是最慢的操作,调试时启用,生产系统不要使用.
+  //activity:只记录流程实例和任务及最终完成时的变量值,过程变量值不记录
+  //audit:默认,保留流程实例活动实例变量值及同步提交的表单值(form属性中设置的字段,与系统的表单值不是一个概念).
   "history": "audit",
-  //����������Ϣ����
+  //启用流程信息缓存
   "enableProcessDefinitionInfoCache": true,
-  //��ǰ�汾,�����ݿ���ʱ,�޸İ汾��,���ڱ������
+  //当前版本,当数据库变更时,修改版本号,用于变更管理
   "currentVersion": "7.0.0.0",
-  //��ʷ�汾,ά����ǰ�����������е���ʷ�汾��,���ڱ������
+  //历史版本,维护当前流程引擎所有的历史版本号,用于变更管理
   "historyVersions": [],
   "transactionOption": {
     "useTransactionScope": true,
