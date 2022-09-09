@@ -77,7 +77,7 @@ namespace SmartSql.DbSession
 
         public void CloseConnection()
         {
-            if ((Connection is not null) && (Connection.State != ConnectionState.Closed))
+            if (Connection is not null)
             {
                 Connection.Close();
                 Connection.Dispose();
@@ -116,6 +116,7 @@ namespace SmartSql.DbSession
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)

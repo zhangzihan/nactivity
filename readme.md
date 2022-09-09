@@ -19,7 +19,7 @@
 * 修改数据库配置 appsettings.json
 ```
 "WorkflowDataSource"：{
-    "providerName": "System.Data.SqlClient",
+    "providerName": "Microsoft.Data.SqlClient",
     "database": "activiti",　//数据库名称
     "connectionString": "server=localhost;database=数据库名称;uid=用户名;pwd=密码;"
 }

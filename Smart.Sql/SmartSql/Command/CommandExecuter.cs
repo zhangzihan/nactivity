@@ -32,7 +32,8 @@ namespace SmartSql.Command
             return ExecuteWarp((dbCommand) =>
             {
                 dbCommand.CommandTimeout = 0;
-                return dbCommand.ExecuteNonQuery();
+                int effect = dbCommand.ExecuteNonQuery();
+                return effect;
             }, dbSession, context);
         }
 
@@ -57,7 +58,8 @@ namespace SmartSql.Command
             return ExecuteWarp((dbCommand) =>
             {
                 dbCommand.CommandTimeout = 0;
-                return dbCommand.ExecuteScalar();
+                object obj = dbCommand.ExecuteScalar();
+                return obj;
             }, dbSession, context);
         }
 
@@ -78,29 +80,27 @@ namespace SmartSql.Command
         #region Async
         public Task<int> ExecuteNonQueryAsync(IDbConnectionSession dbSession, RequestContext context)
         {
-            return ExecuteWarpAsync((dbCommand) =>
+            return ExecuteWarpAsync(async (dbCommand) =>
             {
                 dbCommand.CommandTimeout = 0;
-                return dbCommand.ExecuteNonQueryAsync();
+                int effect = await dbCommand.ExecuteNonQueryAsync().ConfigureAwait(false);
+                return effect;
             }, dbSession, context);
         }
 
         public Task<int> ExecuteNonQueryAsync(IDbConnectionSession dbSession, RequestContext context, CancellationToken cancellationToken)
         {
-            return ExecuteWarpAsync((dbCommand) =>
+            return ExecuteWarpAsync(async (dbCommand) =>
             {
                 dbCommand.CommandTimeout = 0;
-                return dbCommand.ExecuteNonQueryAsync(cancellationToken);
+                int effect = await dbCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                return effect;
             }, dbSession, context);
         }
 
         public Task<object> ExecuteScalarAsync(IDbConnectionSession dbSession, RequestContext context)
         {
-            return ExecuteWarpAsync((dbCommand) =>
-            {
-                dbCommand.CommandTimeout = 0;
-                return dbCommand.ExecuteScalarAsync();
-            }, dbSession, context);
+            return ExecuteScalarAsync(dbSession, context, CancellationToken.None);
         }
 
         public Task<object> ExecuteScalarAsync(IDbConnectionSession dbSession, RequestContext context, CancellationToken cancellationToken)
@@ -113,11 +113,7 @@ namespace SmartSql.Command
         }
         public Task<DbDataReader> ExecuteReaderAsync(IDbConnectionSession dbSession, RequestContext context)
         {
-            return ExecuteWarpAsync((dbCommand) =>
-            {
-                dbCommand.CommandTimeout = 0;
-                return dbCommand.ExecuteReaderAsync();
-            }, dbSession, context);
+            return ExecuteReaderAsync(dbSession, context, CancellationToken.None);
         }
 
         public Task<DbDataReader> ExecuteReaderAsync(IDbConnectionSession dbSession, RequestContext context, CancellationToken cancellationToken)

@@ -105,7 +105,7 @@ namespace Spring.Objects.Factory.Config
 
                 variables.Add(setting.Name + ".connectionString", setting.ConnectionString);
                 variables.Add(setting.Name + ".providerName",
-                              StringUtils.HasText(providerName) ? providerName : "System.Data.SqlClient");
+                              StringUtils.HasText(providerName) ? providerName : "Microsoft.Data.SqlClient");
             }
         }
     }

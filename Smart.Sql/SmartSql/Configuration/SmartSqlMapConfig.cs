@@ -52,9 +52,9 @@ namespace SmartSql.Configuration
     public class DataSource : IDataSource
     {
         [XmlAttribute]
-        public String Name { get; set; }
+        public string Name { get; set; }
         [XmlAttribute]
-        public String ConnectionString { get; set; }
+        public string ConnectionString { get; set; }
     }
 
     public class WriteDataSource : IWriteDataSource

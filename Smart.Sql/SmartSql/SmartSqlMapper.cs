@@ -39,7 +39,7 @@ namespace SmartSql
         public JToken Variables
         {
             get => variables;
-            set => variables = value ?? throw new ArgumentNullException("variables");
+            set => variables = value ?? throw new ArgumentNullException(nameof(Variables));
         }
 
         public SmartSqlMapper(String sqlMapConfigFilePath = "SmartSqlMapConfig.xml") : this(NullLoggerFactory.Instance, sqlMapConfigFilePath)
@@ -122,35 +122,50 @@ namespace SmartSql
         {
             return ExecuteWrap((dbSession) =>
             {
-                using var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
-                var deser = DeserializerFactory.Create();
-                Type resultType = context.Statement.ResultType ?? context.Statement?.ResultMap?.ResultType;
-                if (resultType is not null)
+                using (var dataReader = CommandExecuter.ExecuteReader(dbSession, context))
                 {
-                    var method = deser.GetType().GetMethod("ToEnumerable", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
+                    var deser = DeserializerFactory.Create();
+                    Type resultType = context.Statement.ResultType ?? context.Statement?.ResultMap?.ResultType;
+                    IList<T> objList = null;
+                    if (resultType is not null)
+                    {
+                        var method = deser.GetType().GetMethod("ToEnumerable", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
 
-                    var list = method.MakeGenericMethod(resultType).Invoke(deser, new object[] { context, dataReader });
+                        var list = method.MakeGenericMethod(resultType).Invoke(deser, new object[] { context, dataReader });
 
-                    return (list as System.Collections.IEnumerable).Cast<T>().ToList();
+                        objList = (list as System.Collections.IEnumerable).Cast<T>().ToList();
+                    }
+                    else
+                    {
+                        objList = deser.ToEnumerable<T>(context, dataReader).ToList();
+                    }
+                    dataReader.Close();
+                    return objList;
                 }
-                var objList = deser.ToEnumerable<T>(context, dataReader).ToList();
-                return objList;
             }, context);
         }
         public T QuerySingle<T>(RequestContext context)
         {
             return ExecuteWrap((dbSession) =>
             {
-                using var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
-                var deser = DeserializerFactory.Create();
-                Type resultType = context.Statement.ResultType ?? context.Statement?.ResultMap?.ResultType;
-                if (resultType is not null)
+                using (var dataReader = CommandExecuter.ExecuteReader(dbSession, context))
                 {
-                    var method = deser.GetType().GetMethod("ToSingle", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
+                    var deser = DeserializerFactory.Create();
+                    Type resultType = context.Statement.ResultType ?? context.Statement?.ResultMap?.ResultType;
+                    T obj = default;
+                    if (resultType is not null)
+                    {
+                        var method = deser.GetType().GetMethod("ToSingle", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
 
-                    return (T)method.MakeGenericMethod(resultType).Invoke(deser, new object[] { context, dataReader });
+                        obj = (T)method.MakeGenericMethod(resultType).Invoke(deser, new object[] { context, dataReader });
+                    }
+                    else
+                    {
+                        obj = deser.ToSingle<T>(context, dataReader);
+                    }
+                    dataReader.Close();
+                    return obj;
                 }
-                return deser.ToSingle<T>(context, dataReader);
             }, context);
         }
 
@@ -158,9 +173,12 @@ namespace SmartSql
         {
             return ExecuteWrap((dbSession) =>
             {
-                using var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
-                return DataReaderConvert.ToDataTable(dataReader);
-
+                using (var dataReader = CommandExecuter.ExecuteReader(dbSession, context))
+                {
+                    var dt = DataReaderConvert.ToDataTable(dataReader);
+                    dataReader.Close();
+                    return dt;
+                }
             }, context);
         }
 

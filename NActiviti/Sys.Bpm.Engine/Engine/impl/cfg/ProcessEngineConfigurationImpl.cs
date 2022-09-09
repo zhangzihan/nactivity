@@ -1543,6 +1543,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 // Especially with executions, with 100 as default, this limit is passed.
                 switch (dbreader.DatabaseSchema.Provider)
                 {
+                    case "Microsoft.Data.SqlClient":
                     case "System.Data.SqlClient":
                         databaseType = DATABASE_TYPE_MSSQL;
                         break;

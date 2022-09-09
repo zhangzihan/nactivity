@@ -12,10 +12,10 @@ namespace SmartSql.Abstractions.DataSource
         /// <summary>
         /// 数据源名称
         /// </summary>
-        String Name { get; set; }
+        string Name { get; set; }
         /// <summary>
         /// 数据源链接字符串
         /// </summary>
-        String ConnectionString { get; set; }
+        string ConnectionString { get; set; }
     }
 }
