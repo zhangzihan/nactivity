@@ -28,11 +28,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     /// 
     public class StartProcessInstanceByMessageCmd : ICommand<IProcessInstance>
     {
-        private string messageName;
+        private readonly string messageName;
         private readonly string businessKey;
-        private IDictionary<string, object> processVariables;
-        private IDictionary<string, object> transientVariables;
-        private string tenantId;
+        private readonly IDictionary<string, object> processVariables;
+        private readonly IDictionary<string, object> transientVariables;
+        private readonly string tenantId;
 
         ///<inheritdoc />
         public StartProcessInstanceByMessageCmd(string messageName, string businessKey, IDictionary<string, object> processVariables, string tenantId)
@@ -83,7 +83,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiObjectNotFoundException("No process definition found for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
             }
 
-            ProcessInstanceHelper processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
+            var processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
             IProcessInstance processInstance = processInstanceHelper.CreateAndStartProcessInstanceByMessage(processDefinition, messageName, processVariables, transientVariables);
 
             return processInstance;

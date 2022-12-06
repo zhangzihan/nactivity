@@ -39,10 +39,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
                 eventSubscriptionEntity.EventName is not null &&
                 eventSubscriptionEntity.EventName.Equals(eventName, StringComparison.OrdinalIgnoreCase))
             {
-                if (tenantId is not null && ProcessEngineConfiguration.NO_TENANT_ID != tenantId?.ToString())
+                if (!string.IsNullOrWhiteSpace(tenantId))
                 {
                     return eventSubscriptionEntity.TenantId is not null &&
-                        string.Compare(eventSubscriptionEntity.TenantId, tenantId?.ToString(), true) == 0;
+                        string.Compare(eventSubscriptionEntity.TenantId, tenantId, true) == 0;
                 }
                 else
                 {

@@ -104,7 +104,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
                 IProcessDefinitionQuery query = new ProcessDefinitionQueryImpl(commandContext).SetProcessDefinitionKey(processDefinitionKey);
 
-                if (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+                if (string.IsNullOrWhiteSpace(tenantId))
                 {
                     query.SetProcessDefinitionWithoutTenantId();
                 }

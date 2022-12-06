@@ -15,69 +15,69 @@
 
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
-    using Sys.Workflow.Bpmn.Models;
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Persistence.Deploies;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Impl.Runtimes;
-    using Sys.Workflow.Engine.Impl.Util;
-    using Sys.Workflow.Engine.Repository;
-    using Sys.Workflow.Engine.Runtime;
-    using System.Linq;
+	using Sys.Workflow.Bpmn.Models;
+	using Sys.Workflow.Engine.Impl.Interceptor;
+	using Sys.Workflow.Engine.Impl.Persistence.Deploies;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity;
+	using Sys.Workflow.Engine.Impl.Runtimes;
+	using Sys.Workflow.Engine.Impl.Util;
+	using Sys.Workflow.Engine.Repository;
+	using Sys.Workflow.Engine.Runtime;
+	using System.Linq;
 
-    /// 
-    /// 
-    public class StartProcessInstanceByActivityCmd : ICommand<IProcessInstance>
-    {
+	/// 
+	/// 
+	public class StartProcessInstanceByActivityCmd : ICommand<IProcessInstance>
+	{
 
-        protected internal string messageName;
-        protected internal string businessKey;
-        protected internal IDictionary<string, object> processVariables;
-        protected internal IDictionary<string, object> transientVariables;
-        protected internal string tenantId;
-        private readonly string activityId;
-        private readonly string processDefinitionId;
-        private readonly string processInstanceName;
-        private readonly bool startProcessInstance;
+		protected internal string messageName;
+		protected internal string businessKey;
+		protected internal IDictionary<string, object> processVariables;
+		protected internal IDictionary<string, object> transientVariables;
+		protected internal string tenantId;
+		private readonly string activityId;
+		private readonly string processDefinitionId;
+		private readonly string processInstanceName;
+		private readonly bool startProcessInstance;
 
-        public StartProcessInstanceByActivityCmd(string processDefinitionId, string businessKey, string activityId, IDictionary<string, object> processVariables, string tenantId, IDictionary<string, object> transientVariables, bool startProcessInstance = true, string processInstanceName = null)
-        {
-            this.processDefinitionId = processDefinitionId;
-            this.activityId = activityId;
-            this.businessKey = businessKey;
-            this.processVariables = processVariables;
-            this.tenantId = tenantId;
-            this.transientVariables = transientVariables;
-            this.startProcessInstance = startProcessInstance;
-            this.processInstanceName = processInstanceName;
-        }
+		public StartProcessInstanceByActivityCmd(string processDefinitionId, string businessKey, string activityId, IDictionary<string, object> processVariables, string tenantId, IDictionary<string, object> transientVariables, bool startProcessInstance = true, string processInstanceName = null)
+		{
+			this.processDefinitionId = processDefinitionId;
+			this.activityId = activityId;
+			this.businessKey = businessKey;
+			this.processVariables = processVariables;
+			this.tenantId = tenantId;
+			this.transientVariables = transientVariables;
+			this.startProcessInstance = startProcessInstance;
+			this.processInstanceName = processInstanceName;
+		}
 
-        public virtual IProcessInstance Execute(ICommandContext commandContext)
-        {
-            DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
+		public virtual IProcessInstance Execute(ICommandContext commandContext)
+		{
+			DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
 
-            IProcessDefinition processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
-            if (processDefinition is null)
-            {
-                throw new ActivitiObjectNotFoundException("No process definition found for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
-            }
+			IProcessDefinition processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
+			if (processDefinition is null)
+			{
+				throw new ActivitiObjectNotFoundException("No process definition found for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
+			}
 
-            ProcessInstanceHelper processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
+			var processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
 
-            // Get model from cache
-            Process process = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
-            if (process is null)
-            {
-                throw new ActivitiException("Cannot start process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
-            }
+			// Get model from cache
+			Process process = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
+			if (process is null)
+			{
+				throw new ActivitiException("Cannot start process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
+			}
 
-            FlowElement initialFlowElement = process.FlowElements.FirstOrDefault(x => x.Id == activityId);
+			FlowElement initialFlowElement = process.FlowElements.FirstOrDefault(x => x.Id == activityId);
 
-            IProcessInstance processInstance = processInstanceHelper.CreateAndStartProcessInstanceWithInitialFlowElement(processDefinition, businessKey, processInstanceName, initialFlowElement, process, processVariables, transientVariables, startProcessInstance);
+			IProcessInstance processInstance = processInstanceHelper.CreateAndStartProcessInstanceWithInitialFlowElement(processDefinition, businessKey, processInstanceName, initialFlowElement, process, processVariables, transientVariables, startProcessInstance);
 
-            return processInstance;
-        }
+			return processInstance;
+		}
 
-    }
+	}
 
 }

@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Repositories
         protected internal DateTime? processDefinitionsActivationDate;
         protected internal IDictionary<string, object> deploymentProperties = new Dictionary<string, object>();
 
-        private readonly object syncRoot = new object();
+        private readonly object syncRoot = new();
 
         public DeploymentBuilderImpl(RepositoryServiceImpl repositoryService)
         {

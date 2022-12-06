@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
             if (!data.ContainsKey(FieldsFields.TENANT_ID) && !string.IsNullOrWhiteSpace(processDefinitionId))
             {
                 IProcessDefinition processDefinition = ProcessDefinitionUtil.GetProcessDefinition(processDefinitionId);
-                if (processDefinition is object && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
+                if (processDefinition is not null && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
                 {
                     PutInMapIfNotNull(data, FieldsFields.TENANT_ID, processDefinition.TenantId);
                 }

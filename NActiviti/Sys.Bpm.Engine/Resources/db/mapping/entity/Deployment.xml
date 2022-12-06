@@ -50,9 +50,16 @@
 	</Delete>
 
 	<!-- DEPLOYMENT SELECT -->
+	<Statement Id="definitionVersionThanZeroOrNotIn">
+		(exists (select 1 from ACT_RE_PROCDEF where RES.ID_ = DEPLOYMENT_ID_ and VERSION_ > 0) or RES.ID_ not in (select DEPLOYMENT_ID_ from ACT_RE_PROCDEF))
+	</Statement>
 
 	<Statement Id="selectDeploymentsByQueryCriteriaSql">
-		from ACT_RE_DEPLOYMENT RES
+		from (select * from ACT_RE_DEPLOYMENT RES <Where>
+			<IsTrue Property="deploymentId==null">
+				<Include RefId="definitionVersionThanZeroOrNotIn" />
+			</IsTrue>
+		</Where>) RES
 		<IsTrue Property="processDefinitionKey != null or processDefinitionKeyLike != null">
 			inner join ACT_RE_PROCDEF PROCDEF on RES.ID_ = PROCDEF.DEPLOYMENT_ID_
 		</IsTrue>
@@ -60,17 +67,17 @@
 			left join ACT_RE_PROCDEF PROCDEF on RES.ID_ = PROCDEF.DEPLOYMENT_ID_
 		</IsTrue>
 		<IsTrue Property="latestDeployment">
-			inner join (select ${isNull, tenant_id_, ''} tenant_id_, name_, max(DEPLOY_TIME_) DEPLOY_TIME_ from ACT_RE_DEPLOYMENT group by ${isNull, tenant_id_, ''}, name_) B on ${isNull, RES.tenant_id_, ''} = B.tenant_id_ and RES.name_= B.name_ and RES.DEPLOY_TIME_ = B.DEPLOY_TIME_
+			inner join (select ${isNull, tenant_id_, ''} tenant_id_, name_, max(DEPLOY_TIME_) DEPLOY_TIME_ from (select * from ACT_RE_DEPLOYMENT RES where <Include RefId="definitionVersionThanZeroOrNotIn"/>) RES group by ${isNull, tenant_id_, ''}, name_) B on ${isNull, RES.tenant_id_, ''} = B.tenant_id_ and RES.name_= B.name_ and RES.DEPLOY_TIME_ = B.DEPLOY_TIME_
 		</IsTrue>
 		<Where>
+			<IsTrue Property="deploymentId != null">
+				RES.ID_ = #{deploymentId}
+			</IsTrue>
 			<IsTrue Property="CollectionUtil.IsNotEmpty(ids)">
 				and RES.ID_ in
 				<For Key="item" Index="index" Property="ids" Open="(" Separator="," Close=")">
 					#{item}
 				</For>
-			</IsTrue>
-			<IsTrue Property="deploymentId != null">
-				RES.ID_ = #{deploymentId}
 			</IsTrue>
 			<IsTrue Property="name != null">
 				and RES.NAME_ = #{name}
@@ -139,7 +146,9 @@
 	</Select>
 
 	<Select Id="selectDeploymentsByName" ResultMap="deploymentResultMap">
-		select * from ACT_RE_DEPLOYMENT D where NAME_=#{deploymentName} order by D.DEPLOY_TIME_ desc
+		select * from ACT_RE_DEPLOYMENT RES
+		where NAME_=#{deploymentName} and <Include RefId="definitionVersionThanZeroOrNotIn" />
+		order by RES.DEPLOY_TIME_ desc
 	</Select>
 
 	<Select Id="selectDeploymentById" ResultMap="deploymentResultMap">

@@ -16,258 +16,257 @@ using System.Collections.Generic;
  */
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
-    using Microsoft.Extensions.Logging;
-    using Sys.Workflow.Bpmn.Models;
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Persistence.Deploies;
-    using Sys.Workflow.Engine.Impl.Runtimes;
-    using Sys.Workflow.Engine.Impl.Util;
-    using Sys.Workflow.Engine.Repository;
-    using Sys.Workflow.Engine.Runtime;
-    using Sys.Workflow.Services.Api.Commands;
-    using Sys.Workflow;
+	using Microsoft.Extensions.Logging;
+	using Sys.Workflow.Bpmn.Models;
+	using Sys.Workflow.Engine.Impl.Interceptor;
+	using Sys.Workflow.Engine.Impl.Persistence.Deploies;
+	using Sys.Workflow.Engine.Impl.Runtimes;
+	using Sys.Workflow.Engine.Impl.Util;
+	using Sys.Workflow.Engine.Repository;
+	using Sys.Workflow.Engine.Runtime;
+	using Sys.Workflow.Services.Api.Commands;
+	using Sys.Workflow;
 
-    /// 
-    /// 
-    [Serializable]
-    public class StartProcessInstanceCmd : ICommand<IProcessInstance>
-    {
-        private const long serialVersionUID = 1L;
-        private string processDefinitionKey;
-        private string processDefinitionId;
-        private string processDefinitionBusinessKey;
-        private IDictionary<string, object> variables;
-        private IDictionary<string, object> transientVariables;
-        private string businessKey;
-        private string tenantId;
-        private string processInstanceName;
-        private ProcessInstanceHelper processInstanceHelper;
-        private string startForm;
-        private string processName;
-        private readonly string initialFlowElementId;
+	/// 
+	/// 
+	[Serializable]
+	public class StartProcessInstanceCmd : ICommand<IProcessInstance>
+	{
+		private const long serialVersionUID = 1L;
+		private readonly string processDefinitionKey;
+		private string processDefinitionId;
+		private readonly string processDefinitionBusinessKey;
+		private readonly IDictionary<string, object> variables;
+		private readonly IDictionary<string, object> transientVariables;
+		private readonly string businessKey;
+		private readonly string tenantId;
+		private readonly string processInstanceName;
+		private readonly string startForm;
+		private readonly string processName;
+		private readonly string initialFlowElementId;
 
-        private readonly IStartProcessInstanceCmd startCmd;
+		private readonly IStartProcessInstanceCmd startCmd;
 
-        private readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<StartProcessInstanceCmd>();
+		private readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<StartProcessInstanceCmd>();
 
-        /// <inheritdoc />
-        public StartProcessInstanceCmd(IStartProcessInstanceCmd cmd)
-        {
-            processDefinitionKey = cmd.ProcessDefinitionKey;
-            processDefinitionId = cmd.ProcessDefinitionId;
-            variables = cmd.Variables;
-            businessKey = cmd.BusinessKey;
-            tenantId = cmd.TenantId;
-            processInstanceName = cmd.ProcessInstanceName;
-            startForm = cmd.StartForm;
-            processName = cmd.ProcessName;
-            processDefinitionBusinessKey = cmd.ProcessDefinitionBusinessKey;
-            initialFlowElementId = cmd.InitialFlowElementId;
+		/// <inheritdoc />
+		public StartProcessInstanceCmd(IStartProcessInstanceCmd cmd)
+		{
+			processDefinitionKey = cmd.ProcessDefinitionKey;
+			processDefinitionId = cmd.ProcessDefinitionId;
+			variables = cmd.Variables;
+			businessKey = cmd.BusinessKey;
+			tenantId = cmd.TenantId;
+			processInstanceName = cmd.ProcessInstanceName;
+			startForm = cmd.StartForm;
+			processName = cmd.ProcessName;
+			processDefinitionBusinessKey = cmd.ProcessDefinitionBusinessKey;
+			initialFlowElementId = cmd.InitialFlowElementId;
 
-            this.startCmd = cmd;
-        }
+			this.startCmd = cmd;
+		}
 
-        /// <inheritdoc />
-        public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string startForm = null)
-        {
-            this.processDefinitionKey = processDefinitionKey;
-            this.processDefinitionId = processDefinitionId;
-            this.businessKey = businessKey;
-            this.variables = variables;
-            this.startForm = startForm;
-        }
+		/// <inheritdoc />
+		public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string startForm = null)
+		{
+			this.processDefinitionKey = processDefinitionKey;
+			this.processDefinitionId = processDefinitionId;
+			this.businessKey = businessKey;
+			this.variables = variables;
+			this.startForm = startForm;
+		}
 
-        /// <inheritdoc />
-        public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string tenantId, string startForm = null) : this(processDefinitionKey, processDefinitionId, businessKey, variables, startForm)
-        {
-            this.tenantId = tenantId;
-        }
+		/// <inheritdoc />
+		public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string tenantId, string startForm = null) : this(processDefinitionKey, processDefinitionId, businessKey, variables, startForm)
+		{
+			this.tenantId = tenantId;
+		}
 
-        /// <inheritdoc />
-        public StartProcessInstanceCmd(string processDefinitionId, IDictionary<string, object> variables)
-        {
-            this.processDefinitionId = processDefinitionId;
-            this.variables = variables;
-        }
+		/// <inheritdoc />
+		public StartProcessInstanceCmd(string processDefinitionId, IDictionary<string, object> variables)
+		{
+			this.processDefinitionId = processDefinitionId;
+			this.variables = variables;
+		}
 
-        /// <inheritdoc />
-        public StartProcessInstanceCmd(ProcessInstanceBuilderImpl processInstanceBuilder) : this(processInstanceBuilder.ProcessDefinitionKey, processInstanceBuilder.ProcessDefinitionId, processInstanceBuilder.BusinessKey, processInstanceBuilder.Variables, processInstanceBuilder.TenantId)
-        {
-            this.processInstanceName = processInstanceBuilder.ProcessInstanceName;
-            this.transientVariables = processInstanceBuilder.TransientVariables;
-            this.initialFlowElementId = processInstanceBuilder.InitialFlowElementId;
-        }
+		/// <inheritdoc />
+		public StartProcessInstanceCmd(ProcessInstanceBuilderImpl processInstanceBuilder) : this(processInstanceBuilder.ProcessDefinitionKey, processInstanceBuilder.ProcessDefinitionId, processInstanceBuilder.BusinessKey, processInstanceBuilder.Variables, processInstanceBuilder.TenantId)
+		{
+			this.processInstanceName = processInstanceBuilder.ProcessInstanceName;
+			this.transientVariables = processInstanceBuilder.TransientVariables;
+			this.initialFlowElementId = processInstanceBuilder.InitialFlowElementId;
+		}
 
-        /// <inheritdoc />
-        public virtual IProcessInstance Execute(ICommandContext commandContext)
-        {
-            if (this.startCmd is object)
-            {
-                return this.StartFromCommand(commandContext);
-            }
-            else
-            {
-                DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
+		/// <inheritdoc />
+		public virtual IProcessInstance Execute(ICommandContext commandContext)
+		{
+			if (this.startCmd is object)
+			{
+				return this.StartFromCommand(commandContext);
+			}
+			else
+			{
+				DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
 
-                // Find the process definition
-                IProcessDefinition processDefinition;
-                if (!string.IsNullOrWhiteSpace(processDefinitionId))
-                {
-                    processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
-                    if (processDefinition is null)
-                    {
-                        throw new ActivitiObjectNotFoundException("No process definition found for id = '" + processDefinitionId + "'", typeof(IProcessDefinition));
-                    }
+				// Find the process definition
+				IProcessDefinition processDefinition;
+				if (!string.IsNullOrWhiteSpace(processDefinitionId))
+				{
+					processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
+					if (processDefinition is null)
+					{
+						throw new ActivitiObjectNotFoundException("No process definition found for id = '" + processDefinitionId + "'", typeof(IProcessDefinition));
+					}
 
-                }
-                else if (processDefinitionKey is not null && (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
-                {
-                    processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKey(processDefinitionKey);
-                    if (processDefinition is null)
-                    {
-                        throw new ActivitiObjectNotFoundException("No process definition found for key '" + processDefinitionKey + "'", typeof(IProcessDefinition));
-                    }
+				}
+				else if (processDefinitionKey is not null && (string.IsNullOrWhiteSpace(tenantId)))
+				{
+					processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKey(processDefinitionKey);
+					if (processDefinition is null)
+					{
+						throw new ActivitiObjectNotFoundException("No process definition found for key '" + processDefinitionKey + "'", typeof(IProcessDefinition));
+					}
 
-                }
-                else if (processDefinitionKey is not null && tenantId is not null && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
-                {
-                    processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
-                    if (processDefinition is null)
-                    {
-                        throw new ActivitiObjectNotFoundException("No process definition found for key '" + processDefinitionKey + "' for tenant identifier " + tenantId, typeof(IProcessDefinition));
-                    }
-                }
-                else
-                {
-                    throw new ActivitiIllegalArgumentException("processDefinitionKey and processDefinitionId are null");
-                }
+				}
+				else if (processDefinitionKey is not null && !string.IsNullOrWhiteSpace(tenantId))
+				{
+					processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
+					if (processDefinition is null)
+					{
+						throw new ActivitiObjectNotFoundException("No process definition found for key '" + processDefinitionKey + "' for tenant identifier " + tenantId, typeof(IProcessDefinition));
+					}
+				}
+				else
+				{
+					throw new ActivitiIllegalArgumentException("processDefinitionKey and processDefinitionId are null");
+				}
 
-                processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
+				var processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
 
-                IProcessInstance processInstance = processInstanceHelper.CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, initialFlowElementId);
+				IProcessInstance processInstance = processInstanceHelper.CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, initialFlowElementId);
 
-                return processInstance;
-            }
-        }
+				return processInstance;
+			}
+		}
 
-        /// <inheritdoc />
-        protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
-        {
-            IDictionary<string, object> variablesMap = new Dictionary<string, object>();
-            // convert data objects to process variables
-            if (dataObjects is object)
-            {
-                foreach (ValuedDataObject dataObject in dataObjects)
-                {
-                    variablesMap[dataObject.Name] = dataObject.Value;
-                }
-            }
-            return variablesMap;
-        }
+		/// <inheritdoc />
+		protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
+		{
+			IDictionary<string, object> variablesMap = new Dictionary<string, object>();
+			// convert data objects to process variables
+			if (dataObjects is object)
+			{
+				foreach (ValuedDataObject dataObject in dataObjects)
+				{
+					variablesMap[dataObject.Name] = dataObject.Value;
+				}
+			}
+			return variablesMap;
+		}
 
-        private IProcessInstance StartFromCommand(ICommandContext commandContext)
-        {
-            IRepositoryService repositoryService = commandContext.ProcessEngineConfiguration.RepositoryService;
-            IRuntimeService runtimeService = commandContext.ProcessEngineConfiguration.RuntimeService;
-            string id = startCmd.ProcessDefinitionId;
-            IProcessDefinition definition = null;
-            IProcessInstanceBuilder builder = runtimeService.CreateProcessInstanceBuilder();
-            if (string.IsNullOrWhiteSpace(startCmd.StartByMessage) == false)
-            {
-                builder.SetMessageName(startCmd.StartByMessage);
-            }
-            else if (string.IsNullOrWhiteSpace(startCmd.StartForm) == false)
-            {
-                definition = repositoryService.CreateProcessDefinitionQuery()
-                    .SetProcessDefinitionStartForm(startCmd.StartForm)
-                    .SetProcessDefinitionTenantId(startCmd.TenantId)
-                    .SetLatestVersion()
-                    .SingleResult();
+		private IProcessInstance StartFromCommand(ICommandContext commandContext)
+		{
+			IRepositoryService repositoryService = commandContext.ProcessEngineConfiguration.RepositoryService;
+			IRuntimeService runtimeService = commandContext.ProcessEngineConfiguration.RuntimeService;
+			string id = startCmd.ProcessDefinitionId;
+			IProcessDefinition definition = null;
+			IProcessInstanceBuilder builder = runtimeService.CreateProcessInstanceBuilder();
+			if (string.IsNullOrWhiteSpace(startCmd.StartByMessage) == false)
+			{
+				builder.SetMessageName(startCmd.StartByMessage);
+			}
+			else if (string.IsNullOrWhiteSpace(startCmd.StartForm) == false)
+			{
+				definition = repositoryService.CreateProcessDefinitionQuery()
+					.SetProcessDefinitionStartForm(startCmd.StartForm)
+					.SetProcessDefinitionTenantId(startCmd.TenantId)
+					.SetLatestVersion()
+					.SingleResult();
 
-                if (definition is null)
-                {
-                    logger.LogError($"Unable to find process definition for the given start form key:'{startCmd.StartForm}' with tenantId:'{startCmd.TenantId}'");
+				if (definition is null)
+				{
+					logger.LogError($"Unable to find process definition for the given start form key:'{startCmd.StartForm}' with tenantId:'{startCmd.TenantId}'");
 
-                    throw new ActivitiObjectNotFoundException("Unable to find process definition for the given start form key:'" + startCmd.StartForm + "'");
-                }
-                processDefinitionId = definition.Id;
-            }
-            else if (string.IsNullOrWhiteSpace(processName) == false)
-            {
-                definition = repositoryService.CreateProcessDefinitionQuery()
-                    .SetProcessDefinitionName(startCmd.ProcessName)
-                    .SetProcessDefinitionTenantId(startCmd.TenantId)
-                    .SetLatestVersion()
-                    .SingleResult();
+					throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given start form key:'{startCmd.StartForm}'");
+				}
+				processDefinitionId = definition.Id;
+			}
+			else if (string.IsNullOrWhiteSpace(processName) == false)
+			{
+				definition = repositoryService.CreateProcessDefinitionQuery()
+					.SetProcessDefinitionName(startCmd.ProcessName)
+					.SetProcessDefinitionTenantId(startCmd.TenantId)
+					.SetLatestVersion()
+					.SingleResult();
 
-                if (definition is null)
-                {
-                    logger.LogError($"Unable to find process definition for the given process name:'{startCmd.ProcessName}' with tenantid:'{tenantId}'");
+				if (definition is null)
+				{
+					logger.LogError($"Unable to find process definition for the given process name:'{startCmd.ProcessName}' with tenantid:'{tenantId}'");
 
-                    throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given process name:'{startCmd.ProcessName}' with tenantid:'{tenantId}'");
-                }
-                processDefinitionId = definition.Id;
-            }
-            else if (string.IsNullOrWhiteSpace(processDefinitionKey) == false)
-            {
-                definition = repositoryService.CreateProcessDefinitionQuery()
-                    .SetProcessDefinitionKey(processDefinitionKey)
-                    .SetProcessDefinitionTenantId(startCmd.TenantId)
-                    .SetLatestVersion()
-                    .SingleResult();
+					throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given process name:'{startCmd.ProcessName}' with tenantid:'{tenantId}'");
+				}
+				processDefinitionId = definition.Id;
+			}
+			else if (string.IsNullOrWhiteSpace(processDefinitionKey) == false)
+			{
+				definition = repositoryService.CreateProcessDefinitionQuery()
+					.SetProcessDefinitionKey(processDefinitionKey)
+					.SetProcessDefinitionTenantId(startCmd.TenantId)
+					.SetLatestVersion()
+					.SingleResult();
 
-                if (definition is null)
-                {
-                    logger.LogError($"Unable to find process definition for the given key:'{processDefinitionKey}'");
+				if (definition is null)
+				{
+					logger.LogError($"Unable to find process definition for the given key:'{processDefinitionKey}'");
 
-                    throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given key:'{processDefinitionKey}'");
-                }
-                processDefinitionId = definition.Id;
-            }
-            else if (string.IsNullOrWhiteSpace(processDefinitionBusinessKey) == false)
-            {
-                definition = repositoryService.CreateProcessDefinitionQuery()
-                    .SetProcessDefinitionBusinessKey(processDefinitionBusinessKey)
-                    .SetProcessDefinitionTenantId(startCmd.TenantId)
-                    .SetLatestVersion()
-                    .SingleResult();
+					throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given key:'{processDefinitionKey}'");
+				}
+				processDefinitionId = definition.Id;
+			}
+			else if (string.IsNullOrWhiteSpace(processDefinitionBusinessKey) == false)
+			{
+				definition = repositoryService.CreateProcessDefinitionQuery()
+					.SetProcessDefinitionBusinessKey(processDefinitionBusinessKey)
+					.SetProcessDefinitionTenantId(startCmd.TenantId)
+					.SetLatestVersion()
+					.SingleResult();
 
-                if (definition is null)
-                {
-                    logger.LogError($"Unable to find process definition for the given key:'{processDefinitionKey}'");
+				if (definition is null)
+				{
+					logger.LogError($"Unable to find process definition for the given key:'{processDefinitionKey}'");
 
-                    throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given key:'{processDefinitionKey}'");
-                }
-                processDefinitionId = definition.Id;
-            }
-            else
-            {
-                definition = repositoryService.GetProcessDefinition(id);
-                if (definition is null)
-                {
-                    logger.LogError($"Unable to find process definition for the given id:'{id}'");
+					throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given key:'{processDefinitionKey}'");
+				}
+				processDefinitionId = definition.Id;
+			}
+			else
+			{
+				definition = repositoryService.GetProcessDefinition(id);
+				if (definition is null)
+				{
+					logger.LogError($"Unable to find process definition for the given id:'{id}'");
 
-                    throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given id:'{id}'");
-                }
-                processDefinitionId = definition.Id;
-            }
+					throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given id:'{id}'");
+				}
+				processDefinitionId = definition.Id;
+			}
 
-            if (definition is object)
-            {
-                builder.SetProcessDefinitionId(definition.Id);
-                if (string.IsNullOrWhiteSpace(startCmd.ProcessInstanceName))
-                {
-                    startCmd.ProcessInstanceName = definition.Name;
-                }
-            }
-            builder.SetVariables(startCmd.Variables);
-            builder.SetBusinessKey(startCmd.BusinessKey);
-            builder.SetName(startCmd.ProcessInstanceName);
-            builder.SetTenantId(startCmd.TenantId);
-            builder.SetInitialFlowElement(startCmd.InitialFlowElementId);
+			if (definition is object)
+			{
+				builder.SetProcessDefinitionId(definition.Id);
+				if (string.IsNullOrWhiteSpace(startCmd.ProcessInstanceName))
+				{
+					startCmd.ProcessInstanceName = definition.Name;
+				}
+			}
+			builder.SetVariables(startCmd.Variables);
+			builder.SetBusinessKey(startCmd.BusinessKey);
+			builder.SetName(startCmd.ProcessInstanceName);
+			builder.SetTenantId(startCmd.TenantId);
+			builder.SetInitialFlowElement(startCmd.InitialFlowElementId);
 
-            return builder.Start();
-        }
-    }
+			return builder.Start();
+		}
+	}
 
 }

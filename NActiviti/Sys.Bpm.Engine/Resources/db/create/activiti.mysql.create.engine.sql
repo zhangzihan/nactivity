@@ -27,9 +27,9 @@ create table ACT_GE_BYTEARRAY (
 create table ACT_RE_DEPLOYMENT (
     ID_ varchar(64),
     NAME_ varchar(255),
-	BUSINESS_KEY_ VARCHAR(255),
+	BUSINESS_KEY_ VARCHAR(100),
     CATEGORY_ varchar(255),
-    KEY_ varchar(255),
+    KEY_ varchar(100),
     TENANT_ID_ varchar(255) default '',
     DEPLOY_TIME_ timestamp(3) NULL,
     ENGINE_VERSION_ varchar(255),
@@ -40,7 +40,7 @@ create table ACT_RE_MODEL (
     ID_ varchar(64) not null,
     REV_ integer,
     NAME_ varchar(255),
-    KEY_ varchar(255),
+    KEY_ varchar(100),
     CATEGORY_ varchar(255),
     CREATE_TIME_ timestamp(3) null,
     LAST_UPDATE_TIME_ timestamp(3) null,
@@ -57,7 +57,7 @@ create table ACT_RU_EXECUTION (
     ID_ varchar(64),
     REV_ integer,
     PROC_INST_ID_ varchar(64),
-    BUSINESS_KEY_ varchar(255),
+    BUSINESS_KEY_ varchar(100),
     PARENT_ID_ varchar(64),
     PROC_DEF_ID_ varchar(64),
     SUPER_EXEC_ varchar(64),
@@ -172,10 +172,10 @@ create table ACT_RE_PROCDEF (
     REV_ integer,
     CATEGORY_ varchar(255),
     NAME_ varchar(255),
-	BUSINESS_KEY_ varchar(255),
+	BUSINESS_KEY_ varchar(100),
 	BUSINESS_PATH_ varchar(255),
 	START_FORM_ varchar(255),
-    KEY_ varchar(255) not null,
+    KEY_ varchar(100) not null,
     VERSION_ integer not null,
     DEPLOYMENT_ID_ varchar(64),
     RESOURCE_NAME_ varchar(4000),
@@ -296,6 +296,7 @@ create table ACT_RU_INTEGRATION (
     primary key (ID_)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;
 
+CREATE INDEX ACT_IDX_GE_BYTEARRAY_DEPLOYMENT ON ACT_GE_BYTEARRAY(DEPLOYMENT_ID_)
 create index ACT_IDX_EXEC_BUSKEY on ACT_RU_EXECUTION(BUSINESS_KEY_);
 create index ACT_IDC_EXEC_ROOT on ACT_RU_EXECUTION(ROOT_PROC_INST_ID_);
 create index ACT_IDX_TASK_CREATE on ACT_RU_TASK(CREATE_TIME_);
@@ -317,11 +318,15 @@ create index ACT_IDX_RU_EXECUTION_START_USER_ID ON ACT_RU_EXECUTION(START_USER_I
 create index ACT_IDX_RE_DEPLOYMENT_TENANT_ID on ACT_RE_DEPLOYMENT(TENANT_ID_,NAME_);
 create index ACT_IDX_RE_DEPLOYMENT_DEPLOY_TIME on ACT_RE_DEPLOYMENT(DEPLOY_TIME_ asc);
 create index ACT_IDX_RE_DEPLOYMENT_NAME on ACT_RE_DEPLOYMENT(NAME_ asc);
-create index ACT_IDX_RE_MODEL_TENANT_ID on ACT_RE_MODEL(TENANT_ID_);
+create index ACT_IDX_RE_DEPLOYMENT_BUSINESSKEY on ACT_RE_DEPLOYMENT(NAME_, BUSINESS_KEY_ asc);
+CREATE INDEX ACT_IDX_RE_PROCDEF_DEPLOYMENT ON ACT_RE_PROCDEF(DEPLOYMENT_ID_);
+CREATE INDEX ACT_IDX_RE_PROCDEF_VERSION ON ACT_RE_PROCDEF(VERSION_);
+create index ACT_IDX_RE_PROCDEF_BUSINESSKEY on ACT_RE_PROCDEF(NAME_, BUSINESS_KEY_ asc);
 create index ACT_IDX_RE_PROCDEF_TENANT_ID on ACT_RE_PROCDEF(TENANT_ID_);
 create index ACT_IDX_RE_PROCDEF_START_FROM on ACT_RE_PROCDEF(START_FORM_, TENANT_ID_);
 create index ACT_IDX_RE_PROCDEF_NAME on ACT_RE_PROCDEF(NAME_ asc);
 create index ACT_IDX_RE_PROCDEF_KEY on ACT_RE_PROCDEF(KEY_ asc);
+create index ACT_IDX_RE_MODEL_TENANT_ID on ACT_RE_MODEL(TENANT_ID_);
 create index ACT_IDX_RU_DEADLETTER_JOB_TENANT_ID on ACT_RU_DEADLETTER_JOB(TENANT_ID_);
 create index ACT_IDX_RU_EVENT_SUBSCR_TENANT_ID on ACT_RU_EVENT_SUBSCR(TENANT_ID_);
 create index ACT_IDX_RU_JOB_TENANT_ID on ACT_RU_JOB(TENANT_ID_);
@@ -337,7 +342,7 @@ alter table ACT_GE_BYTEARRAY
 
 alter table ACT_RE_PROCDEF
     add constraint ACT_UNIQ_PROCDEF
-    unique (KEY_,VERSION_, TENANT_ID_);
+    unique (BUSINESS_KEY_, KEY_,VERSION_, TENANT_ID_);
     
 create index ACT_IDX_EXE_PROCINST on ACT_RU_EXECUTION(PROC_INST_ID_);
 alter table ACT_RU_EXECUTION

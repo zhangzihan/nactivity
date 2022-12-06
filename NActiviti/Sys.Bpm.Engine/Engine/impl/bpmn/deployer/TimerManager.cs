@@ -15,85 +15,85 @@
 namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
 {
 
-    using Sys.Workflow.Bpmn.Models;
-    using Sys.Workflow.Engine.Impl.Asyncexecutor;
-    using Sys.Workflow.Engine.Impl.Cmd;
-    using Sys.Workflow.Engine.Impl.Contexts;
-    using Sys.Workflow.Engine.Impl.JobExecutors;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Impl.Util;
+	using Sys.Workflow.Bpmn.Models;
+	using Sys.Workflow.Engine.Impl.Asyncexecutor;
+	using Sys.Workflow.Engine.Impl.Cmd;
+	using Sys.Workflow.Engine.Impl.Contexts;
+	using Sys.Workflow.Engine.Impl.JobExecutors;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity;
+	using Sys.Workflow.Engine.Impl.Util;
 
-    /// <summary>
-    /// Manages timers for newly-deployed process definitions and their previous versions.
-    /// </summary>
-    public class TimerManager
-    {
-        protected internal virtual void RemoveObsoleteTimers(IProcessDefinitionEntity processDefinition)
-        {
-            IList<ITimerJobEntity> jobsToDelete;
-            if (processDefinition.TenantId is not null && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
-            {
-                jobsToDelete = Context.CommandContext.TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionKeyAndTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key, processDefinition.TenantId);
-            }
-            else
-            {
-                jobsToDelete = Context.CommandContext.TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionKeyNoTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key);
-            }
+	/// <summary>
+	/// Manages timers for newly-deployed process definitions and their previous versions.
+	/// </summary>
+	public class TimerManager
+	{
+		protected internal virtual void RemoveObsoleteTimers(IProcessDefinitionEntity processDefinition)
+		{
+			IList<ITimerJobEntity> jobsToDelete;
+			if (!string.IsNullOrWhiteSpace(processDefinition.TenantId))
+			{
+				jobsToDelete = Context.CommandContext.TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionKeyAndTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key, processDefinition.TenantId);
+			}
+			else
+			{
+				jobsToDelete = Context.CommandContext.TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionKeyNoTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key);
+			}
 
-            if (jobsToDelete is object)
-            {
-                foreach (ITimerJobEntity job in jobsToDelete)
-                {
-                    (new CancelJobsCmd(job.Id)).Execute(Context.CommandContext);
-                }
-            }
-        }
+			if (jobsToDelete is object)
+			{
+				foreach (ITimerJobEntity job in jobsToDelete)
+				{
+					(new CancelJobsCmd(job.Id)).Execute(Context.CommandContext);
+				}
+			}
+		}
 
-        protected internal virtual void ScheduleTimers(IProcessDefinitionEntity processDefinition, Process process)
-        {
-            IJobManager jobManager = Context.CommandContext.JobManager;
-            IList<ITimerJobEntity> timers = GetTimerDeclarations(processDefinition, process);
-            foreach (ITimerJobEntity timer in timers)
-            {
-                jobManager.ScheduleTimerJob(timer);
-            }
-        }
+		protected internal virtual void ScheduleTimers(IProcessDefinitionEntity processDefinition, Process process)
+		{
+			IJobManager jobManager = Context.CommandContext.JobManager;
+			IList<ITimerJobEntity> timers = GetTimerDeclarations(processDefinition, process);
+			foreach (ITimerJobEntity timer in timers)
+			{
+				jobManager.ScheduleTimerJob(timer);
+			}
+		}
 
-        protected internal virtual IList<ITimerJobEntity> GetTimerDeclarations(IProcessDefinitionEntity processDefinition, Process process)
-        {
-            IJobManager jobManager = Context.CommandContext.JobManager;
-            IList<ITimerJobEntity> timers = new List<ITimerJobEntity>();
-            if (CollectionUtil.IsNotEmpty(process.FlowElements))
-            {
-                foreach (FlowElement element in process.FlowElements)
-                {
-                    if (element is StartEvent startEvent)
-                    {
-                        if (CollectionUtil.IsNotEmpty(startEvent.EventDefinitions))
-                        {
-                            EventDefinition eventDefinition = startEvent.EventDefinitions[0];
-                            if (eventDefinition is TimerEventDefinition timerEventDefinition)
-                            {
-                                ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
+		protected internal virtual IList<ITimerJobEntity> GetTimerDeclarations(IProcessDefinitionEntity processDefinition, Process process)
+		{
+			IJobManager jobManager = Context.CommandContext.JobManager;
+			IList<ITimerJobEntity> timers = new List<ITimerJobEntity>();
+			if (CollectionUtil.IsNotEmpty(process.FlowElements))
+			{
+				foreach (FlowElement element in process.FlowElements)
+				{
+					if (element is StartEvent startEvent)
+					{
+						if (CollectionUtil.IsNotEmpty(startEvent.EventDefinitions))
+						{
+							EventDefinition eventDefinition = startEvent.EventDefinitions[0];
+							if (eventDefinition is TimerEventDefinition timerEventDefinition)
+							{
+								ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
 
-                                if (timerJob is object)
-                                {
-                                    timerJob.ProcessDefinitionId = processDefinition.Id;
+								if (timerJob is object)
+								{
+									timerJob.ProcessDefinitionId = processDefinition.Id;
 
-                                    if (processDefinition.TenantId is not null)
-                                    {
-                                        timerJob.TenantId = processDefinition.TenantId;
-                                    }
-                                    timers.Add(timerJob);
-                                }
+									if (processDefinition.TenantId is not null)
+									{
+										timerJob.TenantId = processDefinition.TenantId;
+									}
+									timers.Add(timerJob);
+								}
 
-                            }
-                        }
-                    }
-                }
-            }
+							}
+						}
+					}
+				}
+			}
 
-            return timers;
-        }
-    }
+			return timers;
+		}
+	}
 }

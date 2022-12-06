@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Events
                 {
                     variables = (IDictionary<string, object>)payload;
                 }
-                ProcessInstanceHelper processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
+                var processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
                 processInstanceHelper.CreateAndStartProcessInstanceWithInitialFlowElement(processDefinition, null, null, flowElement, process, variables, null, true);
 
             }

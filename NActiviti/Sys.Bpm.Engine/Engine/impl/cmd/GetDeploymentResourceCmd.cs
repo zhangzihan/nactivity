@@ -15,53 +15,53 @@
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
 
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Repository;
-    using System.Collections.Generic;
-    using System.IO;
+	using Sys.Workflow.Engine.Impl.Interceptor;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity;
+	using Sys.Workflow.Engine.Repository;
+	using System.Collections.Generic;
+	using System.IO;
 
-    /// 
-    [Serializable]
-    public class GetDeploymentResourceCmd : ICommand<Stream>
-    {
+	/// 
+	[Serializable]
+	public class GetDeploymentResourceCmd : ICommand<Stream>
+	{
 
-        private const long serialVersionUID = 1L;
-        protected internal string deploymentId;
-        protected internal string resourceName;
+		private const long serialVersionUID = 1L;
+		protected internal string deploymentId;
+		protected internal string resourceName;
 
-        public GetDeploymentResourceCmd(string deploymentId, string resourceName)
-        {
-            this.deploymentId = deploymentId;
-            this.resourceName = resourceName;
-        }
+		public GetDeploymentResourceCmd(string deploymentId, string resourceName)
+		{
+			this.deploymentId = deploymentId;
+			this.resourceName = resourceName;
+		}
 
-        public virtual Stream Execute(ICommandContext commandContext)
-        {
-            if (ReferenceEquals(deploymentId, null))
-            {
-                throw new ActivitiIllegalArgumentException("deploymentId is null");
-            }
-            if (ReferenceEquals(resourceName, null))
-            {
-                throw new ActivitiIllegalArgumentException("resourceName is null");
-            }
+		public virtual Stream Execute(ICommandContext commandContext)
+		{
+			if (deploymentId is null)
+			{
+				throw new ActivitiIllegalArgumentException("deploymentId is null");
+			}
+			if (resourceName is null)
+			{
+				throw new ActivitiIllegalArgumentException("resourceName is null");
+			}
 
-            IResourceEntity resource = commandContext.ResourceEntityManager.FindResourceByDeploymentIdAndResourceName(deploymentId, resourceName);
-            if (resource is null)
-            {
-                if (commandContext.DeploymentEntityManager.FindById<IDeployment>(new KeyValuePair<string, object>("id", deploymentId)) is null)
-                {
-                    throw new ActivitiObjectNotFoundException("deployment does not exist: " + deploymentId, typeof(IDeployment));
-                }
-                else
-                {
-                    throw new ActivitiObjectNotFoundException("no resource found with name '" + resourceName + "' in deployment '" + deploymentId + "'", typeof(System.IO.Stream));
-                }
-            }
-            return new MemoryStream(resource.Bytes);
-        }
+			IResourceEntity resource = commandContext.ResourceEntityManager.FindResourceByDeploymentIdAndResourceName(deploymentId, resourceName);
+			if (resource is null)
+			{
+				if (commandContext.DeploymentEntityManager.FindById<IDeployment>(new KeyValuePair<string, object>("id", deploymentId)) is null)
+				{
+					throw new ActivitiObjectNotFoundException("deployment does not exist: " + deploymentId, typeof(IDeployment));
+				}
+				else
+				{
+					throw new ActivitiObjectNotFoundException("no resource found with name '" + resourceName + "' in deployment '" + deploymentId + "'", typeof(System.IO.Stream));
+				}
+			}
+			return new MemoryStream(resource.Bytes);
+		}
 
-    }
+	}
 
 }
