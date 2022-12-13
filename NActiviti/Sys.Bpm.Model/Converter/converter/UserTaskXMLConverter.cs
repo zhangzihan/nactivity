@@ -156,7 +156,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
                     if (!didWriteExtensionStartElement)
                     {
-                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                         didWriteExtensionStartElement = true;
                     }
                     xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, customProperty.Name, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
@@ -178,7 +178,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             if (!didWriteExtensionStartElement)
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                 didWriteExtensionStartElement = true;
             }
             List<string> identityLinkTypes = new List<string>();
@@ -217,8 +217,8 @@ namespace Sys.Workflow.Bpmn.Converters
 
             string delimitedString = ConvertToDelimitedString(identityList);
 
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_RESOURCE_ASSIGNMENT, BpmnXMLConstants.BPMN2_NAMESPACE);
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_FORMAL_EXPRESSION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_RESOURCE_ASSIGNMENT, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_FORMAL_EXPRESSION, BpmnXMLConstants.BPMN2_NAMESPACE);
             xtw.WriteCharacters(delimitedString);
             xtw.WriteEndElement(); // End ELEMENT_FORMAL_EXPRESSION
             xtw.WriteEndElement(); // End ELEMENT_RESOURCE_ASSIGNMENT

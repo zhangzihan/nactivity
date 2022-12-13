@@ -123,7 +123,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         public virtual void ConvertToXML(XMLStreamWriter xtw, BaseElement baseElement, BpmnModel model)
         {
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, XMLElementName, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, XMLElementName, BpmnXMLConstants.BPMN2_NAMESPACE);
             bool didWriteExtensionStartElement = false;
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ID, baseElement.Id, xtw);
             if (baseElement is FlowElement)
@@ -178,7 +178,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 if (!string.IsNullOrWhiteSpace(flowElement.Documentation))
                 {
 
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
                     xtw.WriteCharacters(flowElement.Documentation);
                     xtw.WriteEndElement();
                 }
@@ -355,7 +355,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
                         if (!didWriteExtensionStartElement)
                         {
-                            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
+                            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                             didWriteExtensionStartElement = true;
                         }
 
@@ -443,7 +443,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         protected internal virtual void WriteTimerDefinition(Event parentEvent, TimerEventDefinition timerDefinition, XMLStreamWriter xtw)
         {
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             if (!string.IsNullOrWhiteSpace(timerDefinition.CalendarName))
             {
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_CALENDAR_NAME, timerDefinition.CalendarName, xtw);
@@ -455,14 +455,14 @@ namespace Sys.Workflow.Bpmn.Converters
             }
             if (!string.IsNullOrWhiteSpace(timerDefinition.TimeDate))
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ATTRIBUTE_TIMER_DATE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ATTRIBUTE_TIMER_DATE, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteCharacters(timerDefinition.TimeDate);
                 xtw.WriteEndElement();
 
             }
             else if (!string.IsNullOrWhiteSpace(timerDefinition.TimeCycle))
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX,  BpmnXMLConstants.ATTRIBUTE_TIMER_CYCLE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX,  BpmnXMLConstants.ATTRIBUTE_TIMER_CYCLE, BpmnXMLConstants.BPMN2_NAMESPACE);
 
                 if (!string.IsNullOrWhiteSpace(timerDefinition.EndDate))
                 {
@@ -475,7 +475,7 @@ namespace Sys.Workflow.Bpmn.Converters
             }
             else if (!string.IsNullOrWhiteSpace(timerDefinition.TimeDuration))
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ATTRIBUTE_TIMER_DURATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ATTRIBUTE_TIMER_DURATION, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteCharacters(timerDefinition.TimeDuration);
                 xtw.WriteEndElement();
             }
@@ -485,7 +485,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         protected internal virtual void WriteSignalDefinition(Event parentEvent, SignalEventDefinition signalDefinition, XMLStreamWriter xtw)
         {
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_SIGNALDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_SIGNALDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_SIGNAL_REF, signalDefinition.SignalRef, xtw);
             if (parentEvent is ThrowEvent && signalDefinition.Async)
             {
@@ -501,7 +501,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         protected internal virtual void WriteCancelDefinition(Event parentEvent, CancelEventDefinition cancelEventDefinition, XMLStreamWriter xtw)
         {
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_CANCELDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_CANCELDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(cancelEventDefinition, false, xtw);
             if (didWriteExtensionStartElement)
             {
@@ -512,7 +512,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         protected internal virtual void WriteCompensateDefinition(Event parentEvent, CompensateEventDefinition compensateEventDefinition, XMLStreamWriter xtw)
         {
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_COMPENSATE_ACTIVITYREF, compensateEventDefinition.ActivityRef, xtw);
             bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(compensateEventDefinition, false, xtw);
             if (didWriteExtensionStartElement)
@@ -524,7 +524,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         protected internal virtual void WriteMessageDefinition(Event parentEvent, MessageEventDefinition messageDefinition, BpmnModel model, XMLStreamWriter xtw)
         {
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
 
             string messageRef = messageDefinition.MessageRef;
             if (!string.IsNullOrWhiteSpace(messageRef))
@@ -559,7 +559,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         protected internal virtual void WriteErrorDefinition(Event parentEvent, ErrorEventDefinition errorDefinition, XMLStreamWriter xtw)
         {
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ERROR_REF, errorDefinition.ErrorCode, xtw);
             bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(errorDefinition, false, xtw);
             if (didWriteExtensionStartElement)
@@ -571,7 +571,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         protected internal virtual void WriteTerminateDefinition(Event parentEvent, TerminateEventDefinition terminateDefinition, XMLStreamWriter xtw)
         {
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
 
             if (terminateDefinition.TerminateAll)
             {

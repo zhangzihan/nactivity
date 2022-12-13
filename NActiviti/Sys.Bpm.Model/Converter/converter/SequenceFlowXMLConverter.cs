@@ -66,7 +66,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             if (!string.IsNullOrWhiteSpace(sequenceFlow.ConditionExpression))
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_FLOW_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_FLOW_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteAttribute(BpmnXMLConstants.XSI_PREFIX, BpmnXMLConstants.XSI_NAMESPACE, "type", "bpmn2:tFormalExpression");
                 xtw.WriteCharacters(sequenceFlow.ConditionExpression);
                 xtw.WriteEndElement();

@@ -62,7 +62,7 @@ namespace Sys.Workflow.Bpmn.Converters
             DataStoreReference dataStoreRef = (DataStoreReference)element;
             if (!string.IsNullOrWhiteSpace(dataStoreRef.DataState))
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DATA_STATE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_DATA_STATE, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteCharacters(dataStoreRef.DataState);
                 xtw.WriteEndElement();
             }

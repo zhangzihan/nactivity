@@ -104,6 +104,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 			processDefinitionDataManager.UpdateProcessDefinitionTenantIdForDeployment(deploymentId, newTenantId);
 		}
 
+		public override TOut FindById<TOut>(object entityId)
+		{
+			return base.FindById<TOut>(new KeyValuePair<string, object>("processDefinitionId", entityId));
+		}
+
 		public virtual IProcessDefinitionDataManager ProcessDefinitionDataManager
 		{
 			get

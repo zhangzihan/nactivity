@@ -26,7 +26,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
                 MultiInstanceLoopCharacteristics multiInstanceObject = activity.LoopCharacteristics;
                 if (!string.IsNullOrWhiteSpace(multiInstanceObject.LoopCardinality) || !string.IsNullOrWhiteSpace(multiInstanceObject.InputDataItem) || !string.IsNullOrWhiteSpace(multiInstanceObject.CompletionCondition))
                 {
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE, BpmnXMLConstants.BPMN2_NAMESPACE);
                     BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL, multiInstanceObject.Sequential ? "true" : "false", xtw);
                     if (!string.IsNullOrWhiteSpace(multiInstanceObject.InputDataItem))
                     {
@@ -38,13 +38,13 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
                     }
                     if (!string.IsNullOrWhiteSpace(multiInstanceObject.LoopCardinality))
                     {
-                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CARDINALITY, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CARDINALITY, BpmnXMLConstants.BPMN2_NAMESPACE);
                         xtw.WriteCharacters(multiInstanceObject.LoopCardinality);
                         xtw.WriteEndElement();
                     }
                     if (!string.IsNullOrWhiteSpace(multiInstanceObject.CompletionCondition))
                     {
-                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
                         xtw.WriteCharacters(multiInstanceObject.CompletionCondition);
                         xtw.WriteEndElement();
                     }
@@ -52,7 +52,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
                 }
                 else
                 {
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE, BpmnXMLConstants.BPMN2_NAMESPACE);
                     BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL, multiInstanceObject.Sequential ? "true" : "false", xtw);
                     xtw.WriteEndElement();
                 }

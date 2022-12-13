@@ -23,11 +23,11 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
         {
             if (process.Lanes.Count > 0)
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_LANESET, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_LANESET, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, "laneSet_" + process.Id);
                 foreach (Lane lane in process.Lanes)
                 {
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_LANE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_LANE, BpmnXMLConstants.BPMN2_NAMESPACE);
                     xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, lane.Id);
 
                     if (!string.IsNullOrWhiteSpace(lane.Name))
@@ -43,7 +43,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
 
                     foreach (string flowNodeRef in lane.FlowReferences)
                     {
-                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_FLOWNODE_REF, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_FLOWNODE_REF, BpmnXMLConstants.BPMN2_NAMESPACE);
                         xtw.WriteCharacters(flowNodeRef);
                         xtw.WriteEndElement();
                     }

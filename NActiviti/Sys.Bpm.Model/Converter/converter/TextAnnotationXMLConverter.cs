@@ -65,7 +65,7 @@ namespace Sys.Workflow.Bpmn.Converters
             TextAnnotation textAnnotation = (TextAnnotation)element;
             if (!string.IsNullOrWhiteSpace(textAnnotation.Text))
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION_TEXT, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION_TEXT, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteCharacters(textAnnotation.Text);
                 xtw.WriteEndElement();
             }

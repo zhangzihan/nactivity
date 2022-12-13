@@ -39,7 +39,8 @@
 		update ACT_RE_DEPLOYMENT set
 		CATEGORY_ = #{category},
 		BUSINESS_KEY_ = #{businessKey},
-		TENANT_ID_ = #{tenantId}
+		TENANT_ID_ = #{tenantId},
+		NAME_ = #{name}
 		where ID_ = #{id}
 	</Update>
 

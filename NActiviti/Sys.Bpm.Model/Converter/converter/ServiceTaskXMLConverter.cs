@@ -138,7 +138,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
                     if (!didWriteExtensionStartElement)
                     {
-                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                         didWriteExtensionStartElement = true;
                     }
                     xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_FIELD, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);

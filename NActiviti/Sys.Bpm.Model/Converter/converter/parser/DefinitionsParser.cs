@@ -15,55 +15,63 @@
 namespace Sys.Workflow.Bpmn.Converters.Parsers
 {
 
-    using Sys.Workflow.Bpmn.Constants;
-    using Sys.Workflow.Bpmn.Converters.Utils;
-    using Sys.Workflow.Bpmn.Models;
-    using System.Linq;
+	using Sys.Workflow.Bpmn.Constants;
+	using Sys.Workflow.Bpmn.Converters.Utils;
+	using Sys.Workflow.Bpmn.Models;
+	using System.Linq;
 
-    /// 
-    public class DefinitionsParser : IBpmnXMLConstants
-    {
-        protected internal static readonly IList<ExtensionAttribute> defaultAttributes = new List<ExtensionAttribute>()
-        {
-            new ExtensionAttribute(BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE),
-            new ExtensionAttribute(BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE),
-            new ExtensionAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE)
-        };
+	/// 
+	public class DefinitionsParser : IBpmnXMLConstants
+	{
+		protected internal static readonly IList<ExtensionAttribute> defaultAttributes = new List<ExtensionAttribute>()
+		{
+			new ExtensionAttribute(BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE),
+			new ExtensionAttribute(BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE),
+			new ExtensionAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE)
+		};
 
-        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
-        {
-            model.TargetNamespace = xtr.GetAttributeValue(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE);
-            for (int i = 0; i < xtr.NamespaceCount; i++)
-            {
-                string prefix = xtr.GetNamespacePrefix(i);
-                if (!string.IsNullOrWhiteSpace(prefix))
-                {
-                    model.AddNamespace(prefix, xtr.GetNamespaceURI(i));
-                }
-            }
+		public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
+		{
+			model.TargetNamespace = xtr.GetAttributeValue(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE);
+			for (int i = 0; i < xtr.NamespaceCount; i++)
+			{
+				string prefix = xtr.GetNamespacePrefix(i);
+				if (!string.IsNullOrWhiteSpace(prefix))
+				{
+					model.AddNamespace(prefix, xtr.GetNamespaceURI(i));
+				}
+			}
 
-            for (int i = 0; i < xtr.AttributeCount; i++)
-            {
-                var attr = xtr.element.Attributes().ElementAt(i);
-                ExtensionAttribute extensionAttribute = new ExtensionAttribute
-                {
-                    Name = attr.Name.LocalName,
-                    Value = attr.Value
-                };
-                if (!string.IsNullOrWhiteSpace(attr.Name.NamespaceName))
-                {
-                    extensionAttribute.Namespace = attr.Name.NamespaceName;
-                }
-                if (!string.IsNullOrWhiteSpace(xtr.element.GetPrefixOfNamespace(attr.Name.Namespace)))
-                {
-                    extensionAttribute.NamespacePrefix = xtr.element.GetPrefixOfNamespace(attr.Name.Namespace);
-                }
-                if (!BpmnXMLUtil.IsBlacklisted(extensionAttribute, defaultAttributes))
-                {
-                    model.AddDefinitionsAttribute(extensionAttribute);
-                }
-            }
-        }
-    }
+			var defAttributes = defaultAttributes.Union(model.Namespaces.Select(x =>
+			{
+				return new ExtensionAttribute(x.Value, x.Key)
+				{
+					NamespacePrefix = BpmnXMLConstants.XMLNS_PREFIX,
+					Value = x.Value
+				};
+			})).ToList();
+			for (int i = 0; i < xtr.AttributeCount; i++)
+			{
+				var attr = xtr.element.Attributes().ElementAt(i);
+				ExtensionAttribute extensionAttribute = new ExtensionAttribute
+				{
+					Name = attr.Name.LocalName,
+					Value = attr.Value
+				};
+				if (!string.IsNullOrWhiteSpace(attr.Name.NamespaceName))
+				{
+					extensionAttribute.Namespace = attr.Name.NamespaceName;
+				}
+				if (!string.IsNullOrWhiteSpace(xtr.element.GetPrefixOfNamespace(attr.Name.Namespace)))
+				{
+					extensionAttribute.NamespacePrefix = xtr.element.GetPrefixOfNamespace(attr.Name.Namespace);
+				}
+				if (!BpmnXMLUtil.IsBlacklisted(extensionAttribute, defAttributes))
+				{
+					model.AddDefinitionsAttribute(extensionAttribute);
+				}
+			}
+		}
+	}
 
 }

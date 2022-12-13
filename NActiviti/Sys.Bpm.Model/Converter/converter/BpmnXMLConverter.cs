@@ -574,15 +574,15 @@ namespace Sys.Workflow.Bpmn.Converters
             {
                 if (flowElement is Transaction)
                 {
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_TRANSACTION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_TRANSACTION, BpmnXMLConstants.BPMN2_NAMESPACE);
                 }
                 else if (flowElement is AdhocSubProcess)
                 {
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_ADHOC_SUBPROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_ADHOC_SUBPROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
                 }
                 else
                 {
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_SUBPROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_SUBPROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
                 }
 
                 xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, subProcess.Id);
@@ -624,7 +624,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 if (!string.IsNullOrWhiteSpace(subProcess.Documentation))
                 {
 
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
                     xtw.WriteCharacters(subProcess.Documentation);
                     xtw.WriteEndElement();
                 }
@@ -644,7 +644,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 {
                     if (!string.IsNullOrWhiteSpace(adhocSubProcess.CompletionCondition))
                     {
-                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_COMPLETION_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_COMPLETION_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
                         xtw.WriteCharacters(adhocSubProcess.CompletionCondition);
                         xtw.WriteEndElement();
                     }

@@ -55,7 +55,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual object Execute(ICommandContext commandContext)
         {
-            IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
+            IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
 
             if (processDefinition is null)
             {

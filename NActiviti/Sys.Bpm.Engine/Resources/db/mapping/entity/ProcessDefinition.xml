@@ -80,7 +80,8 @@
 		BUSINESS_KEY_ = #{businessKey},
 		BUSINESS_PATH_ = #{businessPath},
 		START_FORM_ = #{startForm},
-		CATEGORY_ = #{category}
+		CATEGORY_ = #{category},
+		NAME_ = #{name}
 		where ID_ = #{id}
 		and REV_ = #{revision}
 	</Update>

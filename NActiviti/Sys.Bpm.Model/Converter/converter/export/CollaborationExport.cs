@@ -22,11 +22,11 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
         {
             if ((model.Pools?.Count).GetValueOrDefault() > 0)
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_COLLABORATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_COLLABORATION, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, "Collaboration");
                 foreach (Pool pool in model.Pools)
                 {
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_PARTICIPANT, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_PARTICIPANT, BpmnXMLConstants.BPMN2_NAMESPACE);
                     xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, pool.Id);
                     if (!string.IsNullOrWhiteSpace(pool.Name))
                     {
@@ -41,7 +41,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
 
                 foreach (MessageFlow messageFlow in model.MessageFlows.Values)
                 {
-                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MESSAGE_FLOW, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_MESSAGE_FLOW, BpmnXMLConstants.BPMN2_NAMESPACE);
                     xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, messageFlow.Id);
                     if (!string.IsNullOrWhiteSpace(messageFlow.Name))
                     {

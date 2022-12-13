@@ -47,7 +47,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
 
             foreach (Signal signal in model.Signals)
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_SIGNAL, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_SIGNAL, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, signal.Id);
                 xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, signal.Name);
                 if (signal.Scope is not null)
@@ -59,7 +59,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
 
             foreach (Message message in model.Messages)
             {
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MESSAGE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_MESSAGE, BpmnXMLConstants.BPMN2_NAMESPACE);
                 string messageId = message.Id;
                 // remove the namespace from the message id if set
                 if (model.TargetNamespace is not null && messageId.StartsWith(model.TargetNamespace, StringComparison.Ordinal))

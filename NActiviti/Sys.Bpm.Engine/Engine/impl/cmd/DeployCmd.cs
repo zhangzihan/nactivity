@@ -158,9 +158,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
 			foreach (string resourceName in resources.Keys)
 			{
-				IResourceEntity savedResource = savedResources[resourceName];
-
-				if (savedResource is null)
+				if (!savedResources.TryGetValue(resourceName, out var savedResource))
 				{
 					return true;
 				}

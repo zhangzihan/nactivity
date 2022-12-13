@@ -36,7 +36,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
         public static void WriteProcess(Process process, XMLStreamWriter xtw)
         {
             // start process element
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_PROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_PROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
             xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, process.Id);
 
             if (!string.IsNullOrWhiteSpace(process.Name))
@@ -62,7 +62,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
             if (!string.IsNullOrWhiteSpace(process.Documentation))
             {
 
-                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
                 xtw.WriteCharacters(process.Documentation);
                 xtw.WriteEndElement();
             }

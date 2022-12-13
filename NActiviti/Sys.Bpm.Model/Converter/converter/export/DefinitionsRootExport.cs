@@ -15,67 +15,76 @@
 namespace Sys.Workflow.Bpmn.Converters.Exports
 {
 
-    using Sys.Workflow.Bpmn.Constants;
-    using Sys.Workflow.Bpmn.Converters.Utils;
-    using Sys.Workflow.Bpmn.Models;
+	using Sys.Workflow.Bpmn.Constants;
+	using Sys.Workflow.Bpmn.Converters.Utils;
+	using Sys.Workflow.Bpmn.Models;
+	using System.Linq;
 
-    public class DefinitionsRootExport : IBpmnXMLConstants
-    {
+	public class DefinitionsRootExport : IBpmnXMLConstants
+	{
 
-        /// <summary>
-        /// default namespaces for definitions </summary>
-        protected internal static readonly IList<string> defaultNamespaces = new List<string>
-        (new string[]{
-            BpmnXMLConstants.BPMN_PREFIX,
-            BpmnXMLConstants.XSI_PREFIX,
-            BpmnXMLConstants.XSD_PREFIX,
-            BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX,
-            BpmnXMLConstants.BPMNDI_PREFIX,
-            BpmnXMLConstants.OMGDC_PREFIX,
-            BpmnXMLConstants.OMGDI_PREFIX
-        });
+		/// <summary>
+		/// default namespaces for definitions </summary>
+		protected internal static readonly IList<string> defaultNamespaces = new List<string>
+		(new string[]{
+			BpmnXMLConstants.BPMN2_PREFIX,
+			BpmnXMLConstants.XSI_PREFIX,
+			BpmnXMLConstants.XSD_PREFIX,
+			BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX,
+			BpmnXMLConstants.BPMNDI_PREFIX,
+			BpmnXMLConstants.OMGDC_PREFIX,
+			BpmnXMLConstants.OMGDI_PREFIX
+		});
 
-        protected internal static readonly List<ExtensionAttribute> defaultAttributes = new List<ExtensionAttribute>()
-        {
-            new ExtensionAttribute(BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE),
-            new ExtensionAttribute(BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE),
-            new ExtensionAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE)
-        };
+		protected internal static readonly List<ExtensionAttribute> defaultAttributes = new List<ExtensionAttribute>()
+		{
+			new ExtensionAttribute(BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE),
+			new ExtensionAttribute(BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE),
+			new ExtensionAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE)
+		};
 
-        public static void WriteRootElement(BpmnModel model, XMLStreamWriter xtw, string encoding)
-        {
-            xtw.WriteStartDocument(encoding, "1.0");
+		public static void WriteRootElement(BpmnModel model, XMLStreamWriter xtw, string encoding)
+		{
+			xtw.WriteStartDocument(encoding, "1.0");
 
-            // start definitions root element
-            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DEFINITIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
-            xtw.DefaultNamespace = BpmnXMLConstants.BPMN2_NAMESPACE;
-            xtw.WriteDefaultNamespace(BpmnXMLConstants.BPMN2_NAMESPACE);
-            xtw.WriteNamespace(BpmnXMLConstants.XSI_PREFIX, BpmnXMLConstants.XSI_NAMESPACE);
-            xtw.WriteNamespace(BpmnXMLConstants.XSD_PREFIX, BpmnXMLConstants.SCHEMA_NAMESPACE);
-            xtw.WriteNamespace(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-            xtw.WriteNamespace(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.BPMNDI_NAMESPACE);
-            xtw.WriteNamespace(BpmnXMLConstants.OMGDC_PREFIX, BpmnXMLConstants.OMGDC_NAMESPACE);
-            xtw.WriteNamespace(BpmnXMLConstants.OMGDI_PREFIX, BpmnXMLConstants.OMGDI_NAMESPACE);
-            foreach (string prefix in model.Namespaces.Keys)
-            {
-                if (!defaultNamespaces.Contains(prefix) && !string.IsNullOrWhiteSpace(prefix))
-                {
-                    xtw.WriteNamespace(prefix, model.Namespaces[prefix]);
-                }
-            }
-            xtw.WriteAttribute(BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE, BpmnXMLConstants.SCHEMA_NAMESPACE);
-            xtw.WriteAttribute(BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE, BpmnXMLConstants.XPATH_NAMESPACE);
-            if (!string.IsNullOrWhiteSpace(model.TargetNamespace))
-            {
-                xtw.WriteAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE, model.TargetNamespace);
-            }
-            else
-            {
-                xtw.WriteAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE, BpmnXMLConstants.PROCESS_NAMESPACE);
-            }
+			// start definitions root element
+			xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_DEFINITIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
+			xtw.DefaultNamespace = BpmnXMLConstants.BPMN2_NAMESPACE;
+			xtw.WriteDefaultNamespace(BpmnXMLConstants.BPMN2_NAMESPACE);
+			xtw.WriteNamespace(BpmnXMLConstants.XSI_PREFIX, BpmnXMLConstants.XSI_NAMESPACE);
+			xtw.WriteNamespace(BpmnXMLConstants.XSD_PREFIX, BpmnXMLConstants.SCHEMA_NAMESPACE);
+			xtw.WriteNamespace(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+			xtw.WriteNamespace(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.BPMNDI_NAMESPACE);
+			xtw.WriteNamespace(BpmnXMLConstants.OMGDC_PREFIX, BpmnXMLConstants.OMGDC_NAMESPACE);
+			xtw.WriteNamespace(BpmnXMLConstants.OMGDI_PREFIX, BpmnXMLConstants.OMGDI_NAMESPACE);
+			foreach (string prefix in model.Namespaces.Keys)
+			{
+				if (!defaultNamespaces.Contains(prefix) && !string.IsNullOrWhiteSpace(prefix))
+				{
+					xtw.WriteNamespace(prefix, model.Namespaces[prefix]);
+				}
+			}
+			xtw.WriteAttribute(BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE, BpmnXMLConstants.SCHEMA_NAMESPACE);
+			xtw.WriteAttribute(BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE, BpmnXMLConstants.XPATH_NAMESPACE);
+			if (!string.IsNullOrWhiteSpace(model.TargetNamespace))
+			{
+				xtw.WriteAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE, model.TargetNamespace);
+			}
+			else
+			{
+				xtw.WriteAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE, BpmnXMLConstants.PROCESS_NAMESPACE);
+			}
 
-            //BpmnXMLUtil.WriteCustomAttributes(model.DefinitionsAttributes.Values, xtw, model.Namespaces, defaultAttributes);
-        }
-    }
+			var defAttributes = defaultAttributes.Union(model.Namespaces.Select(x =>
+			{
+				return new ExtensionAttribute(x.Value, x.Key)
+				{
+					NamespacePrefix = BpmnXMLConstants.XMLNS_PREFIX,
+					Value = x.Value
+				};
+			})).ToList();
+			BpmnXMLUtil.WriteCustomAttributes(model.DefinitionsAttributes.Values, xtw, model.Namespaces, defAttributes);
+		}
+	}
 
 }

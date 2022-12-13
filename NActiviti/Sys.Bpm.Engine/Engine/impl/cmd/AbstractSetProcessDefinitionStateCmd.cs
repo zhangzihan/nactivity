@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             if (!string.IsNullOrWhiteSpace(processDefinitionId))
             {
 
-                IProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
+                IProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
                 if (processDefinitionEntity is null)
                 {
                     throw new ActivitiObjectNotFoundException("Cannot find process definition for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
