@@ -54,7 +54,7 @@ namespace Sys.Workflow.Cloud.Services.Events.Converters
                 @event.ExecutionId, 
                 @event.ProcessDefinitionId, 
                 @event.ProcessInstanceId, 
-                processInstanceConverter.From(((IExecutionEntity)((IActivitiEntityEvent)@event).Entity).ProcessInstance));
+                processInstanceConverter.From(((IExecutionEntity)((IActivitiEntityEvent)@event).Entity).GetProcessInstance()));
         }
 
 

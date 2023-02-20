@@ -281,7 +281,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
 				foreach (IMessageEventSubscriptionEntity messageEventSubscription in messageEventSubscriptions)
 				{
-					commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_WAITING, messageEventSubscription.ActivityId, messageEventSubscription.EventName, null, messageEventSubscription.Execution.Id, messageEventSubscription.ProcessInstanceId, messageEventSubscription.ProcessDefinitionId));
+					commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_WAITING, messageEventSubscription.ActivityId, messageEventSubscription.EventName, null, messageEventSubscription.GetExecution().Id, messageEventSubscription.ProcessInstanceId, messageEventSubscription.ProcessDefinitionId));
 				}
 			}
 		}

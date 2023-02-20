@@ -16,123 +16,130 @@ using System.Collections.Generic;
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 {
 
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher;
-    using Sys.Workflow.Engine.Tasks;
-    using System.Linq;
+	using Sys.Workflow.Engine.Impl.Cfg;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher;
+	using Sys.Workflow.Engine.Tasks;
+	using System.Linq;
 
-    /// 
-    public class MybatisTaskDataManager : AbstractDataManager<ITaskEntity>, ITaskDataManager
-    {
+	/// 
+	public class MybatisTaskDataManager : AbstractDataManager<ITaskEntity>, ITaskDataManager
+	{
 
-        protected internal ICachedEntityMatcher<ITaskEntity> tasksByExecutionIdMatcher = new TasksByExecutionIdMatcher();
+		protected internal ICachedEntityMatcher<ITaskEntity> tasksByExecutionIdMatcher = new TasksByExecutionIdMatcher();
 
-        public MybatisTaskDataManager(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
-        {
-        }
+		public MybatisTaskDataManager(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
+		{
+		}
 
-        public override Type ManagedEntityClass
-        {
-            get
-            {
-                return typeof(TaskEntityImpl);
-            }
-        }
+		public override Type ManagedEntityClass
+		{
+			get
+			{
+				return typeof(TaskEntityImpl);
+			}
+		}
 
-        public override ITaskEntity Create()
-        {
-            return new TaskEntityImpl();
-        }
+		public override ITaskEntity Create()
+		{
+			return new TaskEntityImpl();
+		}
 
-        public virtual IList<ITaskEntity> FindTasksByExecutionId(string executionId)
-        {
-            return (IList<ITaskEntity>)GetList("selectTasksByExecutionId", new { executionId }, tasksByExecutionIdMatcher, true);
-        }
+		public virtual IList<ITaskEntity> FindTasksByExecutionId(string executionId)
+		{
+			try
+			{
+				return (IList<ITaskEntity>)GetList("selectTasksByExecutionId", new { executionId }, tasksByExecutionIdMatcher, true);
+			}
+			catch
+			{
+				throw;
+			}
+		}
 
-        public virtual IList<ITaskEntity> FindTasksByProcessInstanceId(string processInstanceId)
-        {
-            return DbSqlSession.SelectList<TaskEntityImpl, ITaskEntity>("selectTasksByProcessInstanceId", new { processInstanceId });
-        }
+		public virtual IList<ITaskEntity> FindTasksByProcessInstanceId(string processInstanceId)
+		{
+			return DbSqlSession.SelectList<TaskEntityImpl, ITaskEntity>("selectTasksByProcessInstanceId", new { processInstanceId });
+		}
 
-        public virtual IList<ITask> FindTasksByQueryCriteria(ITaskQuery taskQuery)
-        {
-            const string query = "selectTaskByQueryCriteria";
-            return DbSqlSession.SelectList<TaskEntityImpl, ITask>(query, taskQuery);
-        }
+		public virtual IList<ITask> FindTasksByQueryCriteria(ITaskQuery taskQuery)
+		{
+			const string query = "selectTaskByQueryCriteria";
+			return DbSqlSession.SelectList<TaskEntityImpl, ITask>(query, taskQuery);
+		}
 
-        public virtual IList<ITask> FindTasksAndVariablesByQueryCriteria(ITaskQuery taskQuery)
-        {
-            const string query = "selectTaskWithVariablesByQueryCriteria";
-            TaskQueryImpl taskQueyImpl = taskQuery as TaskQueryImpl;
-            // paging doesn't work for combining task instances and variables due to
-            // an outer join, so doing it in-memory
-            if (taskQueyImpl.FirstResult < 0 || taskQueyImpl.MaxResults <= 0)
-            {
-                return new List<ITask>();
-            }
+		public virtual IList<ITask> FindTasksAndVariablesByQueryCriteria(ITaskQuery taskQuery)
+		{
+			const string query = "selectTaskWithVariablesByQueryCriteria";
+			TaskQueryImpl taskQueyImpl = taskQuery as TaskQueryImpl;
+			// paging doesn't work for combining task instances and variables due to
+			// an outer join, so doing it in-memory
+			if (taskQueyImpl.FirstResult < 0 || taskQueyImpl.MaxResults <= 0)
+			{
+				return new List<ITask>();
+			}
 
-            int firstResult = taskQueyImpl.FirstResult;
-            int maxResults = taskQueyImpl.MaxResults;
+			int firstResult = taskQueyImpl.FirstResult;
+			int maxResults = taskQueyImpl.MaxResults;
 
-            // setting max results, limit to 20000 results for performance reasons
-            if (taskQueyImpl.TaskVariablesLimit is not null)
-            {
-                taskQueyImpl.MaxResults = taskQueyImpl.TaskVariablesLimit.GetValueOrDefault();
-            }
-            else
-            {
-                taskQueyImpl.MaxResults = ProcessEngineConfiguration.TaskQueryLimit;
-            }
-            taskQueyImpl.FirstResult = 0;
+			// setting max results, limit to 20000 results for performance reasons
+			if (taskQueyImpl.TaskVariablesLimit is not null)
+			{
+				taskQueyImpl.MaxResults = taskQueyImpl.TaskVariablesLimit.GetValueOrDefault();
+			}
+			else
+			{
+				taskQueyImpl.MaxResults = ProcessEngineConfiguration.TaskQueryLimit;
+			}
+			taskQueyImpl.FirstResult = 0;
 
-            IList<ITask> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<TaskEntityImpl, ITask>(query, taskQueyImpl, taskQueyImpl.FirstResult, taskQueyImpl.MaxResults);
+			IList<ITask> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<TaskEntityImpl, ITask>(query, taskQueyImpl, taskQueyImpl.FirstResult, taskQueyImpl.MaxResults);
 
-            if (instanceList is object && instanceList.Count > 0)
-            {
-                if (firstResult > 0)
-                {
-                    if (firstResult <= instanceList.Count)
-                    {
-                        int toIndex = firstResult + Math.Min(maxResults, instanceList.Count - firstResult);
-                        return instanceList.Skip(firstResult).Take(toIndex).ToList();
-                    }
-                    else
-                    {
-                        return new List<ITask>();
-                    }
-                }
-                else
-                {
-                    int toIndex = Math.Min(maxResults, instanceList.Count);
-                    return instanceList.Skip(0).Take(toIndex).ToList();
-                }
-            }
-            return new List<ITask>();
-        }
+			if (instanceList is object && instanceList.Count > 0)
+			{
+				if (firstResult > 0)
+				{
+					if (firstResult <= instanceList.Count)
+					{
+						int toIndex = firstResult + Math.Min(maxResults, instanceList.Count - firstResult);
+						return instanceList.Skip(firstResult).Take(toIndex).ToList();
+					}
+					else
+					{
+						return new List<ITask>();
+					}
+				}
+				else
+				{
+					int toIndex = Math.Min(maxResults, instanceList.Count);
+					return instanceList.Skip(0).Take(toIndex).ToList();
+				}
+			}
+			return new List<ITask>();
+		}
 
-        public virtual long FindTaskCountByQueryCriteria(ITaskQuery taskQuery)
-        {
-            return DbSqlSession.SelectOne<TaskEntityImpl, long?>("selectTaskCountByQueryCriteria", taskQuery).GetValueOrDefault();
-        }
+		public virtual long FindTaskCountByQueryCriteria(ITaskQuery taskQuery)
+		{
+			return DbSqlSession.SelectOne<TaskEntityImpl, long?>("selectTaskCountByQueryCriteria", taskQuery).GetValueOrDefault();
+		}
 
-        public virtual IList<ITask> FindTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
-        {
-            return DbSqlSession.SelectListWithRawParameter<TaskEntityImpl, ITask>("selectTaskByNativeQuery", parameterMap, firstResult, maxResults);
-        }
+		public virtual IList<ITask> FindTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+		{
+			return DbSqlSession.SelectListWithRawParameter<TaskEntityImpl, ITask>("selectTaskByNativeQuery", parameterMap, firstResult, maxResults);
+		}
 
-        public virtual long FindTaskCountByNativeQuery(IDictionary<string, object> parameterMap)
-        {
-            return DbSqlSession.SelectOne<TaskEntityImpl, long?>("selectTaskCountByNativeQuery", parameterMap).GetValueOrDefault();
-        }
+		public virtual long FindTaskCountByNativeQuery(IDictionary<string, object> parameterMap)
+		{
+			return DbSqlSession.SelectOne<TaskEntityImpl, long?>("selectTaskCountByNativeQuery", parameterMap).GetValueOrDefault();
+		}
 
-        public virtual IList<ITask> FindTasksByParentTaskId(string parentTaskId)
-        {
-            return DbSqlSession.SelectList<TaskEntityImpl, ITask>("selectTasksByParentTaskId", new { parentTaskId });
-        }
+		public virtual IList<ITask> FindTasksByParentTaskId(string parentTaskId)
+		{
+			return DbSqlSession.SelectList<TaskEntityImpl, ITask>("selectTasksByParentTaskId", new { parentTaskId });
+		}
 
-        public virtual void UpdateTaskTenantIdForDeployment(string deploymentId, string tenantId)
-        {
-            DbSqlSession.Update<TaskEntityImpl>("updateTaskTenantIdForDeployment", new { deploymentId, tenantId });
-        }
-    }
+		public virtual void UpdateTaskTenantIdForDeployment(string deploymentId, string tenantId)
+		{
+			DbSqlSession.Update<TaskEntityImpl>("updateTaskTenantIdForDeployment", new { deploymentId, tenantId });
+		}
+	}
 }

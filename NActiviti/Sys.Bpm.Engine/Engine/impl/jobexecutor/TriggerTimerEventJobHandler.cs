@@ -65,7 +65,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
                     if (!processedElements.Contains(boundaryEvent.Id))
                     {
                         processedElements.Add(boundaryEvent.Id);
-                        IExecutionEntity parentExecution = execution.Parent;
+                        IExecutionEntity parentExecution = execution.GetParent();
                         DispatchExecutionTimeOut(timerEntity, parentExecution, processedElements, commandContext);
                     }
                 }
@@ -81,7 +81,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
                     DispatchActivityTimeOut(timerEntity, (FlowNode)execution.CurrentFlowElement, execution, commandContext);
                     if (execution.CurrentFlowElement is UserTask && !execution.IsMultiInstanceRoot)
                     {
-                        IList<ITaskEntity> tasks = execution.Tasks;
+                        IList<ITaskEntity> tasks = execution.GetTasks();
                         if (tasks.Count > 0)
                         {
                             tasks[0].Canceled = true;

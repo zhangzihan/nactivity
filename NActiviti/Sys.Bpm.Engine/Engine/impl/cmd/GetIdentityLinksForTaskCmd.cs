@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
 
-            IList<IIdentityLink> identityLinks = (IList<IIdentityLink>)task.IdentityLinks;
+            IList<IIdentityLink> identityLinks = (IList<IIdentityLink>)task.GetIdentityLinks();
 
             // assignee is not part of identity links in the db.
             // so if there is one, we add it here.
@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 identityLinks.Add(identityLink);
             }
 
-            return (IList<IIdentityLink>)task.IdentityLinks;
+            return (IList<IIdentityLink>)task.GetIdentityLinks();
         }
 
     }

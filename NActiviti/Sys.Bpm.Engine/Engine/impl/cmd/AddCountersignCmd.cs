@@ -74,8 +74,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             ITaskService taskService = pec.TaskService;
             IIdGenerator idGenerator = pec.IdGenerator;
 
-            IExecutionEntity execution = task.Execution;
-            IExecutionEntity parent = execution.Parent;
+            IExecutionEntity execution = task.GetExecution();
+            IExecutionEntity parent = execution.GetParent();
 
             //查找当前待追加人员是否已经存在在任务列表中,proc_inst_id_
             IList<ITask> assignTasks = taskService.CreateTaskQuery()
@@ -130,7 +130,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     string taskId = idGenerator.GetNextId();
                     taskEntity.Id = taskId;
                 }
-                taskEntity.Execution = newExecution;
+                taskEntity.SetExecution(newExecution);
                 taskEntity.Assignee = assignee;
                 if (string.IsNullOrWhiteSpace(assignee) == false)
                 {

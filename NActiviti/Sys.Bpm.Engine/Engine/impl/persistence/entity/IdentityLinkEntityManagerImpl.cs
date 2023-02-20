@@ -120,8 +120,8 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IIdentityLinkEntity AddIdentityLink(IExecutionEntity executionEntity, string userId, string groupId, string type)
         {
             IIdentityLinkEntity identityLinkEntity = identityLinkDataManager.Create();
-            executionEntity.IdentityLinks.Add(identityLinkEntity);
-            identityLinkEntity.ProcessInstance = executionEntity.ProcessInstance ?? executionEntity;
+            executionEntity.GetIdentityLinks().Add(identityLinkEntity);
+            identityLinkEntity.ProcessInstance = executionEntity.GetProcessInstance() ?? executionEntity;
             identityLinkEntity.UserId = userId;
             identityLinkEntity.GroupId = groupId;
             identityLinkEntity.Type = type;
@@ -132,7 +132,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IIdentityLinkEntity AddIdentityLink(ITaskEntity taskEntity, string userId, string groupId, string type)
         {
             IIdentityLinkEntity identityLinkEntity = identityLinkDataManager.Create();
-            taskEntity.IdentityLinks.Add(identityLinkEntity);
+            taskEntity.GetIdentityLinks().Add(identityLinkEntity);
             identityLinkEntity.Task = taskEntity;
             identityLinkEntity.UserId = userId;
             identityLinkEntity.GroupId = groupId;
@@ -140,7 +140,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             Insert(identityLinkEntity);
             if (userId is not null && taskEntity.ProcessInstanceId is not null)
             {
-                InvolveUser(taskEntity.ProcessInstance, userId, IdentityLinkType.PARTICIPANT);
+                InvolveUser(taskEntity.GetProcessInstance(), userId, IdentityLinkType.PARTICIPANT);
             }
             return identityLinkEntity;
         }
@@ -164,7 +164,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// </summary>
         public virtual IIdentityLinkEntity InvolveUser(IExecutionEntity executionEntity, string userId, string type)
         {
-            foreach (IIdentityLinkEntity identityLink in executionEntity.IdentityLinks)
+            foreach (IIdentityLinkEntity identityLink in executionEntity.GetIdentityLinks())
             {
                 if (identityLink.User && identityLink.UserId.Equals(userId))
                 {
@@ -222,10 +222,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             foreach (var il in identityLinks)
             {
-                var item = executionEntity.IdentityLinks.FirstOrDefault(x => x.Id == il.Id);
+                var item = executionEntity.GetIdentityLinks().FirstOrDefault(x => x.Id == il.Id);
                 if (item is object)
                 {
-                    executionEntity.IdentityLinks.Remove(item);
+                    executionEntity.GetIdentityLinks().Remove(item);
                 }
             }
         }
@@ -243,7 +243,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             // fix deleteCandidate() in create TaskListener
             IList<IIdentityLinkEntity> removedIdentityLinkEntities = new List<IIdentityLinkEntity>();
-            foreach (IIdentityLinkEntity identityLinkEntity in taskEntity.IdentityLinks)
+            foreach (IIdentityLinkEntity identityLinkEntity in taskEntity.GetIdentityLinks())
             {
                 if (IdentityLinkType.CANDIDATE.Equals(identityLinkEntity.Type) && identityLinkIds.Contains(identityLinkEntity.Id) == false)
                 {
@@ -260,10 +260,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             foreach (var il in identityLinks)
             {
-                var item = taskEntity.IdentityLinks.FirstOrDefault(x => x.Id == il.Id);
+                var item = taskEntity.GetIdentityLinks().FirstOrDefault(x => x.Id == il.Id);
                 if (item is object)
                 {
-                    taskEntity.IdentityLinks.Remove(item);
+                    taskEntity.GetIdentityLinks().Remove(item);
                 }
             }
         }

@@ -81,7 +81,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             DeleteChildExecutions(attachedRefScopeExecution, executionEntity, commandContext);
 
             // set new parent for boundary event execution
-            executionEntity.Parent = scopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
+            executionEntity.SetParent(scopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event"));
 
             Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(executionEntity, true);
         }

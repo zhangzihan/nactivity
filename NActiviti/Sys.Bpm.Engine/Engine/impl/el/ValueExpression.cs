@@ -107,7 +107,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             else if (VariableScopeElResolver.EXECUTION_KEY.Equals(expstr) && variableScope is ITaskEntity entity)
             {
                 context.IsPropertyResolved = true;
-                return entity.Execution;
+                return entity.GetExecution();
             }
             else if (VariableScopeElResolver.LOGGED_IN_USER_KEY.Equals(expstr))
             {

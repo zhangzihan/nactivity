@@ -30,14 +30,14 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         {
             try
             {
-                ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-                if (processEngineConfiguration.EnableEventDispatcher)
-                {
-                    if (runnable.Execution is object)
-                    {
-                        processEngineConfiguration.EventDispatcher.DispatchEvent(new WorkflowDebuggerEvent(runnable.Execution));
-                    }
-                }
+                //ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
+                //if (processEngineConfiguration.EnableEventDispatcher)
+                //{
+                //    if (runnable.Execution is object)
+                //    {
+                //        processEngineConfiguration.EventDispatcher.DispatchEvent(new WorkflowDebuggerEvent(runnable.Execution));
+                //    }
+                //}
 
                 base.ExecuteOperation(runnable);
             }

@@ -73,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // No parent execution == process instance id
             logger.LogDebug($"No parent execution found. Verifying if process instance {processInstanceId} can be stopped.");
 
-            IExecutionEntity superExecution = processInstanceExecution.SuperExecution;
+            IExecutionEntity superExecution = processInstanceExecution.GetSuperExecution();
             ISubProcessActivityBehavior subProcessActivityBehavior = null;
 
             // copy variables before destroying the ended sub process instance (call activity)
@@ -121,7 +121,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // and trigger execution afterwards if doing a call activity
             if (superExecution is object)
             {
-                superExecution.SubProcessInstance = null;
+                superExecution.SetSubProcessInstance(null);
                 try
                 {
                     subProcessActivityBehavior.Completed(superExecution);
@@ -226,7 +226,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         protected internal virtual IExecutionEntity HandleSubProcessEnd(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution, SubProcess subProcess)
         {
             // create a new execution to take the outgoing sequence flows
-            IExecutionEntity executionToContinue = executionEntityManager.CreateChildExecution(parentExecution.Parent);
+            IExecutionEntity executionToContinue = executionEntityManager.CreateChildExecution(parentExecution.GetParent());
             executionToContinue.CurrentFlowElement = subProcess;
 
             bool hasCompensation = false;
@@ -297,7 +297,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                     if (!parentExecution.Id.Equals(parentExecution.ProcessInstanceId))
                     {
                         // create a new execution to take the outgoing sequence flows
-                        executionToContinue = executionEntityManager.CreateChildExecution(parentExecution.Parent);
+                        executionToContinue = executionEntityManager.CreateChildExecution(parentExecution.GetParent());
                         executionToContinue.CurrentFlowElement = parentExecution.CurrentFlowElement;
 
                         executionEntityManager.DeleteChildExecutions(parentExecution, null, false);
@@ -357,7 +357,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             if (executionEntity.CurrentFlowElement is EndEvent)
             {
                 SubProcess subProcess = ((EndEvent)execution.CurrentFlowElement).SubProcess;
-                return !executionEntity.Parent.ProcessInstanceType && subProcess is not null && subProcess.LoopCharacteristics is not null && subProcess.Behavior is MultiInstanceActivityBehavior;
+                return !executionEntity.GetParent().ProcessInstanceType && subProcess is not null && subProcess.LoopCharacteristics is not null && subProcess.Behavior is MultiInstanceActivityBehavior;
             }
             return false;
         }

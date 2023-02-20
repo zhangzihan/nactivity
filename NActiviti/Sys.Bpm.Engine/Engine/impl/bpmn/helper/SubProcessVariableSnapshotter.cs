@@ -9,7 +9,7 @@
         {
             snapshotHolder.VariablesLocal = sourceExecution.VariablesLocal;
 
-            IExecutionEntity parentExecution = sourceExecution.Parent;
+            IExecutionEntity parentExecution = sourceExecution.GetParent();
             if (parentExecution is object && parentExecution.IsMultiInstanceRoot)
             {
                 snapshotHolder.VariablesLocal = parentExecution.VariablesLocal;

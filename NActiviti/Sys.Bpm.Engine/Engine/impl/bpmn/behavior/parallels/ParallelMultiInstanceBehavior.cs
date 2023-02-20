@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 IExecutionEntity concurrentExecution = concurrentExecutions[loopCounter];
                 // executions can be inactive, if instances are all automatics
                 // (no-waitstate) and completionCondition has been met in the meantime
-                if (concurrentExecution.IsActive && !concurrentExecution.Ended && concurrentExecution.Parent.IsActive && !concurrentExecution.Parent.Ended)
+                if (concurrentExecution.IsActive && !concurrentExecution.Ended && concurrentExecution.GetParent().IsActive && !concurrentExecution.GetParent().Ended)
                 {
                     SetLoopVariable(concurrentExecution, CollectionElementIndexVariable, loopCounter);
                     ExecuteOriginalBehavior(concurrentExecution, loopCounter);
@@ -156,17 +156,17 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             LogLoopDetails(execution, "instance completed", loopCounter, nrOfCompletedInstances, nrOfActiveInstances, nrOfActiveInstances < 0 ? 0 : nrOfActiveInstances);
 
-            if (execution.Parent is object)
+            if (execution.GetParent() is object)
             {
                 execution.Inactivate();
                 LockFirstParentScope(execution);
 
-                if (CompletionConditionSatisfied(execution.Parent, signalData) || nrOfCompletedInstances >= nrOfInstances)
+                if (CompletionConditionSatisfied(execution.GetParent(), signalData) || nrOfCompletedInstances >= nrOfInstances)
                 {
                     IExecutionEntity executionToUse;
                     if (nrOfInstances > 0)
                     {
-                        executionToUse = execution.Parent;
+                        executionToUse = execution.GetParent();
                     }
                     else
                     {

@@ -65,17 +65,17 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                 return execution;
             }
 
-            return GetMiRootExecution(execution.Parent);
+            return GetMiRootExecution(execution.GetParent());
         }
 
         private T GetVariable<T>(IExecutionEntity execution, string variableName)
         {
             object value = execution.GetVariableLocal(variableName);
-            IExecutionEntity parent = execution.Parent;
+            IExecutionEntity parent = execution.GetParent();
             while (value is null && parent is object)
             {
                 value = parent.GetVariableLocal(variableName);
-                parent = parent.Parent;
+                parent = parent.GetParent();
             }
             return (T)value;
         }

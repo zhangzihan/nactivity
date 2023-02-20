@@ -31,11 +31,11 @@ namespace Sys.Workflow.Engine.Debug
             {
                 if (parentExecution.ParentId is not null)
                 {
-                    parentExecution = parentExecution.Parent;
+                    parentExecution = parentExecution.GetParent();
                 }
                 else
                 {
-                    parentExecution = parentExecution.SuperExecution;
+                    parentExecution = parentExecution.GetSuperExecution();
                 }
             }
 
@@ -56,10 +56,10 @@ namespace Sys.Workflow.Engine.Debug
                 CollectChildExecutions(childExecutionEntity, allExecutions);
             }
 
-            if (rootExecutionEntity.SubProcessInstance is object)
+            if (rootExecutionEntity.GetSubProcessInstance() is object)
             {
-                allExecutions.Add(rootExecutionEntity.SubProcessInstance);
-                CollectChildExecutions(rootExecutionEntity.SubProcessInstance, allExecutions);
+                allExecutions.Add(rootExecutionEntity.GetSubProcessInstance());
+                CollectChildExecutions(rootExecutionEntity.GetSubProcessInstance(), allExecutions);
             }
         }
 

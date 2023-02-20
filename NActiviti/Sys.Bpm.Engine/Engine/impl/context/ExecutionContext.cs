@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             get
             {
-                return execution.ProcessInstance;
+                return execution.GetProcessInstance();
             }
         }
 

@@ -136,7 +136,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
             ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceValueId);
-            return @ref.Bytes;
+            return @ref.GetBytes();
         }
 
         public virtual byte[] FindEditorSourceExtraByModelId(string modelId)
@@ -148,7 +148,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
             ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceExtraValueId);
-            return @ref.Bytes;
+            return @ref.GetBytes();
         }
 
         public virtual IList<IModel> FindModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)

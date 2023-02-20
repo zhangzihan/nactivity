@@ -15,104 +15,104 @@ using System.Collections.Generic;
  */
 namespace Sys.Workflow.Bpmn.Models
 {
-    public abstract class FlowElement : BaseElement, IHasExecutionListeners
-    {
-        protected internal string name;
-        protected internal string documentation;
-        protected internal IList<ActivitiListener> executionListeners = new List<ActivitiListener>();
+	public abstract class FlowElement : BaseElement, IHasExecutionListeners
+	{
+		protected internal string name;
+		protected internal string documentation;
+		protected internal IList<ActivitiListener> executionListeners;
 
-        [JsonIgnore]
-        protected internal IFlowElementsContainer parentContainer;
+		[JsonIgnore]
+		protected internal IFlowElementsContainer parentContainer;
 
-        public virtual string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                this.name = value;
-            }
-        }
-
-
-        public virtual string Documentation
-        {
-            get
-            {
-                return documentation;
-            }
-            set
-            {
-                this.documentation = value;
-            }
-        }
+		public virtual string Name
+		{
+			get
+			{
+				return name;
+			}
+			set
+			{
+				this.name = value;
+			}
+		}
 
 
-        public virtual IList<ActivitiListener> ExecutionListeners
-        {
-            get
-            {
-                return executionListeners;
-            }
-            set
-            {
-                this.executionListeners = value;
-            }
-        }
-
-        [JsonIgnore]
-        public virtual IFlowElementsContainer ParentContainer
-        {
-            get
-            {
-                return parentContainer;
-            }
-            set
-            {
-                this.parentContainer = value;
-            }
-        }
-
-        [JsonIgnore]
-        public virtual SubProcess SubProcess
-        {
-            get
-            {
-                SubProcess subProcess = null;
-                if (parentContainer is SubProcess)
-                {
-                    subProcess = (SubProcess)parentContainer;
-                }
-
-                return subProcess;
-            }
-        }
+		public virtual string Documentation
+		{
+			get
+			{
+				return documentation;
+			}
+			set
+			{
+				this.documentation = value;
+			}
+		}
 
 
-        public override abstract BaseElement Clone();
+		public virtual IList<ActivitiListener> ExecutionListeners
+		{
+			get
+			{
+				return executionListeners ??= new List<ActivitiListener>(); ;
+			}
+			set
+			{
+				this.executionListeners = value;
+			}
+		}
 
-        public override BaseElement Values
-        {
-            set
-            {
-                base.Values = value;
-                var val = value as FlowElement;
+		[JsonIgnore]
+		public virtual IFlowElementsContainer ParentContainer
+		{
+			get
+			{
+				return parentContainer;
+			}
+			set
+			{
+				this.parentContainer = value;
+			}
+		}
 
-                Name = val.Name;
-                Documentation = val.Documentation;
+		[JsonIgnore]
+		public virtual SubProcess SubProcess
+		{
+			get
+			{
+				SubProcess subProcess = null;
+				if (parentContainer is SubProcess)
+				{
+					subProcess = (SubProcess)parentContainer;
+				}
 
-                executionListeners = new List<ActivitiListener>();
-                if (val.ExecutionListeners is object && val.ExecutionListeners.Count > 0)
-                {
-                    foreach (ActivitiListener listener in val.ExecutionListeners)
-                    {
-                        executionListeners.Add(listener.Clone() as ActivitiListener);
-                    }
-                }
-            }
-        }
-    }
+				return subProcess;
+			}
+		}
+
+
+		public override abstract BaseElement Clone();
+
+		public override BaseElement Values
+		{
+			set
+			{
+				base.Values = value;
+				var val = value as FlowElement;
+
+				Name = val.Name;
+				Documentation = val.Documentation;
+
+				executionListeners = new List<ActivitiListener>();
+				if (val.ExecutionListeners is object && val.ExecutionListeners.Count > 0)
+				{
+					foreach (ActivitiListener listener in val.ExecutionListeners)
+					{
+						executionListeners.Add(listener.Clone() as ActivitiListener);
+					}
+				}
+			}
+		}
+	}
 
 }

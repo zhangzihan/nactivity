@@ -69,11 +69,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             //如果当前任务为补偿任务，则修改任务的父级为流程实例
             if ((execution.CurrentFlowElement as UserTask).ForCompensation)
             {
-                execution.Parent = execution.ProcessInstance;
+                execution.SetParent(execution.GetProcessInstance());
             }
 
             ITaskEntity task = taskEntityManager.Create();
-            task.Execution = execution;
+            task.SetExecution(execution);
             task.TaskDefinitionKey = userTask.Id;
             task.IsRuntimeAssignee();
 

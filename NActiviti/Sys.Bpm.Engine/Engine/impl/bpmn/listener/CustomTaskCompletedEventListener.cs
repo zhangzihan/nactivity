@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
                 ICommandContext commandContext = Context.CommandContext;
 
-                IExecutionEntity execution = taskEntity.Execution;
+                IExecutionEntity execution = taskEntity.GetExecution();
 
                 UserTask userTask = execution.CurrentFlowElement as UserTask;
 

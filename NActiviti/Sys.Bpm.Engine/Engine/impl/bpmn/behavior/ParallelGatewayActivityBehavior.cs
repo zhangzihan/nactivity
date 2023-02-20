@@ -138,7 +138,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual bool IsChildOfMultiInstanceExecution(IExecutionEntity executionEntity, IExecutionEntity multiInstanceExecution)
         {
             bool isChild = false;
-            IExecutionEntity parentExecution = executionEntity.Parent;
+            IExecutionEntity parentExecution = executionEntity.GetParent();
             if (parentExecution is object)
             {
                 if (parentExecution.Id.Equals(multiInstanceExecution.Id))
@@ -183,7 +183,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual IExecutionEntity FindMultiInstanceParentExecution(IExecutionEntity execution)
         {
             IExecutionEntity multiInstanceExecution = null;
-            IExecutionEntity parentExecution = execution.Parent;
+            IExecutionEntity parentExecution = execution.GetParent();
             if (parentExecution is object && parentExecution.CurrentFlowElement is not null)
             {
                 FlowElement flowElement = parentExecution.CurrentFlowElement;

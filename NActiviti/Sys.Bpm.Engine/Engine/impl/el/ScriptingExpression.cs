@@ -109,7 +109,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             else if (VariableScopeElResolver.EXECUTION_KEY.Equals(expstr) && variableScope is ITaskEntity entity)
             {
                 context.IsPropertyResolved = true;
-                return entity.Execution;
+                return entity.GetExecution();
             }
             else if (VariableScopeElResolver.LOGGED_IN_USER_KEY.Equals(expstr))
             {
@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             IScriptingEnginesProvider scriptingEnginesProvider = ProcessEngineServiceProvider.Resolve<IScriptingEnginesProvider>();
             IScriptingEngines scriptingEngines = scriptingEnginesProvider.Create(language);
 
-            var execution = variableScope is ITaskEntity te ? te.Execution : variableScope as IExecutionEntity;
+            var execution = variableScope is ITaskEntity te ? te.GetExecution() : variableScope as IExecutionEntity;
             
             return scriptingEngines.Evaluate(expstr, execution);
         }

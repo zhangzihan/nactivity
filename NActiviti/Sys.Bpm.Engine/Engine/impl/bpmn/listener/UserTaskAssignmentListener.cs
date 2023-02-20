@@ -24,7 +24,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
         public void Notify(IDelegateTask task)
         {
-            if (task is null || task.Execution.CurrentFlowElement is not UserTask)
+            if (task is null || task.GetExecution().CurrentFlowElement is not UserTask)
             {
                 return;
             }
@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
         {
             if (@event is IActivitiEntityEvent entity
                 && entity.Entity is ITaskEntity task
-                && task.Execution.CurrentFlowElement is UserTask)
+                && task.GetExecution().CurrentFlowElement is UserTask)
             {
                 Notify(task as IDelegateTask);
             }

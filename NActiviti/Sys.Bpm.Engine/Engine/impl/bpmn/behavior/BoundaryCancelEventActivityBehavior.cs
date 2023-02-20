@@ -81,7 +81,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 {
                     if (activity.LoopCharacteristics is not null)
                     {
-                        IExecutionEntity miExecution = subProcessExecution.Parent;
+                        IExecutionEntity miExecution = subProcessExecution.GetParent();
                         IList<IExecutionEntity> miChildExecutions = executionEntityManager.FindChildExecutionsByParentExecutionId(miExecution.Id);
                         foreach (IExecutionEntity miChildExecution in miChildExecutions)
                         {

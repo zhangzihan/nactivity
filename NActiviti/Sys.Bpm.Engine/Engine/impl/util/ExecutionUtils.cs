@@ -25,11 +25,11 @@ namespace Sys.Workflow.Engine.Impl.Util
         internal static T GetLoopVariable<T>(this IExecutionEntity execution, string variableName)
         {
             object value = execution.GetVariableLocal(variableName);
-            IExecutionEntity parent = execution.Parent;
+            IExecutionEntity parent = execution.GetParent();
             while (value is null && parent is object)
             {
                 value = parent.GetLoopVariable<T>(variableName);
-                parent = parent.Parent;
+                parent = parent.GetParent();
             }
             return value is null ? default : JToken.FromObject(value).ToObject<T>();
         }
@@ -55,7 +55,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         internal static IExecutionEntity FindMultiInstanceParentExecution(this IExecutionEntity execution)
         {
             IExecutionEntity multiInstanceExecution = null;
-            IExecutionEntity parentExecution = execution.Parent;
+            IExecutionEntity parentExecution = execution.GetParent();
             if (parentExecution is object && parentExecution.CurrentFlowElement is not null)
             {
                 FlowElement flowElement = parentExecution.CurrentFlowElement;
@@ -85,7 +85,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             {
                 return null;
             }
-            IExecutionEntity parentExecution = execution.Parent;
+            IExecutionEntity parentExecution = execution.GetParent();
             if (parentExecution is object && parentExecution.CurrentFlowElement is not null)
             {
                 return FindRootParent(parentExecution);

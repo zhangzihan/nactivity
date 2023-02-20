@@ -144,7 +144,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 EnsureByteArrayRefInitialized();
-                return byteArrayRef.Bytes;
+                return byteArrayRef.GetBytes();
             }
             set
             {

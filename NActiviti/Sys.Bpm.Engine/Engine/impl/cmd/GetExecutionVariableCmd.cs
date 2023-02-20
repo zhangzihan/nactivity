@@ -42,11 +42,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual object Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }

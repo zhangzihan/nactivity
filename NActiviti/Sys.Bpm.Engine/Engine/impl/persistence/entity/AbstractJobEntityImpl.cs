@@ -269,7 +269,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     return null;
                 }
 
-                byte[] bytes = exceptionByteArrayRef.Bytes;
+                byte[] bytes = exceptionByteArrayRef.GetBytes();
                 if (bytes is null)
                 {
                     return null;

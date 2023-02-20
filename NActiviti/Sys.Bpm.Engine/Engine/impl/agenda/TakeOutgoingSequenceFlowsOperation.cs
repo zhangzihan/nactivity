@@ -211,7 +211,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 {
                     for (int i = 1; i < outgoingSequenceFlows.Count; i++)
                     {
-                        IExecutionEntity parent = execution.ParentId is not null ? execution.Parent : execution;
+                        IExecutionEntity parent = execution.ParentId is not null ? execution.GetParent() : execution;
                         IExecutionEntity outgoingExecutionEntity = commandContext.ExecutionEntityManager.CreateChildExecution(parent);
 
                         SequenceFlow outgoingSequenceFlow = outgoingSequenceFlows[i];
@@ -280,7 +280,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
 
                 if (endAdhocSubProcess)
                 {
-                    Context.Agenda.PlanEndExecutionOperation(execution.Parent);
+                    Context.Agenda.PlanEndExecutionOperation(execution.GetParent());
                 }
             }
         }
@@ -303,7 +303,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             commandContext.HistoryManager.RecordActivityEnd(execution, null);
             commandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(execution, null, false);
 
-            IExecutionEntity parentExecutionEntity = execution.Parent;
+            IExecutionEntity parentExecutionEntity = execution.GetParent();
             if (parentExecutionEntity.IsScope && !parentExecutionEntity.ProcessInstanceType)
             {
 
@@ -385,12 +385,12 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         {
             if (executionEntity.ParentId is not null)
             {
-                IExecutionEntity scopeExecutionEntity = executionEntity.Parent;
+                IExecutionEntity scopeExecutionEntity = executionEntity.GetParent();
 
                 // Find next scope
                 while (!scopeExecutionEntity.IsScope || !scopeExecutionEntity.ProcessInstanceType)
                 {
-                    scopeExecutionEntity = scopeExecutionEntity.Parent;
+                    scopeExecutionEntity = scopeExecutionEntity.GetParent();
                 }
 
                 // Return when all child executions for it are ended

@@ -18,7 +18,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
         public void Notify(IExecutionEntity execution)
         {
-            IExecutionEntity miRoot = execution.Parent;
+            IExecutionEntity miRoot = execution.GetParent();
 
             if (miRoot.IsMultiInstanceRoot
                 && execution.CurrentFlowElement is CallActivity callActivity)

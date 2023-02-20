@@ -89,11 +89,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (execution.ProcessInstanceType)
                 {
                     string processInstanceId = execution.ProcessInstanceId;
-                    IExecutionEntity superExection = execution.SuperExecution;
+                    IExecutionEntity superExection = execution.GetSuperExecution();
                     while (superExection is object)
                     {
                         processInstanceId = superExection.ProcessInstanceId;
-                        superExection = superExection.SuperExecution;
+                        superExection = superExection.GetSuperExecution();
                     }
                     signalEvents = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByProcessInstanceAndEventName(processInstanceId, eventName);
                 }

@@ -34,10 +34,10 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             {
                 if (!executionEntity.ProcessInstanceType)
                 {
-                    executionEntity = executionEntity.Parent;
+                    executionEntity = executionEntity.GetParent();
                 }
 
-                IExecutionEntity superExecution = executionEntity.SuperExecution;
+                IExecutionEntity superExecution = executionEntity.GetSuperExecution();
                 if (superExecution is object)
                 {
                     this.nestedProcessDefinitionId = superExecution.ProcessDefinitionId;

@@ -16,48 +16,47 @@ using System.Collections.Generic;
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 {
 
-    using Sys.Workflow.Engine.Impl.Cfg;
+	using Sys.Workflow.Engine.Impl.Cfg;
 
-    /// 
-    public class MybatisResourceDataManager : AbstractDataManager<IResourceEntity>, IResourceDataManager
-    {
+	/// 
+	public class MybatisResourceDataManager : AbstractDataManager<IResourceEntity>, IResourceDataManager
+	{
 
-        public MybatisResourceDataManager(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
-        {
-        }
+		public MybatisResourceDataManager(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
+		{
+		}
 
-        public override Type ManagedEntityClass
-        {
-            get
-            {
-                return typeof(ResourceEntityImpl);
-            }
-        }
+		public override Type ManagedEntityClass
+		{
+			get
+			{
+				return typeof(ResourceEntityImpl);
+			}
+		}
 
-        public override IResourceEntity Create()
-        {
-            return new ResourceEntityImpl();
-        }
+		public override IResourceEntity Create()
+		{
+			return new ResourceEntityImpl();
+		}
 
-        public virtual void DeleteResourcesByDeploymentId(string deploymentId)
-        {
-            DbSqlSession.Delete("deleteResourcesByDeploymentId", new { deploymentId }, typeof(ResourceEntityImpl));
-        }
+		public virtual void DeleteResourcesByDeploymentId(string deploymentId)
+		{
+			DbSqlSession.Delete("deleteResourcesByDeploymentId", new { deploymentId }, typeof(ResourceEntityImpl));
+		}
 
-        public virtual IResourceEntity FindResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName)
-        {
-            return (IResourceEntity)DbSqlSession.SelectOne<ResourceEntityImpl, IResourceEntity>("selectResourceByDeploymentIdAndResourceName", new
-            {
-                deploymentId,
-                resourceName
-            });
-        }
+		public virtual IResourceEntity FindResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName)
+		{
+			return DbSqlSession.SelectOne<ResourceEntityImpl, IResourceEntity>("selectResourceByDeploymentIdAndResourceName", new
+			{
+				deploymentId,
+				resourceName
+			});
+		}
 
-        public virtual IList<IResourceEntity> FindResourcesByDeploymentId(string deploymentId)
-        {
-            return DbSqlSession.SelectList<ResourceEntityImpl, IResourceEntity>("selectResourcesByDeploymentId", new { deploymentId });
-        }
-
-    }
+		public virtual IList<IResourceEntity> FindResourcesByDeploymentId(string deploymentId)
+		{
+			return string.IsNullOrWhiteSpace(deploymentId) ? new List<IResourceEntity>() : DbSqlSession.SelectList<ResourceEntityImpl, IResourceEntity>("selectResourcesByDeploymentId", new { deploymentId });
+		}
+	}
 
 }

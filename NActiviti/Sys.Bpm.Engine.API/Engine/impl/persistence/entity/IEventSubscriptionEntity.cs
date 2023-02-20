@@ -31,11 +31,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 	  string ExecutionId {get;set;}
 
+		IExecutionEntity GetExecution();
 
-	  IExecutionEntity Execution {get;set;}
+		void SetExecution(IExecutionEntity value);
 
-
-	  string ProcessInstanceId {get;set;}
+		string ProcessInstanceId {get;set;}
 
 
 	  string Configuration {get;set;}

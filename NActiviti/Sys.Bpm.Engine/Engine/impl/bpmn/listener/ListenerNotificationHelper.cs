@@ -122,7 +122,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
                     if (activitiListener.OnTransaction is not null)
                     {
-                        PlanTransactionDependentTaskListener(taskEntity.Execution, (ITransactionDependentTaskListener)taskListener, activitiListener);
+                        PlanTransactionDependentTaskListener(taskEntity.GetExecution(), (ITransactionDependentTaskListener)taskListener, activitiListener);
                     }
                     else
                     {

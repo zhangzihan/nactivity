@@ -39,14 +39,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         new string Description { get; set; }
 
-        new IExecutionEntity Execution { get; set; }
+		IExecutionEntity GetExecution();
+		void SetExecution(IExecutionEntity value);
 
-        new string ExecutionId { get; set; }
+		new string ExecutionId { get; set; }
 
+		IList<IIdentityLinkEntity> GetIdentityLinks();
 
-        IList<IIdentityLinkEntity> IdentityLinks { get; }
-
-        IDictionary<string, object> ExecutionVariables { set; }
+		IDictionary<string, object> ExecutionVariables { set; }
 
         new DateTime? CreateTime { get; set; }
 
@@ -58,9 +58,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         new DelegationState? DelegationState { get; set; }
 
-        IExecutionEntity ProcessInstance { get; }
+		IExecutionEntity GetProcessInstance();
 
-        new string ProcessInstanceId { get; set; }
+		new string ProcessInstanceId { get; set; }
 
         int SuspensionState { get; set; }
 

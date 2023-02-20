@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     SubProcess subProcess = (SubProcess)currentlyExaminedExecution.CurrentFlowElement;
                     if (subProcess.LoopCharacteristics is not null)
                     {
-                        IExecutionEntity miExecution = parentScopeExecution.Parent;
+                        IExecutionEntity miExecution = parentScopeExecution.GetParent();
                         FlowElement miElement = miExecution.CurrentFlowElement;
                         if (miElement is not null && miElement.Id.Equals(subProcess.Id))
                         {
@@ -137,7 +137,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 executionEntityManager.Delete(cancelBoundaryEventExecution);
 
                 // set new parent for boundary event execution
-                execution.Parent = newParentScopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event " + cancelBoundaryEvent.Id);
+                execution.SetParent(newParentScopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event " + cancelBoundaryEvent.Id));
                 execution.CurrentFlowElement = cancelBoundaryEvent;
 
                 // end all executions in the scope of the transaction

@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual byte[] FindInfoJsonById(string infoJsonId)
         {
             ByteArrayRef @ref = new ByteArrayRef(infoJsonId);
-            return @ref.Bytes;
+            return @ref.GetBytes();
         }
     }
 }

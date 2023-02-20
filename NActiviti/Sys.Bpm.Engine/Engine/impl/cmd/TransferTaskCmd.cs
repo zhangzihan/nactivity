@@ -72,7 +72,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal override void ExecuteTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
         {
-            var userTask = taskEntity.Execution.CurrentFlowElement as UserTask;
+            var userTask = taskEntity.GetExecution().CurrentFlowElement as UserTask;
             if (userTask is null)
             {
                 throw new Exception("当前任务不是用户任务");

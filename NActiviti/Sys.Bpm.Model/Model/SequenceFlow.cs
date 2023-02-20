@@ -15,156 +15,156 @@ using System.Collections.Generic;
  */
 namespace Sys.Workflow.Bpmn.Models
 {
-    public class SequenceFlow : FlowElement
-    {
-        protected internal string conditionExpression;
-        protected internal string sourceRef;
-        protected internal string targetRef;
-        protected internal string skipExpression;
+	public class SequenceFlow : FlowElement
+	{
+		protected internal string conditionExpression;
+		protected internal string sourceRef;
+		protected internal string targetRef;
+		protected internal string skipExpression;
 
-        // Actual flow elements that match the source and target ref
-        // Set during process definition parsing
-        [JsonIgnore]
-        protected internal FlowElement sourceFlowElement;
+		// Actual flow elements that match the source and target ref
+		// Set during process definition parsing
+		[JsonIgnore]
+		protected internal FlowElement sourceFlowElement;
 
-        [JsonIgnore]
-        protected internal FlowElement targetFlowElement;
+		[JsonIgnore]
+		protected internal FlowElement targetFlowElement;
 
-        /// <summary>
-        /// Graphical information: a list of waypoints: x1, y1, x2, y2, x3, y3, ..
-        /// 
-        /// Added during parsing of a process definition.
-        /// </summary>
-        protected internal IList<int> waypoints = new List<int>();
+		/// <summary>
+		/// Graphical information: a list of waypoints: x1, y1, x2, y2, x3, y3, ..
+		/// 
+		/// Added during parsing of a process definition.
+		/// </summary>
+		protected internal IList<int> waypoints = new List<int>();
 
-        public SequenceFlow()
-        {
+		public SequenceFlow()
+		{
 
-        }
+		}
 
-        public SequenceFlow(string sourceRef, string targetRef)
-        {
-            this.sourceRef = sourceRef;
-            this.targetRef = targetRef;
-        }
+		public SequenceFlow(string sourceRef, string targetRef)
+		{
+			this.sourceRef = sourceRef;
+			this.targetRef = targetRef;
+		}
 
-        public virtual string ConditionExpression
-        {
-            get
-            {
-                return conditionExpression;
-            }
-            set
-            {
-                this.conditionExpression = value;
-            }
-        }
-
-
-        public virtual string SourceRef
-        {
-            get
-            {
-                return sourceRef;
-            }
-            set
-            {
-                this.sourceRef = value;
-            }
-        }
+		public virtual string ConditionExpression
+		{
+			get
+			{
+				return conditionExpression;
+			}
+			set
+			{
+				this.conditionExpression = value;
+			}
+		}
 
 
-        public virtual string TargetRef
-        {
-            get
-            {
-                return targetRef;
-            }
-            set
-            {
-                this.targetRef = value;
-            }
-        }
+		public virtual string SourceRef
+		{
+			get
+			{
+				return sourceRef;
+			}
+			set
+			{
+				this.sourceRef = value;
+			}
+		}
 
 
-        public virtual string SkipExpression
-        {
-            get
-            {
-                return skipExpression;
-            }
-            set
-            {
-                this.skipExpression = value;
-            }
-        }
-
-        [JsonIgnore]
-        public virtual FlowElement SourceFlowElement
-        {
-            get
-            {
-                return sourceFlowElement;
-            }
-            set
-            {
-                this.sourceFlowElement = value;
-            }
-        }
-
-        [JsonIgnore]
-        public virtual FlowElement TargetFlowElement
-        {
-            get
-            {
-                return targetFlowElement;
-            }
-            set
-            {
-                this.targetFlowElement = value;
-            }
-        }
+		public virtual string TargetRef
+		{
+			get
+			{
+				return targetRef;
+			}
+			set
+			{
+				this.targetRef = value;
+			}
+		}
 
 
-        public virtual IList<int> Waypoints
-        {
-            get
-            {
-                return waypoints;
-            }
-            set
-            {
-                this.waypoints = value;
-            }
-        }
+		public virtual string SkipExpression
+		{
+			get
+			{
+				return skipExpression;
+			}
+			set
+			{
+				this.skipExpression = value;
+			}
+		}
+
+		[JsonIgnore]
+		public virtual FlowElement SourceFlowElement
+		{
+			get
+			{
+				return sourceFlowElement;
+			}
+			set
+			{
+				this.sourceFlowElement = value;
+			}
+		}
+
+		[JsonIgnore]
+		public virtual FlowElement TargetFlowElement
+		{
+			get
+			{
+				return targetFlowElement;
+			}
+			set
+			{
+				this.targetFlowElement = value;
+			}
+		}
 
 
-        public override string ToString()
-        {
-            return sourceRef + " --> " + targetRef;
-        }
+		public virtual IList<int> Waypoints
+		{
+			get
+			{
+				return waypoints;
+			}
+			set
+			{
+				this.waypoints = value;
+			}
+		}
 
-        public override BaseElement Clone()
-        {
-            SequenceFlow clone = new SequenceFlow
-            {
-                Values = this
-            };
-            return clone;
-        }
 
-        public override BaseElement Values
-        {
-            set
-            {
-                base.Values = value;
-                var val = value as SequenceFlow;
-                ConditionExpression = val.ConditionExpression;
-                SourceRef = val.SourceRef;
-                TargetRef = val.TargetRef;
-                SkipExpression = val.SkipExpression;
-            }
-        }
-    }
+		public override string ToString()
+		{
+			return sourceRef + " --> " + targetRef;
+		}
+
+		public override BaseElement Clone()
+		{
+			SequenceFlow clone = new()
+			{
+				Values = this,
+			};
+			return clone;
+		}
+
+		public override BaseElement Values
+		{
+			set
+			{
+				base.Values = value;
+				var val = value as SequenceFlow;
+				ConditionExpression = val.ConditionExpression;
+				SourceRef = val.SourceRef;
+				TargetRef = val.TargetRef;
+				SkipExpression = val.SkipExpression;
+			}
+		}
+	}
 
 }

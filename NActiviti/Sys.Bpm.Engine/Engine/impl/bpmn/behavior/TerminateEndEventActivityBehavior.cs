@@ -103,7 +103,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 else
                 {
                     Context.Agenda.PlanDestroyScopeOperation(scopeExecutionEntity);
-                    IExecutionEntity outgoingFlowExecution = executionEntityManager.CreateChildExecution(scopeExecutionEntity.Parent);
+                    IExecutionEntity outgoingFlowExecution = executionEntityManager.CreateChildExecution(scopeExecutionEntity.GetParent());
                     outgoingFlowExecution.CurrentFlowElement = scopeExecutionEntity.CurrentFlowElement;
                     Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(outgoingFlowExecution, true);
                 }
@@ -112,7 +112,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             else if (scopeExecutionEntity.ParentId is null && scopeExecutionEntity.SuperExecutionId is not null)
             { // CallActivity
 
-                IExecutionEntity callActivityExecution = scopeExecutionEntity.SuperExecution;
+                IExecutionEntity callActivityExecution = scopeExecutionEntity.GetSuperExecution();
                 CallActivity callActivity = (CallActivity)callActivityExecution.CurrentFlowElement;
 
                 if (callActivity.HasMultiInstanceLoopCharacteristics())
@@ -163,7 +163,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (miRootExecutionEntity is object)
             {
                 // Create sibling execution to continue process instance execution before deletion
-                IExecutionEntity siblingExecution = executionEntityManager.CreateChildExecution(miRootExecutionEntity.Parent);
+                IExecutionEntity siblingExecution = executionEntityManager.CreateChildExecution(miRootExecutionEntity.GetParent());
                 siblingExecution.CurrentFlowElement = miRootExecutionEntity.CurrentFlowElement;
 
                 DeleteExecutionEntities(executionEntityManager, miRootExecutionEntity, CreateDeleteReason(miRootExecutionEntity.ActivityId));

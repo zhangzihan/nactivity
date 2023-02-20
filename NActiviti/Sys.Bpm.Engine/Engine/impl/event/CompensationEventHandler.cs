@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Events
             }
 
             IExecutionEntity scopeExecution = null;
-            IExecutionEntity parentExecution = compensatingExecution.Parent;
+            IExecutionEntity parentExecution = compensatingExecution.GetParent();
             while (scopeExecution is null && parentExecution is object)
             {
                 if (parentExecution.CurrentFlowElement is SubProcess)
@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Events
                 }
                 else
                 {
-                    parentExecution = parentExecution.Parent;
+                    parentExecution = parentExecution.GetParent();
                 }
             }
 

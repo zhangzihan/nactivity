@@ -21,24 +21,22 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     using Sys;
     using Sys.Workflow;
     using Sys.Workflow.Engine.Bpmn.Rules;
+	using Sys.Workflow.Engine.Tasks;
 
-    /// 
-    [Serializable]
-    public class ClaimTaskCmd : NeedsActiveTaskCmd<object>
+	/// 
+	[Serializable]
+    public class ClaimTaskCmd : NeedsActiveTaskCmd<ITask>
     {
-
         private const long serialVersionUID = 1L;
 
         protected internal string userId;
-
-        private readonly IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
         public ClaimTaskCmd(string taskId, string userId) : base(taskId)
         {
             this.userId = userId;
         }
 
-        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override ITask Execute(ICommandContext commandContext, ITaskEntity task)
         {
             if (userId is not null)
             {
@@ -72,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // Add claim time to historic task instance
             commandContext.HistoryManager.RecordTaskClaim(task);
 
-            return null;
+            return task;
         }
 
         protected internal override string SuspendedTaskException

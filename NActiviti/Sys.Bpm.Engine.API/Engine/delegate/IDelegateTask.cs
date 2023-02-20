@@ -83,14 +83,14 @@ namespace Sys.Workflow.Engine.Delegate
         string FormKey { get; set; }
 
 
-        /// <summary>
-        /// Returns the execution currently at the task. </summary>
-        IExecutionEntity Execution { get; }
+		/// <summary>
+		/// Returns the execution currently at the task. </summary>
+		IExecutionEntity GetExecution();
 
-        /// <summary>
-        /// Returns the event name which triggered the task listener to fire for this task.
-        /// </summary>
-        string EventName { get; }
+		/// <summary>
+		/// Returns the event name which triggered the task listener to fire for this task.
+		/// </summary>
+		string EventName { get; }
 
         /// <summary>
         /// 

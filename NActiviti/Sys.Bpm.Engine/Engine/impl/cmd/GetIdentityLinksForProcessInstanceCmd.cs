@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiObjectNotFoundException("Cannot find process definition with id " + processInstanceId, typeof(IExecutionEntity));
             }
 
-            return (IList<IIdentityLink>)processInstance.IdentityLinks;
+            return (IList<IIdentityLink>)processInstance.GetIdentityLinks();
         }
 
     }

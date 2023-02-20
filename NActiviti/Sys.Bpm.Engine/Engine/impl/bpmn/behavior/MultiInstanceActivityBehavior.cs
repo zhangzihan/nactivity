@@ -425,11 +425,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual int? GetLoopVariable(IExecutionEntity execution, string variableName)
         {
             object value = execution.GetVariableLocal(variableName);
-            IExecutionEntity parent = execution.Parent;
+            IExecutionEntity parent = execution.GetParent();
             while (value is null && parent is object)
             {
                 value = parent.GetVariableLocal(variableName);
-                parent = parent.Parent;
+                parent = parent.GetParent();
             }
             return (int?)value;
         }

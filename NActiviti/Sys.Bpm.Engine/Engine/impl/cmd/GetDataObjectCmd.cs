@@ -89,7 +89,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(variableEntity.ExecutionId);
                 while (!executionEntity.IsScope)
                 {
-                    executionEntity = executionEntity.Parent;
+                    executionEntity = executionEntity.GetParent();
                 }
 
                 BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(executionEntity.ProcessDefinitionId);

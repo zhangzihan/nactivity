@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             // find SubProcess or Process instance execution
             IExecutionEntity scopeExecution = null;
-            IExecutionEntity parentExecution = executionEntity.Parent;
+            IExecutionEntity parentExecution = executionEntity.GetParent();
             while (scopeExecution is null && parentExecution is object)
             {
                 if (parentExecution.CurrentFlowElement is SubProcess)
@@ -83,7 +83,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
                 else
                 {
-                    parentExecution = parentExecution.Parent;
+                    parentExecution = parentExecution.GetParent();
                 }
             }
 

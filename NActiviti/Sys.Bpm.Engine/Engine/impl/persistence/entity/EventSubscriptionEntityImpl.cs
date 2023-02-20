@@ -100,31 +100,29 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
-        public virtual IExecutionEntity Execution
-        {
-            get
-            {
-                var ctx = Context.CommandContext;
-                if (execution is null && executionId is not null && ctx is object)
-                {
-                    execution = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(executionId);
-                }
-                return execution;
-            }
-            set
-            {
-                this.execution = value;
-                if (value is object)
-                {
-                    this.executionId = value.Id;
-                    this.processInstanceId = value.ProcessInstanceId;
-                }
-            }
-        }
+		public virtual IExecutionEntity GetExecution()
+		{
+			var ctx = Context.CommandContext;
+			if (execution is null && executionId is not null && ctx is object)
+			{
+				execution = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(executionId);
+			}
+			return execution;
+		}
 
 
-        public virtual string ProcessInstanceId
+		public virtual void SetExecution(IExecutionEntity value)
+		{
+			this.execution = value;
+			if (value is object)
+			{
+				this.executionId = value.Id;
+				this.processInstanceId = value.ProcessInstanceId;
+			}
+		}
+
+
+		public virtual string ProcessInstanceId
         {
             get
             {

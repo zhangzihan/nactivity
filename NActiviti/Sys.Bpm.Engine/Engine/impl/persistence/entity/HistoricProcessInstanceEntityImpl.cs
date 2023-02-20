@@ -66,7 +66,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             startTime = processInstance.StartTime;
             startUserId = processInstance.StartUserId;
             startActivityId = processInstance.ActivityId;
-            superProcessInstanceId = processInstance.SuperExecution?.ProcessInstanceId;
+            superProcessInstanceId = processInstance.GetSuperExecution()?.ProcessInstanceId;
 
             // Inherit tenant id (if applicable)
             if (processInstance.TenantId is not null)

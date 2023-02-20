@@ -94,17 +94,25 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         ActivitiListener CurrentActivitiListener { get; set; }
 
 
-        /* Execution management */
+		/* Execution management */
 
-        /// <summary>
-        /// returns the parent of this execution, or null if there no parent.
-        /// </summary>
-        IExecutionEntity Parent { get; set; }
+		/// <summary>
+		/// returns the parent of this execution, or null if there no parent.
+		/// </summary>
+		IExecutionEntity GetParent();
 
-        /// <summary>
-        /// returns the list of execution of which this execution the parent of.
-        /// </summary>
-        IList<IExecutionEntity> Executions { get; }
+
+		/* Execution management */
+
+		/// <summary>
+		/// returns the parent of this execution, or null if there no parent.
+		/// </summary>
+		void SetParent(IExecutionEntity value);
+
+		/// <summary>
+		/// returns the list of execution of which this execution the parent of.
+		/// </summary>
+		IList<IExecutionEntity> Executions { get; }
 
         /* State management */
 
@@ -154,27 +162,28 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         new string DeploymentId { get; set; }
 
-        IExecutionEntity ProcessInstance { get; set; }
+		IExecutionEntity GetProcessInstance();
+		void SetProcessInstance(IExecutionEntity value);
+		IExecutionEntity GetSuperExecution();
+		void SetSuperExecution(IExecutionEntity value);
+		IExecutionEntity GetSubProcessInstance();
+		void SetSubProcessInstance(IExecutionEntity value);
 
-        IExecutionEntity SuperExecution { get; set; }
-
-        IExecutionEntity SubProcessInstance { get; set; }
-
-        IExecutionEntity RootProcessInstance { get; set; }
+		IExecutionEntity RootProcessInstance { get; set; }
 
         void AddChildExecution(IExecutionEntity executionEntity);
 
-        IList<ITaskEntity> Tasks { get; }
+		IList<ITaskEntity> GetTasks();
 
-        IList<IEventSubscriptionEntity> EventSubscriptions { get; }
+		IList<IEventSubscriptionEntity> EventSubscriptions { get; }
 
         IList<IJobEntity> Jobs { get; }
 
         IList<ITimerJobEntity> TimerJobs { get; }
 
-        IList<IIdentityLinkEntity> IdentityLinks { get; }
+		IList<IIdentityLinkEntity> GetIdentityLinks();
 
-        string DeleteReason { get; set; }
+		string DeleteReason { get; set; }
 
         int SuspensionState { get; set; }
 

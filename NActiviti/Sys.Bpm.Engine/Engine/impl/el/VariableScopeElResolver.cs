@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.EL
                 else if (EXECUTION_KEY.Equals(variable) && variableScope is ITaskEntity entity)
                 {
                     context.IsPropertyResolved = true;
-                    return entity.Execution;
+                    return entity.GetExecution();
                 }
                 else if (LOGGED_IN_USER_KEY.Equals(variable))
                 {

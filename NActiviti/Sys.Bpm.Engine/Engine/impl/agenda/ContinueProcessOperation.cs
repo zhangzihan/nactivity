@@ -95,7 +95,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         protected internal virtual void ExecuteProcessStartExecutionListeners()
         {
             Process process = ProcessDefinitionUtil.GetProcess(execution.ProcessDefinitionId);
-            ExecuteExecutionListeners(process, execution.Parent, BaseExecutionListenerFields.EVENTNAME_START);
+            ExecuteExecutionListeners(process, execution.GetParent(), BaseExecutionListenerFields.EVENTNAME_START);
         }
 
         /// <summary>

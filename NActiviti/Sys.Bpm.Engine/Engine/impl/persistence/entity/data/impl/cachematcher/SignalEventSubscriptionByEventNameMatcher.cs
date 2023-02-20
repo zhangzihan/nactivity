@@ -37,8 +37,8 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
                 string.Compare(eventSubscriptionEntity.EventName, eventName?.ToString(), true) == 0 &&
                 (eventSubscriptionEntity.ExecutionId is null ||
                     (eventSubscriptionEntity.ExecutionId is not null &&
-                        eventSubscriptionEntity.Execution is object &&
-                            eventSubscriptionEntity.Execution.SuspensionState == SuspensionStateProvider.ACTIVE.StateCode)) &&
+                        eventSubscriptionEntity.GetExecution() is object &&
+                            eventSubscriptionEntity.GetExecution().SuspensionState == SuspensionStateProvider.ACTIVE.StateCode)) &&
                 ((tenantId is not null && string.Compare(tenantId?.ToString(), eventSubscriptionEntity.TenantId, true) == 0) ||
                     (tenantId is not null && string.IsNullOrWhiteSpace(eventSubscriptionEntity.TenantId)));
         }

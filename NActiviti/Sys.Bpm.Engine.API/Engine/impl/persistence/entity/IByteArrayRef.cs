@@ -2,8 +2,10 @@
 {
     public interface IByteArrayRef
     {
-        byte[] Bytes { get; set; }
-        bool Deleted { get; }
+		byte[] GetBytes();
+		void SetBytes(byte[] value);
+
+		bool Deleted { get; }
         IByteArrayEntity Entity { get; }
         string Id { get; }
         string Name { get; }

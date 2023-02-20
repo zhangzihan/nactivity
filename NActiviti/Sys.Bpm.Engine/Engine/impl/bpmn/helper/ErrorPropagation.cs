@@ -55,7 +55,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 IExecutionEntity processInstanceExecution = executionEntityManager.FindById<IExecutionEntity>(execution.ProcessInstanceId);
                 if (processInstanceExecution is object)
                 {
-                    IExecutionEntity parentExecution = processInstanceExecution.SuperExecution;
+                    IExecutionEntity parentExecution = processInstanceExecution.GetSuperExecution();
 
                     IList<string> toDeleteProcessInstanceIds = new List<string>
                     {
@@ -87,14 +87,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                         else
                         {
                             toDeleteProcessInstanceIds.Add(parentExecution.ProcessInstanceId);
-                            IExecutionEntity superExecution = parentExecution.SuperExecution;
+                            IExecutionEntity superExecution = parentExecution.GetSuperExecution();
                             if (superExecution is object)
                             {
                                 parentExecution = superExecution;
                             }
                             else if (!parentExecution.Id.Equals(parentExecution.RootProcessInstanceId))
                             { // stop at the root
-                                parentExecution = parentExecution.ProcessInstance;
+                                parentExecution = parentExecution.GetProcessInstance();
                             }
                             else
                             {
@@ -121,9 +121,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 matchingEvent = eventMap[currentExecution.ActivityId][0];
 
                 // Check for multi instance
-                if (currentExecution.ParentId is not null && currentExecution.Parent.IsMultiInstanceRoot)
+                if (currentExecution.ParentId is not null && currentExecution.GetParent().IsMultiInstanceRoot)
                 {
-                    parentExecution = currentExecution.Parent;
+                    parentExecution = currentExecution.GetParent();
                 }
                 else
                 {
@@ -133,7 +133,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             }
             else
             {
-                parentExecution = currentExecution.Parent;
+                parentExecution = currentExecution.GetParent();
 
                 // Traverse parents until one is found that is a scope and matches the activity the boundary event is defined on
                 while (matchingEvent is null && parentExecution is object)
@@ -167,15 +167,15 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                             matchingEvent = eventMap[parentExecution.ActivityId][0];
 
                             // Check for multi instance
-                            if (parentExecution.ParentId is not null && parentExecution.Parent.IsMultiInstanceRoot)
+                            if (parentExecution.ParentId is not null && parentExecution.GetParent().IsMultiInstanceRoot)
                             {
-                                parentExecution = parentExecution.Parent;
+                                parentExecution = parentExecution.GetParent();
                             }
 
                         }
                         else if (!string.IsNullOrWhiteSpace(parentExecution.ParentId))
                         {
-                            parentExecution = parentExecution.Parent;
+                            parentExecution = parentExecution.GetParent();
                         }
                         else
                         {
@@ -318,14 +318,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             else
             {
                 IExecutionEntity callActivityExecution = null;
-                IExecutionEntity parentExecution = execution.Parent;
+                IExecutionEntity parentExecution = execution.GetParent();
                 while (parentExecution is object && callActivityExecution is null)
                 {
                     if (parentExecution.Id.Equals(parentExecution.ProcessInstanceId))
                     {
-                        if (parentExecution.SuperExecution is object)
+                        if (parentExecution.GetSuperExecution() is object)
                         {
-                            callActivityExecution = parentExecution.SuperExecution;
+                            callActivityExecution = parentExecution.GetSuperExecution();
                         }
                         else
                         {
@@ -334,7 +334,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                     }
                     else
                     {
-                        parentExecution = parentExecution.Parent;
+                        parentExecution = parentExecution.GetParent();
                     }
                 }
 

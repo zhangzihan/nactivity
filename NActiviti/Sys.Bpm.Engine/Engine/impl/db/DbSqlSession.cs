@@ -350,47 +350,54 @@ namespace Sys.Workflow.Engine.Impl.DB
 		/// </summary>
 		public virtual IList<TOut> SelectListWithRawParameter<TEntityImpl, TOut>(string statement, object parameter, int firstResult, int maxResults, bool useCache = true)
 		{
-			statement = dbSqlSessionFactory.MapStatement(statement);
-			if (firstResult == -1 || maxResults == -1)
+			try
 			{
-				return new List<TOut>();
+				statement = dbSqlSessionFactory.MapStatement(statement);
+				if (firstResult == -1 || maxResults == -1)
+				{
+					return new List<TOut>();
+				}
+
+				Dictionary<string, object> request = ObjectUtils.ToDictionary(parameter ?? new { }, true);
+
+				if (request.ContainsKey("firstresult") == false)
+				{
+					request.Add("firstResult", firstResult);
+				}
+
+				if (request.ContainsKey("maxresults") == false)
+				{
+					request.Add("maxResults", maxResults);
+				}
+				request["maxresults"] = Convert.ToInt64(request["maxresults"]);
+
+				if (request.ContainsKey("firstRow") == false)
+				{
+					request.Add("firstRow", firstResult);
+				}
+
+				if (request.ContainsKey("lastRow") == false)
+				{
+					request.Add("lastRow", firstResult + maxResults + 1);
+				}
+				request["lastRow"] = Convert.ToInt64(request["lastRow"]);
+
+				RequestContext ctx = dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, request);
+
+				var loadedObjects = SqlMapper.Query<TOut>(ctx);
+				if (useCache)
+				{
+					var objs = loadedObjects.Cast<object>().ToList();
+					return CacheLoadOrStore(objs).Cast<TOut>().ToList();
+				}
+				else
+				{
+					return loadedObjects.ToList();
+				}
 			}
-
-			Dictionary<string, object> request = ObjectUtils.ToDictionary(parameter ?? new { }, true);
-
-			if (request.ContainsKey("firstresult") == false)
+			catch (Exception ex)
 			{
-				request.Add("firstResult", firstResult);
-			}
-
-			if (request.ContainsKey("maxresults") == false)
-			{
-				request.Add("maxResults", maxResults);
-			}
-			request["maxresults"] = Convert.ToInt64(request["maxresults"]);
-
-			if (request.ContainsKey("firstRow") == false)
-			{
-				request.Add("firstRow", firstResult);
-			}
-
-			if (request.ContainsKey("lastRow") == false)
-			{
-				request.Add("lastRow", firstResult + maxResults + 1);
-			}
-			request["lastRow"] = Convert.ToInt64(request["lastRow"]);
-
-			RequestContext ctx = dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, request);
-
-			var loadedObjects = SqlMapper.Query<TOut>(ctx);
-			if (useCache)
-			{
-				var objs = loadedObjects.Cast<object>().ToList();
-				return CacheLoadOrStore(objs).Cast<TOut>().ToList();
-			}
-			else
-			{
-				return loadedObjects.ToList();
+				throw;
 			}
 		}
 
@@ -412,16 +419,23 @@ namespace Sys.Workflow.Engine.Impl.DB
 		/// </summary>
 		public virtual TOut SelectOne<TEntityImpl, TOut>(string statement, object parameter)
 		{
-			statement = dbSqlSessionFactory.MapStatement(statement);
-
-			var result = SqlMapper.QuerySingle<TOut>(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, parameter));
-
-			if (result is IEntity entity)
+			try
 			{
-				CacheLoadOrStore(entity);
-			}
+				statement = dbSqlSessionFactory.MapStatement(statement);
 
-			return result;
+				var result = SqlMapper.QuerySingle<TOut>(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, parameter));
+
+				if (result is IEntity entity)
+				{
+					CacheLoadOrStore(entity);
+				}
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
 		}
 
 		/// <summary>
@@ -429,37 +443,44 @@ namespace Sys.Workflow.Engine.Impl.DB
 		/// </summary>
 		public virtual TOut SelectById<TEntityImpl, TOut>(KeyValuePair<string, object> id, bool useCache = true) where TEntityImpl : IEntity where TOut : IEntity
 		{
-			Type entityClass = typeof(TEntityImpl);
-			if (id.Value is null)
+			try
 			{
-				return default;
-			}
-
-			IEntity entity;
-			if (useCache)
-			{
-				entity = entityCache.FindInCache(entityClass, id.Value.ToString()) as IEntity;
-				if (entity is object)
+				Type entityClass = typeof(TEntityImpl);
+				if (id.Value is null)
 				{
-					return (TOut)entity;
+					return default;
 				}
-			}
 
-			string selectStatement = dbSqlSessionFactory.GetSelectStatement(ref entityClass);
-			selectStatement = dbSqlSessionFactory.MapStatement(selectStatement);
+				IEntity entity;
+				if (useCache)
+				{
+					entity = entityCache.FindInCache(entityClass, id.Value.ToString()) as IEntity;
+					if (entity is object)
+					{
+						return (TOut)entity;
+					}
+				}
 
-			entity = SqlMapper.QuerySingle<TEntityImpl>(dbSqlSessionFactory.CreateRequestContext(entityClass.FullName, selectStatement, new Dictionary<string, object>()
+				string selectStatement = dbSqlSessionFactory.GetSelectStatement(ref entityClass);
+				selectStatement = dbSqlSessionFactory.MapStatement(selectStatement);
+
+				entity = SqlMapper.QuerySingle<TEntityImpl>(dbSqlSessionFactory.CreateRequestContext(entityClass.FullName, selectStatement, new Dictionary<string, object>()
 			{
 				{ id.Key, id.Value }
 			}));
 
-			if (entity is null)
-			{
-				return default;
-			}
+				if (entity is null)
+				{
+					return default;
+				}
 
-			entityCache.Put(entity, true); // true -> store state so we can see later if it is updated later on
-			return (TOut)entity;
+				entityCache.Put(entity, true); // true -> store state so we can see later if it is updated later on
+				return (TOut)entity;
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
 		}
 
 		// internal session cache

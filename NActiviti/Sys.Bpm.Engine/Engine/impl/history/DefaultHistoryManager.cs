@@ -294,7 +294,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
             if (execution.ParentId is not null)
             {
-                IHistoricActivityInstanceEntity historicActivityInstanceFromParent = FindActivityInstance(execution.Parent, activityId, false, endTimeMustBeNull); // always false for create, we only check if it can be found
+                IHistoricActivityInstanceEntity historicActivityInstanceFromParent = FindActivityInstance(execution.GetParent(), activityId, false, endTimeMustBeNull); // always false for create, we only check if it can be found
                 if (historicActivityInstanceFromParent is object)
                 {
                     return historicActivityInstanceFromParent;
@@ -398,7 +398,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
         /// <param name="task"></param>
         public virtual void RecordTaskAssignment(ITaskEntity task)
         {
-            IExecutionEntity executionEntity = task.Execution;
+            IExecutionEntity executionEntity = task.GetExecution();
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 if (executionEntity is object)
@@ -438,7 +438,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IExecutionEntity execution = task.Execution;
+                IExecutionEntity execution = task.GetExecution();
                 if (execution is object)
                 {
                     IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(execution, false, true);

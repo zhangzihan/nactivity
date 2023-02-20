@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual ISignalEventSubscriptionEntity InsertSignalEvent(string signalName, Signal signal, IExecutionEntity execution)
         {
             ISignalEventSubscriptionEntity subscriptionEntity = CreateSignalEventSubscription();
-            subscriptionEntity.Execution = execution;
+            subscriptionEntity.SetExecution(execution);
             if (signal is not null)
             {
                 subscriptionEntity.EventName = signal.Name;
@@ -97,7 +97,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IMessageEventSubscriptionEntity InsertMessageEvent(string messageName, IExecutionEntity execution)
         {
             IMessageEventSubscriptionEntity subscriptionEntity = CreateMessageEventSubscription();
-            subscriptionEntity.Execution = execution;
+            subscriptionEntity.SetExecution(execution);
             subscriptionEntity.EventName = messageName;
 
             subscriptionEntity.ActivityId = execution.CurrentActivityId;
@@ -115,7 +115,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual ICompensateEventSubscriptionEntity InsertCompensationEvent(IExecutionEntity execution, string activityId)
         {
             ICompensateEventSubscriptionEntity eventSubscription = CreateCompensateEventSubscription();
-            eventSubscription.Execution = execution;
+            eventSubscription.SetExecution(execution);
             eventSubscription.ActivityId = activityId;
             if (execution.TenantId is not null)
             {
@@ -132,7 +132,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             if (entity.ExecutionId is not null && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.Execution;
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.GetExecution();
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
                     executionEntity.EventSubscriptionCount += 1;
@@ -145,7 +145,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             if (entity.ExecutionId is not null && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.Execution;
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.GetExecution();
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
                     executionEntity.EventSubscriptionCount -= 1;
@@ -192,7 +192,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void AddToExecution(IEventSubscriptionEntity eventSubscriptionEntity)
         {
             // add reference in execution
-            IExecutionEntity execution = eventSubscriptionEntity.Execution;
+            IExecutionEntity execution = eventSubscriptionEntity.GetExecution();
             if (execution is object)
             {
                 execution.EventSubscriptions.Add(eventSubscriptionEntity);

@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Events
             // thrown before the actual message has been sent
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED, eventSubscription.ActivityId, eventSubscription.EventName, payload, eventSubscription.ExecutionId, eventSubscription.ProcessInstanceId, eventSubscription.Execution.ProcessDefinitionId));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED, eventSubscription.ActivityId, eventSubscription.EventName, payload, eventSubscription.ExecutionId, eventSubscription.ProcessInstanceId, eventSubscription.GetExecution().ProcessDefinitionId));
             }
 
             base.HandleEvent(eventSubscription, payload, commandContext);

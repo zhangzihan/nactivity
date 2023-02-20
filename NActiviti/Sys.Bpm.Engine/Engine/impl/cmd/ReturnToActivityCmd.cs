@@ -115,7 +115,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             string currentExecutionId = task.ExecutionId;
-            IExecutionEntity execution = task.Execution;
+            IExecutionEntity execution = task.GetExecution();
             var flowElement = ProcessDefinitionUtil.GetFlowElement(execution.ProcessDefinitionId, returnToActivityId);
             if (flowElement is null)
             {
@@ -132,7 +132,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
-            IExecutionEntity returnToExec = executionEntityManager.CreateChildExecution(execution.ProcessInstance);
+            IExecutionEntity returnToExec = executionEntityManager.CreateChildExecution(execution.GetProcessInstance());
             returnToExec.CurrentFlowElement = flowElement;
             foreach (var key in variables.Keys)
             {

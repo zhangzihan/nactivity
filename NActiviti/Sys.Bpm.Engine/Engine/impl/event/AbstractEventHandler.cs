@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Events
 
         public virtual void HandleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
         {
-            IExecutionEntity execution = eventSubscription.Execution;
+            IExecutionEntity execution = eventSubscription.GetExecution();
             FlowNode currentFlowElement = (FlowNode)execution.CurrentFlowElement;
 
             if (currentFlowElement is null)

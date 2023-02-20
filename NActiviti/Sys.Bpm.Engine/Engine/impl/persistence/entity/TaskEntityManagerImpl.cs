@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             if (execution is object)
             {
-                execution.Tasks.Add(taskEntity);
+                execution.GetTasks().Add(taskEntity);
                 taskEntity.ProcessInstanceId = execution.ProcessInstanceId;
                 taskEntity.ProcessDefinitionId = execution.ProcessDefinitionId;
                 taskEntity.ExecutionId = execution.Id;
@@ -216,9 +216,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// <param name="taskEntity"></param>
         private void AddAssigneeIdentityLinks(ITaskEntity taskEntity)
         {
-            if (taskEntity.Assignee is not null && taskEntity.ProcessInstance is object)
+            if (taskEntity.Assignee is not null && taskEntity.GetProcessInstance() is object)
             {
-                IdentityLinkEntityManager.InvolveUser(taskEntity.ProcessInstance, taskEntity.Assignee, IdentityLinkType.PARTICIPANT);
+                IdentityLinkEntityManager.InvolveUser(taskEntity.GetProcessInstance(), taskEntity.Assignee, IdentityLinkType.PARTICIPANT);
             }
         }
         /// <summary>
@@ -235,7 +235,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             if (owner is not null && taskEntity.ProcessInstanceId is not null)
             {
-                IdentityLinkEntityManager.InvolveUser(taskEntity.ProcessInstance, owner, IdentityLinkType.PARTICIPANT);
+                IdentityLinkEntityManager.InvolveUser(taskEntity.GetProcessInstance(), owner, IdentityLinkType.PARTICIPANT);
             }
         }
         /// <summary>
@@ -253,7 +253,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 if (EventDispatcher.Enabled && !task.Canceled)
                 {
                     task.Canceled = true;
-                    EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(task.Execution.ActivityId, task.Name, task.ExecutionId, task.ProcessInstanceId, task.ProcessDefinitionId, "userTask", deleteReason));
+                    EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(task.GetExecution().ActivityId, task.Name, task.ExecutionId, task.ProcessInstanceId, task.ProcessDefinitionId, "userTask", deleteReason));
                 }
 
                 DeleteTask(task, deleteReason, cascade, false);
@@ -300,7 +300,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     if (cancel && !task.Canceled)
                     {
                         task.Canceled = true;
-                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(task.Execution?.ActivityId, task.Name, task.ExecutionId, task.ProcessInstanceId, task.ProcessDefinitionId, "userTask", deleteReason));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(task.GetExecution()?.ActivityId, task.Name, task.ExecutionId, task.ProcessInstanceId, task.ProcessDefinitionId, "userTask", deleteReason));
                     }
 
                     EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, task));
@@ -314,7 +314,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             if (entity.ExecutionId is not null && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)entity.Execution;
+                ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)entity.GetExecution();
                 if (IsExecutionRelatedEntityCountEnabled(countingExecutionEntity))
                 {
                     countingExecutionEntity.TaskCount -= 1;

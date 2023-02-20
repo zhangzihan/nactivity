@@ -220,23 +220,23 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 // Process instance relationship
                 if (executionEntity.ProcessInstanceId is not null)
                 {
-                    executionEntity.ProcessInstance = executionMap[executionEntity.ProcessInstanceId];
+                    executionEntity.SetProcessInstance(executionMap[executionEntity.ProcessInstanceId]);
                 }
 
                 // Parent - child relationship
                 if (executionEntity.ParentId is not null)
                 {
                     IExecutionEntity parentExecutionEntity = executionMap[executionEntity.ParentId];
-                    executionEntity.Parent = parentExecutionEntity;
+                    executionEntity.SetParent(parentExecutionEntity);
                     parentExecutionEntity.AddChildExecution(executionEntity);
                 }
 
                 // Super - sub execution relationship
-                if (executionEntity.SuperExecution is object)
+                if (executionEntity.GetSuperExecution() is object)
                 {
                     IExecutionEntity superExecutionEntity = executionMap[executionEntity.SuperExecutionId];
-                    executionEntity.SuperExecution = superExecutionEntity;
-                    superExecutionEntity.SubProcessInstance = executionEntity;
+                    executionEntity.SetSuperExecution(superExecutionEntity);
+                    superExecutionEntity.SetSubProcessInstance(executionEntity);
                 }
 
             }
@@ -409,7 +409,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             IExecutionEntity childExecution = executionDataManager.Create();
             childExecution.Name = parentExecutionEntity.Name;
             InheritCommonProperties(parentExecutionEntity, childExecution);
-            childExecution.Parent = parentExecutionEntity;
+            childExecution.SetParent(parentExecutionEntity);
             childExecution.ProcessDefinitionId = parentExecutionEntity.ProcessDefinitionId;
             childExecution.ProcessDefinitionKey = parentExecutionEntity.ProcessDefinitionKey;
             childExecution.ProcessInstanceId = parentExecutionEntity.ProcessInstanceId is not null ? parentExecutionEntity.ProcessInstanceId : parentExecutionEntity.Id;
@@ -451,7 +451,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             InheritCommonProperties(superExecutionEntity, subProcessInstance);
             subProcessInstance.ProcessDefinitionId = processDefinition.Id;
             subProcessInstance.ProcessDefinitionKey = processDefinition.Key;
-            subProcessInstance.SuperExecution = superExecutionEntity;
+            subProcessInstance.SetSuperExecution(superExecutionEntity);
             subProcessInstance.RootProcessInstanceId = superExecutionEntity.RootProcessInstanceId;
             subProcessInstance.IsScope = true; // process instance is always a scope for all child executions
             subProcessInstance.StartUserId = Authentication.AuthenticatedUser.Id;
@@ -474,7 +474,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
             subProcessInstance.ProcessInstanceId = subProcessInstance.Id;
-            superExecutionEntity.SubProcessInstance = subProcessInstance;
+            superExecutionEntity.SetSubProcessInstance(subProcessInstance);
 
             ProcessEngineConfigurationImpl processEngineConfiguration1 = Context.ProcessEngineConfiguration;
             if (processEngineConfiguration1 is not null && processEngineConfiguration1.EventDispatcher.Enabled)
@@ -581,16 +581,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IExecutionEntity miExecutionEntity in subExecutionEntity.Executions)
                     {
-                        if (miExecutionEntity.SubProcessInstance is object)
+                        if (miExecutionEntity.GetSubProcessInstance() is object)
                         {
-                            DeleteProcessInstanceCascade(miExecutionEntity.SubProcessInstance, deleteReason, deleteHistory);
+                            DeleteProcessInstanceCascade(miExecutionEntity.GetSubProcessInstance(), deleteReason, deleteHistory);
                         }
                     }
 
                 }
-                else if (subExecutionEntity.SubProcessInstance is object)
+                else if (subExecutionEntity.GetSubProcessInstance() is object)
                 {
-                    DeleteProcessInstanceCascade(subExecutionEntity.SubProcessInstance, deleteReason, deleteHistory);
+                    DeleteProcessInstanceCascade(subExecutionEntity.GetSubProcessInstance(), deleteReason, deleteHistory);
                 }
             }
 
@@ -604,13 +604,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             // delete the execution BEFORE we delete the history, otherwise we will
             // produce orphan HistoricVariableInstance instances
 
-            IExecutionEntity processInstanceExecutionEntity = execution.ProcessInstance;
+            IExecutionEntity processInstanceExecutionEntity = execution.GetProcessInstance();
             if (processInstanceExecutionEntity is null)
             {
                 return;
             }
 
-            IList<IExecutionEntity> childExecutions = CollectChildren(execution.ProcessInstance);
+            IList<IExecutionEntity> childExecutions = CollectChildren(execution.GetProcessInstance());
             for (int i = childExecutions.Count - 1; i >= 0; i--)
             {
                 IExecutionEntity childExecutionEntity = childExecutions[i];
@@ -665,9 +665,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             // Call activities
             foreach (IExecutionEntity subExecutionEntity in processInstanceEntity.Executions)
             {
-                if (subExecutionEntity.SubProcessInstance is object && !subExecutionEntity.Ended)
+                if (subExecutionEntity.GetSubProcessInstance() is object && !subExecutionEntity.Ended)
                 {
-                    DeleteProcessInstanceCascade(subExecutionEntity.SubProcessInstance, deleteReason, cascade);
+                    DeleteProcessInstanceCascade(subExecutionEntity.GetSubProcessInstance(), deleteReason, cascade);
                 }
             }
 
@@ -752,7 +752,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
 
-            IExecutionEntity subProcessInstance = executionEntity.SubProcessInstance;
+            IExecutionEntity subProcessInstance = executionEntity.GetSubProcessInstance();
             if (subProcessInstance is object && !subProcessInstance.Deleted)
             {
                 collectedChildExecution.Add(subProcessInstance);
@@ -774,10 +774,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     return currentExecutionEntity;
                 }
 
-                IExecutionEntity parentExecutionEntity = currentExecutionEntity.Parent;
+                IExecutionEntity parentExecutionEntity = currentExecutionEntity.GetParent();
                 if (parentExecutionEntity is null)
                 {
-                    parentExecutionEntity = currentExecutionEntity.SuperExecution;
+                    parentExecutionEntity = currentExecutionEntity.GetSuperExecution();
                 }
                 currentExecutionEntity = parentExecutionEntity;
             }
@@ -798,10 +798,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     return currentExecutionEntity;
                 }
 
-                IExecutionEntity parentExecutionEntity = currentExecutionEntity.Parent;
+                IExecutionEntity parentExecutionEntity = currentExecutionEntity.GetParent();
                 if (parentExecutionEntity is null)
                 {
-                    parentExecutionEntity = currentExecutionEntity.SuperExecution;
+                    parentExecutionEntity = currentExecutionEntity.GetSuperExecution();
                 }
                 currentExecutionEntity = parentExecutionEntity;
             }

@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 if (eventSubscription.Configuration is not null)
                 {
                     compensatingExecution = executionEntityManager.FindById<IExecutionEntity>(eventSubscription.Configuration);
-                    compensatingExecution.Parent = compensatingExecution.ProcessInstance;
+                    compensatingExecution.SetParent(compensatingExecution.GetProcessInstance());
                     compensatingExecution.IsEventScope = false;
                 }
                 else
@@ -84,7 +84,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
             if (CollectionUtil.IsNotEmpty(compensateEventSubscriptions))
             {
-                IExecutionEntity processInstanceExecutionEntity = subProcessExecution.ProcessInstance;
+                IExecutionEntity processInstanceExecutionEntity = subProcessExecution.GetProcessInstance();
 
                 IExecutionEntity eventScopeExecution = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(processInstanceExecutionEntity);
                 eventScopeExecution.IsActive = false;

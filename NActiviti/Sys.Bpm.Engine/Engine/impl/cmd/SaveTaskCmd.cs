@@ -129,7 +129,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 {
                     if (task.ProcessInstanceId is not null)
                     {
-                        commandContext.IdentityLinkEntityManager.InvolveUser(task.ProcessInstance, task.Owner, IdentityLinkType.PARTICIPANT);
+                        commandContext.IdentityLinkEntityManager.InvolveUser(task.GetProcessInstance(), task.Owner, IdentityLinkType.PARTICIPANT);
                     }
                     commandContext.HistoryManager.RecordTaskOwnerChange(task.Id, task.Owner);
                 }
@@ -137,7 +137,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 {
                     if (task.ProcessInstanceId is not null)
                     {
-                        commandContext.IdentityLinkEntityManager.InvolveUser(task.ProcessInstance, task.Assignee, IdentityLinkType.PARTICIPANT);
+                        commandContext.IdentityLinkEntityManager.InvolveUser(task.GetProcessInstance(), task.Assignee, IdentityLinkType.PARTICIPANT);
                     }
                     commandContext.HistoryManager.RecordTaskAssigneeChange(task.Id, task.Assignee, task.AssigneeUser);
 

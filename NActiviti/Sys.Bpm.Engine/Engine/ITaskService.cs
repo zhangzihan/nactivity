@@ -136,16 +136,16 @@ namespace Sys.Workflow.Engine
         ///           when the task doesn't exist. </exception>
         /// <exception cref="ActivitiTaskAlreadyClaimedException">
         ///           when the task is already claimed by another user. </exception>
-        void Claim(string taskId, string userId);
+        ITask Claim(string taskId, string userId);
 
-        /// <summary>
-        /// A shortcut to <seealso cref="#claim"/> with null user in order to unclaim the task
-        /// </summary>
-        /// <param name="taskId">
-        ///          task to unclaim, cannot be null. </param>
-        /// <exception cref="ActivitiObjectNotFoundException">
-        ///           when the task doesn't exist. </exception>
-        void Unclaim(string taskId);
+		/// <summary>
+		/// A shortcut to <seealso cref="#claim"/> with null user in order to unclaim the task
+		/// </summary>
+		/// <param name="taskId">
+		///          task to unclaim, cannot be null. </param>
+		/// <exception cref="ActivitiObjectNotFoundException">
+		///           when the task doesn't exist. </exception>
+		ITask Unclaim(string taskId);
 
         /// <summary>
         /// Called when the task is successfully executed.

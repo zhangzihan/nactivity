@@ -62,46 +62,47 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return name;
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual byte[] Bytes
-        {
-            get
-            {
-                EnsureInitialized();
-                return entity?.Bytes;
-            }
-            set
-            {
-                if (id is null)
-                {
-                    if (value is not null)
-                    {
-                        IByteArrayEntityManager byteArrayEntityManager = Context.CommandContext.ByteArrayEntityManager;
-                        entity = byteArrayEntityManager.Create();
-                        entity.Name = name;
-                        entity.Bytes = value;
-                        byteArrayEntityManager.Insert(entity);
-                        id = entity.Id;
-                    }
-                }
-                else
-                {
-                    EnsureInitialized();
-                    entity.Bytes = value;
-                }
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="bytes"></param>
-        public virtual void SetValue(string name, byte[] bytes)
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual byte[] GetBytes()
+		{
+			EnsureInitialized();
+			return entity?.Bytes;
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void SetBytes(byte[] value)
+		{
+			if (id is null)
+			{
+				if (value is not null)
+				{
+					IByteArrayEntityManager byteArrayEntityManager = Context.CommandContext.ByteArrayEntityManager;
+					entity = byteArrayEntityManager.Create();
+					entity.Name = name;
+					entity.Bytes = value;
+					byteArrayEntityManager.Insert(entity);
+					id = entity.Id;
+				}
+			}
+			else
+			{
+				EnsureInitialized();
+				entity.Bytes = value;
+			}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="bytes"></param>
+		public virtual void SetValue(string name, byte[] bytes)
         {
             this.name = name;
-            Bytes = bytes;
+			SetBytes(bytes);
         }
 
         /// <summary>

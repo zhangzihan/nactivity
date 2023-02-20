@@ -94,12 +94,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 .Create(variableName, type, value);
             variableInstance.TaskId = taskEntity.Id;
             variableInstance.ExecutionId = taskEntity.ExecutionId;
-            variableInstance.ProcessInstanceId = taskEntity.Execution.ProcessInstanceId;
+            variableInstance.ProcessInstanceId = taskEntity.GetExecution().ProcessInstanceId;
             // Record historic variable
             pec.HistoryManager.RecordVariableCreate(variableInstance);
 
             // Record historic detail
-            pec.HistoryManager.RecordHistoricDetailVariableCreate(variableInstance, taskEntity.Execution, true);
+            pec.HistoryManager.RecordHistoricDetailVariableCreate(variableInstance, taskEntity.GetExecution(), true);
 
             return variableInstance;
         }

@@ -96,7 +96,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 if (byteArrayRef is not null)
                 {
-                    return byteArrayRef.Bytes;
+                    return byteArrayRef.GetBytes();
                 }
                 return null;
             }

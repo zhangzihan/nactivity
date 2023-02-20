@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiException("Ad-hoc sub process has running child executions that need to be completed first");
             }
 
-            IExecutionEntity outgoingFlowExecution = executionEntityManager.CreateChildExecution(execution.Parent);
+            IExecutionEntity outgoingFlowExecution = executionEntityManager.CreateChildExecution(execution.GetParent());
             outgoingFlowExecution.CurrentFlowElement = execution.CurrentFlowElement;
 
             executionEntityManager.DeleteExecutionAndRelatedData(execution, null, false);

@@ -44,7 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
                 else
                 {
-                    currentExecution = currentExecution.Parent;
+                    currentExecution = currentExecution.GetParent();
                 }
             }
             if (scopeExecution is null)

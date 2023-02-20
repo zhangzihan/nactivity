@@ -15,7 +15,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
         {
             try
             {
-                delegateTask.Execution.WriteDebugLog();
+                delegateTask.GetExecution().WriteDebugLog();
             }
             catch (Exception ex)
             {

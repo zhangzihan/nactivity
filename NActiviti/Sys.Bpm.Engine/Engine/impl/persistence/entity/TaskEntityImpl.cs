@@ -185,7 +185,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                IExecutionEntity execution = Execution;
+                IExecutionEntity execution = GetExecution();
                 businessKey = execution?.BusinessKey;
 
                 return businessKey;
@@ -274,7 +274,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (Execution is object)
+                if (GetExecution() is object)
                 {
                     return (ExecutionEntityImpl)execution;
                 }
@@ -338,33 +338,35 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-        // execution //////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IExecutionEntity Execution
-        {
-            get
-            {
-                var config = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
-                if (execution is null && !string.IsNullOrWhiteSpace(executionId))
-                {
-                    this.execution = config.CommandExecutor.Execute(new GetExecutionByIdCmd(executionId));
-                }
-                return execution;
-            }
-            set
-            {
-                this.execution = value;
-            }
-        }
+		// execution //////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IExecutionEntity GetExecution()
+		{
+			var config = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+			if (execution is null && !string.IsNullOrWhiteSpace(executionId))
+			{
+				this.execution = config.CommandExecutor.Execute(new GetExecutionByIdCmd(executionId));
+			}
+			return execution;
+		}
 
-        // task assignment ////////////////////////////////////////////////////////////
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="userId"></param>
-        public virtual void AddCandidateUser(string userId)
+		// execution //////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void SetExecution(IExecutionEntity value)
+		{
+			this.execution = value;
+		}
+
+		// task assignment ////////////////////////////////////////////////////////////
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="userId"></param>
+		public virtual void AddCandidateUser(string userId)
         {
             Context.CommandContext.IdentityLinkEntityManager.AddCandidateUser(this, userId);
         }
@@ -418,7 +420,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 ISet<IIdentityLink> potentialOwners = new HashSet<IIdentityLink>();
-                foreach (IIdentityLinkEntity identityLinkEntity in IdentityLinks)
+                foreach (IIdentityLinkEntity identityLinkEntity in GetIdentityLinks())
                 {
                     if (IdentityLinkType.CANDIDATE.Equals(identityLinkEntity.Type))
                     {
@@ -468,31 +470,29 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 Context.CommandContext.IdentityLinkEntityManager.DeleteIdentityLink(this, userId, null, identityLinkType);
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<IIdentityLinkEntity> IdentityLinks
-        {
-            get
-            {
-                var ctx = Context.CommandContext;
-                if (!isIdentityLinksInitialized && ctx is object)
-                {
-                    taskIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByTaskId(Id);
-                    isIdentityLinksInitialized = true;
-                }
 
-                return taskIdentityLinkEntities;
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IDictionary<string, object> ExecutionVariables
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IList<IIdentityLinkEntity> GetIdentityLinks()
+		{
+			var ctx = Context.CommandContext;
+			if (!isIdentityLinksInitialized && ctx is object)
+			{
+				taskIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByTaskId(Id);
+				isIdentityLinksInitialized = true;
+			}
+
+			return taskIdentityLinkEntities;
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IDictionary<string, object> ExecutionVariables
         {
             set
             {
-                if (Execution is object)
+                if (GetExecution() is object)
                 {
                     execution.Variables = value;
                 }
@@ -940,30 +940,32 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IExecutionEntity ProcessInstance
-        {
-            get
-            {
-                var ctx = Context.CommandContext;
-                if (processInstance is null && processInstanceId is not null && ctx is object)
-                {
-                    processInstance = ctx.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
-                }
-                return processInstance;
-            }
-            set
-            {
-                this.processInstance = value;
-            }
-        }
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IExecutionEntity GetProcessInstance()
+		{
+			var ctx = Context.CommandContext;
+			if (processInstance is null && processInstanceId is not null && ctx is object)
+			{
+				processInstance = ctx.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
+			}
+			return processInstance;
+		}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual DelegationState? DelegationState
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void SetProcessInstance(IExecutionEntity value)
+		{
+			this.processInstance = value;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual DelegationState? DelegationState
         {
             get
             {
@@ -1172,7 +1174,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// </summary>
         public virtual void IsRuntimeAssignee()
         {
-            UserTask task = this.Execution.CurrentFlowElement as UserTask;
+            UserTask task = this.GetExecution().CurrentFlowElement as UserTask;
             if (task.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out IList<ExtensionElement> exts))
             {
                 if (bool.TryParse(exts.GetAttributeValue(BpmnXMLConstants.ACTIITI_RUNTIME_ASSIGNEE), out bool result))
