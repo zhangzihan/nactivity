@@ -26,7 +26,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Assemblers
         /// <returns></returns>
         public override TaskVariableResource ToResource(TaskVariable taskVariable)
         {
-            throw new NotImplementedException();
+			return new TaskVariableResource(taskVariable);
+            //throw new NotImplementedException();
             //Link globalVariables = linkTo(methodOn(typeof(TaskVariableControllerImpl)).getVariables(taskVariable.TaskId)).withRel("globalVariables");
             //Link localVariables = linkTo(methodOn(typeof(TaskVariableControllerImpl)).getVariablesLocal(taskVariable.TaskId)).withRel("localVariables");
             //Link taskRel = linkTo(methodOn(typeof(TaskControllerImpl)).getTaskById(taskVariable.TaskId)).withRel("task");

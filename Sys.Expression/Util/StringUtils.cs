@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using CommunityToolkit.HighPerformance.Buffers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -45,11 +46,21 @@ namespace Spring.Util
         public static readonly string[] EmptyStrings = { };
 
         public static readonly IReadOnlyList<string> EmptyStringsList = new List<string>();
+		private readonly static StringPool poolString = new();
+		public static string PoolString(string str)
+		{
+			if (str is null)
+			{
+				return null;
+			}
 
-        /// <summary>
-        /// The string that signals the start of an Ant-style expression.
-        /// </summary>
-        private const string AntExpressionPrefix = "${";
+			return poolString.GetOrAdd(str);
+		}
+
+		/// <summary>
+		/// The string that signals the start of an Ant-style expression.
+		/// </summary>
+		private const string AntExpressionPrefix = "${";
 
         /// <summary>
         /// The string that signals the end of an Ant-style expression.

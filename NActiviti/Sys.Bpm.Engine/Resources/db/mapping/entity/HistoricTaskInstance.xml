@@ -216,6 +216,7 @@
 		DESCRIPTION_ = #{description},
 		OWNER_ = #{owner},
 		ASSIGNEE_ = #{assignee},
+		ASSIGNEE_USER_ = #{assigneeUser},
 		CLAIM_TIME_ = #{claimTime},
 		END_TIME_ = #{endTime},
 		DURATION_ = #{durationInMillis},

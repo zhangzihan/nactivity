@@ -31,8 +31,6 @@ namespace Sys.Workflow.Engine.Impl
 	/// 
 	public class TaskServiceImpl : ServiceImpl, ITaskService
 	{
-		private readonly object syncRoot = new object();
-
 		private readonly ILogger<TaskServiceImpl> logger = ProcessEngineServiceProvider.LoggerService<TaskServiceImpl>();
 
 		public TaskServiceImpl()

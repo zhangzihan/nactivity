@@ -939,7 +939,7 @@ namespace Sys.Workflow.Engine
     public  class TransOption
     {
         public bool UseTransactionScope { get; set; } = true;
-        public virtual IsolationLevel IsolationLevel { get; set; } = IsolationLevel.RepeatableRead;
+        public virtual IsolationLevel IsolationLevel { get; set; } = IsolationLevel.ReadCommitted;
 
         public virtual TransactionScopeOption TransactionScopeOption { get; set; } = TransactionScopeOption.Required;
 

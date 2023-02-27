@@ -2,6 +2,7 @@
 using SmartSql.Abstractions.Cache;
 using SmartSql.Configuration.Maps;
 using SmartSql.Configuration.Tags;
+using Spring.Util;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -18,33 +19,35 @@ namespace SmartSql.Configuration.Statements
         Select
     }
 
-    public class Statement
-    {
-        public virtual StatementType Type { get { return StatementType.Statement; } }
-        [XmlIgnore]
-        public SmartSqlMap SmartSqlMap { get; internal set; }
-        [XmlAttribute]
-        public String Id { get; set; }
-        public String FullSqlId => $"{SmartSqlMap.Scope}.{Id}";
-        public IList<ITag> SqlTags { get; set; }
-        public Cache Cache { get; set; }
-        public ResultMap ResultMap { get; set; }
-        public Type ResultType { get; set; }
-        public ParameterMap ParameterMap { get; set; }
+	public class Statement
+	{
+		private string id;
 
-        public void BuildSql(RequestContext context)
-        {
-            foreach (ITag tag in SqlTags)
-            {
-                try
-                {
-                    tag.BuildSql(context);
-                }
-                catch (BuildSqlException e)
-                {
-                    throw new BuildSqlException($"构造SQL语句发生错误{FullSqlId}:({tag.LineInfo.LineNumber},{tag.LineInfo.LinePosition}):{e.Message}", e);
-                }
-            }
-        }
-    }
+		public virtual StatementType Type { get { return StatementType.Statement; } }
+		[XmlIgnore]
+		public SmartSqlMap SmartSqlMap { get; internal set; }
+		[XmlAttribute]
+		public string Id { get => id; set => id = StringUtils.PoolString(value); }
+		public string FullSqlId => $"{SmartSqlMap.Scope}.{Id}";
+		public IList<ITag> SqlTags { get; set; }
+		public Cache Cache { get; set; }
+		public ResultMap ResultMap { get; set; }
+		public Type ResultType { get; set; }
+		public ParameterMap ParameterMap { get; set; }
+
+		public void BuildSql(RequestContext context)
+		{
+			foreach (ITag tag in SqlTags)
+			{
+				try
+				{
+					tag.BuildSql(context);
+				}
+				catch (BuildSqlException e)
+				{
+					throw new BuildSqlException($"构造SQL语句发生错误{FullSqlId}:({tag.LineInfo.LineNumber},{tag.LineInfo.LinePosition}):{e.Message}", e);
+				}
+			}
+		}
+	}
 }

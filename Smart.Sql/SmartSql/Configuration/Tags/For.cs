@@ -9,211 +9,219 @@ using System.Reflection;
 using SmartSql.Exceptions;
 using SmartSql.Utils;
 using AspectCore.Extensions.Reflection;
+using Spring.Util;
+using ObjectUtils = SmartSql.Utils.ObjectUtils;
 
 namespace SmartSql.Configuration.Tags
 {
-    public class For : Tag
-    {
-        public static string FOR_KEY_SUFFIX = "";
-        public override TagType Type => TagType.For;
-        public string Open { get; set; }
-        public string Separator { get; set; }
-        public string Close { get; set; }
-        public string Key { get; set; }
-        public string Index { get; set; }
+	public class For : Tag
+	{
+		public static string FOR_KEY_SUFFIX = "";
+		private string open;
+		private string separator;
+		private string close;
+		private string key;
+		private string index;
 
-        public override bool IsCondition(RequestContext context)
-        {
-            var reqVal = GetPropertyValue(context);
-            if (reqVal is null) { return false; }
-            if (reqVal is IEnumerable)
-            {
-                return (reqVal as IEnumerable).GetEnumerator().MoveNext();
-            }
-            return false;
-        }
+		public override TagType Type => TagType.For;
+		public string Open { get => open; set => open = StringUtils.PoolString(value); }
+		public string Separator { get => separator; set => separator = StringUtils.PoolString(value); }
+		public string Close { get => close; set => close = StringUtils.PoolString(value); }
+		public string Key { get => key; set => key = StringUtils.PoolString(value); }
+		public string Index { get => index; set => index = StringUtils.PoolString(value); }
 
-        public override void BuildChildSql(RequestContext context)
-        {
-            if (string.IsNullOrEmpty(Key))
-            {
-                throw new SmartSqlException("[For] tag [Key] is required!");
-            }
-            if (ChildTags.Count == 0)
-            {
-                throw new SmartSqlException("[For] tag must have childTag!");
-            }
-            foreach (ITag tag in ChildTags)
-            {
-                if (tag is SqlText childText)
-                {
-                    context.Sql.Append(Open);
-                    IEnumerator reqVal = (GetPropertyValue(context) as IEnumerable).GetEnumerator();
-                    reqVal.MoveNext();
-                    bool isDirectValue = IsDirectValue(reqVal.Current);
-                    var itemSqlStr = childText.BodyText;
-                    if (isDirectValue)
-                    {
-                        BuildItemSql_DirectValue(itemSqlStr, context);
-                    }
-                    else
-                    {
-                        string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
-                        if (new Regex($"([{dbPrefixs}]{{.+}})", RegexOptions.IgnoreCase).IsMatch(itemSqlStr))
-                        {
-                            BuildItemSql_NotDirectValue(itemSqlStr, context);
-                        }
-                        else
-                        {
-                            context.Sql.Append(childText.BodyText);
-                        }
-                    }
-                    context.Sql.Append(Close);
-                }
-                else if (tag is TrimTag trimSql)
-                {
-                    BuildTrim_Sql(trimSql, context);
-                }
-                else
-                {
-                    throw new SmartSqlException("[For] ChildTag only support SqlText!");
-                }
-            }
-        }
+		public override bool IsCondition(RequestContext context)
+		{
+			var reqVal = GetPropertyValue(context);
+			if (reqVal is null) { return false; }
+			if (reqVal is IEnumerable)
+			{
+				return (reqVal as IEnumerable).GetEnumerator().MoveNext();
+			}
+			return false;
+		}
 
-        private string KeyPrepend(string property)
-        {
-            return string.Join("_", property.Split(new char[] { '.' }));
-        }
+		public override void BuildChildSql(RequestContext context)
+		{
+			if (string.IsNullOrEmpty(Key))
+			{
+				throw new SmartSqlException("[For] tag [Key] is required!");
+			}
+			if (ChildTags.Count == 0)
+			{
+				throw new SmartSqlException("[For] tag must have childTag!");
+			}
+			foreach (ITag tag in ChildTags)
+			{
+				if (tag is SqlText childText)
+				{
+					context.Sql.Append(Open);
+					IEnumerator reqVal = (GetPropertyValue(context) as IEnumerable).GetEnumerator();
+					reqVal.MoveNext();
+					bool isDirectValue = IsDirectValue(reqVal.Current);
+					var itemSqlStr = childText.BodyText;
+					if (isDirectValue)
+					{
+						BuildItemSql_DirectValue(itemSqlStr, context);
+					}
+					else
+					{
+						string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
+						if (new Regex($"([{dbPrefixs}]{{.+}})", RegexOptions.IgnoreCase).IsMatch(itemSqlStr))
+						{
+							BuildItemSql_NotDirectValue(itemSqlStr, context);
+						}
+						else
+						{
+							context.Sql.Append(childText.BodyText);
+						}
+					}
+					context.Sql.Append(Close);
+				}
+				else if (tag is TrimTag trimSql)
+				{
+					BuildTrim_Sql(trimSql, context);
+				}
+				else
+				{
+					throw new SmartSqlException("[For] ChildTag only support SqlText!");
+				}
+			}
+		}
 
-        private void BuildTrim_Sql(TrimTag trimSql, RequestContext context)
-        {
-            context.Sql.Append(" ");
-            context.Sql.Append(trimSql.Prefix);
+		private string KeyPrepend(string property)
+		{
+			return string.Join("_", property.Split(new char[] { '.' }));
+		}
 
-            var reqVal = GetPropertyValue(context) as IEnumerable;
-            foreach (var itemVal in reqVal)
-            {
-                if (context.Request is IDictionary<string, object> request)
-                {
-                    request[Key] = ObjectUtils.ToDictionary(itemVal, true);
-                }
+		private void BuildTrim_Sql(TrimTag trimSql, RequestContext context)
+		{
+			context.Sql.Append(" ");
+			context.Sql.Append(trimSql.Prefix);
 
-                trimSql.BuildChildSql(context);
-            }
-            if (context.Request is IDictionary<string, object> req)
-            {
-                req.Remove(Key);
-            }
+			var reqVal = GetPropertyValue(context) as IEnumerable;
+			foreach (var itemVal in reqVal)
+			{
+				if (context.Request is IDictionary<string, object> request)
+				{
+					request[Key] = ObjectUtils.ToDictionary(itemVal, true);
+				}
 
-            context.Sql.Append(trimSql.Suffix);
-            context.Sql.Append(" ");
-        }
+				trimSql.BuildChildSql(context);
+			}
+			if (context.Request is IDictionary<string, object> req)
+			{
+				req.Remove(Key);
+			}
 
-        private void BuildItemSql_DirectValue(string itemSqlStr, RequestContext context)
-        {
-            string dbPrefix = GetDbProviderPrefix(context);
-            string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
+			context.Sql.Append(trimSql.Suffix);
+			context.Sql.Append(" ");
+		}
 
-            var reqVal = GetPropertyValue(context) as IEnumerable;
-            int item_index = 0;
-            foreach (var itemVal in reqVal)
-            {
-                if (item_index > 0)
-                {
-                    context.Sql.AppendFormat(" {0} ", Separator);
-                }
-                string patternStr = $"([{dbPrefixs}]{{{Regex.Escape(Key)}}})";
-                string key_name = $"{KeyPrepend(Property)}_{Key}{item_index}";
-                context.RequestParameters.Add(key_name, itemVal);
-                string key_name_dbPrefix = $"{dbPrefix}{key_name}";
-                string item_sql = Regex.Replace(itemSqlStr
-                                  , patternStr
-                                  , key_name_dbPrefix
-                                  , RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.CultureInvariant);
+		private void BuildItemSql_DirectValue(string itemSqlStr, RequestContext context)
+		{
+			string dbPrefix = GetDbProviderPrefix(context);
+			string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
 
-                if (!string.IsNullOrWhiteSpace(Index))
-                {
-                    context.Sql.AppendFormat("{0}", item_sql.Replace("${" + Index + "}", "" + item_index));
-                }
-                else
-                {
-                    context.Sql.AppendFormat("{0}", item_sql);
-                }
-                item_index++;
-            }
-        }
+			var reqVal = GetPropertyValue(context) as IEnumerable;
+			int item_index = 0;
+			foreach (var itemVal in reqVal)
+			{
+				if (item_index > 0)
+				{
+					context.Sql.AppendFormat(" {0} ", Separator);
+				}
+				string patternStr = $"([{dbPrefixs}]{{{Regex.Escape(Key)}}})";
+				string key_name = $"{KeyPrepend(Property)}_{Key}{item_index}";
+				context.RequestParameters.Add(key_name, itemVal);
+				string key_name_dbPrefix = $"{dbPrefix}{key_name}";
+				string item_sql = Regex.Replace(itemSqlStr
+								  , patternStr
+								  , key_name_dbPrefix
+								  , RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.CultureInvariant);
 
-        private void BuildItemSql_NotDirectValue(string itemSqlStr, RequestContext context)
-        {
-            string dbPrefix = GetDbProviderPrefix(context);
-            string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
-            var reqVal = GetPropertyValue(context) as IEnumerable;
-            int item_index = 0;
-            Dictionary<PropertyInfo, PropertyReflector> htGetters = new();
-            Dictionary<string, Regex> regPatten = new(StringComparer.OrdinalIgnoreCase);
+				if (!string.IsNullOrWhiteSpace(Index))
+				{
+					context.Sql.AppendFormat("{0}", item_sql.Replace("${" + Index + "}", "" + item_index));
+				}
+				else
+				{
+					context.Sql.AppendFormat("{0}", item_sql);
+				}
+				item_index++;
+			}
+		}
 
-            foreach (var itemVal in reqVal)
-            {
-                if (item_index > 0)
-                {
-                    context.Sql.AppendFormat(" {0} ", Separator);
-                }
-                string item_sql = itemSqlStr;
-                var properties = itemVal.GetType().GetTypeInfo().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                foreach (var property in properties)
-                {
-                    string patternStr = $"([{dbPrefixs}]{{{Regex.Escape(property.Name)}}})";
-                    if (regPatten.TryGetValue(patternStr, out Regex regex) == false)
-                    {
-                        regex = new Regex(patternStr, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-                        regPatten.Add(patternStr, regex);
-                    }
+		private void BuildItemSql_NotDirectValue(string itemSqlStr, RequestContext context)
+		{
+			string dbPrefix = GetDbProviderPrefix(context);
+			string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
+			var reqVal = GetPropertyValue(context) as IEnumerable;
+			int item_index = 0;
+			Dictionary<PropertyInfo, PropertyReflector> htGetters = new();
+			Dictionary<string, Regex> regPatten = new(StringComparer.OrdinalIgnoreCase);
 
-                    if (!regex.IsMatch(item_sql))
-                    {
-                        continue;
-                    }
+			foreach (var itemVal in reqVal)
+			{
+				if (item_index > 0)
+				{
+					context.Sql.AppendFormat(" {0} ", Separator);
+				}
+				string item_sql = itemSqlStr;
+				var properties = itemVal.GetType().GetTypeInfo().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+				foreach (var property in properties)
+				{
+					string patternStr = $"([{dbPrefixs}]{{{Regex.Escape(property.Name)}}})";
+					if (regPatten.TryGetValue(patternStr, out Regex regex) == false)
+					{
+						regex = new Regex(patternStr, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+						regPatten.Add(patternStr, regex);
+					}
 
-                    if (htGetters.TryGetValue(property, out PropertyReflector reflector) == false)
-                    {
-                        reflector = property.GetReflector();
-                        htGetters.Add(property, reflector);
-                    }
-                    var propertyVal = reflector.GetValue(itemVal);
+					if (!regex.IsMatch(item_sql))
+					{
+						continue;
+					}
 
-                    string key_name = $"{KeyPrepend(Property)}_{property.Name}_{Key}{item_index}";
-                    //context.RequestParameters.Add(key_name, itemVal);
-                    string key_name_dbPrefix = $"{dbPrefix}{key_name}";
+					if (htGetters.TryGetValue(property, out PropertyReflector reflector) == false)
+					{
+						reflector = property.GetReflector();
+						htGetters.Add(property, reflector);
+					}
+					var propertyVal = reflector.GetValue(itemVal);
 
-                    var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => string.Compare(p.Name, property.Name, true) == 0);
-                    if (paramMap is not null && paramMap.Handler is object)
-                    {
-                        propertyVal = paramMap.Handler.ToParameterValue(propertyVal);
-                    }
-                    context.RequestParameters.Add(key_name, propertyVal);
+					string key_name = $"{KeyPrepend(Property)}_{property.Name}_{Key}{item_index}";
+					//context.RequestParameters.Add(key_name, itemVal);
+					string key_name_dbPrefix = $"{dbPrefix}{key_name}";
 
-                    item_sql = regex.Replace(item_sql, key_name_dbPrefix);
-                }
+					var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => string.Compare(p.Name, property.Name, true) == 0);
+					if (paramMap is not null && paramMap.Handler is object)
+					{
+						propertyVal = paramMap.Handler.ToParameterValue(propertyVal);
+					}
+					context.RequestParameters.Add(key_name, propertyVal);
 
-                if (!string.IsNullOrWhiteSpace(Index))
-                {
-                    context.Sql.AppendFormat("{0}", item_sql.Replace("${" + Index + "}", "" + item_index));
-                }
-                else
-                {
-                    context.Sql.AppendFormat("{0}", item_sql);
-                }
-                item_index++;
-            }
-        }
-        private bool IsDirectValue(object obj)
-        {
-            bool isString = obj is String;
-            if (isString) { return true; }
-            bool isValueType = obj is ValueType;
-            if (isValueType) { return true; }
-            return false;
-        }
-    }
+					item_sql = regex.Replace(item_sql, key_name_dbPrefix);
+				}
+
+				if (!string.IsNullOrWhiteSpace(Index))
+				{
+					context.Sql.AppendFormat("{0}", item_sql.Replace("${" + Index + "}", "" + item_index));
+				}
+				else
+				{
+					context.Sql.AppendFormat("{0}", item_sql);
+				}
+				item_index++;
+			}
+		}
+		private bool IsDirectValue(object obj)
+		{
+			bool isString = obj is String;
+			if (isString) { return true; }
+			bool isValueType = obj is ValueType;
+			if (isValueType) { return true; }
+			return false;
+		}
+	}
 }

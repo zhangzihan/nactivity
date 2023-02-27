@@ -49,6 +49,7 @@
 		ACT_NAME_,
 		ACT_TYPE_,
 		ASSIGNEE_,
+		ASSIGNEE_USER_,
 		START_TIME_,
 		END_TIME_,
 		DURATION_,
@@ -64,6 +65,7 @@
 		#{activityName},
 		#{activityType},
 		#{assignee},
+		#{assigneeUser},
 		#{startTime},
 		#{endTime},
 		#{durationInMillis},
@@ -83,6 +85,7 @@
 		ACT_NAME_,
 		ACT_TYPE_,
 		ASSIGNEE_,
+		ASSIGNEE_USER_,
 		START_TIME_,
 		END_TIME_,
 		DURATION_,
@@ -99,6 +102,7 @@
 			#{activityName},
 			#{activityType},
 			#{assignee},
+			#{assigneeUser},
 			#{startTime},
 			#{endTime},
 			#{durationInMillis},
@@ -112,6 +116,7 @@
 		update ACT_HI_ACTINST set
 		EXECUTION_ID_ = #{executionId},
 		ASSIGNEE_ = #{assignee},
+		ASSIGNEE_USER_ = #{assigneeUser},
 		END_TIME_ = #{endTime},
 		DURATION_ = #{durationInMillis}
 		where ID_ = #{id}
