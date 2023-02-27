@@ -26,6 +26,7 @@ namespace Sys.Workflow.Engine.Impl
 	using Sys.Workflow;
 	using System.IO;
 	using System.Linq;
+	using System.Threading.Tasks;
 
 	/// 
 	/// 
@@ -161,18 +162,11 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				if (TryGetTask(taskId, out var task) == false)
-				{
-					return;
-				}
 				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, null, null));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
-				if (logger.IsEnabled(LogLevel.Debug))
-				{
-					logger.LogDebug("任务可能已经终止或无效.");
-				}
+				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
 			}
 		}
 
@@ -180,18 +174,11 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				if (TryGetTask(taskId, out var task) == false)
-				{
-					return;
-				}
 				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, null));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
-				if (logger.IsEnabled(LogLevel.Debug))
-				{
-					logger.LogDebug("任务可能已经终止或无效.");
-				}
+				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
 			}
 		}
 
@@ -199,18 +186,11 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				if (TryGetTask(taskId, out var task) == false)
-				{
-					return;
-				}
 				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, transientVariables));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
-				if (logger.IsEnabled(LogLevel.Debug))
-				{
-					logger.LogDebug("任务可能已经终止或无效.");
-				}
+				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
 			}
 		}
 
@@ -218,25 +198,14 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				if (TryGetTask(taskId, out var task) == false)
-				{
-					if (notFoundThrowError)
-					{
-						throw new ActivitiObjectNotFoundException($"Cannot find task for 'taskId={taskId}'", typeof(ITask));
-					}
-				}
 				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, localScope));
 			}
 			catch (ActivitiObjectNotFoundException ex)
 			{
+				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
 				if (notFoundThrowError)
 				{
-					logger.LogError(ex.Message, ex);
 					throw ex;
-				}
-				else if (logger.IsEnabled(LogLevel.Debug))
-				{
-					logger.LogDebug("任务可能已经终止或无效.");
 				}
 			}
 			catch (Exception ex)
@@ -250,22 +219,11 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				if (TryGetTask(taskId, out var task) == false)
-				{
-					return;
-				}
-				if (string.IsNullOrWhiteSpace(comment) == false)
-				{
-					AddComment(taskId, task.ProcessInstanceId, comment);
-				}
 				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, transientVariables, localScope, completeReason: comment));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
-				if (logger.IsEnabled(LogLevel.Debug))
-				{
-					logger.LogDebug("任务可能已经终止或无效.");
-				}
+				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
 			}
 		}
 
@@ -275,28 +233,22 @@ namespace Sys.Workflow.Engine.Impl
 			{
 				if (TryGetTask(businessKey, taskName, assignee, out var task) == false)
 				{
+					logger.LogError($"【任务{businessKey}-{taskName}-{assignee}可能已经终止或无效.】");
 					if (notFoundThrowError)
 					{
 						throw new ActivitiObjectNotFoundException($"Cannot find task for 'businessKey={businessKey} and assignee={assignee}'", typeof(ITask));
 					}
 					return;
 				}
-				if (string.IsNullOrWhiteSpace(comment) == false)
-				{
-					AddComment(task.Id, task.ProcessInstanceId, comment);
-				}
+
 				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(task.Id, variables, transientVariables, localScope, completeReason: comment));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
+				logger.LogError($"【任务{businessKey}-{taskName}-{assignee}可能已经终止或无效.】");
 				if (notFoundThrowError)
 				{
-					logger.LogError("任务可能已经终止或无效.");
 					throw;
-				}
-				else if (logger.IsEnabled(LogLevel.Debug))
-				{
-					logger.LogDebug("任务可能已经终止或无效.");
 				}
 			}
 		}
@@ -684,12 +636,9 @@ namespace Sys.Workflow.Engine.Impl
 			{
 				return commandExecutor.Execute(new CommandConfig(true), new TransferTaskCmd(cmd)) as ITask[];
 			}
-			catch (ActivitiObjectNotFoundException e)
+			catch (ActivitiObjectNotFoundException)
 			{
-				if (logger.IsEnabled(LogLevel.Warning))
-				{
-					logger.LogWarning($"任务可能已经终止或无效.{e.Message}{e.ObjectClass}");
-				}
+				logger.LogError($"【任务{cmd.TaskId}可能已经终止或无效.】");
 				return null;
 			}
 		}
