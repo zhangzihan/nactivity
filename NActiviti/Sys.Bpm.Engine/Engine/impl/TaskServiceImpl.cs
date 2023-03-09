@@ -65,7 +65,7 @@ namespace Sys.Workflow.Engine.Impl
 
 		public virtual void TerminateTask(string taskId, string terminateReason, bool terminateExecution, IDictionary<string, object> variables, IDictionary<string, object> transientVariables = null)
 		{
-			commandExecutor.Execute(new CommandConfig(true), new TerminateTaskCmd(taskId, terminateReason, terminateExecution, variables, transientVariables));
+			commandExecutor.Execute(new CommandConfig(false), new TerminateTaskCmd(taskId, terminateReason, terminateExecution, variables, transientVariables));
 		}
 
 		public virtual void DeleteTasks(ICollection<string> taskIds)
@@ -162,11 +162,12 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, null, null));
+				_ = commandExecutor.Execute(new CommandConfig(false), new CompleteTaskCmd(taskId, null, null));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
 				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
+				throw;
 			}
 		}
 
@@ -174,11 +175,12 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, null));
+				_ = commandExecutor.Execute(new CommandConfig(false), new CompleteTaskCmd(taskId, variables, null));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
 				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
+				throw;
 			}
 		}
 
@@ -186,11 +188,12 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, transientVariables));
+				_ = commandExecutor.Execute(new CommandConfig(false), new CompleteTaskCmd(taskId, variables, transientVariables));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
 				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
+				throw;
 			}
 		}
 
@@ -198,7 +201,7 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, localScope));
+				_ = commandExecutor.Execute(new CommandConfig(false), new CompleteTaskCmd(taskId, variables, localScope));
 			}
 			catch (ActivitiObjectNotFoundException ex)
 			{
@@ -219,11 +222,12 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, transientVariables, localScope, completeReason: comment));
+				_ = commandExecutor.Execute(new CommandConfig(false), new CompleteTaskCmd(taskId, variables, transientVariables, localScope, completeReason: comment));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
 				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
+				throw;
 			}
 		}
 
@@ -241,7 +245,7 @@ namespace Sys.Workflow.Engine.Impl
 					return;
 				}
 
-				_ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(task.Id, variables, transientVariables, localScope, completeReason: comment));
+				_ = commandExecutor.Execute(new CommandConfig(false), new CompleteTaskCmd(task.Id, variables, transientVariables, localScope, completeReason: comment));
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
@@ -626,7 +630,7 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			var cmd = new CreateNewSubtaskCmd(taskName, description, dueDate, priority, parentTaskId, assignee, tenantId);
 
-			return commandExecutor.Execute(new CommandConfig(true), cmd);
+			return commandExecutor.Execute(new CommandConfig(false), cmd);
 		}
 
 		/// <inheritdoc />
@@ -634,12 +638,12 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			try
 			{
-				return commandExecutor.Execute(new CommandConfig(true), new TransferTaskCmd(cmd)) as ITask[];
+				return commandExecutor.Execute(new CommandConfig(false), new TransferTaskCmd(cmd)) as ITask[];
 			}
 			catch (ActivitiObjectNotFoundException)
 			{
 				logger.LogError($"【任务{cmd.TaskId}可能已经终止或无效.】");
-				return null;
+				throw;
 			}
 		}
 
@@ -648,7 +652,7 @@ namespace Sys.Workflow.Engine.Impl
 		{
 			var cmd = new AddCountersignCmd(taskId, assignees, tenantId);
 
-			return commandExecutor.Execute(new CommandConfig(true), cmd);
+			return commandExecutor.Execute(new CommandConfig(false), cmd);
 		}
 
 		/// <inheritdoc />

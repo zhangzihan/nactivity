@@ -9,6 +9,7 @@ using SmartSql.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace SmartSql.DbSession
 {
@@ -89,12 +90,11 @@ namespace SmartSql.DbSession
 		{
 			try
 			{
+				//_logger.LogError($"【数据提交CommitTransaction DbSession.Id:{Id}:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}】");
+
 				if (Transaction is null && System.Transactions.Transaction.Current is null)
 				{
-					if (_logger.IsEnabled(LogLevel.Error))
-					{
-						_logger.LogError("Before CommitTransaction,Please BeginTransaction first!");
-					}
+					_logger.LogError("Before CommitTransaction,Please BeginTransaction first!");
 					throw new SmartSqlException("Before CommitTransaction,Please BeginTransaction first!");
 				}
 				if (Transaction is not null)

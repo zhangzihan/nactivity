@@ -13,11 +13,14 @@
 
 namespace Sys.Workflow.Engine.Impl.Interceptor
 {
-    using Sys.Workflow.Engine.Impl.Cfg;
+	using Microsoft.Extensions.Logging;
+	using Sys.Workflow.Engine.Impl.Cfg;
+	using System;
 
-    /// 
+	/// 
     public class TransactionCommandContextCloseListener : ICommandContextCloseListener
     {
+		private ILogger log => ProcessEngineServiceProvider.Resolve<ILoggerFactory>().CreateLogger(this.GetType());
 
         protected internal ITransactionContext transactionContext;
 
@@ -32,8 +35,13 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         }
 
         public virtual void AfterSessionsFlush(ICommandContext commandContext)
-        {
-            transactionContext.Commit();
+		{
+			//if (log.IsEnabled(LogLevel.Debug))
+			//{
+			//	log.LogDebug($"【数据提交CommitTransaction:{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}】");
+			//}
+
+			transactionContext.Commit();
         }
 
         public virtual void Closed(ICommandContext commandContext)
@@ -42,8 +50,13 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         }
 
         public virtual void CloseFailure(ICommandContext commandContext)
-        {
-            transactionContext.Rollback();
+		{
+			if (log.IsEnabled(LogLevel.Debug))
+			{
+				log.LogDebug($"【数据回滚RollbackTransaction:{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}】");
+			}
+
+			transactionContext.Rollback();
         }
 
     }

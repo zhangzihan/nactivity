@@ -15,74 +15,82 @@ using System.Collections.Generic;
  */
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
-    using Sys.Workflow.Engine.Delegate;
-    using Sys.Workflow.Engine.Delegate.Events;
-    using Sys.Workflow.Engine.Delegate.Events.Impl;
-    using Sys.Workflow.Engine.Impl.Agenda;
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Impl.Contexts;
-    using Sys.Workflow.Engine.Impl.Identities;
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Tasks;
-    using Sys.Workflow;
+	using Sys.Workflow.Engine.Delegate;
+	using Sys.Workflow.Engine.Delegate.Events;
+	using Sys.Workflow.Engine.Delegate.Events.Impl;
+	using Sys.Workflow.Engine.Impl.Agenda;
+	using Sys.Workflow.Engine.Impl.Cfg;
+	using Sys.Workflow.Engine.Impl.Contexts;
+	using Sys.Workflow.Engine.Impl.Identities;
+	using Sys.Workflow.Engine.Impl.Interceptor;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity;
+	using Sys.Workflow.Engine.Tasks;
+	using Sys.Workflow;
+	using System.Threading.Tasks;
+	using System.Xml.Linq;
 
-    /// 
-    [Serializable]
-    public abstract class AbstractCompleteTaskCmd : NeedsActiveTaskCmd<object>
-    {
-        private const long serialVersionUID = 1L;
+	/// 
+	[Serializable]
+	public abstract class AbstractCompleteTaskCmd : NeedsActiveTaskCmd<object>
+	{
+		private const long serialVersionUID = 1L;
 
-        protected string completeReason = null;
+		protected string completeReason = null;
 
-        public AbstractCompleteTaskCmd(string taskId) : base(taskId)
-        {
-        }
+		public AbstractCompleteTaskCmd(string taskId) : base(taskId)
+		{
+		}
 
-        protected internal virtual void ExecuteTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
-        {
-            CompleteTask(commandContext, taskEntity, variables, localScope);
+		protected internal virtual void ExecuteTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
+		{
+			CompleteTask(commandContext, taskEntity, variables, localScope);
 
-            // Continue process (if not a standalone task)
-            if (taskEntity.ExecutionId is not null)
-            {
-                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
-                Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
-            }
-        }
+			// Continue process (if not a standalone task)
+			if (taskEntity.ExecutionId is not null)
+			{
+				IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
+				Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
+			}
+		}
 
-        protected void CompleteTask(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
-        {
-            // Task complete logic
-            if (taskEntity.DelegationState.HasValue && taskEntity.DelegationState.Value == DelegationState.PENDING)
-            {
-                throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
-            }
+		protected void CompleteTask(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
+		{
+			// Task complete logic
+			if (taskEntity.DelegationState.HasValue && taskEntity.DelegationState.Value == DelegationState.PENDING)
+			{
+				throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
+			}
 
-            ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
-            processEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_COMPLETE);
+			ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
 
-            IUserInfo user = Authentication.AuthenticatedUser;
-            if (user is object && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
-            {
-                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ProcessInstanceId);
-                commandContext.IdentityLinkEntityManager.InvolveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
-            }
+			if (string.IsNullOrWhiteSpace(completeReason) == false)
+			{
+				new AddCommentCmd(taskId, taskEntity.ProcessInstanceId, completeReason).Execute(commandContext);
+			}
 
-            IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
-            if (eventDispatcher.Enabled)
-            {
-                if (variables is null)
-                {
-                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
-                }
-                else
-                {
-                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
-                }
-            }
+			processEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_COMPLETE);
 
-            commandContext.TaskEntityManager.DeleteTask(taskEntity, completeReason, false, false);
-        }
-    }
+			IUserInfo user = Authentication.AuthenticatedUser;
+			if (user is object && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
+			{
+				IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ProcessInstanceId);
+				commandContext.IdentityLinkEntityManager.InvolveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
+			}
+
+			IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
+			if (eventDispatcher.Enabled)
+			{
+				if (variables is null)
+				{
+					eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
+				}
+				else
+				{
+					eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
+				}
+			}
+
+			commandContext.TaskEntityManager.DeleteTask(taskEntity, completeReason, false, false);
+		}
+	}
 }

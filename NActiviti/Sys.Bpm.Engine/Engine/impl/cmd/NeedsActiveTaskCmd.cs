@@ -14,74 +14,76 @@
  */
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
+	using Microsoft.Extensions.Logging;
+	using Sys.Workflow.Engine.Impl.Interceptor;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity;
+	using Sys.Workflow.Engine.Tasks;
+	using System.Collections.Generic;
 
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Tasks;
-    using System.Collections.Generic;
+	/// <summary>
+	/// An abstract superclass for <seealso cref="Command"/> implementations that want to verify the provided task is always active (ie. not suspended).
+	/// 
+	/// 
+	/// </summary>
+	[Serializable]
+	public abstract class NeedsActiveTaskCmd<T> : ICommand<T>
+	{
 
-    /// <summary>
-    /// An abstract superclass for <seealso cref="Command"/> implementations that want to verify the provided task is always active (ie. not suspended).
-    /// 
-    /// 
-    /// </summary>
-    [Serializable]
-    public abstract class NeedsActiveTaskCmd<T> : ICommand<T>
-    {
+		private const long serialVersionUID = 1L;
 
-        private const long serialVersionUID = 1L;
+		protected internal string taskId;
 
-        protected internal string taskId;
+		protected ILogger logger => ProcessEngineServiceProvider.Resolve<ILoggerFactory>().CreateLogger(this.GetType());
 
-        public NeedsActiveTaskCmd(string taskId)
-        {
-            this.taskId = taskId;
-        }
+		public NeedsActiveTaskCmd(string taskId)
+		{
+			this.taskId = taskId;
+		}
 
-        public virtual T Execute(ICommandContext commandContext)
-        {
-            if (taskId is null)
-            {
-                throw new ActivitiIllegalArgumentException("taskId is null");
-            }
+		public virtual T Execute(ICommandContext commandContext)
+		{
+			if (taskId is null)
+			{
+				throw new ActivitiIllegalArgumentException("taskId is null");
+			}
 
-            var task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
+			var task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
-            if (task is null)
-            {
-                var hisTask = commandContext.HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (hisTask is null)
-                {
-                    throw new ActivitiObjectNotFoundException("Cannot find task with id " + taskId, typeof(ITask));
-                }
+			if (task is null)
+			{
+				var hisTask = commandContext.HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+				if (hisTask is null)
+				{
+					throw new ActivitiObjectNotFoundException("Cannot find task with id " + taskId, typeof(ITask));
+				}
 
-                return default;
-            }
+				return default;
+			}
 
-            if (task.Suspended)
-            {
-                throw new ActivitiException(SuspendedTaskException);
-            }
+			if (task.Suspended)
+			{
+				throw new ActivitiException(SuspendedTaskException);
+			}
 
-            return Execute(commandContext, task);
-        }
+			return Execute(commandContext, task);
+		}
 
-        /// <summary>
-        /// Subclasses must implement in this method their normal command logic. The provided task is ensured to be active.
-        /// </summary>
-        protected internal abstract T Execute(ICommandContext commandContext, ITaskEntity task);
+		/// <summary>
+		/// Subclasses must implement in this method their normal command logic. The provided task is ensured to be active.
+		/// </summary>
+		protected internal abstract T Execute(ICommandContext commandContext, ITaskEntity task);
 
-        /// <summary>
-        /// Subclasses can override this method to provide a customized exception message that will be thrown when the task is suspended.
-        /// </summary>
-        protected internal virtual string SuspendedTaskException
-        {
-            get
-            {
-                return "Cannot execute operation: task is suspended";
-            }
-        }
+		/// <summary>
+		/// Subclasses can override this method to provide a customized exception message that will be thrown when the task is suspended.
+		/// </summary>
+		protected internal virtual string SuspendedTaskException
+		{
+			get
+			{
+				return "Cannot execute operation: task is suspended";
+			}
+		}
 
-    }
+	}
 
 }

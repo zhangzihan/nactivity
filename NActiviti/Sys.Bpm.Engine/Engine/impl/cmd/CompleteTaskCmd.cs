@@ -15,79 +15,80 @@ using System.Collections.Generic;
  */
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Impl.Util;
+	using Microsoft.Extensions.Logging;
+	using Sys.Workflow.Engine.Impl.Interceptor;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity;
+	using Sys.Workflow.Engine.Impl.Util;
 
-    /// 
-    [Serializable]
-    public class CompleteTaskCmd : AbstractCompleteTaskCmd
-    {
-        private const long serialVersionUID = 1L;
-        protected IDictionary<string, object> variables;
-        protected IDictionary<string, object> transientVariables;
-        protected bool localScope;
-        private readonly object syncRoot = new object();
+	/// 
+	[Serializable]
+	public class CompleteTaskCmd : AbstractCompleteTaskCmd
+	{
+		private const long serialVersionUID = 1L;
+		protected IDictionary<string, object> variables;
+		protected IDictionary<string, object> transientVariables;
+		protected bool localScope;
+		private readonly object syncRoot = new object();
 
-        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables) : base(taskId)
-        {
-            this.variables = variables ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-        }
+		public CompleteTaskCmd(string taskId, IDictionary<string, object> variables) : base(taskId)
+		{
+			this.variables = variables ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+		}
 
-        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, bool localScope) : this(taskId, variables, null, localScope)
-        {
-        }
+		public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, bool localScope) : this(taskId, variables, null, localScope)
+		{
+		}
 
-        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool localScope = false, string completeReason = null) : this(taskId, variables)
-        {
-            this.localScope = localScope;
-            this.transientVariables = transientVariables;
-            this.completeReason = completeReason;
-        }
+		public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool localScope = false, string completeReason = null) : this(taskId, variables)
+		{
+			this.localScope = localScope;
+			this.transientVariables = transientVariables;
+			this.completeReason = completeReason;
+		}
 
-        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
-        {
-            if (variables is object)
-            {
-                if (localScope)
-                {
-                    task.VariablesLocal = variables;
-                }
-                else if (task.ExecutionId is not null)
-                {
-                    task.ExecutionVariables = variables;
-                }
-                else
-                {
-                    task.Variables = variables;
-                }
-            }
+		protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
+		{
+			if (variables is object)
+			{
+				if (localScope)
+				{
+					task.VariablesLocal = variables;
+				}
+				else if (task.ExecutionId is not null)
+				{
+					task.ExecutionVariables = variables;
+				}
+				else
+				{
+					task.Variables = variables;
+				}
+			}
 
-            if (transientVariables is object)
-            {
-                if (localScope)
-                {
-                    task.TransientVariablesLocal = transientVariables;
-                }
-                else
-                {
-                    task.TransientVariables = transientVariables;
-                }
-            }
+			if (transientVariables is object)
+			{
+				if (localScope)
+				{
+					task.TransientVariablesLocal = transientVariables;
+				}
+				else
+				{
+					task.TransientVariables = transientVariables;
+				}
+			}
 
-            ExecuteTaskComplete(commandContext, task, variables, localScope);
+			ExecuteTaskComplete(commandContext, task, variables, localScope);
 
-            return null;
-        }
+			return null;
+		}
 
-        protected internal override string SuspendedTaskException
-        {
-            get
-            {
-                return "Cannot complete a suspended task";
-            }
-        }
+		protected internal override string SuspendedTaskException
+		{
+			get
+			{
+				return "Cannot complete a suspended task";
+			}
+		}
 
-    }
+	}
 
 }

@@ -534,28 +534,36 @@ namespace Sys.Workflow.Engine.Impl.DB
 		/// </summary>
 		public virtual void Flush()
 		{
-			lock (syncRoot)
+			DetermineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
+			RemoveUnnecessaryOperations();
+
+			if (insertedObjects.IsEmpty && updatedObjects.Count == 0 && deletedObjects.IsEmpty)
 			{
-				DetermineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
-				RemoveUnnecessaryOperations();
-
-				if (insertedObjects.IsEmpty && updatedObjects.Count == 0 && deletedObjects.IsEmpty)
-				{
-					return;
-				}
-
-				if (SqlMapper.SessionStore.LocalSession is null && (!insertedObjects.IsEmpty || updatedObjects.Count > 0 || !deletedObjects.IsEmpty))
-				{
-					// 使用TransactionScope控制事务提交
-					SqlMapper.BeginTransaction();
-
-					RemoveInstanceIncludeHis();
-				}
-
-				FlushInserts();
-				FlushUpdates();
-				FlushDeletes();
+				return;
 			}
+
+			if (SqlMapper.SessionStore.LocalSession is null && (!insertedObjects.IsEmpty || updatedObjects.Count > 0 || !deletedObjects.IsEmpty))
+			{
+				var tec = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>().TransactionOption;
+
+				// 使用TransactionScope控制事务提交
+				SqlMapper.BeginTransaction(tec.IsolationLevel switch
+				{
+					System.Transactions.IsolationLevel.Snapshot => IsolationLevel.Snapshot,
+					System.Transactions.IsolationLevel.Serializable => IsolationLevel.Serializable,
+					System.Transactions.IsolationLevel.ReadCommitted => IsolationLevel.ReadCommitted,
+					System.Transactions.IsolationLevel.ReadUncommitted => IsolationLevel.ReadUncommitted,
+					System.Transactions.IsolationLevel.RepeatableRead => IsolationLevel.RepeatableRead,
+					System.Transactions.IsolationLevel.Chaos => IsolationLevel.Chaos,
+					_ => IsolationLevel.ReadCommitted,
+				});
+
+				RemoveInstanceIncludeHis();
+			}
+
+			FlushInserts();
+			FlushUpdates();
+			FlushDeletes();
 		}
 
 		private void RemoveInstanceIncludeHis()

@@ -299,7 +299,7 @@ namespace SmartSql
 		#region Transaction
 		public IDbConnectionSession BeginTransaction()
 		{
-			return BeginTransaction(IsolationLevel.ReadCommitted);
+			return BeginTransaction(IsolationLevel.RepeatableRead);
 		}
 
 		public IDbConnectionSession BeginTransaction(IsolationLevel isolationLevel)
@@ -314,7 +314,7 @@ namespace SmartSql
 
 		public IDbConnectionSession BeginTransaction(RequestContext context)
 		{
-			return BeginTransaction(context, IsolationLevel.ReadCommitted);
+			return BeginTransaction(context, IsolationLevel.RepeatableRead);
 		}
 
 		public IDbConnectionSession BeginTransaction(RequestContext context, IsolationLevel isolationLevel)
@@ -337,10 +337,10 @@ namespace SmartSql
 			}
 			try
 			{
-				if (_logger.IsEnabled(LogLevel.Debug))
-				{
-					_logger.LogDebug($"CommitTransaction DbSession.Id:{session.Id}");
-				}
+				//if (_logger.IsEnabled(LogLevel.Debug))
+				//{
+					_logger.LogError($"【数据提交CommitTransaction DbSession.Id:{session.Id}:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}】");
+				//}
 				session.CommitTransaction();
 				CacheManager.RequestCommitted(session);
 			}
