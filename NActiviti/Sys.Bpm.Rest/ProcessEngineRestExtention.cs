@@ -191,7 +191,7 @@ namespace Sys.Workflow.Services.Rest
             _ = app.UseMiddleware<SecurityPoliciesApplicationMiddle>(Microsoft.Extensions.Options.Options.Create(options));
 
             string enableErrorHandling = config["applicationSettings:workflow:enableErrorHandling"];
-            if (!bool.TryParse(enableErrorHandling, out var b) || !b)
+            if (!bool.TryParse(enableErrorHandling, out var b) || b)
             {
                 app.UseMiddleware<ErrorHandlingMiddleware>();
             }
