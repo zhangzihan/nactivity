@@ -32,7 +32,7 @@ namespace SmartSql.Command
             _logger = logger;
             _smartSqlContext = smartSqlContext;
             var dbPrefixs = $"{smartSqlContext.DbPrefix}{smartSqlContext.SmartDbPrefix}#";
-            var regOptions = RegexOptions.Multiline | RegexOptions.CultureInvariant;
+            var regOptions = RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled;
             if (smartSqlContext.IgnoreParameterCase)
             {
                 regOptions |= RegexOptions.IgnoreCase;
@@ -40,7 +40,7 @@ namespace SmartSql.Command
             _sqlParamsTokens = new Regex(@"[" + dbPrefixs + @"]{?(([\p{L}\p{N}_]+(\[\d+\])*)(\.[\p{L}\p{N}_]+)*)}?", regOptions);
         }
 
-        private static readonly Regex regDbParamName = new Regex(@"(\[(\d+)\])*\.");
+        private static readonly Regex regDbParamName = new(@"(\[(\d+)\])*\.", RegexOptions.Compiled);
 
         public IDbCommand Prepare(IDbConnectionSession dbSession, RequestContext context)
         {

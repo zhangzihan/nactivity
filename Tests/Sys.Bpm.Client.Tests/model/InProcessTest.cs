@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using SmartSql.Abstractions;
 using Sys.Workflow.Bpmn.Converters;
 using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Rest.Api;
 using Sys.Workflow.Engine;
 using Sys.Workflow.Engine.Impl;
 using Sys.Workflow.Engine.Impl.Cfg;
@@ -104,6 +106,119 @@ namespace Sys.Workflow.Client.Tests.Models
 				}
 			});
 
+		}
+
+		[Theory]
+		[InlineData("分支合并.bpmn")]
+		public void 无条件分支合并_所有分支都完成后执行下一流程(string bpmnFile)
+		{
+			var ex = Record.Exception(() =>
+			{
+				string user1 = Guid.NewGuid().ToString();
+				string user2 = Guid.NewGuid().ToString();
+				string waiter = Guid.NewGuid().ToString();
+				string bizId = Guid.NewGuid().ToString();
+
+				WorkflowVariable vars = new WorkflowVariable();
+				vars.AddAssignee(nameof(user1), user1)
+					.AddAssignee(nameof(user2), user2)
+					.AddAssignee(nameof(waiter), waiter);
+
+				ProcessEngineConfigurationImpl processEngineConfig = processEngine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl;
+
+				ICommandExecutor commandExecutor = processEngineConfig.CommandExecutor;
+
+				Authentication.AuthenticatedUser = new InProcessWorkflowEngine.TestUser()
+				{
+					Id = "评审员",
+					FullName = "评审员",
+					TenantId = context.TenantId
+				};
+				string xml = IntegrationTestContext.ReadBpmn(bpmnFile);
+
+				IDeploymentBuilder builder = processEngine.RepositoryService.CreateDeployment()
+					.Name(Path.GetFileNameWithoutExtension(bpmnFile))
+					.TenantId(context.TenantId)
+					.AddString(bpmnFile, xml)
+					.EnableDuplicateFiltering()
+					.TenantId(context.TenantId);
+
+				IDeployment deploy = commandExecutor.Execute(new DeployCmd(builder));
+
+				IProcessDefinition definition = processEngine.RepositoryService.CreateProcessDefinitionQuery()
+					.SetDeploymentId(deploy.Id)
+					.SetProcessDefinitionTenantId(context.TenantId)
+					.SetLatestVersion()
+					.SingleResult();
+
+				IProcessInstance processInstance = commandExecutor.Execute(new StartProcessInstanceCmd(new Cloud.Services.Api.Commands.StartProcessInstanceCmd()
+				{
+					ProcessDefinitionId = definition.Id,
+					BusinessKey = bizId,
+					Variables = vars
+				}));
+
+				var tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
+				var task = tasks.First();
+
+				//commandExecutor.Execute(new CompleteTaskCmd(task.Id, vars));
+
+				commandExecutor.Execute(new ReturnToActivityCmd(task.Id, "Task_085qd6k", "流程1", vars));
+				tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
+
+				commandExecutor.Execute(new ReturnToActivityCmd(task.Id, "ExclusiveGateway_1y6gcmn", "并行", vars));
+				tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
+
+				//var execution = processEngineConfig.ExecutionEntityManager.CreateChildExecution(processInstance as IExecutionEntity);
+				//var task = processEngineConfig.TaskEntityManager.Create();
+				//task.
+
+				//ITask ntask = commandExecutor.Execute(new CreateNewTaskCmd("Task_0opugm1", "流程2", null, null, task.ExecutionId, null, task.TenantId));				
+
+				tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
+
+				//IList<ITask> u2tasks = processEngine.TaskService.GetMyTasks(user2);
+
+				//IList<ITask> u1tasks = processEngine.TaskService.GetMyTasks(user1);
+
+				//commandExecutor.Execute(new CompleteTaskCmd(u1tasks[0].Id, vars));
+
+				//commandExecutor.Execute(new CompleteTaskCmd(u2tasks[0].Id, vars));
+
+				//u2tasks = processEngine.TaskService.GetMyTasks(user2);
+
+				//u1tasks = processEngine.TaskService.GetMyTasks(user1); 
+
+				//tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
+
+				//完成用户1的任务
+				//_ = taskClient.CompleteTask(new CompleteTaskCmd
+				//{
+				//	Assignee = user1,
+				//	BusinessKey = bizId,
+				//	OutputVariables = WorkflowVariable.FromObject(new
+				//	{
+				//		完成 = true
+				//	})
+				//}).GetAwaiter().GetResult();
+
+				//Assert.Empty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+
+				////完成用户2的任务
+				//_ = taskClient.CompleteTask(new CompleteTaskCmd
+				//{
+				//	Assignee = user2,
+				//	BusinessKey = bizId,
+				//	OutputVariables = WorkflowVariable.FromObject(new
+				//	{
+				//		完成 = true
+				//	})
+				//}).GetAwaiter().GetResult();
+
+				//Assert.NotEmpty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+			});
+
+			Assert.Null(ex);
 		}
 
 		[Theory]
