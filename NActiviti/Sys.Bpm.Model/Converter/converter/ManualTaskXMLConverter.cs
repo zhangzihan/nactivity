@@ -38,7 +38,7 @@ namespace Sys.Workflow.Bpmn.Converters
             }
         }
 
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ManualTask manualTask = new ManualTask();
             BpmnXMLUtil.AddXMLLocation(manualTask, xtr);
@@ -46,11 +46,11 @@ namespace Sys.Workflow.Bpmn.Converters
             return manualTask;
         }
 
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
 
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
 
         }

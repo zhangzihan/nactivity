@@ -38,7 +38,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_TASK_SERVICE;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ServiceTask serviceTask = new ServiceTask();
             BpmnXMLUtil.AddXMLLocation(serviceTask, xtr);
@@ -87,7 +87,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             return serviceTask;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
 
             ServiceTask serviceTask = (ServiceTask)element;
@@ -122,7 +122,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_SKIP_EXPRESSION, serviceTask.SkipExpression, xtw);
             }
         }
-        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             ServiceTask serviceTask = (ServiceTask)element;
 
@@ -164,11 +164,11 @@ namespace Sys.Workflow.Bpmn.Converters
 
             return didWriteExtensionStartElement;
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
 
-        protected internal virtual string ParseOperationRef(string operationRef, BpmnModel model)
+        public virtual string ParseOperationRef(string operationRef, BpmnModel model)
         {
             string result = null;
             if (!string.IsNullOrWhiteSpace(operationRef))

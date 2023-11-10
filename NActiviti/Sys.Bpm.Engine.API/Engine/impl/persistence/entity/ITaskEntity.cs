@@ -39,7 +39,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         new string Description { get; set; }
 
-		IExecutionEntity GetExecution();
 		void SetExecution(IExecutionEntity value);
 
 		new string ExecutionId { get; set; }

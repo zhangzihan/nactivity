@@ -163,11 +163,14 @@ namespace Sys.Workflow.Client.Tests.Models
 
 				//commandExecutor.Execute(new CompleteTaskCmd(task.Id, vars));
 
-				commandExecutor.Execute(new ReturnToActivityCmd(task.Id, "Task_085qd6k", "流程1", vars));
+				var rtasks = processEngine.TaskService.RunTask(task.Id, "Task_085qd6k", "流程1", vars);
 				tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
 
-				commandExecutor.Execute(new ReturnToActivityCmd(task.Id, "ExclusiveGateway_1y6gcmn", "并行", vars));
+				rtasks = commandExecutor.Execute(new RunTaskCmd(null, "Task_0opugm1", "流程2", vars, businessKey: bizId));
 				tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
+
+				//commandExecutor.Execute(new ReturnToActivityCmd("ExclusiveGateway_1y6gcmn", "并行", vars, businessKey: bizId));
+				//tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
 
 				//var execution = processEngineConfig.ExecutionEntityManager.CreateChildExecution(processInstance as IExecutionEntity);
 				//var task = processEngineConfig.TaskEntityManager.Create();
@@ -177,19 +180,23 @@ namespace Sys.Workflow.Client.Tests.Models
 
 				tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
 
-				//IList<ITask> u2tasks = processEngine.TaskService.GetMyTasks(user2);
+				IList<ITask> u2tasks = processEngine.TaskService.GetMyTasks(user2);
 
-				//IList<ITask> u1tasks = processEngine.TaskService.GetMyTasks(user1);
+				IList<ITask> u1tasks = processEngine.TaskService.GetMyTasks(user1);
 
-				//commandExecutor.Execute(new CompleteTaskCmd(u1tasks[0].Id, vars));
+				commandExecutor.Execute(new CompleteTaskCmd(u1tasks[0].Id, vars));
 
-				//commandExecutor.Execute(new CompleteTaskCmd(u2tasks[0].Id, vars));
+				commandExecutor.Execute(new CompleteTaskCmd(u2tasks[0].Id, vars));
 
-				//u2tasks = processEngine.TaskService.GetMyTasks(user2);
+				u2tasks = processEngine.TaskService.GetMyTasks(user2);
 
-				//u1tasks = processEngine.TaskService.GetMyTasks(user1); 
+				u1tasks = processEngine.TaskService.GetMyTasks(user1);
 
-				//tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
+				tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
+
+				commandExecutor.Execute(new CompleteTaskCmd(tasks.FirstOrDefault().Id, vars));
+
+				tasks = processEngine.TaskService.CreateTaskQuery().SetProcessInstanceId(processInstance.Id).List();
 
 				//完成用户1的任务
 				//_ = taskClient.CompleteTask(new CompleteTaskCmd
@@ -215,7 +222,7 @@ namespace Sys.Workflow.Client.Tests.Models
 				//	})
 				//}).GetAwaiter().GetResult();
 
-				//Assert.NotEmpty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+				Assert.Empty(tasks);
 			});
 
 			Assert.Null(ex);
@@ -400,7 +407,7 @@ namespace Sys.Workflow.Client.Tests.Models
 				tasks = processEngine.TaskService.GetMyTasks(users[0]);
 				task = tasks[0] as ITaskEntity;
 
-				commandExecutor.Execute(new ReturnToActivityCmd(task.Id, list[0].Id, $"回退测试到{list[0].Name}"));
+				commandExecutor.Execute(new RunTaskCmd(task.Id, list[0].Id, $"回退测试到{list[0].Name}"));
 			}
 			catch (Exception ex)
 			{
@@ -463,7 +470,7 @@ namespace Sys.Workflow.Client.Tests.Models
 			tasks = processEngine.TaskService.GetMyTasks("节点3");
 			task = tasks[0] as ITaskEntity;
 
-			commandExecutor.Execute(new ReturnToActivityCmd(task.Id, list[0].Id, $"回退测试到{list[0].Name}"));
+			commandExecutor.Execute(new RunTaskCmd(task.Id, list[0].Id, $"回退测试到{list[0].Name}"));
 		}
 
 		[Theory]

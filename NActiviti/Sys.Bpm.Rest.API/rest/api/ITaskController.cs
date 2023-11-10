@@ -152,8 +152,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <summary>
         /// 审批类型任务-退回到
         /// </summary>
-        /// <param name="cmd" cref="ReturnToTaskCmd">退回到</param>
+        /// <param name="cmd" cref="RunTaskCmd">退回到</param>
         /// <returns></returns>
-        Task<bool> ReturnTo(ReturnToTaskCmd cmd);
+        Task<bool> ReturnTo(RunTaskCmd cmd);
     }
 }

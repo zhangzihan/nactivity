@@ -26,516 +26,516 @@ using Sys.Workflow.Engine.Impl.Identities;
 
 namespace Sys.Workflow.Cloud.Services.Core
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ProcessEngineWrapper
-    {
-        private readonly ILogger logger = null;
+	/// <summary>
+	/// 
+	/// </summary>
+	public class ProcessEngineWrapper
+	{
+		private readonly ILogger logger = null;
 
-        private readonly ProcessInstanceConverter processInstanceConverter;
-        private readonly IRuntimeService runtimeService;
-        private readonly ITaskService taskService;
-        private readonly TaskConverter taskConverter;
-        private readonly PageableTaskRepositoryService pageableTaskService;
-        private readonly SecurityPoliciesApplicationService securityService;
-        private readonly IRepositoryService repositoryService;
-        private readonly AuthenticationWrapper authenticationWrapper;
-        private PageableProcessInstanceRepositoryService pageableProcessInstanceService;
-        private readonly IApplicationEventPublisher eventPublisher;
-        private readonly IProcessEngine processEngine;
-        private readonly IHistoryService historyService;
-        private readonly HistoricInstanceConverter historicInstanceConverter;
+		private readonly ProcessInstanceConverter processInstanceConverter;
+		private readonly IRuntimeService runtimeService;
+		private readonly ITaskService taskService;
+		private readonly TaskConverter taskConverter;
+		private readonly PageableTaskRepositoryService pageableTaskService;
+		private readonly SecurityPoliciesApplicationService securityService;
+		private readonly IRepositoryService repositoryService;
+		private readonly AuthenticationWrapper authenticationWrapper;
+		private PageableProcessInstanceRepositoryService pageableProcessInstanceService;
+		private readonly IApplicationEventPublisher eventPublisher;
+		private readonly IProcessEngine processEngine;
+		private readonly IHistoryService historyService;
+		private readonly HistoricInstanceConverter historicInstanceConverter;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public ProcessEngineWrapper(ProcessInstanceConverter processInstanceConverter,
-            PageableProcessInstanceRepositoryService pageableProcessInstanceService,
-            TaskConverter taskConverter,
-            PageableTaskRepositoryService pageableTaskService,
-            MessageProducerActivitiEventListener listener,
-            SecurityPoliciesApplicationService securityService,
-            AuthenticationWrapper authenticationWrapper,
-            IApplicationEventPublisher eventPublisher,
-            IProcessEngine processEngine,
-            HistoricInstanceConverter historicInstanceConverter,
-            ILoggerFactory loggerFactory)
-        {
-            this.processEngine = processEngine;
-            this.processInstanceConverter = processInstanceConverter;
-            this.runtimeService = processEngine.RuntimeService;
-            this.pageableProcessInstanceService = pageableProcessInstanceService;
-            this.taskService = processEngine.TaskService;
-            this.taskConverter = taskConverter;
-            this.pageableTaskService = pageableTaskService;
-            this.historyService = processEngine.HistoryService;
+		/// <summary>
+		/// 
+		/// </summary>
+		public ProcessEngineWrapper(ProcessInstanceConverter processInstanceConverter,
+			PageableProcessInstanceRepositoryService pageableProcessInstanceService,
+			TaskConverter taskConverter,
+			PageableTaskRepositoryService pageableTaskService,
+			MessageProducerActivitiEventListener listener,
+			SecurityPoliciesApplicationService securityService,
+			AuthenticationWrapper authenticationWrapper,
+			IApplicationEventPublisher eventPublisher,
+			IProcessEngine processEngine,
+			HistoricInstanceConverter historicInstanceConverter,
+			ILoggerFactory loggerFactory)
+		{
+			this.processEngine = processEngine;
+			this.processInstanceConverter = processInstanceConverter;
+			this.runtimeService = processEngine.RuntimeService;
+			this.pageableProcessInstanceService = pageableProcessInstanceService;
+			this.taskService = processEngine.TaskService;
+			this.taskConverter = taskConverter;
+			this.pageableTaskService = pageableTaskService;
+			this.historyService = processEngine.HistoryService;
 #warning 暂时不处理事件侦听
-            //this.runtimeService.addEventListener(listener);
-            this.securityService = securityService;
-            this.repositoryService = processEngine.RepositoryService;
-            this.authenticationWrapper = authenticationWrapper;
-            this.eventPublisher = eventPublisher;
-            this.historicInstanceConverter = historicInstanceConverter;
-            logger = loggerFactory.CreateLogger<ProcessEngineWrapper>();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IPage<ProcessInstance> GetProcessInstances(Pageable pageable)
-        {
-            return pageableProcessInstanceService.GetProcessInstances(pageable);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IPage<ProcessInstance> GetAllProcessInstances(Pageable pageable)
-        {
-            return pageableProcessInstanceService.GetAllProcessInstances(pageable);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual async Task<ProcessInstance[]> StartProcessAsync(IStartProcessInstanceCmd[] cmds)
-        {
-            //if (!securityService.canWrite(processDefinitionKey))
-            //{
-            //    LOGGER.debug("User " + authenticationWrapper.AuthenticatedUserId + " not permitted to access definition " + processDefinitionKey);
-            //    throw new ActivitiForbiddenException("Operation not permitted for " + processDefinitionKey);
-            //}
-
-            IProcessInstance[] processInstance = await runtimeService.StartProcessInstanceByCmdAsync(cmds).ConfigureAwait(false);
-
-            return processInstanceConverter.From(processInstance).ToArray();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void Signal(SignalCmd signalCmd)
-        {
-            //TODO: plan is to restrict access to events using a new security policy on events
-            // - that's another piece of work though so for now no security here
-            if (string.IsNullOrWhiteSpace(signalCmd.ExecutionId) == false)
-            {
-                runtimeService.SignalEventReceived(signalCmd.Name, signalCmd.ExecutionId, signalCmd.InputVariables);
-            }
-            else
-            {
-                runtimeService.SignalEventReceivedWithTenantId(signalCmd.Name, signalCmd.InputVariables, signalCmd.TenantId);
-            }
-
-            eventPublisher.PublishEvent(signalCmd);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual ProcessInstance Suspend(SuspendProcessInstanceCmd suspendProcessInstanceCmd)
-        {
-            runtimeService.SuspendProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId);
-
-            return GetProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId, SuspensionStateProvider.SUSPENDED);
-        }
-
-        private void VerifyCanWriteToProcessInstance(string processInstanceId)
-        {
-            ProcessInstance processInstance = GetProcessInstanceById(processInstanceId);
-            if (processInstance is null)
-            {
-                throw new ActivitiException("Unable to find process instance for the given id: " + processInstanceId);
-            }
-
-            IProcessDefinition processDefinition = repositoryService.GetProcessDefinition(processInstance.ProcessDefinitionId);
-            if (processDefinition is null)
-            {
-                throw new ActivitiException("Unable to find process definition for the given id: " + processInstance.ProcessDefinitionId);
-            }
-
-            //if (!securityService.canWrite(processDefinition.Key))
-            //{
-            //    LOGGER.debug("User " + authenticationWrapper.AuthenticatedUserId + " not permitted to access definition " + processDefinition.Key);
-            //    throw new ActivitiForbiddenException("Operation not permitted for " + processDefinition.Key);
-            //}
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual ProcessInstance Activate(ActivateProcessInstanceCmd activateProcessInstanceCmd)
-        {
-            VerifyCanWriteToProcessInstance(activateProcessInstanceCmd.ProcessInstanceId);
-            runtimeService.ActivateProcessInstanceById(activateProcessInstanceCmd.ProcessInstanceId);
-
-            return GetProcessInstanceById(activateProcessInstanceCmd.ProcessInstanceId);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual ProcessInstance GetProcessInstanceById(string processInstanceId, ISuspensionState suspensionState = null)
-        {
-            IProcessInstance processInstance = (runtimeService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetProcessInstanceByIdCmd(processInstanceId, suspensionState));
-
-            return processInstanceConverter.From(processInstance);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual HistoricInstance GetHistoryProcessInstanceById(string processInstanceId)
-        {
-            IHistoricProcessInstance processInstance = (this.historyService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetHistoricProcessInstanceByIdCmd(processInstanceId));
-
-            return historicInstanceConverter.From(processInstance);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="processInstanceId"></param>
-        /// <param name="taskId"></param>
-        /// <returns></returns>
-        public IList<HistoricVariableInstance> GetHistoricVariables(string processInstanceId, string taskId)
-        {
-            return GetHistoricVariables(new ProcessVariablesQuery
-            {
-                ProcessInstanceId = processInstanceId,
-                TaskId = taskId
-            });
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="processInstanceId"></param>
-        /// <param name="taskId"></param>
-        /// <returns></returns>
-        public IList<HistoricVariableInstance> GetHistoricVariables(ProcessVariablesQuery qo)
-        {
-            var query = this.historyService.CreateHistoricVariableInstanceQuery()
-                .SetProcessInstanceId(qo.ProcessInstanceId)
-                .SetTaskId(qo.TaskId)
-                .SetVariableName(qo.VariableName);
-
-            if (qo.ExcludeTaskVariables)
-            {
-                query.SetExcludeTaskVariables();
-            }
-
-            IList<IHistoricVariableInstance> variableInstances = query.List();
-
-            IList<HistoricVariableInstance> resourcesList = new List<HistoricVariableInstance>();
-            foreach (IHistoricVariableInstance variableInstance in variableInstances)
-            {
-                resourcesList.Add(new HistoricVariableInstance(variableInstance.ProcessInstanceId, variableInstance.VariableName, variableInstance.VariableTypeName, variableInstance.Value, variableInstance.TaskId));
-            }
-
-            return resourcesList;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<string> GetActiveActivityIds(string executionId)
-        {
-            return runtimeService.GetActiveActivityIds(executionId);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IPage<TaskModel> GetTasks(TaskQuery query)
-        {
-            return pageableTaskService.GetTasks(query);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-
-        public virtual IPage<TaskModel> GetAllTasks(TaskQuery query)
-        {
-            return pageableTaskService.GetAllTasks(query);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual TaskModel GetTaskById(string taskId)
-        {
-            ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetTaskByIdCmd(taskId));
-
-            return taskConverter.From(task);
-        }
-
-        public virtual TaskModel[] ReassignTaskUsers(ReassignTaskUserCmd cmd)
-        {
-            ITask[] tasks = taskService.ReassignTaskUsers(cmd.Assignees);
-
-            return taskConverter.From(tasks).ToArray();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual TaskModel ClaimTask(ClaimTaskCmd claimTaskCmd)
-        {
-            taskService.Claim(claimTaskCmd.TaskId, claimTaskCmd.Assignee);
-
-            return taskConverter.From(taskService.CreateTaskQuery().SetTaskId(claimTaskCmd.TaskId).SingleResult());
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cmd"></param>
-        public void ReturnTo(ReturnToTaskCmd cmd)
-        {
-            _ = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.ReturnToActivityCmd(cmd.TaskId, cmd.ActivityId, cmd.ReturnReason, cmd.Variables));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual TaskModel ReleaseTask(ReleaseTaskCmd cmd)
-        {
-            ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.AssigneeReleaseTaskCmd(cmd.TaskId, cmd.BusinessKey, cmd.Assignee, cmd.Reason));
-
-            return taskConverter.From(taskService.CreateTaskQuery()
-                .SetTaskId(task.Id)
-                .SingleResult());
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void CompleteTask(CompleteTaskCmd cmd)
-        {
-            if (cmd is not null)
-            {
-                IDictionary<string, object> variables = new Dictionary<string, object>(cmd.OutputVariables);
-                if (cmd.RuntimeAssigneeUser is not null && (cmd.RuntimeAssigneeUser.Users?.Length).GetValueOrDefault() > 0)
-                {
-                    variables.Add(BpmnXMLConstants.RUNTIME_ASSIGNEE_USER_VARIABLE_NAME, cmd.RuntimeAssigneeUser);
-                }
-
-                if (string.IsNullOrWhiteSpace(cmd.TaskId) == false)
-                {
-                    taskService.Complete(cmd.TaskId, variables, cmd.LocalScope, cmd.NotFoundThrowError);
-                }
-                else if (string.IsNullOrWhiteSpace(cmd.BusinessKey) == false && string.IsNullOrWhiteSpace(cmd.Assignee) == false)
-                {
-                    taskService.Complete(cmd.BusinessKey, cmd.TaskName, cmd.Assignee, cmd.Comment, variables, cmd.LocalScope, notFoundThrowError: cmd.NotFoundThrowError);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void CompleteApprovalTask(CompleteTaskCmd completeTaskCmd)
-        {
-            IDictionary<string, object> variables = new Dictionary<string, object>(completeTaskCmd.OutputVariables);
-
-            variables.TryGetValue(WorkflowVariable.GLOBAL_APPROVALED_COMMENTS, out var comment);
-
-            taskService.Complete(completeTaskCmd.TaskId, comment?.ToString(), variables, completeTaskCmd.LocalScope);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-
-        public void SetTaskVariables(SetTaskVariablesCmd value)
-        {
-            taskService.SetVariables(value.TaskId, value.Variables);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void SetTaskVariablesLocal(SetTaskVariablesCmd value)
-        {
-            taskService.SetVariablesLocal(value.TaskId, value.Variables);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void SetProcessVariables(SetProcessVariablesCmd value)
-        {
-            ProcessInstance processInstance = GetProcessInstanceById(value.ProcessId);
-            VerifyCanWriteToProcessInstance(processInstance.Id);
-            runtimeService.SetVariables(value.ProcessId, value.Variables);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void RemoveProcessVariables(RemoveProcessVariablesCmd removeProcessVariablesCmd)
-        {
-            ProcessInstance processInstance = GetProcessInstanceById(removeProcessVariablesCmd.ProcessId);
-            VerifyCanWriteToProcessInstance(processInstance.Id);
-            runtimeService.RemoveVariables(removeProcessVariablesCmd.ProcessId, removeProcessVariablesCmd.VariableNames);
-        }
-
-        /// <summary>
-        /// Delete task by id. </summary>
-        /// <param name="taskId"> the task id to delete </param>
-        public virtual void DeleteTask(string taskId)
-        {
-            DeleteTask(taskId, "Cancelled by " + Authentication.AuthenticatedUser.Id);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void DeleteTask(string taskId, string reason, bool cascade = false)
-        {
-            TaskModel task = GetTaskById(taskId);
-            if (task is null)
-            {
-                throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + taskId);
-            }
-
-            CheckWritePermissionsOnTask(task);
-
-            taskService.DeleteTask(taskId, reason, cascade);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void CheckWritePermissionsOnTask(TaskModel task)
-        {
-            //TODO: to check the user write permissions on task
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual TaskModel CreateNewTask(CreateTaskCmd createTaskCmd)
-        {
-            ITask task = taskService.CreateNewTask(createTaskCmd.Name, createTaskCmd.Description, createTaskCmd.DueDate, createTaskCmd.Priority, createTaskCmd.ParentTaskId, createTaskCmd.Assignee, securityService.User.TenantId);
-
-            return taskConverter.From(task);
-        }
-
-        /// <summary>
-        /// 追加任务处理人
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <returns></returns>
-        public virtual TaskModel[] AppendCountersign(AppendCountersignCmd cmd)
-        {
-            ITask[] tasks = taskService.AddCountersign(cmd.TaskId, cmd.Assignees, securityService.User.TenantId);
-
-            return tasks.Select(x => taskConverter.From(x)).ToArray();
-        }
-
-        /// <summary>
-        /// 终止任务
-        /// </summary>
-        /// <param name="cmd">终止任务命令</param>
-        public virtual void TerminateTask(TerminateTaskCmd cmd)
-        {
-            taskService.TerminateTask(cmd.TaskId, cmd.TerminateReason, true, cmd.OutputVariables, cmd.TransientVariables);
-        }
-
-        /// <summary>
-        /// 任务转办
-        /// </summary>
-        /// <param name="cmd">任务转办命令</param>
-        /// <returns></returns>
-        public virtual TaskModel[] TransferTask(ITransferTaskCmd cmd)
-        {
-            ITask[] tasks = taskService.Transfer(cmd);
-
-            return tasks.Select(x => taskConverter.From(x)).ToArray();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual TaskModel CreateNewSubtask(CreateTaskCmd createSubtaskCmd)
-        {
-            ITask task = taskService.CreateNewSubtask(createSubtaskCmd.Name, createSubtaskCmd.Description, createSubtaskCmd.DueDate, createSubtaskCmd.Priority, createSubtaskCmd.ParentTaskId, createSubtaskCmd.Assignee, securityService.User.TenantId);
-
-            return taskConverter.From(task);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void TerminateProcessInstance(TerminateProcessInstanceCmd[] cmds)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var cmd in cmds ?? new TerminateProcessInstanceCmd[0])
-            {
-                try
-                {
-                    runtimeService.TerminateProcessInstance(cmd.ProcessInstanceId, cmd.BusinessKey, cmd.Reason, cmd.OutputVariables);
-                }
-                catch (ActivitiObjectNotFoundException ex)
-                {
-                    logger.LogWarning(ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    sb.AppendLine($"流程终止失败:processInstanceId={cmd.ProcessInstanceId} businessKey={cmd.BusinessKey}\r\n{ex.Message}");
-                }
-            }
-
-            if (sb.Length > 0)
-            {
-                throw new TerminateProcessInstanceException(sb.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void TerminateProcessInstance(string processInstanceId)
-        {
-            TerminateProcessInstance(processInstanceId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void TerminateProcessInstance(string processInstanceId, string reason)
-        {
-            try
-            {
-                //VerifyCanWriteToProcessInstance(processInstanceId);
-                runtimeService.DeleteProcessInstance(processInstanceId, reason ?? "Cancelled");
-            }
-            catch (ActivitiObjectNotFoundException ex)
-            {
-                logger.LogWarning(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<ITask> GetSubtasks(string parentTaskId)
-        {
-            return taskService.GetSubTasks(parentTaskId);
-        }
-
-        /// <summary>
-        /// 更新任务
-        /// </summary>
-        public virtual TaskModel UpdateTask(IUpdateTaskCmd updateTaskCmd)
-        {
-            ITask task = taskService.UpdateTask(updateTaskCmd);
-
-            return taskConverter.From(task);
-        }
-    }
+			//this.runtimeService.addEventListener(listener);
+			this.securityService = securityService;
+			this.repositoryService = processEngine.RepositoryService;
+			this.authenticationWrapper = authenticationWrapper;
+			this.eventPublisher = eventPublisher;
+			this.historicInstanceConverter = historicInstanceConverter;
+			logger = loggerFactory.CreateLogger<ProcessEngineWrapper>();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IPage<ProcessInstance> GetProcessInstances(Pageable pageable)
+		{
+			return pageableProcessInstanceService.GetProcessInstances(pageable);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IPage<ProcessInstance> GetAllProcessInstances(Pageable pageable)
+		{
+			return pageableProcessInstanceService.GetAllProcessInstances(pageable);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual async Task<ProcessInstance[]> StartProcessAsync(IStartProcessInstanceCmd[] cmds)
+		{
+			//if (!securityService.canWrite(processDefinitionKey))
+			//{
+			//    LOGGER.debug("User " + authenticationWrapper.AuthenticatedUserId + " not permitted to access definition " + processDefinitionKey);
+			//    throw new ActivitiForbiddenException("Operation not permitted for " + processDefinitionKey);
+			//}
+
+			IProcessInstance[] processInstance = await runtimeService.StartProcessInstanceByCmdAsync(cmds).ConfigureAwait(false);
+
+			return processInstanceConverter.From(processInstance).ToArray();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void Signal(SignalCmd signalCmd)
+		{
+			//TODO: plan is to restrict access to events using a new security policy on events
+			// - that's another piece of work though so for now no security here
+			if (string.IsNullOrWhiteSpace(signalCmd.ExecutionId) == false)
+			{
+				runtimeService.SignalEventReceived(signalCmd.Name, signalCmd.ExecutionId, signalCmd.InputVariables);
+			}
+			else
+			{
+				runtimeService.SignalEventReceivedWithTenantId(signalCmd.Name, signalCmd.InputVariables, signalCmd.TenantId);
+			}
+
+			eventPublisher.PublishEvent(signalCmd);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual ProcessInstance Suspend(SuspendProcessInstanceCmd suspendProcessInstanceCmd)
+		{
+			runtimeService.SuspendProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId);
+
+			return GetProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId, SuspensionStateProvider.SUSPENDED);
+		}
+
+		private void VerifyCanWriteToProcessInstance(string processInstanceId)
+		{
+			ProcessInstance processInstance = GetProcessInstanceById(processInstanceId);
+			if (processInstance is null)
+			{
+				throw new ActivitiException("Unable to find process instance for the given id: " + processInstanceId);
+			}
+
+			IProcessDefinition processDefinition = repositoryService.GetProcessDefinition(processInstance.ProcessDefinitionId);
+			if (processDefinition is null)
+			{
+				throw new ActivitiException("Unable to find process definition for the given id: " + processInstance.ProcessDefinitionId);
+			}
+
+			//if (!securityService.canWrite(processDefinition.Key))
+			//{
+			//    LOGGER.debug("User " + authenticationWrapper.AuthenticatedUserId + " not permitted to access definition " + processDefinition.Key);
+			//    throw new ActivitiForbiddenException("Operation not permitted for " + processDefinition.Key);
+			//}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual ProcessInstance Activate(ActivateProcessInstanceCmd activateProcessInstanceCmd)
+		{
+			VerifyCanWriteToProcessInstance(activateProcessInstanceCmd.ProcessInstanceId);
+			runtimeService.ActivateProcessInstanceById(activateProcessInstanceCmd.ProcessInstanceId);
+
+			return GetProcessInstanceById(activateProcessInstanceCmd.ProcessInstanceId);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual ProcessInstance GetProcessInstanceById(string processInstanceId, ISuspensionState suspensionState = null)
+		{
+			IProcessInstance processInstance = (runtimeService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetProcessInstanceByIdCmd(processInstanceId, suspensionState));
+
+			return processInstanceConverter.From(processInstance);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual HistoricInstance GetHistoryProcessInstanceById(string processInstanceId)
+		{
+			IHistoricProcessInstance processInstance = (this.historyService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetHistoricProcessInstanceByIdCmd(processInstanceId));
+
+			return historicInstanceConverter.From(processInstance);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="processInstanceId"></param>
+		/// <param name="taskId"></param>
+		/// <returns></returns>
+		public IList<HistoricVariableInstance> GetHistoricVariables(string processInstanceId, string taskId)
+		{
+			return GetHistoricVariables(new ProcessVariablesQuery
+			{
+				ProcessInstanceId = processInstanceId,
+				TaskId = taskId
+			});
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="processInstanceId"></param>
+		/// <param name="taskId"></param>
+		/// <returns></returns>
+		public IList<HistoricVariableInstance> GetHistoricVariables(ProcessVariablesQuery qo)
+		{
+			var query = this.historyService.CreateHistoricVariableInstanceQuery()
+				.SetProcessInstanceId(qo.ProcessInstanceId)
+				.SetTaskId(qo.TaskId)
+				.SetVariableName(qo.VariableName);
+
+			if (qo.ExcludeTaskVariables)
+			{
+				query.SetExcludeTaskVariables();
+			}
+
+			IList<IHistoricVariableInstance> variableInstances = query.List();
+
+			IList<HistoricVariableInstance> resourcesList = new List<HistoricVariableInstance>();
+			foreach (IHistoricVariableInstance variableInstance in variableInstances)
+			{
+				resourcesList.Add(new HistoricVariableInstance(variableInstance.ProcessInstanceId, variableInstance.VariableName, variableInstance.VariableTypeName, variableInstance.Value, variableInstance.TaskId));
+			}
+
+			return resourcesList;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IList<string> GetActiveActivityIds(string executionId)
+		{
+			return runtimeService.GetActiveActivityIds(executionId);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IPage<TaskModel> GetTasks(TaskQuery query)
+		{
+			return pageableTaskService.GetTasks(query);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+
+		public virtual IPage<TaskModel> GetAllTasks(TaskQuery query)
+		{
+			return pageableTaskService.GetAllTasks(query);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual TaskModel GetTaskById(string taskId)
+		{
+			ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetTaskByIdCmd(taskId));
+
+			return taskConverter.From(task);
+		}
+
+		public virtual TaskModel[] ReassignTaskUsers(ReassignTaskUserCmd cmd)
+		{
+			ITask[] tasks = taskService.ReassignTaskUsers(cmd.Assignees);
+
+			return taskConverter.From(tasks).ToArray();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual TaskModel ClaimTask(ClaimTaskCmd claimTaskCmd)
+		{
+			taskService.Claim(claimTaskCmd.TaskId, claimTaskCmd.Assignee);
+
+			return taskConverter.From(taskService.CreateTaskQuery().SetTaskId(claimTaskCmd.TaskId).SingleResult());
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="cmd"></param>
+		public void ReturnTo(RunTaskCmd cmd)
+		{
+			_ = taskService.RunTask(cmd.TaskId, cmd.ActivityId, cmd.ReturnReason, cmd.Variables, cmd.TransientVariables, cmd.BusinessKey);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual TaskModel ReleaseTask(ReleaseTaskCmd cmd)
+		{
+			ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.AssigneeReleaseTaskCmd(cmd.TaskId, cmd.BusinessKey, cmd.Assignee, cmd.Reason));
+
+			return taskConverter.From(taskService.CreateTaskQuery()
+				.SetTaskId(task.Id)
+				.SingleResult());
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void CompleteTask(CompleteTaskCmd cmd)
+		{
+			if (cmd is not null)
+			{
+				IDictionary<string, object> variables = new Dictionary<string, object>(cmd.OutputVariables);
+				if (cmd.RuntimeAssigneeUser is not null && (cmd.RuntimeAssigneeUser.Users?.Length).GetValueOrDefault() > 0)
+				{
+					variables.Add(BpmnXMLConstants.RUNTIME_ASSIGNEE_USER_VARIABLE_NAME, cmd.RuntimeAssigneeUser);
+				}
+
+				if (string.IsNullOrWhiteSpace(cmd.TaskId) == false)
+				{
+					taskService.Complete(cmd.TaskId, variables, cmd.LocalScope, cmd.NotFoundThrowError);
+				}
+				else if (string.IsNullOrWhiteSpace(cmd.BusinessKey) == false && string.IsNullOrWhiteSpace(cmd.Assignee) == false)
+				{
+					taskService.Complete(cmd.BusinessKey, cmd.TaskName, cmd.Assignee, cmd.Comment, variables, cmd.LocalScope, notFoundThrowError: cmd.NotFoundThrowError);
+				}
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void CompleteApprovalTask(CompleteTaskCmd completeTaskCmd)
+		{
+			IDictionary<string, object> variables = new Dictionary<string, object>(completeTaskCmd.OutputVariables);
+
+			variables.TryGetValue(WorkflowVariable.GLOBAL_APPROVALED_COMMENTS, out var comment);
+
+			taskService.Complete(completeTaskCmd.TaskId, comment?.ToString(), variables, completeTaskCmd.LocalScope);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+
+		public void SetTaskVariables(SetTaskVariablesCmd value)
+		{
+			taskService.SetVariables(value.TaskId, value.Variables);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void SetTaskVariablesLocal(SetTaskVariablesCmd value)
+		{
+			taskService.SetVariablesLocal(value.TaskId, value.Variables);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void SetProcessVariables(SetProcessVariablesCmd value)
+		{
+			ProcessInstance processInstance = GetProcessInstanceById(value.ProcessId);
+			VerifyCanWriteToProcessInstance(processInstance.Id);
+			runtimeService.SetVariables(value.ProcessId, value.Variables);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void RemoveProcessVariables(RemoveProcessVariablesCmd removeProcessVariablesCmd)
+		{
+			ProcessInstance processInstance = GetProcessInstanceById(removeProcessVariablesCmd.ProcessId);
+			VerifyCanWriteToProcessInstance(processInstance.Id);
+			runtimeService.RemoveVariables(removeProcessVariablesCmd.ProcessId, removeProcessVariablesCmd.VariableNames);
+		}
+
+		/// <summary>
+		/// Delete task by id. </summary>
+		/// <param name="taskId"> the task id to delete </param>
+		public virtual void DeleteTask(string taskId)
+		{
+			DeleteTask(taskId, "Cancelled by " + Authentication.AuthenticatedUser.Id);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void DeleteTask(string taskId, string reason, bool cascade = false)
+		{
+			TaskModel task = GetTaskById(taskId);
+			if (task is null)
+			{
+				throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + taskId);
+			}
+
+			CheckWritePermissionsOnTask(task);
+
+			taskService.DeleteTask(taskId, reason, cascade);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void CheckWritePermissionsOnTask(TaskModel task)
+		{
+			//TODO: to check the user write permissions on task
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual TaskModel CreateNewTask(CreateTaskCmd createTaskCmd)
+		{
+			ITask task = taskService.CreateNewTask(createTaskCmd.Name, createTaskCmd.Description, createTaskCmd.DueDate, createTaskCmd.Priority, createTaskCmd.ParentTaskId, createTaskCmd.Assignee, securityService.User.TenantId);
+
+			return taskConverter.From(task);
+		}
+
+		/// <summary>
+		/// 追加任务处理人
+		/// </summary>
+		/// <param name="cmd"></param>
+		/// <returns></returns>
+		public virtual TaskModel[] AppendCountersign(AppendCountersignCmd cmd)
+		{
+			ITask[] tasks = taskService.AddCountersign(cmd.TaskId, cmd.Assignees, securityService.User.TenantId);
+
+			return tasks.Select(x => taskConverter.From(x)).ToArray();
+		}
+
+		/// <summary>
+		/// 终止任务
+		/// </summary>
+		/// <param name="cmd">终止任务命令</param>
+		public virtual void TerminateTask(TerminateTaskCmd cmd)
+		{
+			taskService.TerminateTask(cmd.TaskId, cmd.TerminateReason, true, cmd.OutputVariables, cmd.TransientVariables);
+		}
+
+		/// <summary>
+		/// 任务转办
+		/// </summary>
+		/// <param name="cmd">任务转办命令</param>
+		/// <returns></returns>
+		public virtual TaskModel[] TransferTask(ITransferTaskCmd cmd)
+		{
+			ITask[] tasks = taskService.Transfer(cmd);
+
+			return tasks.Select(x => taskConverter.From(x)).ToArray();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual TaskModel CreateNewSubtask(CreateTaskCmd createSubtaskCmd)
+		{
+			ITask task = taskService.CreateNewSubtask(createSubtaskCmd.Name, createSubtaskCmd.Description, createSubtaskCmd.DueDate, createSubtaskCmd.Priority, createSubtaskCmd.ParentTaskId, createSubtaskCmd.Assignee, securityService.User.TenantId);
+
+			return taskConverter.From(task);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void TerminateProcessInstance(TerminateProcessInstanceCmd[] cmds)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (var cmd in cmds ?? new TerminateProcessInstanceCmd[0])
+			{
+				try
+				{
+					runtimeService.TerminateProcessInstance(cmd.ProcessInstanceId, cmd.BusinessKey, cmd.Reason, cmd.OutputVariables);
+				}
+				catch (ActivitiObjectNotFoundException ex)
+				{
+					logger.LogWarning(ex.Message);
+				}
+				catch (Exception ex)
+				{
+					sb.AppendLine($"流程终止失败:processInstanceId={cmd.ProcessInstanceId} businessKey={cmd.BusinessKey}\r\n{ex.Message}");
+				}
+			}
+
+			if (sb.Length > 0)
+			{
+				throw new TerminateProcessInstanceException(sb.ToString());
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void TerminateProcessInstance(string processInstanceId)
+		{
+			TerminateProcessInstance(processInstanceId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual void TerminateProcessInstance(string processInstanceId, string reason)
+		{
+			try
+			{
+				//VerifyCanWriteToProcessInstance(processInstanceId);
+				runtimeService.DeleteProcessInstance(processInstanceId, reason ?? "Cancelled");
+			}
+			catch (ActivitiObjectNotFoundException ex)
+			{
+				logger.LogWarning(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual IList<ITask> GetSubtasks(string parentTaskId)
+		{
+			return taskService.GetSubTasks(parentTaskId);
+		}
+
+		/// <summary>
+		/// 更新任务
+		/// </summary>
+		public virtual TaskModel UpdateTask(IUpdateTaskCmd updateTaskCmd)
+		{
+			ITask task = taskService.UpdateTask(updateTaskCmd);
+
+			return taskConverter.From(task);
+		}
+	}
 }

@@ -676,5 +676,12 @@ namespace Sys.Workflow.Engine.Impl
 
 			return ExecuteCommand(cmd);
 		}
+
+		public IList<ITask> RunTask(string taskId, string runActivityId, string runReason, IDictionary<string, object> variables = null, IDictionary<string, object> transientVariables = null, string businessKey = null)
+		{
+			var cmd = new RunTaskCmd(taskId, runActivityId, runReason, variables, transientVariables, businessKey);
+
+			return ExecuteCommand(cmd);
+		}
 	}
 }

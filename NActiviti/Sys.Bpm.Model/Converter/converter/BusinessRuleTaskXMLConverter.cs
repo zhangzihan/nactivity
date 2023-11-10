@@ -37,7 +37,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_TASK_BUSINESSRULE;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             BusinessRuleTask businessRuleTask = new BusinessRuleTask();
             BpmnXMLUtil.AddXMLLocation(businessRuleTask, xtr);
@@ -53,7 +53,7 @@ namespace Sys.Workflow.Bpmn.Converters
             ParseChildElements(XMLElementName, businessRuleTask, model, xtr);
             return businessRuleTask;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             BusinessRuleTask businessRuleTask = (BusinessRuleTask)element;
             string inputVariables = ConvertToDelimitedString(businessRuleTask.InputVariables);
@@ -79,7 +79,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_RULE_EXCLUDE, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
             }
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
     }

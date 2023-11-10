@@ -38,7 +38,7 @@ namespace Sys.Workflow.Bpmn.Converters
             }
         }
 
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             string formKey = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY);
             StartEvent startEvent = null;
@@ -67,7 +67,7 @@ namespace Sys.Workflow.Bpmn.Converters
             return startEvent;
         }
 
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             StartEvent startEvent = (StartEvent)element;
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_EVENT_START_INITIATOR, startEvent.Initiator, xtw);
@@ -79,14 +79,14 @@ namespace Sys.Workflow.Bpmn.Converters
             }
         }
 
-        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             StartEvent startEvent = (StartEvent)element;
             didWriteExtensionStartElement = WriteFormProperties(startEvent, didWriteExtensionStartElement, xtw);
             return didWriteExtensionStartElement;
         }
 
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             StartEvent startEvent = (StartEvent)element;
             WriteEventDefinitions(startEvent, startEvent.EventDefinitions, model, xtw);

@@ -36,7 +36,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_DATA_OBJECT;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ValuedDataObject dataObject = null;
             ItemDefinition itemSubjectRef = new ItemDefinition();
@@ -127,7 +127,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             return dataObject;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ValuedDataObject dataObject = (ValuedDataObject)element;
             if (dataObject.ItemSubjectRef is not null && !string.IsNullOrWhiteSpace(dataObject.ItemSubjectRef.StructureRef))
@@ -135,7 +135,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF, dataObject.ItemSubjectRef.StructureRef, xtw);
             }
         }
-        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             ValuedDataObject dataObject = (ValuedDataObject)element;
 
@@ -175,7 +175,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             return didWriteExtensionStartElement;
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
     }

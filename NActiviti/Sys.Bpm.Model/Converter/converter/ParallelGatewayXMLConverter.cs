@@ -37,7 +37,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_GATEWAY_PARALLEL;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ParallelGateway gateway = new ParallelGateway();
             BpmnXMLUtil.AddXMLLocation(gateway, xtr);
@@ -45,11 +45,11 @@ namespace Sys.Workflow.Bpmn.Converters
             return gateway;
         }
 
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
 
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
 
         }

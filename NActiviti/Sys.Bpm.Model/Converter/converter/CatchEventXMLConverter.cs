@@ -37,18 +37,18 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_EVENT_CATCH;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             IntermediateCatchEvent catchEvent = new IntermediateCatchEvent();
             BpmnXMLUtil.AddXMLLocation(catchEvent, xtr);
             ParseChildElements(XMLElementName, catchEvent, model, xtr);
             return catchEvent;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
 
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             IntermediateCatchEvent catchEvent = (IntermediateCatchEvent)element;
             WriteEventDefinitions(catchEvent, catchEvent.EventDefinitions, model, xtw);

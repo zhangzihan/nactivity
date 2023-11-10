@@ -37,7 +37,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_EVENT_BOUNDARY;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             BoundaryEvent boundaryEvent = new BoundaryEvent();
             BpmnXMLUtil.AddXMLLocation(boundaryEvent, xtr);
@@ -65,7 +65,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             return boundaryEvent;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             BoundaryEvent boundaryEvent = (BoundaryEvent)element;
             if (boundaryEvent.AttachedToRef is not null)
@@ -83,7 +83,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 }
             }
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             BoundaryEvent boundaryEvent = (BoundaryEvent)element;
             WriteEventDefinitions(boundaryEvent, boundaryEvent.EventDefinitions, model, xtw);

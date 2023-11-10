@@ -49,7 +49,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_CALL_ACTIVITY;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             CallActivity callActivity = new CallActivity();
             BpmnXMLUtil.AddXMLLocation(callActivity, xtr);
@@ -72,7 +72,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             return callActivity;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             CallActivity callActivity = (CallActivity)element;
             if (!string.IsNullOrWhiteSpace(callActivity.CalledElement))
@@ -89,14 +89,14 @@ namespace Sys.Workflow.Bpmn.Converters
             }
             xtw.WriteAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERITVARIABLES, callActivity.InheritVariables.ToString());
         }
-        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             CallActivity callActivity = (CallActivity)element;
             didWriteExtensionStartElement = WriteIOParameters(BpmnXMLConstants.ELEMENT_CALL_ACTIVITY_IN_PARAMETERS, callActivity.InParameters, didWriteExtensionStartElement, xtw);
             didWriteExtensionStartElement = WriteIOParameters(BpmnXMLConstants.ELEMENT_CALL_ACTIVITY_OUT_PARAMETERS, callActivity.OutParameters, didWriteExtensionStartElement, xtw);
             return didWriteExtensionStartElement;
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
         private bool WriteIOParameters(string elementName, IList<IOParameter> parameterList, bool didWriteExtensionStartElement, XMLStreamWriter xtw)

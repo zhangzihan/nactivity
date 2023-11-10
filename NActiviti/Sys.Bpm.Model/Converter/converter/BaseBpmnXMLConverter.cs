@@ -209,26 +209,26 @@ namespace Sys.Workflow.Bpmn.Converters
 
         public abstract Type BpmnElementType { get; }
 
-        protected internal abstract BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model);
+        public abstract BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model);
 
         public abstract string XMLElementName { get; }
 
-        protected internal abstract void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw);
+        public abstract void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw);
 
-        protected internal virtual bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public virtual bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             return didWriteExtensionStartElement;
         }
 
-        protected internal abstract void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw);
+        public abstract void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw);
 
         // To BpmnModel converter convenience methods
-        protected internal virtual void ParseChildElements(string elementName, BaseElement parentElement, BpmnModel model, XMLStreamReader xtr)
+        public virtual void ParseChildElements(string elementName, BaseElement parentElement, BpmnModel model, XMLStreamReader xtr)
         {
             ParseChildElements(elementName, parentElement, null, model, xtr);
         }
 
-        protected internal virtual void ParseChildElements(string elementName, BaseElement parentElement, IDictionary<string, BaseChildElementParser> additionalParsers, BpmnModel model, XMLStreamReader xtr)
+        public virtual void ParseChildElements(string elementName, BaseElement parentElement, IDictionary<string, BaseChildElementParser> additionalParsers, BpmnModel model, XMLStreamReader xtr)
         {
 
             IDictionary<string, BaseChildElementParser> childParsers = new Dictionary<string, BaseChildElementParser>();
@@ -239,7 +239,7 @@ namespace Sys.Workflow.Bpmn.Converters
             BpmnXMLUtil.ParseChildElements(elementName, parentElement, xtr, childParsers, model);
         }
 
-        protected internal virtual ExtensionElement ParseExtensionElement(XMLStreamReader xtr)
+        public virtual ExtensionElement ParseExtensionElement(XMLStreamReader xtr)
         {
             ExtensionElement extensionElement = new ExtensionElement
             {
@@ -286,7 +286,7 @@ namespace Sys.Workflow.Bpmn.Converters
             return extensionElement;
         }
 
-        protected internal virtual bool ParseAsync(XMLStreamReader xtr)
+        public virtual bool ParseAsync(XMLStreamReader xtr)
         {
             bool async = false;
             string asyncString = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS);
@@ -297,7 +297,7 @@ namespace Sys.Workflow.Bpmn.Converters
             return async;
         }
 
-        protected internal virtual bool ParseNotExclusive(XMLStreamReader xtr)
+        public virtual bool ParseNotExclusive(XMLStreamReader xtr)
         {
             bool notExclusive = false;
             string exclusiveString = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE);
@@ -308,7 +308,7 @@ namespace Sys.Workflow.Bpmn.Converters
             return notExclusive;
         }
 
-        protected internal virtual bool ParseForCompensation(XMLStreamReader xtr)
+        public virtual bool ParseForCompensation(XMLStreamReader xtr)
         {
             bool isForCompensation = false;
             string compensationString = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION);
@@ -319,19 +319,19 @@ namespace Sys.Workflow.Bpmn.Converters
             return isForCompensation;
         }
 
-        protected internal virtual IList<string> ParseDelimitedList(string expression)
+        public virtual IList<string> ParseDelimitedList(string expression)
         {
             return BpmnXMLUtil.ParseDelimitedList(expression);
         }
 
         // To XML converter convenience methods
 
-        protected internal virtual string ConvertToDelimitedString(IList<string> stringList)
+        public virtual string ConvertToDelimitedString(IList<string> stringList)
         {
             return BpmnXMLUtil.ConvertToDelimitedString(stringList);
         }
 
-        protected internal virtual bool WriteFormProperties(FlowElement flowElement, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public virtual bool WriteFormProperties(FlowElement flowElement, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
 
             IList<FormProperty> propertyList = null;
@@ -400,12 +400,12 @@ namespace Sys.Workflow.Bpmn.Converters
             return didWriteExtensionStartElement;
         }
 
-        protected internal virtual bool WriteListeners(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public virtual bool WriteListeners(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             return ActivitiListenerExport.WriteListeners(element, didWriteExtensionStartElement, xtw);
         }
 
-        protected internal virtual void WriteEventDefinitions(Event parentEvent, IList<EventDefinition> eventDefinitions, BpmnModel model, XMLStreamWriter xtw)
+        public virtual void WriteEventDefinitions(Event parentEvent, IList<EventDefinition> eventDefinitions, BpmnModel model, XMLStreamWriter xtw)
         {
             foreach (EventDefinition eventDefinition in eventDefinitions)
             {
@@ -441,7 +441,7 @@ namespace Sys.Workflow.Bpmn.Converters
         }
 
 
-        protected internal virtual void WriteTimerDefinition(Event parentEvent, TimerEventDefinition timerDefinition, XMLStreamWriter xtw)
+        public virtual void WriteTimerDefinition(Event parentEvent, TimerEventDefinition timerDefinition, XMLStreamWriter xtw)
         {
             xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             if (!string.IsNullOrWhiteSpace(timerDefinition.CalendarName))
@@ -483,7 +483,7 @@ namespace Sys.Workflow.Bpmn.Converters
             xtw.WriteEndElement();
         }
 
-        protected internal virtual void WriteSignalDefinition(Event parentEvent, SignalEventDefinition signalDefinition, XMLStreamWriter xtw)
+        public virtual void WriteSignalDefinition(Event parentEvent, SignalEventDefinition signalDefinition, XMLStreamWriter xtw)
         {
             xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_SIGNALDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_SIGNAL_REF, signalDefinition.SignalRef, xtw);
@@ -499,7 +499,7 @@ namespace Sys.Workflow.Bpmn.Converters
             xtw.WriteEndElement();
         }
 
-        protected internal virtual void WriteCancelDefinition(Event parentEvent, CancelEventDefinition cancelEventDefinition, XMLStreamWriter xtw)
+        public virtual void WriteCancelDefinition(Event parentEvent, CancelEventDefinition cancelEventDefinition, XMLStreamWriter xtw)
         {
             xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_CANCELDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(cancelEventDefinition, false, xtw);
@@ -510,7 +510,7 @@ namespace Sys.Workflow.Bpmn.Converters
             xtw.WriteEndElement();
         }
 
-        protected internal virtual void WriteCompensateDefinition(Event parentEvent, CompensateEventDefinition compensateEventDefinition, XMLStreamWriter xtw)
+        public virtual void WriteCompensateDefinition(Event parentEvent, CompensateEventDefinition compensateEventDefinition, XMLStreamWriter xtw)
         {
             xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_COMPENSATE_ACTIVITYREF, compensateEventDefinition.ActivityRef, xtw);
@@ -522,7 +522,7 @@ namespace Sys.Workflow.Bpmn.Converters
             xtw.WriteEndElement();
         }
 
-        protected internal virtual void WriteMessageDefinition(Event parentEvent, MessageEventDefinition messageDefinition, BpmnModel model, XMLStreamWriter xtw)
+        public virtual void WriteMessageDefinition(Event parentEvent, MessageEventDefinition messageDefinition, BpmnModel model, XMLStreamWriter xtw)
         {
             xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
 
@@ -557,7 +557,7 @@ namespace Sys.Workflow.Bpmn.Converters
             xtw.WriteEndElement();
         }
 
-        protected internal virtual void WriteErrorDefinition(Event parentEvent, ErrorEventDefinition errorDefinition, XMLStreamWriter xtw)
+        public virtual void WriteErrorDefinition(Event parentEvent, ErrorEventDefinition errorDefinition, XMLStreamWriter xtw)
         {
             xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ERROR_REF, errorDefinition.ErrorCode, xtw);
@@ -569,7 +569,7 @@ namespace Sys.Workflow.Bpmn.Converters
             xtw.WriteEndElement();
         }
 
-        protected internal virtual void WriteTerminateDefinition(Event parentEvent, TerminateEventDefinition terminateDefinition, XMLStreamWriter xtw)
+        public virtual void WriteTerminateDefinition(Event parentEvent, TerminateEventDefinition terminateDefinition, XMLStreamWriter xtw)
         {
             xtw.WriteStartElement(BpmnXMLConstants.BPMN2_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
 
@@ -591,12 +591,12 @@ namespace Sys.Workflow.Bpmn.Converters
             xtw.WriteEndElement();
         }
 
-        protected internal virtual void WriteDefaultAttribute(string attributeName, string value, XMLStreamWriter xtw)
+        public virtual void WriteDefaultAttribute(string attributeName, string value, XMLStreamWriter xtw)
         {
             BpmnXMLUtil.WriteDefaultAttribute(attributeName, value, xtw);
         }
 
-        protected internal virtual void WriteQualifiedAttribute(string attributeName, string value, XMLStreamWriter xtw)
+        public virtual void WriteQualifiedAttribute(string attributeName, string value, XMLStreamWriter xtw)
         {
             BpmnXMLUtil.WriteQualifiedAttribute(attributeName, value, xtw);
         }

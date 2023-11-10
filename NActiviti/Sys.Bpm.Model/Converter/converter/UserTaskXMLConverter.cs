@@ -59,7 +59,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
         public override string XMLElementName => BpmnXMLConstants.ELEMENT_TASK_USER;
 
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             string formKey = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY);
             UserTask userTask = null;
@@ -110,7 +110,7 @@ namespace Sys.Workflow.Bpmn.Converters
             return userTask;
         }
 
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             UserTask userTask = (UserTask)element;
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_ASSIGNEE, userTask.Assignee, xtw);
@@ -140,7 +140,7 @@ namespace Sys.Workflow.Bpmn.Converters
             BpmnXMLUtil.WriteCustomAttributes(userTask.Attributes.Values, xtw, defaultElementAttributes, defaultActivityAttributes, defaultUserTaskAttributes);
         }
 
-        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             UserTask userTask = (UserTask)element;
             didWriteExtensionStartElement = WriteFormProperties(userTask, didWriteExtensionStartElement, xtw);
@@ -226,7 +226,7 @@ namespace Sys.Workflow.Bpmn.Converters
             xtw.WriteEndElement(); // End ELEMENT_CUSTOM_RESOURCE
         }
 
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
 

@@ -137,7 +137,7 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<bool> ReturnTo(ReturnToTaskCmd cmd)
+        public async Task<bool> ReturnTo(RunTaskCmd cmd)
         {
             return await httpProxy.PostAsync<bool>($"{serviceUrl}/returnTo", cmd).ConfigureAwait(false);
         }

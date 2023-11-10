@@ -37,17 +37,17 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_EVENT_THROW;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ThrowEvent throwEvent = new ThrowEvent();
             BpmnXMLUtil.AddXMLLocation(throwEvent, xtr);
             ParseChildElements(XMLElementName, throwEvent, model, xtr);
             return throwEvent;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ThrowEvent throwEvent = (ThrowEvent)element;
             WriteEventDefinitions(throwEvent, throwEvent.EventDefinitions, model, xtw);

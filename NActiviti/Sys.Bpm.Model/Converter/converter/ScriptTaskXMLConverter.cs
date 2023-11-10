@@ -47,7 +47,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_TASK_SCRIPT;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ScriptTask scriptTask = new ScriptTask();
             BpmnXMLUtil.AddXMLLocation(scriptTask, xtr);
@@ -65,14 +65,14 @@ namespace Sys.Workflow.Bpmn.Converters
             ParseChildElements(XMLElementName, scriptTask, childParserMap, model, xtr);
             return scriptTask;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ScriptTask scriptTask = (ScriptTask)element;
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_FORMAT, scriptTask.ScriptFormat, xtw);
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_RESULTVARIABLE, scriptTask.ResultVariable, xtw);
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_AUTO_STORE_VARIABLE, scriptTask.AutoStoreVariables.ToString(), xtw);
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ScriptTask scriptTask = (ScriptTask)element;
             if (!string.IsNullOrWhiteSpace(scriptTask.Script))

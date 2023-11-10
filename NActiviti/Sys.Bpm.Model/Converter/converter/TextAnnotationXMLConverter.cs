@@ -47,7 +47,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             TextAnnotation textAnnotation = new TextAnnotation();
             BpmnXMLUtil.AddXMLLocation(textAnnotation, xtr);
@@ -55,12 +55,12 @@ namespace Sys.Workflow.Bpmn.Converters
             ParseChildElements(XMLElementName, textAnnotation, childParserMap, model, xtr);
             return textAnnotation;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             TextAnnotation textAnnotation = (TextAnnotation)element;
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_TEXTFORMAT, textAnnotation.TextFormat, xtw);
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             TextAnnotation textAnnotation = (TextAnnotation)element;
             if (!string.IsNullOrWhiteSpace(textAnnotation.Text))

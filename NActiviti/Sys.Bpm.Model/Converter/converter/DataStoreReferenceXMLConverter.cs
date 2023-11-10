@@ -37,14 +37,14 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_DATA_STORE_REFERENCE;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             DataStoreReference dataStoreRef = new DataStoreReference();
             BpmnXMLUtil.AddXMLLocation(dataStoreRef, xtr);
             ParseChildElements(XMLElementName, dataStoreRef, model, xtr);
             return dataStoreRef;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             DataStoreReference dataStoreRef = (DataStoreReference)element;
             if (!string.IsNullOrWhiteSpace(dataStoreRef.DataStoreRef))
@@ -57,7 +57,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF, dataStoreRef.ItemSubjectRef);
             }
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             DataStoreReference dataStoreRef = (DataStoreReference)element;
             if (!string.IsNullOrWhiteSpace(dataStoreRef.DataState))

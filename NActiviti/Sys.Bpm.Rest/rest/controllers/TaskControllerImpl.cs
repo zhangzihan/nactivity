@@ -235,7 +235,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         }
 
         [HttpPost("returnto")]
-        public Task<bool> ReturnTo(ReturnToTaskCmd cmd)
+        public Task<bool> ReturnTo(RunTaskCmd cmd)
         {
             processEngine.ReturnTo(cmd);
 

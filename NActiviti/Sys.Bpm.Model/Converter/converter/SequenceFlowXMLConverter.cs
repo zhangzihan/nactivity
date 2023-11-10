@@ -35,7 +35,7 @@ namespace Sys.Workflow.Bpmn.Converters
             }
         }
 
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             SequenceFlow sequenceFlow = new SequenceFlow();
             BpmnXMLUtil.AddXMLLocation(sequenceFlow, xtr);
@@ -49,7 +49,7 @@ namespace Sys.Workflow.Bpmn.Converters
             return sequenceFlow;
         }
 
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             SequenceFlow sequenceFlow = (SequenceFlow)element;
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, sequenceFlow.SourceRef, xtw);
@@ -60,7 +60,7 @@ namespace Sys.Workflow.Bpmn.Converters
             }
         }
 
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             SequenceFlow sequenceFlow = (SequenceFlow)element;
 

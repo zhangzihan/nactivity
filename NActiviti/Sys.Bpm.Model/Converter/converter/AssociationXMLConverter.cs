@@ -36,7 +36,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_ASSOCIATION;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             Association association = new Association();
             BpmnXMLUtil.AddXMLLocation(association, xtr);
@@ -56,7 +56,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             return association;
         }
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             Association association = (Association)element;
             WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, association.SourceRef, xtw);
@@ -67,7 +67,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ASSOCIATION_DIRECTION, associationDirection.Value, xtw);
             }
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
     }

@@ -38,7 +38,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 return BpmnXMLConstants.ELEMENT_TASK_SEND;
             }
         }
-        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        public override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             SendTask sendTask = new SendTask();
             BpmnXMLUtil.AddXMLLocation(sendTask, xtr);
@@ -61,7 +61,7 @@ namespace Sys.Workflow.Bpmn.Converters
             return sendTask;
         }
 
-        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
 
             SendTask sendTask = (SendTask)element;
@@ -71,17 +71,17 @@ namespace Sys.Workflow.Bpmn.Converters
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TYPE, sendTask.Type, xtw);
             }
         }
-        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             SendTask sendTask = (SendTask)element;
             didWriteExtensionStartElement = FieldExtensionExport.WriteFieldExtensions(sendTask.FieldExtensions, didWriteExtensionStartElement, xtw);
             return didWriteExtensionStartElement;
         }
-        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        public override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
 
-        protected internal virtual string ParseOperationRef(string operationRef, BpmnModel model)
+        public virtual string ParseOperationRef(string operationRef, BpmnModel model)
         {
             string result = null;
             if (!string.IsNullOrWhiteSpace(operationRef))
