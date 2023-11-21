@@ -23,7 +23,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
         public const string PROPERTYNAME_CONDITION = "condition";
         public const string PROPERTYNAME_CONDITION_TEXT = "conditionText";
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, SequenceFlow sequenceFlow)
+        public override void ExecuteParse(BpmnParse bpmnParse, SequenceFlow sequenceFlow)
         {
             Process process = bpmnParse.CurrentProcess;
             sequenceFlow.SourceFlowElement = process.GetFlowElement(sequenceFlow.SourceRef, true);

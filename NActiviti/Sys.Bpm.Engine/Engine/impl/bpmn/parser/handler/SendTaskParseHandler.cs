@@ -22,7 +22,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     /// 
     public class SendTaskParseHandler : AbstractActivityBpmnParseHandler<SendTask>
     {
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, SendTask sendTask)
+        public override void ExecuteParse(BpmnParse bpmnParse, SendTask sendTask)
         {
             if (string.IsNullOrWhiteSpace(sendTask.ImplementationType))
             {
@@ -73,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             //}
         }
 
-        protected internal virtual void CreateClassDelegateSendTask(BpmnParse bpmnParse, SendTask sendTask)
+        public virtual void CreateClassDelegateSendTask(BpmnParse bpmnParse, SendTask sendTask)
         {
             sendTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateClassDelegateSendTask(sendTask);
         }

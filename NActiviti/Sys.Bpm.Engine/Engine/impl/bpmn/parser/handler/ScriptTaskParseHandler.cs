@@ -20,7 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     /// 
     public class ScriptTaskParseHandler : AbstractActivityBpmnParseHandler<ScriptTask>
     {
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, ScriptTask scriptTask)
+        public override void ExecuteParse(BpmnParse bpmnParse, ScriptTask scriptTask)
         {
 
             if (string.IsNullOrWhiteSpace(scriptTask.Script))

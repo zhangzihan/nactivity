@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class TransactionParseHandler : AbstractActivityBpmnParseHandler<Transaction>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, Transaction transaction)
+        public override void ExecuteParse(BpmnParse bpmnParse, Transaction transaction)
         {
 
             transaction.Behavior = bpmnParse.ActivityBehaviorFactory.CreateTransactionActivityBehavior(transaction);

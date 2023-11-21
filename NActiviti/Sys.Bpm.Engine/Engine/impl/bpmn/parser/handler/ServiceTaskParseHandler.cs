@@ -19,7 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
 
     public class ServiceTaskParseHandler : AbstractActivityBpmnParseHandler<ServiceTask>
     {
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -27,7 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public override void ExecuteParse(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
 
             if (!string.IsNullOrWhiteSpace(serviceTask.Type))
@@ -57,7 +57,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
 
         }
 
-        protected internal virtual void CreateActivityBehaviorForServiceTaskType(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateActivityBehaviorForServiceTaskType(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             if (serviceTask.Type.Equals("mail", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -81,52 +81,52 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal virtual void CreateMailActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateMailActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateMailActivityBehavior(serviceTask);
         }
 
-        protected internal virtual void CreateMuleActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateMuleActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateMuleActivityBehavior(serviceTask);
         }
 
-        protected internal virtual void CreateCamelActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateCamelActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateCamelActivityBehavior(serviceTask);
         }
 
-        protected internal virtual void CreateShellActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateShellActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateShellActivityBehavior(serviceTask);
         }
 
-        protected internal virtual void CreateActivityBehaviorForCustomServiceTaskType(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateActivityBehaviorForCustomServiceTaskType(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             logger.LogWarning("Invalid service task type: '" + serviceTask.Type + "' " + " for service task " + serviceTask.Id);
         }
 
-        protected internal virtual void CreateClassDelegateServiceTask(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateClassDelegateServiceTask(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateClassDelegateServiceTask(serviceTask);
         }
 
-        protected internal virtual void CreateServiceTaskDelegateExpressionActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateServiceTaskDelegateExpressionActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateServiceTaskDelegateExpressionActivityBehavior(serviceTask);
         }
 
-        protected internal virtual void CreateServiceTaskExpressionActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateServiceTaskExpressionActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateServiceTaskExpressionActivityBehavior(serviceTask);
         }
 
-        protected internal virtual void CreateWebServiceActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateWebServiceActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateWebServiceActivityBehavior(serviceTask);
         }
 
-        protected internal virtual void CreateDefaultServiceTaskActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
+        public virtual void CreateDefaultServiceTaskActivityBehavior(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
             serviceTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_CLASS;
             serviceTask.Implementation = ImplementationType.IMPLEMENTATION_TASK_SERVICE_DEFAULT;

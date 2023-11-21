@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal virtual void CreateMultiInstanceLoopCharacteristics(BpmnParse bpmnParse, Activity modelActivity)
+        protected virtual void CreateMultiInstanceLoopCharacteristics(BpmnParse bpmnParse, Activity modelActivity)
         {
 
             MultiInstanceLoopCharacteristics loopCharacteristics = modelActivity.LoopCharacteristics;

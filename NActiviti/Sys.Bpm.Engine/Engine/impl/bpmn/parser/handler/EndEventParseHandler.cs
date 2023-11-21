@@ -24,7 +24,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     {
         private new static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<EndEventParseHandler>();
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -32,7 +32,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, EndEvent endEvent)
+        public override void ExecuteParse(BpmnParse bpmnParse, EndEvent endEvent)
         {
             if (endEvent.EventDefinitions.Count > 0)
             {

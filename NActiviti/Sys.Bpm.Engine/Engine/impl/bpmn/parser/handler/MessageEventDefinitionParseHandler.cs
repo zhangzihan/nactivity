@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class MessageEventDefinitionParseHandler : AbstractBpmnParseHandler<MessageEventDefinition>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, MessageEventDefinition messageDefinition)
+        public override void ExecuteParse(BpmnParse bpmnParse, MessageEventDefinition messageDefinition)
         {
             BpmnModel bpmnModel = bpmnParse.BpmnModel;
             string messageRef = messageDefinition.MessageRef;

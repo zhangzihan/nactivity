@@ -20,7 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class ParallelGatewayParseHandler : AbstractActivityBpmnParseHandler<ParallelGateway>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, ParallelGateway gateway)
+        public override void ExecuteParse(BpmnParse bpmnParse, ParallelGateway gateway)
         {
             gateway.Behavior = bpmnParse.ActivityBehaviorFactory.CreateParallelGatewayActivityBehavior(gateway);
         }

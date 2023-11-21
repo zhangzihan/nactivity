@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class CancelEventDefinitionParseHandler : AbstractBpmnParseHandler<CancelEventDefinition>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, CancelEventDefinition cancelEventDefinition)
+        public override void ExecuteParse(BpmnParse bpmnParse, CancelEventDefinition cancelEventDefinition)
         {
             if (bpmnParse.CurrentFlowElement is BoundaryEvent boundaryEvent)
             {

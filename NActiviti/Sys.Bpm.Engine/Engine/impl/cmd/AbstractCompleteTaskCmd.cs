@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 			}
 		}
 
-		protected void CompleteTask(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
+		protected virtual void CompleteTask(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
 		{
 			// Task complete logic
 			if (taskEntity.DelegationState.HasValue && taskEntity.DelegationState.Value == DelegationState.PENDING)

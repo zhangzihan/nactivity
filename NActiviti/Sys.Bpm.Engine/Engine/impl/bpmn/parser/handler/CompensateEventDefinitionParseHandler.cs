@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class CompensateEventDefinitionParseHandler : AbstractBpmnParseHandler<CompensateEventDefinition>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, CompensateEventDefinition eventDefinition)
+        public override void ExecuteParse(BpmnParse bpmnParse, CompensateEventDefinition eventDefinition)
         {
 
             if (bpmnParse.CurrentFlowElement is ThrowEvent throwEvent)

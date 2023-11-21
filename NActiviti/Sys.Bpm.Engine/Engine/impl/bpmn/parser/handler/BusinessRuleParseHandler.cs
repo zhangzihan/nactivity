@@ -20,7 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class BusinessRuleParseHandler : AbstractActivityBpmnParseHandler<BusinessRuleTask>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, BusinessRuleTask businessRuleTask)
+        public override void ExecuteParse(BpmnParse bpmnParse, BusinessRuleTask businessRuleTask)
         {
             businessRuleTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateBusinessRuleTaskActivityBehavior(businessRuleTask);
         }

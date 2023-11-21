@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal abstract Type HandledType { get; }
+        public abstract Type HandledType { get; }
 
         public virtual void Parse(BpmnParse bpmnParse, BaseElement element)
         {
@@ -45,9 +45,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             ExecuteParse(bpmnParse, baseElement);
         }
 
-        protected internal abstract void ExecuteParse(BpmnParse bpmnParse, T element);
+        public abstract void ExecuteParse(BpmnParse bpmnParse, T element);
 
-        protected internal virtual IExecutionListener CreateExecutionListener(BpmnParse bpmnParse, ActivitiListener activitiListener)
+        public virtual IExecutionListener CreateExecutionListener(BpmnParse bpmnParse, ActivitiListener activitiListener)
         {
             IExecutionListener executionListener = null;
 
@@ -66,7 +66,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             return executionListener;
         }
 
-        protected internal virtual string GetPrecedingEventBasedGateway(BpmnParse bpmnParse, IntermediateCatchEvent @event)
+        public virtual string GetPrecedingEventBasedGateway(BpmnParse bpmnParse, IntermediateCatchEvent @event)
         {
             string eventBasedGatewayId = null;
             foreach (SequenceFlow sequenceFlow in @event.IncomingFlows)
@@ -81,7 +81,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             return eventBasedGatewayId;
         }
 
-        protected internal virtual void ProcessArtifacts(BpmnParse bpmnParse, ICollection<Artifact> artifacts)
+        public virtual void ProcessArtifacts(BpmnParse bpmnParse, ICollection<Artifact> artifacts)
         {
             // associations
             foreach (Artifact artifact in artifacts)
@@ -93,7 +93,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal virtual void CreateAssociation(BpmnParse bpmnParse, Association association)
+        public virtual void CreateAssociation(BpmnParse bpmnParse, Association association)
         {
             BpmnModel bpmnModel = bpmnParse.BpmnModel;
             if (bpmnModel.GetArtifact(association.SourceRef) is not null || bpmnModel.GetArtifact(association.TargetRef) is not null)

@@ -22,7 +22,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class BoundaryEventParseHandler : AbstractFlowNodeBpmnParseHandler<BoundaryEvent>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, BoundaryEvent boundaryEvent)
+        public override void ExecuteParse(BpmnParse bpmnParse, BoundaryEvent boundaryEvent)
         {
             if (boundaryEvent.AttachedToRef is null)
             {

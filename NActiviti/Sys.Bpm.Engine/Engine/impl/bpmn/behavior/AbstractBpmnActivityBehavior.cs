@@ -33,7 +33,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     {
         private const long serialVersionUID = 1L;
 
-        protected internal MultiInstanceActivityBehavior multiInstanceActivityBehavior;
+        protected MultiInstanceActivityBehavior multiInstanceActivityBehavior;
 
         /// <summary>
         /// Subclasses that call leave() will first pass through this method, before the regular <seealso cref="FlowNodeActivityBehavior#leave(ActivityExecution)"/> is called. This way, we can check if the activity

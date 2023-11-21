@@ -27,7 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     {
         public const string PROPERTYNAME_DOCUMENTATION = "documentation";
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -35,7 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, Process process)
+        public override void ExecuteParse(BpmnParse bpmnParse, Process process)
         {
             if (process.Executable == false)
             {
@@ -47,7 +47,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal virtual IProcessDefinitionEntity TransformProcess(BpmnParse bpmnParse, Process process)
+        public virtual IProcessDefinitionEntity TransformProcess(BpmnParse bpmnParse, Process process)
         {
             IProcessDefinitionEntity currentProcessDefinition = Context.CommandContext.ProcessDefinitionEntityManager.Create();
             bpmnParse.CurrentProcessDefinition = currentProcessDefinition;
@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             return currentProcessDefinition;
         }
 
-        protected internal virtual void CreateEventListeners(BpmnParse bpmnParse, IList<EventListener> eventListeners)
+        public virtual void CreateEventListeners(BpmnParse bpmnParse, IList<EventListener> eventListeners)
         {
 
             if (eventListeners is object && eventListeners.Count > 0)
@@ -114,7 +114,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
 
         }
 
-        protected internal virtual ActivitiEventSupport GetEventSupport(BpmnModel bpmnModel)
+        public virtual ActivitiEventSupport GetEventSupport(BpmnModel bpmnModel)
         {
             return (ActivitiEventSupport)bpmnModel.EventSupport;
         }

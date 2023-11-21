@@ -52,44 +52,44 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected IMultiinstanceCompletedPolicy completedPolicy;
 
         // Variable names for outer instance(as described in spec)
-        internal static readonly string NUMBER_OF_INSTANCES = "nrOfInstances";
-        internal static readonly string NUMBER_OF_ACTIVE_INSTANCES = "nrOfActiveInstances";
-        internal static readonly string NUMBER_OF_COMPLETED_INSTANCES = "nrOfCompletedInstances";
+        public static readonly string NUMBER_OF_INSTANCES = "nrOfInstances";
+		public static readonly string NUMBER_OF_ACTIVE_INSTANCES = "nrOfActiveInstances";
+		public static readonly string NUMBER_OF_COMPLETED_INSTANCES = "nrOfCompletedInstances";
 
         // Instance members
         /// <summary>
         /// 
         /// </summary>
-        protected internal Activity activity;
+        protected Activity activity;
         /// <summary>
         /// 
         /// </summary>
-        protected internal AbstractBpmnActivityBehavior innerActivityBehavior;
+        protected AbstractBpmnActivityBehavior innerActivityBehavior;
         /// <summary>
         /// 
         /// </summary>
-        protected internal IExpression loopCardinalityExpression;
+        protected IExpression loopCardinalityExpression;
         /// <summary>
         /// 
         /// </summary>
-        protected internal IExpression completionConditionExpression;
+        protected IExpression completionConditionExpression;
         /// <summary>
         /// 
         /// </summary>
-        protected internal IExpression collectionExpression;
+        protected IExpression collectionExpression;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string collectionVariable;
+        protected string collectionVariable;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string collectionElementVariable;
+        protected string collectionElementVariable;
         // default variable name for loop counter for inner instances (as described in the spec)
         /// <summary>
         /// 
         /// </summary>
-        protected internal string collectionElementIndexVariable = "loopCounter";
+        protected string collectionElementIndexVariable = "loopCounter";
 
         /// <param name="innerActivityBehavior">
         ///          The original <seealso cref="IActivityBehavior"/> of the activity that will be wrapped inside this behavior. </param>

@@ -20,7 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class EventSubProcessParseHandler : SubProcessParseHandler
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {

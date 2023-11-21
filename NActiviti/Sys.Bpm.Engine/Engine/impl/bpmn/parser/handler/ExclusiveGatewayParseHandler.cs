@@ -20,7 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class ExclusiveGatewayParseHandler : AbstractActivityBpmnParseHandler<ExclusiveGateway>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, ExclusiveGateway gateway)
+        public override void ExecuteParse(BpmnParse bpmnParse, ExclusiveGateway gateway)
         {
             gateway.Behavior = bpmnParse.ActivityBehaviorFactory.CreateExclusiveGatewayActivityBehavior(gateway);
         }

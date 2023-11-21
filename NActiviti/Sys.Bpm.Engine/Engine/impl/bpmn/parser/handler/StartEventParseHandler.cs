@@ -22,7 +22,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class StartEventParseHandler : AbstractActivityBpmnParseHandler<StartEvent>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, StartEvent element)
+        public override void ExecuteParse(BpmnParse bpmnParse, StartEvent element)
         {
             if (element.SubProcess is not null && element.SubProcess is EventSubProcess)
             {

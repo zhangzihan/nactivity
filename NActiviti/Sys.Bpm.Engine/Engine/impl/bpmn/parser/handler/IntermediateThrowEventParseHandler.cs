@@ -22,7 +22,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     {
         //private static readonly Logger logger = LoggerFactory.getLogger(typeof(IntermediateThrowEventParseHandler));
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, ThrowEvent intermediateEvent)
+        public override void ExecuteParse(BpmnParse bpmnParse, ThrowEvent intermediateEvent)
         {
 
             EventDefinition eventDefinition = null;

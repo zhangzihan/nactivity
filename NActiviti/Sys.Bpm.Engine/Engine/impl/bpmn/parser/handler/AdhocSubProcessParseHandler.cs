@@ -19,7 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     /// 
     public class AdhocSubProcessParseHandler : AbstractActivityBpmnParseHandler<SubProcess>
     {
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -27,7 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, SubProcess subProcess)
+        public override void ExecuteParse(BpmnParse bpmnParse, SubProcess subProcess)
         {
             subProcess.Behavior = bpmnParse.ActivityBehaviorFactory.CreateAdhocSubprocessActivityBehavior(subProcess);
 

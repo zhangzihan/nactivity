@@ -20,7 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     public class ManualTaskParseHandler : AbstractActivityBpmnParseHandler<ManualTask>
     {
 
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, ManualTask manualTask)
+        public override void ExecuteParse(BpmnParse bpmnParse, ManualTask manualTask)
         {
             manualTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateManualTaskActivityBehavior(manualTask);
         }

@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
     /// 
     public class IntermediateCatchEventParseHandler : AbstractFlowNodeBpmnParseHandler<IntermediateCatchEvent>
     {
-        protected internal override Type HandledType
+        public override Type HandledType
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             }
         }
 
-        protected internal override void ExecuteParse(BpmnParse bpmnParse, IntermediateCatchEvent @event)
+        public override void ExecuteParse(BpmnParse bpmnParse, IntermediateCatchEvent @event)
         {
             EventDefinition eventDefinition = null;
             if (@event.EventDefinitions.Count > 0)
