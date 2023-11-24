@@ -47,9 +47,7 @@ namespace Sys.Workflow
 			{
 				IConfiguration config = configuration.GetSection("WorkflowDataSource");
 
-				option.ProviderName = config.GetValue<string>(nameof(option.ProviderName));
-				option.Database = config.GetValue<string>(nameof(option.Database));
-				option.ConnectionString = config.GetValue<string>(nameof(option.ConnectionString));
+				config.Bind(option);
 			});
 		}
 

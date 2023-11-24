@@ -16,7 +16,7 @@ namespace Sys.Data
 
         IDbConnection Connection { get; }
 
-        void ForceCloseAll();
+		void ForceCloseAll();
 
         IDbConnection GetConnection();
     }

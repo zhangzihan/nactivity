@@ -18,7 +18,7 @@ namespace SmartSql
 {
     public class SmartSqlOptions
     {
-        public String ConfigPath { get; set; } = "SmartSqlMapConfig.xml";
+        public string ConfigPath { get; set; } = "SmartSqlMapConfig.xml";
         public ILoggerFactory LoggerFactory { get; set; }
         public IConfigLoader ConfigLoader { get; set; }
         public IDbConnectionSessionStore DbSessionStore { get; set; }
@@ -34,19 +34,12 @@ namespace SmartSql
 
         public void Setup()
         {
-            if (String.IsNullOrEmpty(ConfigPath))
+            if (string.IsNullOrEmpty(ConfigPath))
             {
                 ConfigPath = "SmartSqlMapConfig.xml";
             }
-            if (LoggerFactory is null)
-            {
-                LoggerFactory = NullLoggerFactory.Instance;
-            }
-
-            if (ConfigLoader is null)
-            {
-                ConfigLoader = new LocalFileConfigLoader(ConfigPath, LoggerFactory);
-            }
+            LoggerFactory ??= NullLoggerFactory.Instance;
+            ConfigLoader ??= new LocalFileConfigLoader(ConfigPath, LoggerFactory);
             var sqlMapConfig = ConfigLoader.Load();
             SmartSqlContext = new SmartSqlContext(LoggerFactory.CreateLogger<SmartSqlContext>(), sqlMapConfig);
             if (DbSessionStore is null)
@@ -54,27 +47,12 @@ namespace SmartSql
                 var dbProviderFactory = DbProviderFactoryFactory.Create(SmartSqlContext.DbProvider.Type);
                 DbSessionStore = new DbConnectionSessionStore(LoggerFactory, dbProviderFactory);
             }
-            if (DataSourceFilter is null)
-            {
-                DataSourceFilter = new DataSourceFilter(LoggerFactory.CreateLogger<DataSourceFilter>(), DbSessionStore, SmartSqlContext);
-            }
-            if (SqlBuilder is null)
-            {
-                SqlBuilder = new SqlBuilder(LoggerFactory.CreateLogger<SqlBuilder>(), SmartSqlContext);
-            }
+            DataSourceFilter ??= new DataSourceFilter(LoggerFactory.CreateLogger<DataSourceFilter>(), DbSessionStore, SmartSqlContext);
+            SqlBuilder ??= new SqlBuilder(LoggerFactory.CreateLogger<SqlBuilder>(), SmartSqlContext);
+            PreparedCommand ??= new PreparedCommand(LoggerFactory.CreateLogger<PreparedCommand>(), SmartSqlContext);
+            CommandExecuter ??= new CommandExecuter(LoggerFactory.CreateLogger<CommandExecuter>(), PreparedCommand);
+            DataReaderDeserializerFactory ??= new EmitDataReaderDeserializerFactory();
 
-            if (PreparedCommand is null)
-            {
-                PreparedCommand = new PreparedCommand(LoggerFactory.CreateLogger<PreparedCommand>(), SmartSqlContext);
-            }
-            if (CommandExecuter is null)
-            {
-                CommandExecuter = new CommandExecuter(LoggerFactory.CreateLogger<CommandExecuter>(), PreparedCommand);
-            }
-            if (DataReaderDeserializerFactory is null)
-            {
-                DataReaderDeserializerFactory = new EmitDataReaderDeserializerFactory();
-            }
             if (CacheManager is null)
             {
                 if (SmartSqlContext.IsCacheEnabled)

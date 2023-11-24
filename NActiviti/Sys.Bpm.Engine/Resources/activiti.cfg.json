@@ -54,7 +54,7 @@
   //历史版本,维护当前流程引擎所有的历史版本号,用于变更管理
   "historyVersions": [],
   "transactionOption": {
-    "useTransactionScope": true,
+    "useTransactionScope": false,
     "isolationLevel": "RepeatableRead",
     "transactionScopeOption": "Required",
     "transactionTimeout": null

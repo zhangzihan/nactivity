@@ -28,15 +28,15 @@ namespace Sys.Workflow.Engine.Impl.Contexts
     public class Context
     {
         protected internal static ThreadLocal<Stack<ICommandContext>> commandContextThreadLocal =
-               new ThreadLocal<Stack<ICommandContext>>(true);
+               new(true);
         protected internal static ThreadLocal<Stack<ProcessEngineConfigurationImpl>> processEngineConfigurationStackThreadLocal =
-            new ThreadLocal<Stack<ProcessEngineConfigurationImpl>>(true);
+            new(true);
         protected internal static ThreadLocal<Stack<ITransactionContext>> transactionContextThreadLocal =
-            new ThreadLocal<Stack<ITransactionContext>>(true);
+            new(true);
         protected internal static ThreadLocal<IDictionary<string, JToken>> bpmnOverrideContextThreadLocal =
-            new ThreadLocal<IDictionary<string, JToken>>(true);
+            new(true);
 
-        protected internal static ResourceBundleControl resourceBundleControl = new ResourceBundleControl();
+        protected internal static ResourceBundleControl resourceBundleControl = new();
 
         /// <summary>
         /// 
@@ -188,7 +188,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
                 }
                 else
                 {
-                    List<CultureInfo> candidateLocales = new List<CultureInfo>();
+                    List<CultureInfo> candidateLocales = new();
                     candidateLocales.AddRange(resourceBundleControl.GetCandidateLocales(id, new CultureInfo("zh-cn")));//Locale.forLanguageTag(language)));
                     foreach (CultureInfo locale in candidateLocales)
                     {
@@ -274,9 +274,9 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             private readonly IList<CultureInfo> locales = new List<CultureInfo>()
             {
-                new CultureInfo("zh-cn"),
-                new CultureInfo("zh-hans"),
-                new CultureInfo("en-us")
+                new("zh-cn"),
+                new("zh-hans"),
+                new("en-us")
             };
 
             /// <summary>

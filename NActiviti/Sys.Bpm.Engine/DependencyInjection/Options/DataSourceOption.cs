@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Sys.Workflow.Options
 {
@@ -71,7 +72,7 @@ namespace Sys.Workflow.Options
 
         public override int GetHashCode()
         {
-            return ConnectionString.GetHashCode() << 2;
+			return HashCode.Combine(this.ConnectionString, this.ProviderName);
         }
     }
 }

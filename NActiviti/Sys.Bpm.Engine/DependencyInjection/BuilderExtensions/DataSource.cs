@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SmartSql;
 using SmartSql.Abstractions;
+using SmartSql.Abstractions.DbSession;
 using SmartSql.DbSession;
 using Sys.Workflow.Options;
 using System;
@@ -11,87 +12,92 @@ using IDataSource = Sys.Data.IDataSource;
 
 namespace Sys.Workflow
 {
-    /// <summary>
-    /// 数据源依赖注入
-    /// </summary>
-    public static class ProcessEngineBuilderExtensionsDataSource
-    {
-        private static string DEFAULT_MYBATIS_MAPPING_FILE = "resources/db/mapping/mappings.xml";
+	/// <summary>
+	/// 数据源依赖注入
+	/// </summary>
+	public static class ProcessEngineBuilderExtensionsDataSource
+	{
+		private static string DEFAULT_MYBATIS_MAPPING_FILE = "resources/db/mapping/mappings.xml";
 
-        private static IServiceProvider serviceProvider;
+		private static IServiceProvider serviceProvider;
 
-        /// <summary>
-        /// 注入数据源
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static IProcessEngineBuilder AddDataSource(this IProcessEngineBuilder builder)
-        {
-            builder.AddSmartSqlDataSource()
-                .AddSmartSqlMapper();
+		/// <summary>
+		/// 注入数据源
+		/// </summary>
+		/// <param name="builder"></param>
+		/// <returns></returns>
+		public static IProcessEngineBuilder AddDataSource(this IProcessEngineBuilder builder)
+		{
+			builder.AddSmartSqlDataSource()
+				.AddSmartSqlMapper();
 
-            return builder;
-        }
+			return builder;
+		}
 
-        /// <summary>
-        /// 注入SmartSql数据源
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        private static IProcessEngineBuilder AddSmartSqlDataSource(this IProcessEngineBuilder builder)
-        {
-            Action<IDataSource> updateSmartSqlDbSession = (dataSource) =>
-            {
-                ISmartSqlMapper ssm = serviceProvider.GetService<ISmartSqlMapper>();
+		/// <summary>
+		/// 注入SmartSql数据源
+		/// </summary>
+		/// <param name="builder"></param>
+		/// <returns></returns>
+		private static IProcessEngineBuilder AddSmartSqlDataSource(this IProcessEngineBuilder builder)
+		{
+			Action<IDataSource> updateSmartSqlDbSession = (dataSource) =>
+			{
+				ISmartSqlMapper ssm = serviceProvider.GetService<ISmartSqlMapper>();
 
-                ssm.SmartSqlOptions.DbSessionStore = new DbConnectionSessionStore(serviceProvider.GetService<ILoggerFactory>(), dataSource.DbProviderFactory);
+				ssm.SmartSqlOptions.DbSessionStore = serviceProvider.GetService<IDbConnectionSessionStore>();
 
-                ssm.SmartSqlOptions.SmartSqlContext.Database.WriteDataSource.ConnectionString = dataSource.ConnectionString;
-                foreach (var ds in ssm.SmartSqlOptions.SmartSqlContext.Database.ReadDataSources)
-                {
-                    ds.ConnectionString = dataSource.ConnectionString;
-                }
-            };
+				ssm.SmartSqlOptions.SmartSqlContext.Database.WriteDataSource.ConnectionString = dataSource.ConnectionString;
+				foreach (var ds in ssm.SmartSqlOptions.SmartSqlContext.Database.ReadDataSources)
+				{
+					ds.ConnectionString = dataSource.ConnectionString;
+				}
+			};
 
-            builder.Services.AddSingleton<IDataSource>(sp =>
-            {
-                serviceProvider = sp;
+			builder.Services.AddSingleton<IDataSource>(sp =>
+			{
+				serviceProvider = sp;
 
-                return new Data.DataSource(sp.GetService<IOptionsMonitor<DataSourceOption>>(), updateSmartSqlDbSession);
-            });
+				return new Data.DataSource(sp.GetService<IOptionsMonitor<DataSourceOption>>(), updateSmartSqlDbSession);
+			});
 
-            return builder;
-        }
+			builder.Services.AddSingleton<IDbConnectionSessionStore>(sp =>
+			{
+				return new DbConnectionSessionStore(sp.GetService<ILoggerFactory>(), sp.GetService<IDataSource>().DbProviderFactory);
+			});
 
-        private static IProcessEngineBuilder AddSmartSqlMapper(this IProcessEngineBuilder builder)
-        {
-            builder.Services.AddSingleton<ISmartSqlMapper>(sp =>
-            {
-                var codebase = AppDomain.CurrentDomain.BaseDirectory;
+			return builder;
+		}
 
-                IDataSource dataSource = sp.GetService<IDataSource>();
+		private static IProcessEngineBuilder AddSmartSqlMapper(this IProcessEngineBuilder builder)
+		{
+			builder.Services.AddSingleton<ISmartSqlMapper>(sp =>
+			{
+				var codebase = AppDomain.CurrentDomain.BaseDirectory;
 
-                var dbSessionStore = new DbConnectionSessionStore(sp.GetService<ILoggerFactory>(), dataSource.DbProviderFactory);
+				IDataSource dataSource = sp.GetService<IDataSource>();
 
-                SmartSqlOptions options = new SmartSqlOptions
-                {
-                    ConfigPath = Path.Combine(codebase, DEFAULT_MYBATIS_MAPPING_FILE),
-                    DbSessionStore = dbSessionStore
-                };
+				var dbSessionStore = sp.GetService<IDbConnectionSessionStore>();
 
-                SmartSqlMapper ssm = new SmartSqlMapper(options);
+				SmartSqlOptions options = new()
+				{
+					ConfigPath = Path.Combine(codebase, DEFAULT_MYBATIS_MAPPING_FILE),
+					DbSessionStore = dbSessionStore
+				};
 
-                options.SmartSqlContext.Settings.IsWatchConfigFile = true;
-                options.SmartSqlContext.Database.WriteDataSource.ConnectionString = dataSource.ConnectionString;
-                foreach (var ds in options.SmartSqlContext.Database.ReadDataSources)
-                {
-                    ds.ConnectionString = dataSource.ConnectionString;
-                }
+				SmartSqlMapper ssm = new(options);
 
-                return ssm;
-            });
+				options.SmartSqlContext.Settings.IsWatchConfigFile = true;
+				options.SmartSqlContext.Database.WriteDataSource.ConnectionString = dataSource.ConnectionString;
+				foreach (var ds in options.SmartSqlContext.Database.ReadDataSources)
+				{
+					ds.ConnectionString = dataSource.ConnectionString;
+				}
 
-            return builder;
-        }
-    }
+				return ssm;
+			});
+
+			return builder;
+		}
+	}
 }
