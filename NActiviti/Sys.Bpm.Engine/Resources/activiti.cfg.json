@@ -55,7 +55,7 @@
   "historyVersions": [],
   "transactionOption": {
     "useTransactionScope": false,
-    "isolationLevel": "RepeatableRead",
+    "isolationLevel": "ReadCommitted",
     "transactionScopeOption": "Required",
     "transactionTimeout": null
   }

@@ -92,7 +92,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
                 // subprocesses
                 if (execution.CurrentFlowElement is SubProcess)
                 {
-                    foreach (IExecutionEntity subExecution in execution.Executions)
+                    foreach (IExecutionEntity subExecution in execution.GetExecutions())
                     {
                         if (!processedElements.Contains(subExecution.CurrentActivityId))
                         {
@@ -107,7 +107,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
                     IExecutionEntity subProcessInstance = commandContext.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(execution.Id);
                     if (subProcessInstance is object)
                     {
-                        IList<IExecutionEntity> childExecutions = subProcessInstance.Executions;
+                        IList<IExecutionEntity> childExecutions = subProcessInstance.GetExecutions();
                         foreach (IExecutionEntity subExecution in childExecutions)
                         {
                             if (!processedElements.Contains(subExecution.CurrentActivityId))

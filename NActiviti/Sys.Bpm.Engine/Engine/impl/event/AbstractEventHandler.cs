@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Events
         protected internal virtual void DispatchExecutionCancelled(IEventSubscriptionEntity eventSubscription, IExecutionEntity execution, ICommandContext commandContext)
         {
             // subprocesses
-            foreach (IExecutionEntity subExecution in execution.Executions)
+            foreach (IExecutionEntity subExecution in execution.GetExecutions())
             {
                 DispatchExecutionCancelled(eventSubscription, subExecution, commandContext);
             }

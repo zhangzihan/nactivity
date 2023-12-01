@@ -67,7 +67,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 activeActivityIds.Add(executionEntity.ActivityId);
             }
 
-            foreach (IExecutionEntity childExecution in executionEntity.Executions)
+            foreach (IExecutionEntity childExecution in executionEntity.GetExecutions())
             {
                 CollectActiveActivityIds(childExecution, activeActivityIds);
             }

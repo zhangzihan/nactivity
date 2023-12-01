@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // if sequential ordering, only one child execution can be active, so no enabled activities
             if (adhocSubProcess.HasSequentialOrdering())
             {
-                if (execution.Executions.Count > 0)
+                if (execution.GetExecutions().Count > 0)
                 {
                     return enabledFlowNodes;
                 }

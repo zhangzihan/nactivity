@@ -55,7 +55,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // if sequential ordering, only one child execution can be active
             if (adhocSubProcess.HasSequentialOrdering())
             {
-                if (execution.Executions.Count > 0)
+                if (execution.GetExecutions().Count > 0)
                 {
                     throw new ActivitiException("Sequential ad-hoc sub process already has an active execution");
                 }

@@ -112,14 +112,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 		/// <summary>
 		/// returns the list of execution of which this execution the parent of.
 		/// </summary>
-		IList<IExecutionEntity> Executions { get; }
+		IList<IExecutionEntity> GetExecutions();
 
-        /* State management */
+		/* State management */
 
-        /// <summary>
-        /// makes this execution active or inactive.
-        /// </summary>
-        bool IsActive { set; get; }
+		/// <summary>
+		/// makes this execution active or inactive.
+		/// </summary>
+		bool IsActive { set; get; }
 
 
         /// <summary>

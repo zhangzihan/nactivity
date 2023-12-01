@@ -108,7 +108,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 if (subProcess.LoopCharacteristics is not null)
                 {
-                    IList<IExecutionEntity> multiInstanceExecutions = parentScopeExecution.Executions;
+                    IList<IExecutionEntity> multiInstanceExecutions = parentScopeExecution.GetExecutions();
                     IList<IExecutionEntity> executionsToDelete = new List<IExecutionEntity>();
                     foreach (IExecutionEntity multiInstanceExecution in multiInstanceExecutions)
                     {

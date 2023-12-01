@@ -581,11 +581,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 				deleteReason = DeleteReasonFields.PROCESS_INSTANCE_DELETED;
 			}
 
-			foreach (IExecutionEntity subExecutionEntity in execution.Executions)
+			foreach (IExecutionEntity subExecutionEntity in execution.GetExecutions())
 			{
 				if (subExecutionEntity.IsMultiInstanceRoot)
 				{
-					foreach (IExecutionEntity miExecutionEntity in subExecutionEntity.Executions)
+					foreach (IExecutionEntity miExecutionEntity in subExecutionEntity.GetExecutions())
 					{
 						if (miExecutionEntity.GetSubProcessInstance() is object)
 						{
@@ -669,7 +669,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 			}
 
 			// Call activities
-			foreach (IExecutionEntity subExecutionEntity in processInstanceEntity.Executions)
+			foreach (IExecutionEntity subExecutionEntity in processInstanceEntity.GetExecutions())
 			{
 				if (subExecutionEntity.GetSubProcessInstance() is object && !subExecutionEntity.Ended)
 				{
@@ -678,7 +678,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 			}
 
 			// delete event scope executions
-			foreach (IExecutionEntity childExecution in processInstanceEntity.Executions)
+			foreach (IExecutionEntity childExecution in processInstanceEntity.GetExecutions())
 			{
 				if (childExecution.IsEventScope)
 				{
@@ -745,7 +745,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 		/// <param name="collectedChildExecution"></param>
 		protected internal virtual void CollectChildren(IExecutionEntity executionEntity, IList<IExecutionEntity> collectedChildExecution)
 		{
-			IList<IExecutionEntity> childExecutions = executionEntity.Executions;
+			IList<IExecutionEntity> childExecutions = executionEntity.GetExecutions();
 			if (childExecutions is object && childExecutions.Count > 0)
 			{
 				foreach (IExecutionEntity childExecution in childExecutions)

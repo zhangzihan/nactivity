@@ -410,7 +410,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// <returns></returns>
         protected internal virtual bool AllChildExecutionsEnded(IExecutionEntity parentExecutionEntity, IExecutionEntity executionEntityToIgnore)
         {
-            foreach (IExecutionEntity childExecutionEntity in parentExecutionEntity.Executions)
+            foreach (IExecutionEntity childExecutionEntity in parentExecutionEntity.GetExecutions())
             {
                 if (executionEntityToIgnore is null || !executionEntityToIgnore.Id.Equals(childExecutionEntity.Id))
                 {
@@ -418,7 +418,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                     {
                         return false;
                     }
-                    if (childExecutionEntity.Executions is object && childExecutionEntity.Executions.Count > 0)
+                    if (childExecutionEntity.GetExecutions() is object && childExecutionEntity.GetExecutions().Count > 0)
                     {
                         if (!AllChildExecutionsEnded(childExecutionEntity, executionEntityToIgnore))
                         {

@@ -271,7 +271,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 				}
 			}
 
-			IExecutionEntity execution = processInstance.Executions[0]; // There will always be one child execution created
+			IExecutionEntity execution = processInstance.GetExecutions()[0]; // There will always be one child execution created
 			commandContext.Agenda.PlanContinueProcessOperation(execution);
 
 			if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)

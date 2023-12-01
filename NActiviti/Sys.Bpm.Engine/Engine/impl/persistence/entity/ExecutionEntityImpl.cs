@@ -314,13 +314,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 		/// <summary>
 		/// ensures initialization and returns the non-null executions list </summary>
-		public virtual IList<IExecutionEntity> Executions
+		public virtual IList<IExecutionEntity> GetExecutions()
 		{
-			get
-			{
-				EnsureExecutionsInitialized();
-				return executions;
-			}
+			EnsureExecutionsInitialized();
+			return executions;
 		}
 		/// <summary>
 		/// 

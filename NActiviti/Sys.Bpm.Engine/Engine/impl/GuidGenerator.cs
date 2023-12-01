@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Sys.Workflow.Engine.Impl.Cfg;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sys.Workflow.Engine.Impl
@@ -18,6 +19,10 @@ namespace Sys.Workflow.Engine.Impl
         {
             if (ids.TryDequeue(out var id) && !string.IsNullOrWhiteSpace(id))
             {
+				if (ids.Count < 50)
+				{
+					Task.Run(PrepareNextIds);
+				}
                 return id;
             }
             if (ids.Count < 10)
@@ -30,7 +35,7 @@ namespace Sys.Workflow.Engine.Impl
 
         private void PrepareNextIds()
         {
-            for (var idx = 0; idx < 100; idx++)
+            for (var idx = 0; idx < 1000; idx++)
             {
                 var id = NewId.NextGuid().ToString();
                 if (id is null)

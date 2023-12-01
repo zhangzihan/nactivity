@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Debug
 
         protected internal static void CollectChildExecutions(IExecutionEntity rootExecutionEntity, IList<IExecutionEntity> allExecutions)
         {
-            foreach (IExecutionEntity childExecutionEntity in rootExecutionEntity.Executions)
+            foreach (IExecutionEntity childExecutionEntity in rootExecutionEntity.GetExecutions())
             {
                 allExecutions.Add(childExecutionEntity);
                 CollectChildExecutions(childExecutionEntity, allExecutions);

@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiException("The current flow element of the requested execution is not an ad-hoc sub process");
             }
 
-            IList<IExecutionEntity> childExecutions = execution.Executions;
+            IList<IExecutionEntity> childExecutions = execution.GetExecutions();
             if (childExecutions.Count > 0)
             {
                 throw new ActivitiException("Ad-hoc sub process has running child executions that need to be completed first");

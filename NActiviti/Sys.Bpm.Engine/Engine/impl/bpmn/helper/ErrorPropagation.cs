@@ -233,7 +233,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             else
             {
                 IExecutionEntity boundaryExecution = null;
-                IList<IExecutionEntity> childExecutions = parentExecution.Executions;
+                IList<IExecutionEntity> childExecutions = parentExecution.GetExecutions();
                 foreach (IExecutionEntity childExecution in childExecutions)
                 {
                     if (childExecution.ActivityId.Equals(@event.Id))

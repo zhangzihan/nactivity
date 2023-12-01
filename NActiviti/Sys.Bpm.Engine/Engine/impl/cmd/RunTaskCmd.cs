@@ -226,7 +226,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
 			if (execution.IsMultiInstanceRoot)
 			{
-				return execution.Executions.SelectMany(x => x.GetTasks().Cast<ITask>()).ToList();
+				return execution.GetExecutions().SelectMany(x => x.GetTasks().Cast<ITask>()).ToList();
 			}
 
 			return execution.GetTasks().Cast<ITask>().ToList();
