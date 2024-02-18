@@ -266,7 +266,7 @@ namespace Spring.Expressions
 				ParameterInfo[] parameters = mi.GetParameters();
 				if (parameters.Length > 0)
 				{
-					ParameterInfo lastParameter = parameters[^1];
+					ParameterInfo lastParameter = parameters[parameters.Length - 1];
 					cachedIsParamArray = lastParameter.GetCustomAttributes(typeof(ParamArrayAttribute), false).Length > 0;
 					if (cachedIsParamArray)
 					{
@@ -320,7 +320,7 @@ namespace Spring.Expressions
 					}
 					else if (parameters.Length > 0)
 					{
-						ParameterInfo lastParameter = parameters[^1];
+						ParameterInfo lastParameter = parameters[parameters.Length - 1];
 						if (lastParameter.GetCustomAttributes(typeof(ParamArrayAttribute), false).Length > 0)
 						{
 							matches.Add(method);
