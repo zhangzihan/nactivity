@@ -15,23 +15,23 @@
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
 {
 
-    using Sys.Workflow.Engine.Repository;
+	using Sys.Workflow.Engine.Repository;
 
-    /// 
-    public interface IDeploymentDataManager : IDataManager<IDeploymentEntity>
-    {
-        IDeploymentEntity FindLatestDeploymentByName(string deploymentName);
+	/// 
+	public interface IDeploymentDataManager : IDataManager<IDeploymentEntity>
+	{
+		IDeploymentEntity FindLatestDeploymentByName(string deploymentName, string tenantId = default);
 
-        long FindDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery);
+		long FindDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery);
 
-        IList<IDeployment> FindDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page);
+		IList<IDeployment> FindDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page);
 
-        IList<IDeployment> FindDeploymentDrafts(IDeploymentQuery deploymentQuery);
+		IList<IDeployment> FindDeploymentDrafts(IDeploymentQuery deploymentQuery);
 
-        IList<string> GetDeploymentResourceNames(string deploymentId);
+		IList<string> GetDeploymentResourceNames(string deploymentId);
 
-        IList<IDeployment> FindDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+		IList<IDeployment> FindDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-        long FindDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
-    }
+		long FindDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
+	}
 }

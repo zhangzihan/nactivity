@@ -270,8 +270,14 @@ namespace Sys.Workflow.Engine.Impl.Util
 					}
 				}
 			}
-
 			IExecutionEntity execution = processInstance.GetExecutions()[0]; // There will always be one child execution created
+			if (execution.CurrentFlowElement is UserTask us)
+			{
+				if (!execution.HasVariable(us.Id))
+				{
+					execution.SetVariable(us.Id, new string[1] { string.Empty });
+				}
+			}
 			commandContext.Agenda.PlanContinueProcessOperation(execution);
 
 			if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)

@@ -359,9 +359,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 			return null;
 		}
 
-		public virtual IDeploymentEntity FindLatestDeploymentByName(string deploymentName)
+		public virtual IDeploymentEntity FindLatestDeploymentByName(string deploymentName, string tenantId = default)
 		{
-			return deploymentDataManager.FindLatestDeploymentByName(deploymentName);
+			return deploymentDataManager.FindLatestDeploymentByName(deploymentName, tenantId);
 		}
 
 		public virtual long FindDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery)
@@ -391,7 +391,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 		public virtual IDeploymentEntity SaveDraft(IDeploymentEntity deployment)
 		{
-			IDeploymentEntity exist = this.FindLatestDeploymentByName(deployment.Name);
+			IDeploymentEntity exist = this.FindLatestDeploymentByName(deployment.Name, deployment.TenantId);
 
 			if (exist is object)
 			{

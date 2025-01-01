@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     public interface IDeploymentEntityManager : IEntityManager<IDeploymentEntity>
     {
 
-        IDeploymentEntity FindLatestDeploymentByName(string deploymentName);
+        IDeploymentEntity FindLatestDeploymentByName(string deploymentName, string tenantId = default);
 
         IList<IDeployment> FindDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page);
 

@@ -149,10 +149,15 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             if ((taskEntity.Assignee is not null && !taskEntity.Assignee.Equals(assignee)) || (taskEntity.Assignee is null && assignee is not null))
             {
+                var cur = taskEntity.Assignee;
                 taskEntity.Assignee = assignee;
                 taskEntity.AssigneeUser = assigneeUser;
                 if (fireEvents)
                 {
+                    if (!string.IsNullOrWhiteSpace(cur) && string.IsNullOrWhiteSpace(assignee))
+                    {
+                        FireReleaseEvents(taskEntity);
+                    }
                     FireAssignmentEvents(taskEntity);
                 }
                 else
@@ -199,12 +204,24 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, taskEntity));
             }
 
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="taskEntity"></param>
-        protected internal virtual void RecordTaskAssignment(ITaskEntity taskEntity)
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="taskEntity"></param>
+		protected internal virtual void FireReleaseEvents(ITaskEntity taskEntity)
+		{
+			if (EventDispatcher.Enabled)
+			{
+				EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_RELEASE, taskEntity));
+			}
+
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="taskEntity"></param>
+		protected internal virtual void RecordTaskAssignment(ITaskEntity taskEntity)
         {
             ProcessEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_ASSIGNMENT);
             HistoryManager.RecordTaskAssignment(taskEntity);

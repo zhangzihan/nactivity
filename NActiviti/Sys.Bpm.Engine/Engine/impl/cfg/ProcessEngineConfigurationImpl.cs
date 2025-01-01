@@ -131,6 +131,8 @@ namespace Sys.Workflow.Engine.Impl.Cfg
 
 		internal static readonly IActivitiEventListener UserTaskAssignmentListener = new UserTaskAssignmentListener();
 
+		internal static readonly IActivitiEventListener UserTaskReleaseListener = new UserTaskReleaseListener();
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -2548,6 +2550,10 @@ namespace Sys.Workflow.Engine.Impl.Cfg
 			this.eventDispatcher.AddEventListener(
 				UserTaskAssignmentListener,
 				ActivitiEventType.TASK_ASSIGNED);
+
+			this.eventDispatcher.AddEventListener(
+				UserTaskReleaseListener,
+				ActivitiEventType.TASK_RELEASE);
 
 			this.eventDispatcher.Enabled = enableEventDispatcher;
 

@@ -16,77 +16,83 @@ using System.Collections.Generic;
 namespace Sys.Workflow.Bpmn.Converters.Parsers
 {
 
-    using Sys.Workflow.Bpmn.Constants;
-    using Sys.Workflow.Bpmn.Converters.Utils;
-    using Sys.Workflow.Bpmn.Models;
+	using Sys.Workflow.Bpmn.Constants;
+	using Sys.Workflow.Bpmn.Converters.Utils;
+	using Sys.Workflow.Bpmn.Models;
+	using System.Linq;
 
-    /// 
-    public class BpmnEdgeParser : IBpmnXMLConstants
-    {
-        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
-        {
+	/// 
+	public class BpmnEdgeParser : IBpmnXMLConstants
+	{
+		public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
+		{
 
-            string id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT);
-            IList<GraphicInfo> wayPointList = new List<GraphicInfo>();
-            while (xtr.HasNext())
-            {
-                //xtr.next();
+			string id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT);
+			IList<GraphicInfo> wayPointList = new List<GraphicInfo>();
+			while (xtr.HasNext())
+			{
+				//xtr.next();
 
-                if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    while (xtr.HasNext())
-                    {
-                        //xtr.next();
+				if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+				{
+					while (xtr.HasNext())
+					{
+						//xtr.next();
 
-                        if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            GraphicInfo graphicInfo = new GraphicInfo();
-                            BpmnXMLUtil.AddXMLLocation(graphicInfo, xtr);
-                            graphicInfo.X = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_X));
-                            graphicInfo.Y = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_Y));
-                            graphicInfo.Width = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_WIDTH));
-                            graphicInfo.Height = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT));
-                            model.AddLabelGraphicInfo(id, graphicInfo);
-                            break;
-                        }
-                        else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            break;
-                        }
+						if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+						{
+							GraphicInfo graphicInfo = new GraphicInfo();
+							BpmnXMLUtil.AddXMLLocation(graphicInfo, xtr);
+							graphicInfo.X = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_X));
+							graphicInfo.Y = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_Y));
+							graphicInfo.Width = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_WIDTH));
+							graphicInfo.Height = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT));
+							model.AddLabelGraphicInfo(id, graphicInfo);
+							break;
+						}
+						else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+						{
+							break;
+						}
 
-                        if (xtr.IsEmptyElement && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            break;
-                        }
-                    }
+						if (xtr.IsEmptyElement && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+						{
+							break;
+						}
+					}
 
-                }
-                else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_WAYPOINT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    GraphicInfo graphicInfo = new GraphicInfo();
-                    BpmnXMLUtil.AddXMLLocation(graphicInfo, xtr);
-                    graphicInfo.X = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_X));
-                    graphicInfo.Y = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_Y));
-                    wayPointList.Add(graphicInfo);
+				}
+				else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_WAYPOINT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+				{
+					GraphicInfo graphicInfo = new GraphicInfo();
+					graphicInfo.X = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_X));
+					graphicInfo.Y = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_Y));
+					if (!wayPointList.Any(x =>
+					{
+						return x.X == graphicInfo.X && x.Y == graphicInfo.Y;
+					}))
+					{
+						BpmnXMLUtil.AddXMLLocation(graphicInfo, xtr);
+						wayPointList.Add(graphicInfo);
+					};
+				}
+				else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+				{
+					break;
+				}
 
-                }
-                else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    break;
-                }
+				if (xtr.IsEmptyElement && BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+				{
+					break;
+				}
+			}
+			model.AddFlowGraphicInfoList(id, wayPointList);
+		}
 
-                if (xtr.IsEmptyElement && BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    break;
-                }
-            }
-            model.AddFlowGraphicInfoList(id, wayPointList);
-        }
-
-        public virtual BaseElement ParseElement()
-        {
-            return null;
-        }
-    }
+		public virtual BaseElement ParseElement()
+		{
+			return null;
+		}
+	}
 
 }

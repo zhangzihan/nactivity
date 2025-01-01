@@ -12,82 +12,91 @@
  */
 namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 {
-    using Sys.Workflow.Engine.Delegate;
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+	using Sys.Workflow.Engine.Delegate;
+	using Sys.Workflow.Engine.Impl.EL;
+	using Sys.Workflow.Engine.Impl.Interceptor;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
-    public class SkipExpressionUtil
-    {
+	public class SkipExpressionUtil
+	{
 
-        public static bool IsSkipExpressionEnabled(IExecutionEntity execution, string skipExpression)
-        {
-            if (skipExpression is null)
-            {
-                return false;
-            }
-            return CheckSkipExpressionVariable(execution);
-        }
+		public static bool IsSkipExpressionEnabled(IExecutionEntity execution, string skipExpression)
+		{
+			if (skipExpression is null)
+			{
+				return false;
+			}
+			return CheckSkipExpressionVariable(execution);
+		}
 
-        public static bool IsSkipExpressionEnabled(IExecutionEntity execution, IExpression skipExpression)
-        {
-            if (skipExpression is null)
-            {
-                return false;
-            }
-            return CheckSkipExpressionVariable(execution);
-        }
+		public static bool IsSkipExpressionEnabled(IExecutionEntity execution, IExpression skipExpression)
+		{
+			if (skipExpression is null)
+			{
+				return false;
+			}
+			return CheckSkipExpressionVariable(execution);
+		}
 
-        private static bool CheckSkipExpressionVariable(IExecutionEntity execution)
-        {
-            const string skipExpressionEnabledVariable = "_ACTIVITI_SKIP_EXPRESSION_ENABLED";
-            object isSkipExpressionEnabled = execution.GetVariable(skipExpressionEnabledVariable);
+		private static bool CheckSkipExpressionVariable(IExecutionEntity execution)
+		{
+			const string skipExpressionEnabledVariable = "_ACTIVITI_SKIP_EXPRESSION_ENABLED";
+			object isSkipExpressionEnabled = execution.GetVariable(skipExpressionEnabledVariable);
 
-            if (isSkipExpressionEnabled is null)
-            {
-                return false;
+			if (isSkipExpressionEnabled is null)
+			{
+				return false;
+			}
+			try
+			{
+				return ToBoolean(isSkipExpressionEnabled, new JuelExpression(new ValueExpression(skipExpressionEnabledVariable, typeof(bool)), skipExpressionEnabledVariable));
+			}
+			catch (ActivitiIllegalArgumentException)
+			{
+				throw new ActivitiIllegalArgumentException(skipExpressionEnabledVariable + " variable does not resolve to a boolean. " + isSkipExpressionEnabled);
+			}
+		}
 
-            }
-            else if (isSkipExpressionEnabled is bool?)
-            {
-                return ((bool?)isSkipExpressionEnabled).Value;
+		public static bool ShouldSkipFlowElement(ICommandContext commandContext, IExecutionEntity execution, string skipExpressionString)
+		{
+			IExpression skipExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.CreateExpression(skipExpressionString);
+			object value = skipExpression.GetValue(execution);
+			return ToBoolean(value, skipExpression);
+		}
 
-            }
-            else
-            {
-                throw new ActivitiIllegalArgumentException(skipExpressionEnabledVariable + " variable does not resolve to a boolean. " + isSkipExpressionEnabled);
-            }
-        }
+		public static bool ShouldSkipFlowElement(IExecutionEntity execution, IExpression skipExpression)
+		{
+			object value = skipExpression.GetValue(execution);
+			return ToBoolean(value, skipExpression);
+		}
 
-        public static bool ShouldSkipFlowElement(ICommandContext commandContext, IExecutionEntity execution, string skipExpressionString)
-        {
-            IExpression skipExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.CreateExpression(skipExpressionString);
-            object value = skipExpression.GetValue(execution);
-
-            if (value is bool?)
-            {
-                return ((bool?)value).Value;
-
-            }
-            else
-            {
-                throw new ActivitiIllegalArgumentException("Skip expression does not resolve to a boolean: " + skipExpression.ExpressionText);
-            }
-        }
-
-        public static bool ShouldSkipFlowElement(IExecutionEntity execution, IExpression skipExpression)
-        {
-            object value = skipExpression.GetValue(execution);
-
-            if (value is bool?)
-            {
-                return ((bool?)value).Value;
-
-            }
-            else
-            {
-                throw new ActivitiIllegalArgumentException("Skip expression does not resolve to a boolean: " + skipExpression.ExpressionText);
-            }
-        }
-    }
+		private static bool ToBoolean(object value, IExpression skipExpression)
+		{
+			if (value is not null)
+			{
+				var str = value.ToString();
+				switch (str)
+				{
+					case "1":
+					case "是":
+					case "y":
+					case "Y":
+						return true;
+					case "0":
+					case "否":
+					case "N":
+					case "n":
+						return false;
+					default:
+						if (bool.TryParse(value.ToString(), out var skip))
+						{
+							return skip;
+						}
+						break;
+				}
+			}
+			throw new ActivitiIllegalArgumentException("Skip expression does not resolve to a boolean: " + skipExpression.ExpressionText);
+		}
+	}
 
 }

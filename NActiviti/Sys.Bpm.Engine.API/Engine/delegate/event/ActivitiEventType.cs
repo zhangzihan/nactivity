@@ -201,6 +201,11 @@ namespace Sys.Workflow.Engine.Delegate.Events
 		public static readonly ActivitiEventType TASK_ASSIGNED = new("TASK_ASSIGNED", InnerEnum.TASK_ASSIGNED);
 
 		/// <summary>
+		/// A task as been assigned. This is thrown alongside with an <seealso cref="#TASK_RELEASE"/> event.
+		/// </summary>
+		public static readonly ActivitiEventType TASK_RELEASE = new("TASK_RELEASE", InnerEnum.TASK_RELEASE);
+
+		/// <summary>
 		/// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
 		/// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
 		/// </summary>
@@ -335,6 +340,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
 			valueList.Add(MEMBERSHIP_DELETED);
 			valueList.Add(MEMBERSHIPS_DELETED);
 			valueList.Add(DEBUG_LOGGER);
+			valueList.Add(TASK_RELEASE);
 		}
 
 		public enum InnerEnum
@@ -384,7 +390,8 @@ namespace Sys.Workflow.Engine.Delegate.Events
 			MEMBERSHIP_CREATED,
 			MEMBERSHIP_DELETED,
 			MEMBERSHIPS_DELETED,
-			DEBUG_LOGGER
+			DEBUG_LOGGER,
+			TASK_RELEASE
 		}
 
 		public readonly InnerEnum innerEnumValue;

@@ -16,70 +16,75 @@ using System.Collections.Generic;
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 {
 
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Repository;
+	using Sys.Workflow.Engine.Impl.Cfg;
+	using Sys.Workflow.Engine.Repository;
 
-    /// 
-    public class MybatisDeploymentDataManager : AbstractDataManager<IDeploymentEntity>, IDeploymentDataManager
-    {
+	/// 
+	public class MybatisDeploymentDataManager : AbstractDataManager<IDeploymentEntity>, IDeploymentDataManager
+	{
 
-        public MybatisDeploymentDataManager(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
-        {
-        }
+		public MybatisDeploymentDataManager(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
+		{
+		}
 
-        public override Type ManagedEntityClass
-        {
-            get
-            {
-                return typeof(DeploymentEntityImpl);
-            }
-        }
+		public override Type ManagedEntityClass
+		{
+			get
+			{
+				return typeof(DeploymentEntityImpl);
+			}
+		}
 
-        public override IDeploymentEntity Create()
-        {
-            return new DeploymentEntityImpl();
-        }
+		public override IDeploymentEntity Create()
+		{
+			return new DeploymentEntityImpl();
+		}
 
-        public virtual IDeploymentEntity FindLatestDeploymentByName(string deploymentName)
-        {
-            IList<IDeploymentEntity> list = DbSqlSession.SelectList<DeploymentEntityImpl, IDeploymentEntity>("selectDeploymentsByName", new { deploymentName }, 0, 1);
-            if (list is object && list.Count > 0)
-            {
-                return list[0];
-            }
-            return null;
-        }
+		public virtual IDeploymentEntity FindLatestDeploymentByName(string deploymentName, string tenantId = default)
+		{
+			IList<IDeploymentEntity> list = DbSqlSession.SelectList<DeploymentEntityImpl, IDeploymentEntity>("selectDeploymentsByName", new
+			{
+				deploymentName,
+				tenantId,
+				withoutTenantId = string.IsNullOrWhiteSpace(tenantId)
+			}, 0, 1);
+			if (list is object && list.Count > 0)
+			{
+				return list[0];
+			}
+			return null;
+		}
 
-        public virtual long FindDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery)
-        {
-            return DbSqlSession.SelectOne<DeploymentEntityImpl, long?>("selectDeploymentCountByQueryCriteria", deploymentQuery).GetValueOrDefault();
-        }
+		public virtual long FindDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery)
+		{
+			return DbSqlSession.SelectOne<DeploymentEntityImpl, long?>("selectDeploymentCountByQueryCriteria", deploymentQuery).GetValueOrDefault();
+		}
 
-        public virtual IList<IDeployment> FindDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page)
-        {
-            const string query = "selectDeploymentsByQueryCriteria";
-            return DbSqlSession.SelectList<DeploymentEntityImpl, IDeployment>(query, deploymentQuery, page);
-        }
+		public virtual IList<IDeployment> FindDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page)
+		{
+			const string query = "selectDeploymentsByQueryCriteria";
+			return DbSqlSession.SelectList<DeploymentEntityImpl, IDeployment>(query, deploymentQuery, page);
+		}
 
-        public virtual IList<string> GetDeploymentResourceNames(string deploymentId)
-        {
-            return DbSqlSession.SelectList<ResourceEntityImpl, string>("selectResourceNamesByDeploymentId", new { deploymentId });
-        }
+		public virtual IList<string> GetDeploymentResourceNames(string deploymentId)
+		{
+			return DbSqlSession.SelectList<ResourceEntityImpl, string>("selectResourceNamesByDeploymentId", new { deploymentId });
+		}
 
-        public virtual IList<IDeployment> FindDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
-        {
-            return DbSqlSession.SelectListWithRawParameter<DeploymentEntityImpl, IDeployment>("selectDeploymentByNativeQuery", parameterMap, firstResult, maxResults);
-        }
+		public virtual IList<IDeployment> FindDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+		{
+			return DbSqlSession.SelectListWithRawParameter<DeploymentEntityImpl, IDeployment>("selectDeploymentByNativeQuery", parameterMap, firstResult, maxResults);
+		}
 
-        public virtual long FindDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap)
-        {
-            return DbSqlSession.SelectOne<DeploymentEntityImpl, long?>("selectDeploymentCountByNativeQuery", parameterMap).GetValueOrDefault();
-        }
+		public virtual long FindDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap)
+		{
+			return DbSqlSession.SelectOne<DeploymentEntityImpl, long?>("selectDeploymentCountByNativeQuery", parameterMap).GetValueOrDefault();
+		}
 
-        public IList<IDeployment> FindDeploymentDrafts(IDeploymentQuery query)
-        {
-            return DbSqlSession.SelectList<DeploymentEntityImpl, IDeployment>("selectDeploymentDrafts", query);
-        }
-    }
+		public IList<IDeployment> FindDeploymentDrafts(IDeploymentQuery query)
+		{
+			return DbSqlSession.SelectList<DeploymentEntityImpl, IDeployment>("selectDeploymentDrafts", query);
+		}
+	}
 
 }

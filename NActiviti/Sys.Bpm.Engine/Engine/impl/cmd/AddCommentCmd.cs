@@ -84,7 +84,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IUserInfo user = Authentication.AuthenticatedUser;
             ICommentEntity comment = commandContext.CommentEntityManager.Create();
-            comment.UserId = user.Id;
+            comment.UserId = user?.Id;
             comment.Type = (type is null) ? CommentEntityFields.TYPE_COMMENT : type;
             comment.Time = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
             comment.TaskId = taskId;

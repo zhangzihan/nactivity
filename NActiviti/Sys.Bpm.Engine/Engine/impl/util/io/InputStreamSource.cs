@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Util.IO
                         throw new ActivitiException("Could not read from inputstream", e);
                     }
                 }
-                return new BufferedStream(new System.IO.MemoryStream(bytes));
+                return new BufferedStream(new MemoryStream(bytes));
             }
         }
 

@@ -1,39 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Version>3.3.2</Version>
-    <PackageProjectUrl>https://github.com/Ahoo-Wang/SmartSql</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/Ahoo-Wang/SmartSql/master/SmartSql.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/Ahoo-Wang/SmartSql</RepositoryUrl>
-    <PackageReleaseNotes>
-      1. SmartSql.DyRepository add logger
-    </PackageReleaseNotes>
-    <PackageTags>orm sql read-write-separation cache  redis dotnet-core cross-platform high-performance distributed-computing zookeeper</PackageTags>
-    <Copyright>Ahoo Wang</Copyright>
-    <Product>Ahoo Wang</Product>
-    <Company>Ahoo Wang</Company>
-    <Authors>Ahoo Wang</Authors>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>bin</OutputPath>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Version>3.3.2</Version>
+		<PackageProjectUrl>https://github.com/Ahoo-Wang/SmartSql</PackageProjectUrl>
+		<PackageIconUrl>https://raw.githubusercontent.com/Ahoo-Wang/SmartSql/master/SmartSql.png</PackageIconUrl>
+		<RepositoryUrl>https://github.com/Ahoo-Wang/SmartSql</RepositoryUrl>
+		<PackageReleaseNotes>
+			1. SmartSql.DyRepository add logger
+		</PackageReleaseNotes>
+		<PackageTags>orm sql read-write-separation cache  redis dotnet-core cross-platform high-performance distributed-computing zookeeper</PackageTags>
+		<Copyright>Ahoo Wang</Copyright>
+		<Product>Ahoo Wang</Product>
+		<Company>Ahoo Wang</Company>
+		<Authors>Ahoo Wang</Authors>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>bin</OutputPath>
+		<LangVersion>latest</LangVersion>
+		<PackageOutputPath>../../../Packages</PackageOutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\SmartSql.DIExtension.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>bin\SmartSql.DIExtension.xml</DocumentationFile>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\SmartSql.DIExtension.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>bin\SmartSql.DIExtension.xml</DocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SmartSql.DyRepository\SmartSql.DyRepository.csproj" />
-    <ProjectReference Include="..\SmartSql\SmartSql.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SmartSql.DyRepository\SmartSql.DyRepository.csproj" />
+		<ProjectReference Include="..\SmartSql\SmartSql.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="dotnet pack --no-build -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -o $(PackageOutputPath)" />
+	</Target>
 
 </Project>

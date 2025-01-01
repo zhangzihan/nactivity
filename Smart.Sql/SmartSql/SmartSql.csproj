@@ -1,51 +1,56 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Authors>Ahoo Wang</Authors>
-    <Company>Ahoo Wang</Company>
-    <Description>SmartSql = MyBatis + Cache(Memory | Redis) + ZooKeeper + R/W Splitting + ......</Description>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Copyright>Ahoo Wang</Copyright>
-    <PackageProjectUrl>https://github.com/Ahoo-Wang/SmartSql</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Ahoo-Wang/SmartSql</RepositoryUrl>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>3.3.1</Version>
-    <PackageTags>orm sql read-write-separation cache  redis dotnet-core cross-platform high-performance distributed-computing zookeeper</PackageTags>
-    <PackageReleaseNotes>
-      1. add support DEBUG-log output SQL And DBParameters.
-    </PackageReleaseNotes>
-    <PackageIconUrl>https://raw.githubusercontent.com/Ahoo-Wang/SmartSql/master/SmartSql.png</PackageIconUrl>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>bin</OutputPath>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Authors>Ahoo Wang</Authors>
+		<Company>Ahoo Wang</Company>
+		<Description>SmartSql = MyBatis + Cache(Memory | Redis) + ZooKeeper + R/W Splitting + ......</Description>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<Copyright>Ahoo Wang</Copyright>
+		<PackageProjectUrl>https://github.com/Ahoo-Wang/SmartSql</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Ahoo-Wang/SmartSql</RepositoryUrl>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+		<Version>3.3.1</Version>
+		<PackageTags>orm sql read-write-separation cache  redis dotnet-core cross-platform high-performance distributed-computing zookeeper</PackageTags>
+		<PackageReleaseNotes>
+			1. add support DEBUG-log output SQL And DBParameters.
+		</PackageReleaseNotes>
+		<PackageIconUrl>https://raw.githubusercontent.com/Ahoo-Wang/SmartSql/master/SmartSql.png</PackageIconUrl>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>bin</OutputPath>
+		<LangVersion>latest</LangVersion>
+		<PackageOutputPath>../../../Packages</PackageOutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\SmartSql.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>bin\SmartSql.xml</DocumentationFile>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\SmartSql.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>bin\SmartSql.xml</DocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Configuration\Tags\TagBuilder\DefaultTagBuilder.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Configuration\Tags\TagBuilder\DefaultTagBuilder.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AspectCore.Extensions.Reflection" Version="2.2.0" />
-    <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AspectCore.Extensions.Reflection" Version="2.2.0" />
+		<PackageReference Include="Dapper.StrongName" Version="2.1.28" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Sys.Expression\Sys.Expression.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Sys.Expression\Sys.Expression.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="System.Reflection.Emit.Lightweight" Version="4.7.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="dotnet pack --no-build -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -o $(PackageOutputPath)" />
+	</Target>
 </Project>
