@@ -187,6 +187,18 @@ namespace Spring.Expressions
 
 		private int CalculateMethodHash(Type contextType, object[] argValues)
 		{
+			//HashCode hash = new HashCode();
+			//hash.Add(contextType.GetHashCode());
+			//for (int i = 0; i < argValues.Length; i++)
+			//{
+			//	object arg = argValues[i];
+			//	if (arg is not null)
+			//	{
+			//		hash.Add(arg.GetType().GetHashCode());
+			//	}
+			//}
+			//return hash.ToHashCode();
+
 			int hash = contextType.GetHashCode();
 			for (int i = 0; i < argValues.Length; i++)
 			{
@@ -355,6 +367,9 @@ namespace Spring.Expressions
 			, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601
 			, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659
 			, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733
+			, 701, 713, 717, 723, 731, 741, 749, 759, 767, 773
+			, 861, 813, 817, 823, 831, 841, 849, 859, 867, 873
+			, 961, 913, 917, 923, 931, 941, 949, 959, 967, 973
 		};
 	}
 }
