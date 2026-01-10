@@ -187,17 +187,14 @@ namespace Spring.Expressions
 
 		private int CalculateMethodHash(Type contextType, object[] argValues)
 		{
-			HashCode hash = new HashCode();
-			hash.Add(contextType.GetHashCode());
+			int hash = contextType.GetHashCode();
 			for (int i = 0; i < argValues.Length; i++)
 			{
 				object arg = argValues[i];
-				if (arg is not null)
-				{
-					hash.Add(arg.GetType().GetHashCode());
-				}
+				if (arg != null)
+					hash += s_primes[i] * arg.GetType().GetHashCode();
 			}
-			return hash.ToHashCode();
+			return hash;
 		}
 
 		private void Initialize(string methodName, object[] argValues, object context)
@@ -208,7 +205,7 @@ namespace Spring.Expressions
 			MethodInfo mi = GetBestMethod(contextType, methodName, BINDING_FLAGS, argValues);
 
 			// if not found, probe the Type's type          
-			if (mi is null)
+			if (mi == null)
 			{
 				mi = GetBestMethod(typeof(Type), methodName, BINDING_FLAGS, argValues);
 			}
@@ -341,5 +338,23 @@ namespace Spring.Expressions
 		{
 			collectionProcessorMap.Add(methodName, collectionProcessor);
 		}
+
+		// used to calculate signature hash while caring for arg positions
+		private static readonly int[] s_primes =
+		{
+			17, 19, 23, 29
+			, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71
+			, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113
+			, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173
+			, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229
+			, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281
+			, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349
+			, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409
+			, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463
+			, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541
+			, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601
+			, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659
+			, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733
+		};
 	}
 }
