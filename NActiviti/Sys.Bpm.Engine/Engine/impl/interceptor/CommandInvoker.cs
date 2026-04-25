@@ -60,7 +60,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 				// TODO: commandcontext和command不在一个线程导致异常
 				if (log.IsEnabled(LogLevel.Debug))
 				{
-					log.LogDebug($"【线程异常】:{ex.Message}");
+					log.LogError($"【线程异常】:{ex.Message}");
 				}
 				return default;
 				//throw ex;

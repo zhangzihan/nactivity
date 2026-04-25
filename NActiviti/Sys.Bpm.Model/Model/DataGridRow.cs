@@ -65,9 +65,9 @@ namespace Sys.Workflow.Bpmn.Models
                 fields = new List<DataGridField>();
                 if (value.Fields is object && value.Fields.Count > 0)
                 {
-                    foreach (DataGridField field in value.Fields)
+                    foreach (DataGridField _field in value.Fields)
                     {
-                        fields.Add(field.Clone() as DataGridField);
+                        fields.Add(_field.Clone() as DataGridField);
                     }
                 }
             }

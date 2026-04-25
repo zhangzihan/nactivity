@@ -37,7 +37,7 @@ namespace Spring.Objects.Factory.Config
 
         private PropertyInfo property;
 
-        private FieldInfo field;
+        private FieldInfo _field;
 
         private readonly bool required;
 
@@ -114,7 +114,7 @@ namespace Spring.Objects.Factory.Config
         /// </summary>
         public DependencyDescriptor(FieldInfo field, bool required, bool eager)
         {
-            this.field = field;
+            this._field = field;
             this.required = required;
             this.eager = eager;
         }
@@ -140,8 +140,8 @@ namespace Spring.Objects.Factory.Config
                     return methodParameter.ParameterType;
                 if (property is not null)
                     return property.PropertyType;
-                if (field is not null)
-                    return field.FieldType;
+                if (_field is not null)
+                    return _field.FieldType;
 
                 return null;
             }
@@ -170,16 +170,16 @@ namespace Spring.Objects.Factory.Config
         /// <summary>
         /// Gets the Attributes assigned to Field, Property or Paramater
         /// </summary>
-        public Attribute[] Attributes 
-        { 
+        public Attribute[] Attributes
+        {
             get
             {
                 if (methodParameter is not null)
                     return methodParameter.ParameterAttributes;
                 if (property is not null)
                     return Attribute.GetCustomAttributes(property);
-                if (field is not null)
-                    return Attribute.GetCustomAttributes(field);
+                if (_field is not null)
+                    return Attribute.GetCustomAttributes(_field);
 
                 return new Attribute[0];
             }
@@ -196,8 +196,8 @@ namespace Spring.Objects.Factory.Config
                     return methodParameter.ParameterName();
                 if (property is not null)
                     return property.Name;
-                if (field is not null)
-                    return field.Name;
+                if (_field is not null)
+                    return _field.Name;
 
                 return "";
             }

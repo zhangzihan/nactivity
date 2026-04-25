@@ -652,14 +652,14 @@ namespace Spring.Expressions
 
         private class FieldValueAccessor : BaseValueAccessor
         {
-            private readonly SafeField field;
+            private readonly SafeField _field;
             private readonly bool isWriteable;
             private readonly Type targetType;
             private readonly Type contextType;
 
             public FieldValueAccessor(FieldInfo fieldInfo)
             {
-                this.field = new SafeField(fieldInfo);
+                this._field = new SafeField(fieldInfo);
                 this.isWriteable = !(fieldInfo.IsInitOnly || fieldInfo.IsLiteral);
                 this.targetType = fieldInfo.FieldType;
                 this.contextType = fieldInfo.DeclaringType;
@@ -667,12 +667,12 @@ namespace Spring.Expressions
 
             public override object Get(object context)
             {
-                return field.GetValue(context);
+                return _field.GetValue(context);
             }
 
             public override void Set(object context, object value)
             {
-                field.SetValue(context, value);
+                _field.SetValue(context, value);
             }
 
             public override bool IsWriteable
@@ -692,7 +692,7 @@ namespace Spring.Expressions
 
             public override MemberInfo MemberInfo
             {
-                get { return field.FieldInfo; }
+                get { return _field.FieldInfo; }
             }
 
             public override bool RequiresRefresh(Type contextType)

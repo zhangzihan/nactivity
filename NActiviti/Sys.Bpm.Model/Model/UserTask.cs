@@ -266,7 +266,7 @@ namespace Sys.Workflow.Bpmn.Models
 
                 foreach (ExtensionElement extField in fields)
                 {
-                    FormField field = new FormField()
+                    FormField _field = new FormField()
                     {
                         Id = extField.Attributes["id"]?.FirstOrDefault().Value,
                         Type = extField.Attributes["type"]?.FirstOrDefault().Value,
@@ -282,10 +282,10 @@ namespace Sys.Workflow.Bpmn.Models
                             Name = prop.Attributes["id"]?.FirstOrDefault().Value,
                             Value = prop.Attributes["value"]?.FirstOrDefault().Value
                         };
-                        field.FieldProperties.Add(ffp);
+                        _field.FieldProperties.Add(ffp);
                     }
 
-                    yield return field;
+                    yield return _field;
                 }
             }
         }

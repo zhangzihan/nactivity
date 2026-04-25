@@ -24,6 +24,14 @@
     "webapiErrorCode": "-1000",
     //流程定义缓存限制数量
     "processDefinitionCacheLimit": -1,
+    //单次拉取的计时器任务数，避免默认值过低导致吞吐受限
+    "asyncExecutorMaxTimerJobsPerAcquisition": 10,
+    //异步作业线程池核心线程数
+    "asyncExecutorCorePoolSize": 4,
+    //异步作业线程池最大线程数
+    "asyncExecutorMaxPoolSize": 16,
+    //异步作业线程池队列大小
+    "asyncExecutorThreadPoolQueueSize": 200,
     "mailServers": [
         {
             "myEmailTenant": {

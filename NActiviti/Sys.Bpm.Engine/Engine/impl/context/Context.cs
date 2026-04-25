@@ -27,14 +27,10 @@ namespace Sys.Workflow.Engine.Impl.Contexts
     /// 
     public class Context
     {
-        protected internal static ThreadLocal<Stack<ICommandContext>> commandContextThreadLocal =
-               new(true);
-        protected internal static ThreadLocal<Stack<ProcessEngineConfigurationImpl>> processEngineConfigurationStackThreadLocal =
-            new(true);
-        protected internal static ThreadLocal<Stack<ITransactionContext>> transactionContextThreadLocal =
-            new(true);
-        protected internal static ThreadLocal<IDictionary<string, JToken>> bpmnOverrideContextThreadLocal =
-            new(true);
+        protected internal static AsyncLocal<Stack<ICommandContext>> commandContextThreadLocal = new();
+        protected internal static AsyncLocal<Stack<ProcessEngineConfigurationImpl>> processEngineConfigurationStackThreadLocal = new();
+        protected internal static AsyncLocal<Stack<ITransactionContext>> transactionContextThreadLocal = new();
+        protected internal static AsyncLocal<IDictionary<string, JToken>> bpmnOverrideContextThreadLocal = new();
 
         protected internal static ResourceBundleControl resourceBundleControl = new();
 
@@ -45,7 +41,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             get
             {
-                Stack<ICommandContext> stack = GetStack(commandContextThreadLocal);
+                Stack<ICommandContext> stack = GetStack<ICommandContext>(commandContextThreadLocal);
                 if (stack.Count == 0)
                 {
                     return null;
@@ -54,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
             }
             set
             {
-                GetStack(commandContextThreadLocal).Push(value);
+                GetStack<ICommandContext>(commandContextThreadLocal).Push(value);
             }
         }
 
@@ -74,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         /// </summary>
         public static void RemoveCommandContext()
         {
-            GetStack(commandContextThreadLocal)?.Pop();
+            RemoveTop<ICommandContext>(commandContextThreadLocal);
         }
 
         /// <summary>
@@ -84,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             get
             {
-                Stack<ProcessEngineConfigurationImpl> stack = GetStack(processEngineConfigurationStackThreadLocal);
+                Stack<ProcessEngineConfigurationImpl> stack = GetStack<ProcessEngineConfigurationImpl>(processEngineConfigurationStackThreadLocal);
                 if (stack.Count == 0)
                 {
                     return null;
@@ -93,7 +89,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
             }
             set
             {
-                GetStack(processEngineConfigurationStackThreadLocal)?.Push(value);
+                GetStack<ProcessEngineConfigurationImpl>(processEngineConfigurationStackThreadLocal).Push(value);
             }
         }
 
@@ -102,7 +98,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         /// </summary>
         public static void RemoveProcessEngineConfiguration()
         {
-            GetStack(processEngineConfigurationStackThreadLocal)?.Pop();
+            RemoveTop<ProcessEngineConfigurationImpl>(processEngineConfigurationStackThreadLocal);
         }
 
         /// <summary>
@@ -112,7 +108,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             get
             {
-                Stack<ITransactionContext> stack = GetStack(transactionContextThreadLocal);
+                Stack<ITransactionContext> stack = GetStack<ITransactionContext>(transactionContextThreadLocal);
                 if (stack.Count == 0)
                 {
                     return null;
@@ -121,7 +117,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
             }
             set
             {
-                GetStack(transactionContextThreadLocal).Push(value);
+                GetStack<ITransactionContext>(transactionContextThreadLocal).Push(value);
             }
         }
 
@@ -130,24 +126,37 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         /// </summary>
         public static void RemoveTransactionContext()
         {
-            GetStack(transactionContextThreadLocal)?.Pop();
+            RemoveTop<ITransactionContext>(transactionContextThreadLocal);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="threadLocal"></param>
+        /// <param name="asyncLocal"></param>
         /// <returns></returns>
-        protected internal static Stack<T> GetStack<T>(ThreadLocal<Stack<T>> threadLocal)
+        protected internal static Stack<T> GetStack<T>(AsyncLocal<Stack<T>> asyncLocal)
         {
-            Stack<T> stack = threadLocal.Value;
+            Stack<T> stack = asyncLocal.Value;
             if (stack is null)
             {
                 stack = new Stack<T>();
-                threadLocal.Value = stack;
+                asyncLocal.Value = stack;
             }
             return stack;
+        }
+
+        protected internal static void RemoveTop<T>(AsyncLocal<Stack<T>> asyncLocal)
+        {
+            Stack<T> stack = asyncLocal.Value;
+            if (stack?.Count > 0)
+            {
+                stack.Pop();
+                if (stack.Count == 0)
+                {
+                    asyncLocal.Value = null;
+                }
+            }
         }
 
         /// <summary>
@@ -209,12 +218,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         /// </summary>
         public static void RemoveBpmnOverrideContext()
         {
-            if (bpmnOverrideContextThreadLocal.IsValueCreated)
-            {
-                var item = bpmnOverrideContextThreadLocal.Value;
-
-                bpmnOverrideContextThreadLocal.Values.Remove(item);
-            }
+            bpmnOverrideContextThreadLocal.Value = null;
         }
 
         /// <summary>
@@ -246,6 +250,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
                 if (bpmnOverrideMap is null)
                 {
                     bpmnOverrideMap = new Dictionary<string, JToken>();
+                    bpmnOverrideContextThreadLocal.Value = bpmnOverrideMap;
                 }
                 return bpmnOverrideMap;
             }

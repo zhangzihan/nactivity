@@ -707,37 +707,15 @@ namespace Sys.Workflow.Engine.Impl
         }
 
         /// <inheritdoc />
-        public async Task<IProcessInstance[]> StartProcessInstanceByCmdAsync(IStartProcessInstanceCmd[] cmds)
+        public Task<IProcessInstance[]> StartProcessInstanceByCmdAsync(IStartProcessInstanceCmd[] cmds)
         {
-            IEnumerable<Task<IProcessInstance>> tasks = Enumerable.Select(cmds, (cmd) =>
+            if (cmds is null)
             {
-                TaskCompletionSource<IProcessInstance> tsc = new TaskCompletionSource<IProcessInstance>();
+                throw new ArgumentNullException(nameof(cmds));
+            }
 
-                Task.Factory.StartNew((command) =>
-                {
-                    var instance = StartProcessInstanceByCmd(command as IStartProcessInstanceCmd);
-
-                    tsc.TrySetResult(instance);
-                }, cmd);
-
-                return tsc.Task;
-            });
-
-            //var instances = new List<IProcessInstance>(cmds.Length);
-            //List<Task> tasks = new List<Task>();
-            //foreach (var cmd in cmds)
-            //{
-            //    tasks.Add(Task.Factory.StartNew((command) =>
-            //    {
-            //        var instance = StartProcessInstanceByCmd(command as IStartProcessInstanceCmd);
-
-            //        instances.Add(instance);
-            //    }, cmd));
-            //}
-
-            IProcessInstance[] instances = await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
-
-            return instances;
+            IProcessInstance[] instances = StartProcessInstanceByCmd(cmds);
+            return Task.FromResult(instances);
         }
 
         /// <inheritdoc />

@@ -20,44 +20,44 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
     using Sys.Workflow.Engine.Impl.DB;
     using Sys.Workflow.Engine.Impl.Persistence.Caches;
     using System.Collections;
+    using System.Collections.Concurrent;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     /// 
     public abstract class AbstractDataManager<EntityImpl> : AbstractManager, IDataManager<EntityImpl> where EntityImpl : class, IEntity
     {
+        private static readonly MethodInfo selectByIdMethod = GetGenericDbSqlSessionMethod(nameof(DbSqlSession.SelectById), new[] { typeof(KeyValuePair<string, object>), typeof(bool) });
+        private static readonly MethodInfo selectListMethod = GetGenericDbSqlSessionMethod(nameof(DbSqlSession.SelectList), new[] { typeof(string), typeof(object) });
+        private static readonly MethodInfo selectOneMethod = GetGenericDbSqlSessionMethod(nameof(DbSqlSession.SelectOne), new[] { typeof(string), typeof(object) });
+
+        private static readonly ConcurrentDictionary<Tuple<Type, Type>, Func<DbSqlSession, KeyValuePair<string, object>, bool, IEntity>> selectByIdInvokerCache = new();
+        private static readonly ConcurrentDictionary<Tuple<Type, Type>, Func<DbSqlSession, string, object, IEnumerable>> selectListInvokerCache = new();
+        private static readonly ConcurrentDictionary<Tuple<Type, Type>, Func<DbSqlSession, string, object, object>> selectOneInvokerCache = new();
+
         public abstract EntityImpl Create();
 
         public abstract Type ManagedEntityClass { get; }
 
         protected static readonly Func<DbSqlSession, Type, Type, KeyValuePair<string, object>, bool, IEntity> selectById = (db, managedType, outType, id, useCache) =>
         {
-            MethodInfo m = db.GetType().GetMethod("selectbyid", BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
-            var invoker = m.MakeGenericMethod(new Type[] { managedType, outType });
-
-            var res = invoker.Invoke(db, new object[] { id, useCache });
-            if (res is null)
-            {
-                return default;
-            }
-
-            return (IEntity)res;
+            var cacheKey = Tuple.Create(managedType, outType);
+            var invoker = selectByIdInvokerCache.GetOrAdd(cacheKey, key => CreateSelectByIdInvoker(key.Item1, key.Item2));
+            return invoker(db, id, useCache);
         };
 
         protected static readonly Func<DbSqlSession, Type, Type, string, object, IList<EntityImpl>> selectList = (db, managedType, outType, dbQueryName, parameter) =>
         {
-            MethodInfo m = db.GetType().GetMethod("selectList", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance, Type.DefaultBinder, new Type[] { typeof(string), typeof(object) }, null);
-
-            var invoker = m.MakeGenericMethod(new Type[] { managedType, outType });
-
-            var res = invoker.Invoke(db, new object[] { dbQueryName, parameter });
+            var cacheKey = Tuple.Create(managedType, outType);
+            var invoker = selectListInvokerCache.GetOrAdd(cacheKey, key => CreateSelectListInvoker(key.Item1, key.Item2));
+            IEnumerable res = invoker(db, dbQueryName, parameter);
             if (res is null)
             {
                 return new List<EntityImpl>();
             }
 
-            return ToEntityImpl(res as IEnumerable).ToList();
+            return ToEntityImpl(res).ToList();
         };
 
         private static IEnumerable<EntityImpl> ToEntityImpl(IEnumerable list)
@@ -72,11 +72,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
 
         private static readonly Func<DbSqlSession, Type, Type, string, object, EntityImpl> selectOne = (db, managedType, outType, selectQuery, parameter) =>
         {
-            MethodInfo m = db.GetType().GetMethod("selectOne", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance, Type.DefaultBinder, new Type[] { typeof(string), typeof(object) }, null);
-
-            var invoker = m.MakeGenericMethod(new Type[] { managedType, outType });
-
-            var res = invoker.Invoke(db, new object[] { selectQuery, parameter });
+            var cacheKey = Tuple.Create(managedType, outType);
+            var invoker = selectOneInvokerCache.GetOrAdd(cacheKey, key => CreateSelectOneInvoker(key.Item1, key.Item2));
+            object res = invoker(db, selectQuery, parameter);
             if (res is null)
             {
                 return default;
@@ -84,6 +82,45 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
 
             return (EntityImpl)res;
         };
+
+        private static MethodInfo GetGenericDbSqlSessionMethod(string methodName, Type[] parameterTypes)
+        {
+            return typeof(DbSqlSession).GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance, Type.DefaultBinder, parameterTypes, null)
+                ?? throw new MissingMethodException(typeof(DbSqlSession).FullName, methodName);
+        }
+
+        private static Func<DbSqlSession, KeyValuePair<string, object>, bool, IEntity> CreateSelectByIdInvoker(Type managedType, Type outType)
+        {
+            MethodInfo method = selectByIdMethod.MakeGenericMethod(managedType, outType);
+            ParameterExpression dbParameter = Expression.Parameter(typeof(DbSqlSession), "db");
+            ParameterExpression idParameter = Expression.Parameter(typeof(KeyValuePair<string, object>), "id");
+            ParameterExpression useCacheParameter = Expression.Parameter(typeof(bool), "useCache");
+            UnaryExpression castExpression = Expression.Convert(Expression.Call(dbParameter, method, idParameter, useCacheParameter), typeof(IEntity));
+
+            return Expression.Lambda<Func<DbSqlSession, KeyValuePair<string, object>, bool, IEntity>>(castExpression, dbParameter, idParameter, useCacheParameter).Compile();
+        }
+
+        private static Func<DbSqlSession, string, object, IEnumerable> CreateSelectListInvoker(Type managedType, Type outType)
+        {
+            MethodInfo method = selectListMethod.MakeGenericMethod(managedType, outType);
+            ParameterExpression dbParameter = Expression.Parameter(typeof(DbSqlSession), "db");
+            ParameterExpression statementParameter = Expression.Parameter(typeof(string), "statement");
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(object), "parameter");
+            UnaryExpression castExpression = Expression.Convert(Expression.Call(dbParameter, method, statementParameter, parameterExpression), typeof(IEnumerable));
+
+            return Expression.Lambda<Func<DbSqlSession, string, object, IEnumerable>>(castExpression, dbParameter, statementParameter, parameterExpression).Compile();
+        }
+
+        private static Func<DbSqlSession, string, object, object> CreateSelectOneInvoker(Type managedType, Type outType)
+        {
+            MethodInfo method = selectOneMethod.MakeGenericMethod(managedType, outType);
+            ParameterExpression dbParameter = Expression.Parameter(typeof(DbSqlSession), "db");
+            ParameterExpression statementParameter = Expression.Parameter(typeof(string), "statement");
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(object), "parameter");
+            UnaryExpression castExpression = Expression.Convert(Expression.Call(dbParameter, method, statementParameter, parameterExpression), typeof(object));
+
+            return Expression.Lambda<Func<DbSqlSession, string, object, object>>(castExpression, dbParameter, statementParameter, parameterExpression).Compile();
+        }
 
         public AbstractDataManager(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
         {
