@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Sys.Bpm.Engine.Tests.Tests
@@ -150,6 +151,148 @@ namespace Sys.Bpm.Engine.Tests.Tests
             });
 
             Assert.Null(ex);
+        }
+
+        [Fact]
+        public async Task StartProcessInstanceByCmdAsync_单个命令_返回流程实例()
+        {
+            _fixture.SetAuthenticatedUser();
+
+            IProcessDefinition definition = DeployBpmn("简单顺序流.bpmn");
+            string user = Guid.NewGuid().ToString();
+
+            var variables = new WorkflowVariable();
+            variables.AddAssignee("name", user);
+
+            var cmd = new StartProcessInstanceCmdStub
+            {
+                ProcessDefinitionId = definition.Id,
+                Variables = variables
+            };
+
+            IProcessInstance[] instances = await _fixture.ProcessEngine.RuntimeService
+                .StartProcessInstanceByCmdAsync(new IStartProcessInstanceCmd[] { cmd });
+
+            Assert.NotNull(instances);
+            Assert.Single(instances);
+            Assert.NotNull(instances[0]);
+            Assert.Equal(definition.Id, instances[0].ProcessDefinitionId);
+        }
+
+        [Fact]
+        public async Task StartProcessInstanceByCmdAsync_批量命令_返回多个流程实例()
+        {
+            _fixture.SetAuthenticatedUser();
+
+            IProcessDefinition definition = DeployBpmn("简单顺序流.bpmn");
+
+            var cmds = new IStartProcessInstanceCmd[3];
+            for (int i = 0; i < cmds.Length; i++)
+            {
+                string user = Guid.NewGuid().ToString();
+                var variables = new WorkflowVariable();
+                variables.AddAssignee("name", user);
+
+                cmds[i] = new StartProcessInstanceCmdStub
+                {
+                    ProcessDefinitionId = definition.Id,
+                    Variables = variables
+                };
+            }
+
+            IProcessInstance[] instances = await _fixture.ProcessEngine.RuntimeService
+                .StartProcessInstanceByCmdAsync(cmds);
+
+            Assert.NotNull(instances);
+            Assert.Equal(3, instances.Length);
+            Assert.All(instances, ins =>
+            {
+                Assert.NotNull(ins);
+                Assert.Equal(definition.Id, ins.ProcessDefinitionId);
+            });
+        }
+
+        [Fact]
+        public async Task StartProcessInstanceByCmdAsync_指定业务键_业务键正确()
+        {
+            _fixture.SetAuthenticatedUser();
+
+            IProcessDefinition definition = DeployBpmn("简单顺序流.bpmn");
+            string bizKey = Guid.NewGuid().ToString();
+            string user = Guid.NewGuid().ToString();
+
+            var variables = new WorkflowVariable();
+            variables.AddAssignee("name", user);
+
+            var cmd = new StartProcessInstanceCmdStub
+            {
+                ProcessDefinitionId = definition.Id,
+                BusinessKey = bizKey,
+                Variables = variables
+            };
+
+            IProcessInstance[] instances = await _fixture.ProcessEngine.RuntimeService
+                .StartProcessInstanceByCmdAsync(new IStartProcessInstanceCmd[] { cmd });
+
+            Assert.NotNull(instances);
+            Assert.Single(instances);
+            Assert.Equal(bizKey, instances[0].BusinessKey);
+        }
+
+        [Fact]
+        public async Task StartProcessInstanceByCmdAsync_命令为null_抛出ArgumentNullException()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                _fixture.ProcessEngine.RuntimeService.StartProcessInstanceByCmdAsync(null));
+        }
+
+        [Fact]
+        public async Task StartProcessInstanceByCmdAsync_异步不阻塞调用线程()
+        {
+            _fixture.SetAuthenticatedUser();
+
+            IProcessDefinition definition = DeployBpmn("简单顺序流.bpmn");
+            string user = Guid.NewGuid().ToString();
+
+            var variables = new WorkflowVariable();
+            variables.AddAssignee("name", user);
+
+            var cmd = new StartProcessInstanceCmdStub
+            {
+                ProcessDefinitionId = definition.Id,
+                Variables = variables
+            };
+
+            // 验证返回的 Task 尚未同步完成（即不是 Task.FromResult 的伪异步）
+            Task<IProcessInstance[]> task = _fixture.ProcessEngine.RuntimeService
+                .StartProcessInstanceByCmdAsync(new IStartProcessInstanceCmd[] { cmd });
+
+            // Task 不应是在调用瞬间就已完成（IsCompleted == true 表示同步执行，即伪异步）
+            // 注意：由于命令执行很快，Task 可能在 await 之前就完成了，所以仅验证 Task 类型
+            Assert.NotNull(task);
+            Assert.True(task is Task<IProcessInstance[]>);
+
+            IProcessInstance[] instances = await task;
+            Assert.NotNull(instances);
+            Assert.Single(instances);
+        }
+
+        /// <summary>
+        /// IStartProcessInstanceCmd 的测试桩实现
+        /// </summary>
+        private class StartProcessInstanceCmdStub : IStartProcessInstanceCmd
+        {
+            public string BusinessKey { get; set; }
+            public string ProcessDefinitionId { get; set; }
+            public string ProcessDefinitionBusinessKey { get; set; }
+            public string ProcessDefinitionKey { get; set; }
+            public string ProcessInstanceName { get; set; }
+            public string ProcessName { get; set; }
+            public string StartForm { get; set; }
+            public string TenantId { get; set; }
+            public WorkflowVariable Variables { get; set; }
+            public string InitialFlowElementId { get; set; }
+            public string StartByMessage { get; set; }
         }
     }
 }

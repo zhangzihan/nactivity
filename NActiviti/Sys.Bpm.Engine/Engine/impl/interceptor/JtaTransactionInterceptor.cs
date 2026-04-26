@@ -17,6 +17,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 {
     using Sys.Workflow.Transactions;
     using Sys.Workflow.Engine.Impl.Cfg;
+    using System.Threading.Tasks;
 
     /// 
     public class JtaTransactionInterceptor : AbstractCommandInterceptor
@@ -55,6 +56,49 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 try
                 {
                     result = next.execute(config, command);
+                }
+                catch (Exception ex)
+                {
+                    doRollback(isNew, ex);
+                    throw new Exception("TransactionCallback threw undeclared checked exception", ex);
+                }
+                if (isNew)
+                {
+                    doCommit();
+                }
+                return result;
+            }
+            finally
+            {
+                doResume(oldTx);
+            }
+        }
+
+        public override async Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command)
+        {
+            if (config.TransactionPropagation == TransactionPropagation.NOT_SUPPORTED)
+            {
+                return await Next.ExecuteAsync(config, command).ConfigureAwait(false);
+            }
+
+            bool requiresNew = config.TransactionPropagation == TransactionPropagation.REQUIRES_NEW;
+            Transaction oldTx = null;
+            try
+            {
+                bool existing = Existing;
+                bool isNew = !existing || requiresNew;
+                if (existing && requiresNew)
+                {
+                    oldTx = doSuspend();
+                }
+                if (isNew)
+                {
+                    doBegin();
+                }
+                T result;
+                try
+                {
+                    result = await Next.ExecuteAsync(config, command).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

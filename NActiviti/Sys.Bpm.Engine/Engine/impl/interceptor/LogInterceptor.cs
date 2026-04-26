@@ -13,6 +13,7 @@
 
 using Microsoft.Extensions.Logging;
 using Sys.Workflow;
+using System.Threading.Tasks;
 
 namespace Sys.Workflow.Engine.Impl.Interceptor
 {
@@ -40,6 +41,26 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             finally
             {
                 log.LogDebug($"--- {command.GetType().Name} finished --------------------------------------------------------");
+                log.LogDebug("\n");
+            }
+        }
+
+        public override async Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command)
+        {
+            if (!log.IsEnabled(LogLevel.Debug))
+            {
+                return await Next.ExecuteAsync(config, command).ConfigureAwait(false);
+            }
+
+            log.LogDebug("\n");
+            log.LogDebug($"--- async starting {command.GetType().Name} --------------------------------------------------------");
+            try
+            {
+                return await Next.ExecuteAsync(config, command).ConfigureAwait(false);
+            }
+            finally
+            {
+                log.LogDebug($"--- {command.GetType().Name} async finished --------------------------------------------------------");
                 log.LogDebug("\n");
             }
         }

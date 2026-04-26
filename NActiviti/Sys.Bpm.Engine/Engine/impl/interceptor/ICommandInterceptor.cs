@@ -13,11 +13,15 @@
 
 namespace Sys.Workflow.Engine.Impl.Interceptor
 {
+	using System.Threading.Tasks;
+
 	/// 
 	public interface ICommandInterceptor
 	{
 
 	  T Execute<T>(CommandConfig config, ICommand<T> command);
+
+	  Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command);
 
 	  ICommandInterceptor Next {get;set;}
 

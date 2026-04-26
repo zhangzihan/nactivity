@@ -17,6 +17,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 	using Sys.Workflow.Engine.Impl.Contexts;
 	using Sys.Workflow;
 	using System;
+	using System.Threading.Tasks;
 
 	/// 
 	public class CommandInvoker : AbstractCommandInterceptor
@@ -72,6 +73,51 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 			}
 		}
 
+		public override async Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command)
+		{
+			ICommandContext commandContext = Context.CommandContext;
+
+			try
+			{
+				// Execute the command.
+				// This will produce operations that will be put on the agenda.
+				commandContext.Agenda.PlanOperation(new RunableOperation(() =>
+				{
+					T result = command.Execute(commandContext);
+
+					commandContext.SetResult(result);
+				}));
+
+				// Run loop for agenda asynchronously
+				await ExecuteOperationsAsync(commandContext).ConfigureAwait(false);
+
+				// At the end, call the execution tree change listeners.
+				if (commandContext.HasInvolvedExecutions())
+				{
+					Context.Agenda.PlanExecuteInactiveBehaviorsOperation();
+					await ExecuteOperationsAsync(commandContext).ConfigureAwait(false);
+				}
+
+				object value = commandContext.GetResult();
+
+				return (T)value;
+			}
+			catch (InvalidCastException ex)
+			{
+				// TODO: commandcontext和command不在一个线程导致异常
+				if (log.IsEnabled(LogLevel.Debug))
+				{
+					log.LogError($"【线程异常】:{ex.Message}");
+				}
+				return default;
+			}
+			catch (Exception ex)
+			{
+				log.LogError($"{(command is null ? "command is null " : command.GetType().FullName)} execute async failed!\r\n{ex.Message}");
+				throw;
+			}
+		}
+
 		private void ExecuteOperations(ICommandContext commandContext)
 		{
 			while (!commandContext.Agenda.Empty)
@@ -80,6 +126,18 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 				if (runnable is not null)
 				{
 					ExecuteOperation(runnable);
+				}
+			}
+		}
+
+		private async Task ExecuteOperationsAsync(ICommandContext commandContext)
+		{
+			while (!commandContext.Agenda.Empty)
+			{
+				AbstractOperation runnable = commandContext.Agenda.NextOperation();
+				if (runnable is not null)
+				{
+					await ExecuteOperationAsync(runnable).ConfigureAwait(false);
 				}
 			}
 		}
@@ -104,6 +162,23 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 			{
 				runnable.Run();
 			}
+		}
+
+		public virtual Task ExecuteOperationAsync(AbstractOperation runnable)
+		{
+			if (runnable is AbstractOperation operation)
+			{
+				if (operation.Execution is null || !operation.Execution.Ended)
+				{
+					runnable.Run();
+				}
+			}
+			else
+			{
+				runnable.Run();
+			}
+
+			return Task.CompletedTask;
 		}
 
 		public override ICommandInterceptor Next

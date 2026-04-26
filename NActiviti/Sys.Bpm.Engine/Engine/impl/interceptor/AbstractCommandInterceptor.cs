@@ -12,10 +12,21 @@
  */
 namespace Sys.Workflow.Engine.Impl.Interceptor
 {
+    using System.Threading.Tasks;
+
     /// 
     public abstract class AbstractCommandInterceptor : ICommandInterceptor
     {
         public abstract T Execute<T>(CommandConfig config, ICommand<T> command);
+
+        /// <summary>
+        /// Default async implementation delegates to the next interceptor in the chain.
+        /// Subclasses should override this to add async-specific behavior.
+        /// </summary>
+        public virtual Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command)
+        {
+            return Next.ExecuteAsync(config, command);
+        }
 
         /// <summary>
         /// will be initialized by the <seealso cref="Sys.Workflow.Engine.ProcessEngineConfiguration ProcessEngineConfiguration"/>

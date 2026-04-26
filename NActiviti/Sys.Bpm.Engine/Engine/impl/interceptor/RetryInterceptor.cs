@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sys.Workflow;
+using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +61,35 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             throw new ActivitiException(numOfRetries + " retries failed with ActivitiOptimisticLockingException. Giving up.");
         }
 
+        public override async Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command)
+        {
+            long waitTime = waitTimeInMs;
+            int failedAttempts = 0;
+
+            do
+            {
+                if (failedAttempts > 0)
+                {
+                    log.LogInformation($"Waiting for {waitTime}ms before retrying the async command.");
+                    await WaitBeforeRetryAsync(waitTime).ConfigureAwait(false);
+                    waitTime *= waitIncreaseFactor;
+                }
+
+                try
+                {
+                    return await Next.ExecuteAsync(config, command).ConfigureAwait(false);
+                }
+                catch (ActivitiOptimisticLockingException e)
+                {
+                    log.LogInformation("Caught optimistic locking exception: " + e);
+                }
+
+                failedAttempts++;
+            } while (failedAttempts <= numOfRetries);
+
+            throw new ActivitiException(numOfRetries + " retries failed with ActivitiOptimisticLockingException. Giving up.");
+        }
+
         protected internal virtual void WaitBeforeRetry(long waitTime)
         {
             try
@@ -68,6 +99,18 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             catch (ThreadInterruptedException)
             {
                 log.LogDebug("I am interrupted while waiting for a retry.");
+            }
+        }
+
+        protected internal virtual async Task WaitBeforeRetryAsync(long waitTime)
+        {
+            try
+            {
+                await Task.Delay((int)waitTime).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                log.LogDebug("Async retry wait was cancelled.");
             }
         }
 

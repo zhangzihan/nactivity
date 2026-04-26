@@ -707,15 +707,24 @@ namespace Sys.Workflow.Engine.Impl
         }
 
         /// <inheritdoc />
-        public Task<IProcessInstance[]> StartProcessInstanceByCmdAsync(IStartProcessInstanceCmd[] cmds)
+        public async Task<IProcessInstance[]> StartProcessInstanceByCmdAsync(IStartProcessInstanceCmd[] cmds)
         {
             if (cmds is null)
             {
                 throw new ArgumentNullException(nameof(cmds));
             }
 
-            IProcessInstance[] instances = StartProcessInstanceByCmd(cmds);
-            return Task.FromResult(instances);
+            var instances = new List<IProcessInstance>(cmds.Length);
+            foreach (var cmd in cmds)
+            {
+                var scmd = new StartProcessInstanceCmd(cmd as IStartProcessInstanceCmd);
+
+                var instance = await commandExecutor.ExecuteAsync(scmd).ConfigureAwait(false);
+
+                instances.Add(instance);
+            }
+
+            return instances.ToArray();
         }
 
         /// <inheritdoc />

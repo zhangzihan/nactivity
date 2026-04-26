@@ -19,6 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
     using Sys.Workflow.Engine.Impl.Cfg;
     using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow;
+    using System.Threading.Tasks;
 
     /// 
     /// 
@@ -86,6 +87,59 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 finally
                 {
 
+                    // Pop from stack
+                    Context.RemoveCommandContext();
+                    Context.RemoveProcessEngineConfiguration();
+                    Context.RemoveBpmnOverrideContext();
+                }
+            }
+
+            return default;
+        }
+
+        public override async Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command)
+        {
+            ICommandContext context = Context.CommandContext;
+
+            bool contextReused = false;
+            if (!config.ContextReusePossible || context is null || context.Exception is not null)
+            {
+                context = CommandContextFactory.CreateCommandContext<T>(command);
+            }
+            else
+            {
+                log.LogDebug($"Valid context found. Reusing it for the current command '{command.GetType().FullName}'");
+                contextReused = true;
+                context.Reused = true;
+            }
+
+            try
+            {
+                // Push on stack
+                Context.CommandContext = context;
+                Context.ProcessEngineConfiguration = ProcessEngineConfiguration;
+
+                return await Next.ExecuteAsync(config, command).ConfigureAwait(false);
+            }
+            catch (NullReferenceException e)
+            {
+                context.SetException(e);
+            }
+            catch (Exception e)
+            {
+                context.SetException(e);
+            }
+            finally
+            {
+                try
+                {
+                    if (!contextReused)
+                    {
+                        context.Close();
+                    }
+                }
+                finally
+                {
                     // Pop from stack
                     Context.RemoveCommandContext();
                     Context.RemoveProcessEngineConfiguration();

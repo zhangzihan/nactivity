@@ -16,6 +16,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
     using Sys.Workflow.Engine.Impl.Cfg;
     using Sys.Workflow.Engine.Impl.Contexts;
     using System;
+    using System.Threading.Tasks;
 
     /// 
     public class TransactionContextInterceptor : AbstractCommandInterceptor
@@ -49,6 +50,31 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 }
 
                 return Next.Execute(config, command);
+            }
+            finally
+            {
+                if (transactionContextFactory is object && !isReused)
+                {
+                    Context.RemoveTransactionContext();
+                }
+            }
+        }
+
+        public override async Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command)
+        {
+            ICommandContext commandContext = Context.CommandContext;
+            bool isReused = commandContext.Reused;
+
+            try
+            {
+                if (transactionContextFactory is object && !isReused)
+                {
+                    ITransactionContext transactionContext = transactionContextFactory.OpenTransactionContext(commandContext);
+                    Context.TransactionContext = transactionContext;
+                    commandContext.AddCloseListener(new TransactionCommandContextCloseListener(transactionContext));
+                }
+
+                return await Next.ExecuteAsync(config, command).ConfigureAwait(false);
             }
             finally
             {

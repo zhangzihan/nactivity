@@ -1,8 +1,0 @@
-﻿d:\Project\MDD\9.0\nactivity\Tests\Sys.Bpm.Engine.Tests\bin\Debug\net6.0\Sys.Bpm.Engine.Tests.dll (.NETCoreApp,Version=v6.0)的测试运行
-总共 1 个测试文件与指定模式相匹配。
-[xUnit.net 00:00:01.69]     Sys.Bpm.Engine.Tests.Tests.ManagementServiceTests.CreateJobQuery_查询作业_返回作业列表 [SKIP]
-[xUnit.net 00:00:01.76]     Sys.Bpm.Engine.Tests.Tests.ManagementServiceTests.ActivateProcessDefinitionById_激活定义_可启动新实例 [SKIP]
-  已跳过 Sys.Bpm.Engine.Tests.Tests.ManagementServiceTests.CreateJobQuery_查询作业_返回作业列表 [1 ms]
-  已跳过 Sys.Bpm.Engine.Tests.Tests.ManagementServiceTests.ActivateProcessDefinitionById_激活定义_可启动新实例 [1 ms]
-
-已通过! - 失败:     0，通过:    18，已跳过:     2，总计:    20，持续时间: 2 s - Sys.Bpm.Engine.Tests.dll (net6.0)

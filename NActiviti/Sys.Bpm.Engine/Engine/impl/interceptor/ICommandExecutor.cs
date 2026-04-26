@@ -12,6 +12,8 @@
  */
 namespace Sys.Workflow.Engine.Impl.Interceptor
 {
+	using System.Threading.Tasks;
+
 	/// <summary>
 	/// The command executor for internal usage.
 	/// 
@@ -32,6 +34,16 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 	  /// Execute a command with the default <seealso cref="CommandConfig"/>.
 	  /// </summary>
 	  T Execute<T>(ICommand<T> command);
+
+	  /// <summary>
+	  /// Asynchronously execute a command with the specified <seealso cref="CommandConfig"/>.
+	  /// </summary>
+	  Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command);
+
+	  /// <summary>
+	  /// Asynchronously execute a command with the default <seealso cref="CommandConfig"/>.
+	  /// </summary>
+	  Task<T> ExecuteAsync<T>(ICommand<T> command);
 
 	}
 

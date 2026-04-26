@@ -1,6 +1,7 @@
 ﻿namespace Sys.Workflow.Engine.Impl.Cfg
 {
     using Sys.Workflow.Engine.Impl.Interceptor;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Command executor that passes commands to the first interceptor in the chain. If no <seealso cref="CommandConfig"/> is passed, the default configuration will be used.
@@ -79,6 +80,29 @@
         public virtual T Execute<T>(CommandConfig config, ICommand<T> command)
         {
             return First.Execute(config, command);
+        }
+
+        /// <summary>
+        /// 异步执行器执行一个命令
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public virtual Task<T> ExecuteAsync<T>(ICommand<T> command)
+        {
+            return ExecuteAsync(defaultConfig, command);
+        }
+
+        /// <summary>
+        /// 开始拦截器的链式异步调用
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public virtual Task<T> ExecuteAsync<T>(CommandConfig config, ICommand<T> command)
+        {
+            return First.ExecuteAsync(config, command);
         }
     }
 }
