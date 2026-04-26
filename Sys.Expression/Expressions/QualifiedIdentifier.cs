@@ -20,7 +20,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -87,7 +86,7 @@ namespace Spring.Expressions
 //            {
 //                tmp = tmp.Replace(ESCAPE_CHAR, ""); // remove all occurrences of escape char
 //            }
-            AST node = this.getFirstChild();
+            AstNode node = this.getFirstChild();
             while (node is object)
             {
                 tmp = string.Concat(tmp, node.getText());

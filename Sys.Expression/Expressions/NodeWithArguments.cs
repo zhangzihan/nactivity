@@ -22,7 +22,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -82,7 +81,7 @@ namespace Spring.Expressions
                     List<BaseNode> argList = new();
                     namedArgs = new Hashtable();
 
-                    AST node = this.getFirstChild();
+                    AstNode node = this.getFirstChild();
 
                     while (node is object)
                     {

@@ -24,13 +24,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser;
-using Spring.Expressions.Parser.antlr;
-using Spring.Expressions.Parser.antlr.collections;
 using Spring.Core;
 using Spring.Reflection.Dynamic;
 using Spring.Util;
 using StringUtils = Spring.Util.StringUtils;
+using AntlrInputStream = global::Antlr4.Runtime.AntlrInputStream;
+using CommonTokenStream = global::Antlr4.Runtime.CommonTokenStream;
+using IParseTree = global::Antlr4.Runtime.Tree.IParseTree;
+using ExpressionLexer = Spring.Expressions.Parser.Antlr4Gen.ExpressionLexer;
+using ExpressionParser = Spring.Expressions.Parser.Antlr4Gen.ExpressionParser;
 
 namespace Spring.Expressions
 {
@@ -65,74 +67,44 @@ namespace Spring.Expressions
             internal static readonly string CurrentObjectFactory = RESERVEDPREFIX + "CurrentObjectFactory";
         }
 
-        private class ASTNodeCreator : Parser.antlr.ASTNodeCreator
-        {
-            private readonly SafeConstructor ctor;
-            private readonly string name;
-
-            public ASTNodeCreator(ConstructorInfo ctor)
-            {
-                this.ctor = new SafeConstructor(ctor);
-                this.name = ctor.DeclaringType.FullName;
-            }
-
-            public override AST Create()
-            {
-                return (AST)ctor.Invoke(new object[0]);
-            }
-
-            public override string ASTNodeTypeName
-            {
-                get { return name; }
-            }
-        }
-
-        private class SpringASTFactory : ASTFactory
-        {
-            private static readonly Type BASENODE_TYPE;
-            private static readonly Hashtable Typename2Creator;
-
-            static SpringASTFactory()
-            {
-                BASENODE_TYPE = typeof(SpringAST);
-
-                Typename2Creator = new Hashtable();
-                foreach (Type type in typeof(SpringASTFactory).Assembly.GetTypes())
-                {
-                    if (BASENODE_TYPE.IsAssignableFrom(type))
-                    {
-                        ConstructorInfo ctor = type.GetConstructor(new Type[0]);
-                        if (ctor is not null)
-                        {
-                            ASTNodeCreator creator = new(ctor);
-                            Typename2Creator[creator.ASTNodeTypeName] = creator;
-                        }
-                    }
-                }
-                Typename2Creator[BASENODE_TYPE.FullName] = Creator;
-            }
-
-            public SpringASTFactory() : base(BASENODE_TYPE)
-            {
-                defaultASTNodeTypeObject_ = BASENODE_TYPE;
-                typename2creator_ = Typename2Creator;
-            }
-        }
-
-        private class SpringExpressionParser : ExpressionParser
-        {
-            public SpringExpressionParser(TokenStream lexer)
-                : base(lexer)
-            {
-                astFactory = new SpringASTFactory();
-                initialize();
-            }
-        }
-
         static Expression()
         {
-            // Ensure antlr is loaded (fixes GAC issues)!
-            _ = typeof(LLkParser).Assembly;
+        }
+
+        /// <summary>
+        /// Helper to parse an expression string using ANTLR4.
+        /// </summary>
+        private static IExpression ParseWithAntlr4(string expression, Func<ExpressionParser, IParseTree> parseFunc)
+        {
+            var visitor = new SpringExpressionVisitor();
+            var stream = new AntlrInputStream(expression);
+            var lexer = new ExpressionLexer(stream);
+            var tokenStream = new CommonTokenStream(lexer);
+            var parser = new ExpressionParser(tokenStream);
+
+            // Use BailErrorStrategy to throw on first error
+            parser.ErrorHandler = new global::Antlr4.Runtime.BailErrorStrategy();
+
+            try
+            {
+                var tree = parseFunc(parser);
+                return (IExpression)visitor.Visit(tree);
+            }
+            catch (global::Antlr4.Runtime.Misc.ParseCanceledException ex)
+            {
+                // BailErrorStrategy wraps RecognitionException in ParseCanceledException
+                if (ex.InnerException is global::Antlr4.Runtime.RecognitionException re)
+                {
+                    int line = 0, col = 0;
+                    if (re.OffendingToken != null)
+                    {
+                        line = re.OffendingToken.Line;
+                        col = re.OffendingToken.Column;
+                    }
+                    throw new SyntaxErrorException(re.Message, line, col, expression);
+                }
+                throw new SyntaxErrorException(ex.Message, 0, 0, expression);
+            }
         }
 
         /// <summary>
@@ -144,18 +116,7 @@ namespace Spring.Expressions
         {
             if (StringUtils.HasText(expression))
             {
-                ExpressionLexer lexer = new(new StringReader(expression));
-                ExpressionParser parser = new SpringExpressionParser(lexer);
-
-                try
-                {
-                    parser.expr();
-                }
-                catch (TokenStreamRecognitionException ex)
-                {
-                    throw new SyntaxErrorException(ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression);
-                }
-                return (IExpression)parser.getAST();
+                return ParseWithAntlr4(expression, p => p.expr());
             }
             else
             {
@@ -174,18 +135,8 @@ namespace Spring.Expressions
             AssertUtils.ArgumentHasText(functionName, "functionName");
             AssertUtils.ArgumentHasText(lambdaExpression, "lambdaExpression");
 
-            ExpressionLexer lexer = new(new StringReader(lambdaExpression));
-            ExpressionParser parser = new SpringExpressionParser(lexer);
-
-            try
-            {
-                parser.lambda();
-            }
-            catch (TokenStreamRecognitionException ex)
-            {
-                throw new SyntaxErrorException(ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), lambdaExpression);
-            }
-            variables[functionName] = parser.getAST();
+            var result = ParseWithAntlr4(lambdaExpression, p => p.lambda());
+            variables[functionName] = result;
         }
 
         /// <summary>
@@ -197,18 +148,7 @@ namespace Spring.Expressions
         {
             if (StringUtils.HasText(expression))
             {
-                ExpressionLexer lexer = new(new StringReader(expression));
-                ExpressionParser parser = new SpringExpressionParser(lexer);
-
-                try
-                {
-                    parser.primaryExpression();
-                }
-                catch (TokenStreamRecognitionException ex)
-                {
-                    throw new SyntaxErrorException(ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression);
-                }
-                return (IExpression)parser.getAST();
+                return ParseWithAntlr4(expression, p => p.primaryExpression());
             }
             else
             {
@@ -225,18 +165,7 @@ namespace Spring.Expressions
         {
             if (StringUtils.HasText(expression))
             {
-                ExpressionLexer lexer = new(new StringReader(expression));
-                ExpressionParser parser = new SpringExpressionParser(lexer);
-
-                try
-                {
-                    parser.property();
-                }
-                catch (TokenStreamRecognitionException ex)
-                {
-                    throw new SyntaxErrorException(ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression);
-                }
-                return (IExpression)parser.getAST();
+                return ParseWithAntlr4(expression, p => p.property());
             }
             else
             {
@@ -270,7 +199,7 @@ namespace Spring.Expressions
 
             if (this.getNumberOfChildren() > 0)
             {
-                AST node = this.getFirstChild();
+                AstNode node = this.getFirstChild();
                 while (node is object)
                 {
                     result = GetValue(((BaseNode)node), result, evalContext);
@@ -296,7 +225,7 @@ namespace Spring.Expressions
 
             if (this.getNumberOfChildren() > 0)
             {
-                AST node = this.getFirstChild();
+                AstNode node = this.getFirstChild();
 
                 for (int i = 0; i < this.getNumberOfChildren() - 1; i++)
                 {
@@ -330,7 +259,7 @@ namespace Spring.Expressions
             if (this.getNumberOfChildren() > 0)
             {
                 object target = context;
-                AST node = this.getFirstChild();
+                AstNode node = this.getFirstChild();
 
                 for (int i = 0; i < this.getNumberOfChildren() - 1; i++)
                 {

@@ -21,7 +21,6 @@
 using System;
 using System.Runtime.Serialization;
 using Spring.Core.TypeResolution;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -87,7 +86,7 @@ namespace Spring.Expressions
             //                    tmp = type.AssemblyQualifiedName;
             //                }                
             //            }
-            AST node = this.getFirstChild();
+            AstNode node = this.getFirstChild();
             while (node is object)
             {
                 tmp += node.getText();

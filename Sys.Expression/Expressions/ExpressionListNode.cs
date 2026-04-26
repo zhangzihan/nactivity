@@ -20,7 +20,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -56,7 +55,7 @@ namespace Spring.Expressions
         {
             object result = context;
 
-            AST node = this.getFirstChild();
+            AstNode node = this.getFirstChild();
             while (node is object)
             {
                 result = GetValue(((BaseNode) node), context, evalContext);

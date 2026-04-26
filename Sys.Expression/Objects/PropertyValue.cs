@@ -22,7 +22,6 @@ using System;
 using System.Globalization;
 using Spring.Core;
 using Spring.Expressions;
-using Spring.Expressions.Parser.antlr;
 using Spring.Util;
 
 namespace Spring.Objects
@@ -115,11 +114,7 @@ namespace Spring.Objects
                     {
                         propertyExpression = ObjectWrapper.GetPropertyExpression(propertyName);
                     }
-                    catch (RecognitionException e)
-                    {
-                        throw new InvalidPropertyException("Failed to parse property name '" + propertyName + "'.", e);
-                    }
-                    catch (TokenStreamRecognitionException e)
+                    catch (SyntaxErrorException e)
                     {
                         throw new InvalidPropertyException("Failed to parse property name '" + propertyName + "'.", e);
                     }

@@ -21,7 +21,6 @@
 using System;
 using System.Collections;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -130,9 +129,9 @@ namespace Spring.Expressions
                     }
                     else
                     {
-                        AST argsNode = this.getFirstChild();
+                        AstNode argsNode = this.getFirstChild();
                         argumentNames = new string[argsNode.getNumberOfChildren()];
-                        AST argNode = argsNode.getFirstChild();
+                        AstNode argNode = argsNode.getFirstChild();
                         int i = 0;
                         while (argNode is object)
                         {

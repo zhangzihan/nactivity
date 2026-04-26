@@ -12,7 +12,7 @@
     <PackageId>Sys.Expression</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>Sys.Expression</PackageReleaseNotes>
-    <Version>1.0.0.8</Version>
+    <Version>4.9.3.0</Version>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Company>Sys.Expression</Company>
     <Authors>Sys.Expression</Authors>
@@ -34,6 +34,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.3" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.1.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />

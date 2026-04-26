@@ -20,7 +20,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser.antlr;
 
 namespace Spring.Expressions
 {
@@ -29,22 +28,24 @@ namespace Spring.Expressions
 	/// </summary>
     /// <author>Erich Eichinger</author>
 	[Serializable]
-	internal class SyntaxErrorException : RecognitionException, ISerializable
+	internal class SyntaxErrorException : Exception, ISerializable
 	{
         private readonly string _expression;
+        private readonly int _line;
+        private readonly int _column;
 
 	    ///<summary>
 	    ///</summary>
 	    public int Line
 	    {
-	        get { return line; }
+	        get { return _line; }
 	    }
 
 	    ///<summary>
 	    ///</summary>
 	    public int Column
 	    {
-	        get { return column; }
+	        get { return _column; }
 	    }
 
 	    ///<summary>
@@ -72,8 +73,10 @@ namespace Spring.Expressions
         /// TODO
         /// </summary>
 		public SyntaxErrorException(string message, int line, int column, string expression)
-			: base(message, null, line, column)
+			: base(message)
         {
+            _line = line;
+            _column = column;
             _expression = expression;
         }
 
@@ -84,11 +87,12 @@ namespace Spring.Expressions
         /// <summary>
         /// TODO
         /// </summary>
-		protected SyntaxErrorException(SerializationInfo info, StreamingContext context) : base(info.GetString("Message"))
+		protected SyntaxErrorException(SerializationInfo info, StreamingContext context)
+            : base(info.GetString("Message"), null)
         {
-            line = info.GetInt32("Line");
-            column = info.GetInt32("Column");
-            this._expression = info.GetString("Expression");
+            _line = info.GetInt32("Line");
+            _column = info.GetInt32("Column");
+            _expression = info.GetString("Expression");
         }
 
         /// <summary>
@@ -98,12 +102,9 @@ namespace Spring.Expressions
         /// <param name="context"></param>
         public override void GetObjectData( SerializationInfo info, StreamingContext context )
         {
-            // since RecognitionException does not implement .ctor(SerializationInfo info, StreamingContext context)
-            // we need to do the serialization on our own... #?%
-            //base.GetObjectData( info, context );
-            info.AddValue("Line", line);
-            info.AddValue("Column", column);
-            info.AddValue("Message", base.Message);
+            base.GetObjectData(info, context);
+            info.AddValue("Line", _line);
+            info.AddValue("Column", _column);
             info.AddValue("Expression", this._expression);
         }
 

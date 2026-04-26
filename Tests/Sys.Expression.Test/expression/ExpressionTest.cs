@@ -76,6 +76,7 @@ namespace Sys.Workflow.Client.Tests.Expression
             WorkflowVariable wv = WorkflowVariable.FromObject(data);
 
             var obj = ExpressionEvaluator.GetValue(wv, "DateTimeHelper.AddDays(ReviewDays)");
+            Assert.Equal(DateTime.Now.AddDays(10).ToString("yyyyMMdd"), DateTime.Parse(obj.ToString()).ToString("yyyyMMdd"));
         }
 
         [Fact]
@@ -299,25 +300,20 @@ namespace Sys.Workflow.Client.Tests.Expression
             };
 
             var obj = ExpressionEvaluator.GetValue(context, "query.id is object");
+            Assert.True((bool)obj);
         }
 
         [Fact]
         public void Math_Abs()
         {
-            try
+            var data = new
             {
-                var data = new
-                {
-                    a = 1,
-                    b = 2
-                };
+                a = 1,
+                b = 2
+            };
 
-                var abs = ExpressionEvaluator.GetValue(data, "Math.Abs(a - b)");
-            }
-            catch (Exception ex)
-            {
-
-            }
+            var abs = ExpressionEvaluator.GetValue(data, "Math.Abs(a - b)");
+            Assert.Equal(1, (int)abs);
         }
 
         [Fact]
@@ -356,7 +352,7 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var val = ExpressionEvaluator.GetValue(data, "l + r");
-            Assert.True(val.ToString() == "3");
+            Assert.Equal(3, (int)val);
         }
 
         [Theory]
@@ -371,8 +367,8 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var val = ExpressionEvaluator.GetValue(data, "l + r");
-            decimal.TryParse(val.ToString(), out decimal v);
-            Assert.True(v == 3.2M);
+            _ = decimal.TryParse(val.ToString(), out decimal v);
+            Assert.Equal(3.2M, v);
         }
 
         [Theory]
@@ -387,7 +383,7 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var val = ExpressionEvaluator.GetValue(data, "l - r");
-            Assert.True(val.ToString() == "-1");
+            Assert.Equal(-1, (int)val);
         }
 
         [Theory]
@@ -402,8 +398,8 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var val = ExpressionEvaluator.GetValue(data, "l - r");
-            decimal.TryParse(val.ToString(), out decimal v);
-            Assert.True(v == -0.9M);
+            _ = decimal.TryParse(val.ToString(), out decimal v);
+            Assert.Equal(-0.9M, v);
         }
 
         [Theory]
@@ -418,7 +414,7 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var val = ExpressionEvaluator.GetValue(data, "l * r");
-            Assert.True(val.ToString() == "2");
+            Assert.Equal(2, (int)val);
         }
 
         [Theory]
@@ -433,8 +429,8 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var val = ExpressionEvaluator.GetValue(data, "l * r");
-            decimal.TryParse(val.ToString(), out decimal v);
-            Assert.True(v == 2.2M);
+            _ = decimal.TryParse(val.ToString(), out decimal v);
+            Assert.Equal(2.2M, v);
         }
 
         [Theory]
@@ -522,7 +518,7 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var val = ExpressionEvaluator.GetValue(data, "l / r");
-            decimal.TryParse(val.ToString(), out decimal v);
+            _ = decimal.TryParse(val.ToString(), out decimal v);
             Assert.True(v == 1.1M / 2);
         }
 
@@ -551,6 +547,7 @@ namespace Sys.Workflow.Client.Tests.Expression
                 nrOfActiveInstances = 4,
                 test = 1
             }, expr);
+            Assert.True(bool.Parse(val?.ToString()));
         }
 
         [Fact]
@@ -558,6 +555,7 @@ namespace Sys.Workflow.Client.Tests.Expression
         {
             string expr = "'str ' + obj + ' str'";
             var val = ExpressionEvaluator.GetValue(new { obj = 3 }, expr);
+            Assert.Equal("str 3 str", val.ToString());
         }
 
         [Fact]
@@ -598,6 +596,7 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var obj = ExpressionEvaluator.GetValue(data, $"l<r");
+            Assert.True((bool)obj);
         }
 
         [Theory]

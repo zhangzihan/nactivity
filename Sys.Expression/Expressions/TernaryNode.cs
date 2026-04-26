@@ -20,7 +20,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -67,7 +66,7 @@ namespace Spring.Expressions
                 {
                     if (!initialized)
                     {
-                        AST node = this.getFirstChild();
+                        AstNode node = this.getFirstChild();
                         condition = (BaseNode) node;
                         node = node.getNextSibling();
                         trueExp = (BaseNode) node;

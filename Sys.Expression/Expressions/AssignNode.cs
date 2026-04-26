@@ -20,7 +20,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -54,8 +53,8 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            AST left = getFirstChild();
-            AST right = left.getNextSibling();
+            AstNode left = getFirstChild();
+            AstNode right = left.getNextSibling();
 
             object result;
 

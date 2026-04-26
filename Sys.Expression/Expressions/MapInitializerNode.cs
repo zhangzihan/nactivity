@@ -21,7 +21,6 @@
 using System;
 using System.Collections;
 using System.Runtime.Serialization;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -55,7 +54,7 @@ namespace Spring.Expressions
         protected override object Get(object context, EvaluationContext evalContext)
         {
             IDictionary entries = new Hashtable();
-            AST entryNode = this.getFirstChild();
+            AstNode entryNode = this.getFirstChild();
             while (entryNode is object)
             {
                 DictionaryEntry entry = (DictionaryEntry) GetValue(((MapEntryNode)entryNode), evalContext.RootContext, evalContext );

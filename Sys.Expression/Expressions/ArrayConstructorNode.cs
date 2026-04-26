@@ -22,7 +22,6 @@ using System;
 using System.Collections;
 using System.Runtime.Serialization;
 using Spring.Core.TypeResolution;
-using Spring.Expressions.Parser.antlr.collections;
 
 namespace Spring.Expressions
 {
@@ -70,13 +69,13 @@ namespace Spring.Expressions
                 }
             }
 
-            AST rankRoot = getFirstChild();
+            AstNode rankRoot = getFirstChild();
             int dimensions = rankRoot.getNumberOfChildren();
             int[] ranks = new int[dimensions];
             if (dimensions > 0)
             {
                 int i = 0;
-                AST rankNode = rankRoot.getFirstChild();
+                AstNode rankNode = rankRoot.getFirstChild();
                 while (rankNode is object)
                 {
                     ranks[i++] = (int)GetValue((BaseNode)rankNode, context, evalContext);
@@ -86,7 +85,7 @@ namespace Spring.Expressions
             }
             else
             {
-                AST valuesRoot = getFirstChild().getNextSibling();
+                AstNode valuesRoot = getFirstChild().getNextSibling();
                 if (valuesRoot is object)
                 {
                     ArrayList values = (ArrayList)GetValue(((BaseNode)valuesRoot), context, evalContext);
