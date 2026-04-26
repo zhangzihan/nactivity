@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models
+using System;
+namespace Sys.Workflow.Bpmn.Models
 {
     public class DataStoreReference : FlowElement
     {
@@ -60,7 +61,7 @@
             set
             {
                 base.Values = value;
-                var val = value as DataStoreReference;
+                if (value is not DataStoreReference val) throw new ArgumentException($"Expected {nameof(DataStoreReference)}, got {value?.GetType().Name}", nameof(value));
 
                 DataState = val.DataState;
                 ItemSubjectRef = val.ItemSubjectRef;

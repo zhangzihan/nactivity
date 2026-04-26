@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -78,7 +79,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as Lane;
+                if (value is not Lane val) throw new ArgumentException($"Expected {nameof(Lane)}, got {value?.GetType().Name}", nameof(value));
                 Name = val.Name;
                 ParentProcess = val.ParentProcess;
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
 
 namespace Sys.Workflow.Bpmn.Models
@@ -10,7 +10,7 @@ namespace Sys.Workflow.Bpmn.Models
         protected internal string namespacePrefix;
         protected internal string @namespace;
         protected internal string elementText;
-        protected internal IDictionary<string, IList<ExtensionElement>> childElements = new ConcurrentDictionary<string, IList<ExtensionElement>>();
+        protected internal IDictionary<string, IList<ExtensionElement>> childElements = new Dictionary<string, IList<ExtensionElement>>();
 
         public virtual string ElementText
         {
@@ -70,7 +70,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 if (childElements is null)
                 {
-                    childElements = new ConcurrentDictionary<string, IList<ExtensionElement>>();
+                    childElements = new Dictionary<string, IList<ExtensionElement>>();
                 }
 
                 return childElements;
@@ -108,7 +108,8 @@ namespace Sys.Workflow.Bpmn.Models
         {
             set
             {
-                var val = value as ExtensionElement;
+                base.Values = value;
+                if (value is not ExtensionElement val) throw new ArgumentException($"Expected {nameof(ExtensionElement)}, got {value?.GetType().Name}", nameof(value));
 
                 Name = val.Name;
                 NamespacePrefix = val.NamespacePrefix;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace Sys.Workflow.Bpmn.Models
 {
@@ -76,7 +77,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             set
             {
-                var val = value as DataAssociation;
+                if (value is not DataAssociation val) throw new ArgumentException($"Expected {nameof(DataAssociation)}, got {value?.GetType().Name}", nameof(value));
 
                 SourceRef = val.SourceRef;
                 TargetRef = val.TargetRef;

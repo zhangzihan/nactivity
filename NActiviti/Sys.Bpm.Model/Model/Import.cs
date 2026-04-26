@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models
+using System;
+namespace Sys.Workflow.Bpmn.Models
 {
     public class Import : BaseElement
     {
@@ -60,7 +61,7 @@
             set
             {
                 base.Values = value;
-                var val = value as Import;
+                if (value is not Import val) throw new ArgumentException($"Expected {nameof(Import)}, got {value?.GetType().Name}", nameof(value));
 
                 ImportType = val.ImportType;
                 Location = val.Location;

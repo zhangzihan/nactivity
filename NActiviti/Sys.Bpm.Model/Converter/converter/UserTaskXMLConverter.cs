@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -288,12 +288,12 @@ namespace Sys.Workflow.Bpmn.Converters
                             string groupPrefix = "group(";
                             if (assignmentValue.StartsWith(userPrefix, StringComparison.Ordinal))
                             {
-                                assignmentValue = assignmentList[idx] = StringHelper.SubstringSpecial(assignmentValue, userPrefix.Length, assignmentValue.Length - 1).Trim();
+                                assignmentValue = assignmentList[idx] = assignmentValue.Substring(userPrefix.Length, assignmentValue.Length - 1 - userPrefix.Length).Trim();
                                 ((UserTask)parentElement).CandidateUsers.Add(assignmentValue);
                             }
                             else if (assignmentValue.StartsWith(groupPrefix, StringComparison.Ordinal))
                             {
-                                assignmentValue = assignmentList[idx] = StringHelper.SubstringSpecial(assignmentValue, groupPrefix.Length, assignmentValue.Length - 1).Trim();
+                                assignmentValue = assignmentList[idx] = assignmentValue.Substring(groupPrefix.Length, assignmentValue.Length - 1 - groupPrefix.Length).Trim();
                                 ((UserTask)parentElement).CandidateGroups.Add(assignmentValue);
                             }
                             else
@@ -375,12 +375,12 @@ namespace Sys.Workflow.Bpmn.Converters
                             string groupPrefix = "group(";
                             if (assignmentValue.StartsWith(userPrefix, StringComparison.Ordinal))
                             {
-                                assignmentValue = assignmentList[idx] = StringHelper.SubstringSpecial(assignmentValue, userPrefix.Length, assignmentValue.Length - 1).Trim();
+                                assignmentValue = assignmentList[idx] = assignmentValue.Substring(userPrefix.Length, assignmentValue.Length - 1 - userPrefix.Length).Trim();
                                 ((UserTask)parentElement).AddCustomUserIdentityLink(assignmentValue, identityLinkType);
                             }
                             else if (assignmentValue.StartsWith(groupPrefix, StringComparison.Ordinal))
                             {
-                                assignmentValue = assignmentList[idx] = StringHelper.SubstringSpecial(assignmentValue, groupPrefix.Length, assignmentValue.Length - 1).Trim();
+                                assignmentValue = assignmentList[idx] = assignmentValue.Substring(groupPrefix.Length, assignmentValue.Length - 1 - groupPrefix.Length).Trim();
                                 ((UserTask)parentElement).AddCustomGroupIdentityLink(assignmentValue, identityLinkType);
                             }
                             else

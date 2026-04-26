@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -476,7 +476,7 @@ namespace Sys.Workflow.Bpmn.Models
 			{
 				base.Values = value;
 
-				var val = value as Process;
+				if (value is not Process val) throw new ArgumentException($"Expected {nameof(Process)}, got {value?.GetType().Name}", nameof(value));
 
 				//    setBpmnModel(bpmnModel);
 				Name = val.Name;

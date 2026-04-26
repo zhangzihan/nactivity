@@ -1,4 +1,5 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+using System;
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -69,7 +70,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as Message;
+                if (value is not Message val) throw new ArgumentException($"Expected {nameof(Message)}, got {value?.GetType().Name}", nameof(value));
                 Name = val.Name;
                 ItemRef = val.ItemRef;
             }

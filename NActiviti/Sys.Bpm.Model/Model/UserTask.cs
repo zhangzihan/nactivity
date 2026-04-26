@@ -1,4 +1,5 @@
-﻿using Sys.Workflow.Bpmn.Constants;
+using System;
+using Sys.Workflow.Bpmn.Constants;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -255,14 +256,14 @@ namespace Sys.Workflow.Bpmn.Models
         {
             get
             {
-                ExtensionElement formData = ExtensionElements.GetValueOrNull(BpmnXMLConstants.ELEMENT_EXTENSIONS_FORMDATA)?.FirstOrDefault();
+                ExtensionElement formData = ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_FORMDATA, out var formDataList) ? formDataList.FirstOrDefault() : null;
 
                 if (formData is null)
                 {
                     yield break;
                 }
 
-                IEnumerable<ExtensionElement> fields = formData.ChildElements.GetValueOrNull(BpmnXMLConstants.ELEMENT_EXTENSIONS_FORMFIELD) ?? new ExtensionElement[0];
+                IEnumerable<ExtensionElement> fields = formData.ChildElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_FORMFIELD, out var fieldList) ? fieldList : Array.Empty<ExtensionElement>();
 
                 foreach (ExtensionElement extField in fields)
                 {
@@ -273,7 +274,7 @@ namespace Sys.Workflow.Bpmn.Models
                         Name = extField.Attributes["label"]?.FirstOrDefault().Value
                     };
 
-                    IEnumerable<ExtensionElement> props = extField.ChildElements.GetValueOrNull(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY) ?? new ExtensionElement[0];
+                    IEnumerable<ExtensionElement> props = extField.ChildElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out var propList) ? propList : Array.Empty<ExtensionElement>();
 
                     foreach (var prop in props)
                     {
@@ -342,7 +343,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as UserTask;
+                if (value is not UserTask val) throw new ArgumentException($"Expected {nameof(UserTask)}, got {value?.GetType().Name}", nameof(value));
 
                 Assignee = val.Assignee;
                 Owner = val.Owner;

@@ -1,4 +1,5 @@
-﻿using Sys.Workflow;
+using System;
+using Sys.Workflow;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -159,7 +160,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 base.Values = value;
 
-                var val = value as SubProcess;
+                if (value is not SubProcess val) throw new ArgumentException($"Expected {nameof(SubProcess)}, got {value?.GetType().Name}", nameof(value));
 
                 /*
                  * This is required because data objects in Designer have no DI info and are added as properties, not flow elements

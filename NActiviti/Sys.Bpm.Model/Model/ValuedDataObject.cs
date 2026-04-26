@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models
+using System;
+namespace Sys.Workflow.Bpmn.Models
 {
     public abstract class ValuedDataObject : DataObject
     {
@@ -22,7 +23,7 @@
             {
                 base.Values = value;
 
-                var val = value as ValuedDataObject;
+                if (value is not ValuedDataObject val) throw new ArgumentException($"Expected {nameof(ValuedDataObject)}, got {value?.GetType().Name}", nameof(value));
 
                 if (val.Value is not null)
                 {

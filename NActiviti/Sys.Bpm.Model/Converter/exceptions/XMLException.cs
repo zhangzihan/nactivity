@@ -17,9 +17,6 @@ namespace Sys.Workflow.Bpmn.Exceptions
 	/// 
 	public class XMLException : Exception
 	{
-
-	  private const long serialVersionUID = 1L;
-
 	  public XMLException(string message) : base(message)
 	  {
 	  }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace Sys.Workflow.Bpmn.Models
 {
@@ -76,7 +77,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             set
             {
-                var val = value as IOSpecification;
+                if (value is not IOSpecification val) throw new ArgumentException($"Expected {nameof(IOSpecification)}, got {value?.GetType().Name}", nameof(value));
 
                 dataInputs = new List<DataSpec>();
                 if (val.DataInputs is object && val.DataInputs.Count > 0)

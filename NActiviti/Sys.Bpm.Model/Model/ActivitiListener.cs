@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -146,7 +147,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             set
             {
-                var val = value as ActivitiListener;
+                if (value is not ActivitiListener val) throw new ArgumentException($"Expected {nameof(ActivitiListener)}, got {value?.GetType().Name}", nameof(value));
 
                 Event = val.Event;
 

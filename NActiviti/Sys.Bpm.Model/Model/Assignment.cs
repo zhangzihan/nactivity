@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models
+using System;
+namespace Sys.Workflow.Bpmn.Models
 {
     public class Assignment : BaseElement
     {
@@ -45,7 +46,7 @@
         {
             set
             {
-                var val = value as Assignment;
+                if (value is not Assignment val) throw new ArgumentException($"Expected {nameof(Assignment)}, got {value?.GetType().Name}", nameof(value));
 
                 From = val.From;
                 To = val.To;

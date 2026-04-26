@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models.Alfresco
+using System;
+namespace Sys.Workflow.Bpmn.Models.Alfresco
 {
 
     public class AlfrescoStartEvent : StartEvent
@@ -48,7 +49,7 @@
             {
                 base.Values = value;
 
-                var val = value as AlfrescoStartEvent;
+                if (value is not AlfrescoStartEvent val) throw new ArgumentException($"Expected {nameof(AlfrescoStartEvent)}, got {value?.GetType().Name}", nameof(value));
                 RunAs = val.RunAs;
                 ScriptProcessor = val.ScriptProcessor;
             }

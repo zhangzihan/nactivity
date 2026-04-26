@@ -1,4 +1,5 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+using System;
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -58,7 +59,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as CompensateEventDefinition;
+                if (value is not CompensateEventDefinition val) throw new ArgumentException($"Expected {nameof(CompensateEventDefinition)}, got {value?.GetType().Name}", nameof(value));
                 ActivityRef = val.ActivityRef;
                 WaitForCompletion = val.WaitForCompletion;
             }

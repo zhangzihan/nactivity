@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,7 +174,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as FormProperty;
+                if (value is not FormProperty val) throw new ArgumentException($"Expected {nameof(FormProperty)}, got {value?.GetType().Name}", nameof(value));
 
                 Name = val.Name;
                 Expression = val.Expression;

@@ -138,9 +138,10 @@ namespace Sys.Workflow.Bpmn.Models
 		{
 			set
 			{
+				if (value is null) throw new ArgumentNullException(nameof(value));
 				Id = value.Id;
 
-				extensionElements = new ConcurrentDictionary<string, IList<ExtensionElement>>();
+				extensionElements = new Dictionary<string, IList<ExtensionElement>>(StringComparer.OrdinalIgnoreCase);
 				if (value.ExtensionElements is object && value.ExtensionElements.Count > 0)
 				{
 					foreach (string key in value.ExtensionElements.Keys)

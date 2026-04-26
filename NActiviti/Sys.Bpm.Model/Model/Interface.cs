@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace Sys.Workflow.Bpmn.Models
 {
@@ -63,7 +64,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as Interface;
+                if (value is not Interface val) throw new ArgumentException($"Expected {nameof(Interface)}, got {value?.GetType().Name}", nameof(value));
 
                 Name = val.Name;
                 ImplementationRef = val.ImplementationRef;

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -158,7 +159,7 @@ namespace Sys.Workflow.Bpmn.Models
 			set
 			{
 				base.Values = value;
-				var val = value as SequenceFlow;
+				if (value is not SequenceFlow val) throw new ArgumentException($"Expected {nameof(SequenceFlow)}, got {value?.GetType().Name}", nameof(value));
 				ConditionExpression = val.ConditionExpression;
 				SourceRef = val.SourceRef;
 				TargetRef = val.TargetRef;

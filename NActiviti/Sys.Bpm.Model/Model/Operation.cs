@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace Sys.Workflow.Bpmn.Models
 {
@@ -91,7 +92,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as Operation;
+                if (value is not Operation val) throw new ArgumentException($"Expected {nameof(Operation)}, got {value?.GetType().Name}", nameof(value));
 
                 Name = val.Name;
                 ImplementationRef = val.ImplementationRef;

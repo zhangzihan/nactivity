@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace Sys.Workflow
 {
@@ -17,23 +13,6 @@ namespace Sys.Workflow
                     if (!target.ContainsKey(key))
                     {
                         target.Add(key, source[key]);
-                    }
-                }
-            }
-
-            return target;
-        }
-
-        public static ConcurrentDictionary<TKey, TValue> PutAll<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> target, ConcurrentDictionary<TKey, TValue> source)
-        {
-            if (source is not null)
-            {
-                foreach (var key in source.Keys)
-                {
-                    if (!target.ContainsKey(key))
-                    {
-                        source.TryGetValue(key, out var value);
-                        target.TryAdd(key, value);
                     }
                 }
             }

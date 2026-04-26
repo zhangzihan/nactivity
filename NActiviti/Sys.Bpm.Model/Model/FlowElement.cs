@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,7 +99,7 @@ namespace Sys.Workflow.Bpmn.Models
 			set
 			{
 				base.Values = value;
-				var val = value as FlowElement;
+				if (value is not FlowElement val) throw new ArgumentException($"Expected {nameof(FlowElement)}, got {value?.GetType().Name}", nameof(value));
 
 				Name = val.Name;
 				Documentation = val.Documentation;

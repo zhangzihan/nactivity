@@ -1,4 +1,5 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+using System;
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -88,7 +89,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             set
             {
-                var val = value as EventListener;
+                if (value is not EventListener val) throw new ArgumentException($"Expected {nameof(EventListener)}, got {value?.GetType().Name}", nameof(value));
 
                 Events = val.Events;
                 Implementation = val.Implementation;

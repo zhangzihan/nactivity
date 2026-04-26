@@ -1,4 +1,5 @@
-﻿using Sys.Workflow.Bpmn.Constants;
+using System;
+using Sys.Workflow.Bpmn.Constants;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -161,7 +162,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as Activity;
+                if (value is not Activity val) throw new ArgumentException($"Expected {nameof(Activity)}, got {value?.GetType().Name}", nameof(value));
 
                 FailedJobRetryTimeCycleValue = val.FailedJobRetryTimeCycleValue;
                 DefaultFlow = val.DefaultFlow;

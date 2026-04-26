@@ -1,4 +1,5 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+using System;
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -100,7 +101,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as TimerEventDefinition;
+                if (value is not TimerEventDefinition val) throw new ArgumentException($"Expected {nameof(TimerEventDefinition)}, got {value?.GetType().Name}", nameof(value));
                 TimeDate = val.TimeDate;
                 TimeDuration = val.TimeDuration;
                 TimeCycle = val.TimeCycle;

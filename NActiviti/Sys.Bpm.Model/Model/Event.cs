@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +45,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 base.Values = value;
 
-                var val = value as Event;
+                if (value is not Event val) throw new ArgumentException($"Expected {nameof(Event)}, got {value?.GetType().Name}", nameof(value));
 
                 eventDefinitions = new List<EventDefinition>();
                 if (val.EventDefinitions is object && val.EventDefinitions.Count > 0)

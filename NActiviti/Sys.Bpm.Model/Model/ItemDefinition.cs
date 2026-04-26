@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models
+using System;
+namespace Sys.Workflow.Bpmn.Models
 {
     public class ItemDefinition : BaseElement
     {
@@ -46,7 +47,7 @@
             set
             {
                 base.Values = value;
-                var val = value as ItemDefinition;
+                if (value is not ItemDefinition val) throw new ArgumentException($"Expected {nameof(ItemDefinition)}, got {value?.GetType().Name}", nameof(value));
 
                 StructureRef = val.StructureRef;
                 ItemKind = val.ItemKind;

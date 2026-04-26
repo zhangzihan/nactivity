@@ -3,11 +3,14 @@
 //	This class can be used by anyone provided that the copyright notice remains intact.
 //
 //	This class is used to convert some aspects of the Java String class.
+//	DEPRECATED: Use C# native string methods instead.
 //-------------------------------------------------------------------------------------------
+using System;
 using System.Text.RegularExpressions;
 
 namespace Sys.Workflow
 {
+	[Obsolete("Use C# native string methods instead of StringHelper.")]
 	public static class StringHelper
 	{
 		//----------------------------------------------------------------------------------

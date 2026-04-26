@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models
+using System;
+namespace Sys.Workflow.Bpmn.Models
 {
     public class DataStore : BaseElement
     {
@@ -60,7 +61,7 @@
             set
             {
                 base.Values = value;
-                var val = value as DataStore;
+                if (value is not DataStore val) throw new ArgumentException($"Expected {nameof(DataStore)}, got {value?.GetType().Name}", nameof(value));
 
                 Name = val.Name;
                 DataState = val.DataState;

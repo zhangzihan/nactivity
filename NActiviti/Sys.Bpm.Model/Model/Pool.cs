@@ -1,4 +1,5 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+using System;
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -72,7 +73,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as Pool;
+                if (value is not Pool val) throw new ArgumentException($"Expected {nameof(Pool)}, got {value?.GetType().Name}", nameof(value));
                 Name = val.Name;
                 ProcessRef = val.ProcessRef;
                 Executable = val.Executable;

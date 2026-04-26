@@ -45,7 +45,7 @@ namespace Sys.Workflow.Bpmn.Converters
 				var x = obj.Attribute("x")?.Value;
 				var y = obj.Attribute("y")?.Value;
 
-				return HashCode.Combine(x.GetHashCode(), y.GetHashCode());
+				return HashCode.Combine(x?.GetHashCode() ?? 0, y?.GetHashCode() ?? 0);
 			}
 		}
 

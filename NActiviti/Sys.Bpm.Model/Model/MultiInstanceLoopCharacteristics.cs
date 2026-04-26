@@ -1,4 +1,5 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+using System;
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -126,7 +127,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             set
             {
-                var val = value as MultiInstanceLoopCharacteristics;
+                if (value is not MultiInstanceLoopCharacteristics val) throw new ArgumentException($"Expected {nameof(MultiInstanceLoopCharacteristics)}, got {value?.GetType().Name}", nameof(value));
 
                 InputDataItem = val.InputDataItem;
                 LoopCardinality = val.LoopCardinality;

@@ -1,4 +1,5 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+using System;
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -57,7 +58,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             set
             {
-                var val = value as DataGridField;
+                if (value is not DataGridField val) throw new ArgumentException($"Expected {nameof(DataGridField)}, got {value?.GetType().Name}", nameof(value));
 
                 Name = val.Name;
                 Value = val.Value;

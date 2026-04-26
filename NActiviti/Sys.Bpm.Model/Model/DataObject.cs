@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models
+using System;
+namespace Sys.Workflow.Bpmn.Models
 {
     public class DataObject : FlowElement
     {
@@ -31,7 +32,7 @@
             set
             {
                 base.Values = value;
-                var val = value as DataObject;
+                if (value is not DataObject val) throw new ArgumentException($"Expected {nameof(DataObject)}, got {value?.GetType().Name}", nameof(value));
 
                 Id = value.Id;
                 Name = val.Name;

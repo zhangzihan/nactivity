@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models.Alfresco
+using System;
+namespace Sys.Workflow.Bpmn.Models.Alfresco
 {
 
     public class AlfrescoUserTask : UserTask
@@ -49,7 +50,7 @@
             set
             {
                 base.Values = value;
-                var val = value as AlfrescoUserTask;
+                if (value is not AlfrescoUserTask val) throw new ArgumentException($"Expected {nameof(AlfrescoUserTask)}, got {value?.GetType().Name}", nameof(value));
 
                 RunAs = val.RunAs;
                 ScriptProcessor = val.ScriptProcessor;

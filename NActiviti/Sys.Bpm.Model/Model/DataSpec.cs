@@ -1,4 +1,5 @@
-﻿namespace Sys.Workflow.Bpmn.Models
+using System;
+namespace Sys.Workflow.Bpmn.Models
 {
     public class DataSpec : BaseElement
     {
@@ -59,7 +60,7 @@
         {
             set
             {
-                var val = value as DataSpec;
+                if (value is not DataSpec val) throw new ArgumentException($"Expected {nameof(DataSpec)}, got {value?.GetType().Name}", nameof(value));
 
                 Name = val.Name;
                 ItemSubjectRef = val.ItemSubjectRef;

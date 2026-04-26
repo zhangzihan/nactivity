@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,7 +128,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 base.Values = value;
-                var val = value as CallActivity;
+                if (value is not CallActivity val) throw new ArgumentException($"Expected {nameof(CallActivity)}, got {value?.GetType().Name}", nameof(value));
 
                 CalledElement = val.CalledElement;
                 BusinessKey = val.BusinessKey;
