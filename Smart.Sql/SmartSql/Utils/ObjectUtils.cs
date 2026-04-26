@@ -10,7 +10,7 @@ namespace SmartSql.Utils
 {
     public static class ObjectUtils
     {
-        private static ConcurrentDictionary<string, Func<object, Dictionary<string, object>>> _cachedConvert = new ConcurrentDictionary<string, Func<object, Dictionary<string, object>>>();
+        private static readonly ConcurrentDictionary<string, Func<object, Dictionary<string, object>>> _cachedConvert = new ConcurrentDictionary<string, Func<object, Dictionary<string, object>>>();
 
         public static Dictionary<string, object> ToDictionary(object sourceObj, bool ignorePropNameCase)
         {
