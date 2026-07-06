@@ -129,8 +129,20 @@ namespace Spring.Util
             return CanConvertToInteger(number) || CanConvertToDecimal(number);
         }
 
+        private static readonly Type[] NumericTypes = new[]
+        {
+            typeof(int), typeof(long), typeof(double), typeof(decimal), typeof(float),
+            typeof(short), typeof(ushort), typeof(uint), typeof(ulong),
+            typeof(byte), typeof(sbyte)
+        };
+
         internal static bool TryConvertTo(ref object from, ref object to)
         {
+            // Fast path: known numeric types bypass TypeDescriptor reflection
+            if (TryFastConvert(ref from, ref to))
+                return true;
+
+            // Slow path: fallback to TypeDescriptor for custom types
             TypeConverter converter = TypeDescriptor.GetConverter(to.GetType());
             if (!converter.CanConvertFrom(from.GetType()))
             {
@@ -166,6 +178,72 @@ namespace Spring.Util
             }
 
             return true;
+        }
+
+        private static bool TryFastConvert(ref object from, ref object to)
+        {
+            Type toType = to.GetType();
+            Type fromType = from.GetType();
+
+            // Only fast-path when target type is a known numeric type
+            if (!IsKnownNumericType(toType))
+                return false;
+
+            // Source must be a known numeric type or string
+            if (!IsKnownNumericType(fromType) && fromType != typeof(string))
+                return false;
+
+            try
+            {
+                TypeCode toCode = Type.GetTypeCode(toType);
+
+                if (from.ToString().Contains("."))
+                {
+                    if (toCode == TypeCode.Single || toCode == TypeCode.Double || toCode == TypeCode.Decimal)
+                    {
+                        from = ConvertToType(from, toType);
+                    }
+                    else
+                    {
+                        from = Convert.ToDecimal(from);
+                        to = Convert.ToDecimal(to.ToString());
+                    }
+                }
+                else
+                {
+                    from = ConvertToType(from, toType);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool IsKnownNumericType(Type type)
+        {
+            return Array.IndexOf(NumericTypes, type) >= 0;
+        }
+
+        private static object ConvertToType(object value, Type targetType)
+        {
+            switch (Type.GetTypeCode(targetType))
+            {
+                case TypeCode.Int32:   return Convert.ToInt32(value);
+                case TypeCode.Int64:   return Convert.ToInt64(value);
+                case TypeCode.Double:  return Convert.ToDouble(value);
+                case TypeCode.Decimal: return Convert.ToDecimal(value);
+                case TypeCode.Single:  return Convert.ToSingle(value);
+                case TypeCode.Int16:   return Convert.ToInt16(value);
+                case TypeCode.UInt16:  return Convert.ToUInt16(value);
+                case TypeCode.UInt32:  return Convert.ToUInt32(value);
+                case TypeCode.UInt64:  return Convert.ToUInt64(value);
+                case TypeCode.Byte:    return Convert.ToByte(value);
+                case TypeCode.SByte:   return Convert.ToSByte(value);
+                default: throw new NotSupportedException($"Type {targetType} is not a supported numeric type.");
+            }
         }
 
         /// <summary>

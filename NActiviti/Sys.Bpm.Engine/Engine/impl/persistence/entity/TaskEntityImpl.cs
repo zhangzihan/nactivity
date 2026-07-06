@@ -996,11 +996,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
                 if (Enum.TryParse<DelegationState>(value, out var state))
                 {
-                    delegationState = null;
+                    delegationState = state;
                 }
                 else
                 {
-                    delegationState = state;
+                    delegationState = null;
                 }
             }
         }
