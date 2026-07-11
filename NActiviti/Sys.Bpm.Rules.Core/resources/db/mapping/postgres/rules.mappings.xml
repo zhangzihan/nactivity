@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMapConfig xmlns="http://SmartSql.net/schemas/SmartSqlMapConfig.xsd">
+  <Settings IsWatchConfigFile="false" IgnoreParameterCase="true" IsCacheEnabled="false" />
+  <Database>
+    <DbProvider Name="NpgsqlFactory" ParameterPrefix="@" Type="Npgsql.NpgsqlFactory,Npgsql" />
+    <Write Name="WriteDB" ConnectionString="Host=localhost;Database=postgres;Username=postgres;Password=postgres" />
+    <Read Name="ReadDB-0" ConnectionString="Host=localhost;Database=postgres;Username=postgres;Password=postgres" />
+  </Database>
+  <TypeHandlers>
+    <TypeHandler Name="Json" Type="SmartSql.TypeHandler.JsonTypeHandler,SmartSql.TypeHandler" />
+  </TypeHandlers>
+  <SmartSqlMaps>
+    <SmartSqlMap Path="repositories" Type="Directory"></SmartSqlMap>
+  </SmartSqlMaps>
+</SmartSqlMapConfig>

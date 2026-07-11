@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -135,6 +135,9 @@
 		<ProjectReference Include="..\..\Smart.Sql\SmartSql.TypeHandler\SmartSql.TypeHandler.csproj" />
 		<ProjectReference Include="..\..\Smart.Sql\SmartSql\SmartSql.csproj" />
 		<ProjectReference Include="..\Sys.Bpm.Engine.API\Sys.Bpm.Engine.API.csproj" />
+		<ProjectReference Include="..\Sys.Bpm.Rules.API\Sys.Bpm.Rules.API.csproj" />
+		<ProjectReference Include="..\Sys.Bpm.Rules.Core\Sys.Bpm.Rules.Core.csproj" />
+		<ProjectReference Include="..\Sys.Rules.DmnEngine\src\Sys.Rules.DmnEngine.Adapter\Sys.Rules.DmnEngine.Adapter.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

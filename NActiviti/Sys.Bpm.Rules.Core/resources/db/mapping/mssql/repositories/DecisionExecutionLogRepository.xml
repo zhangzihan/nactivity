@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMap Scope="Sys.Workflow.Rules.Core.Repositories.DecisionExecutionLogRepository" xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <ResultMap Id="decisionExecutionLogResultMap" ResultType="Sys.Workflow.Rules.Models.DecisionExecutionLogRecord,Sys.Bpm.Rules.API">
+    <Result Property="ExecutionId" Column="execution_id" />
+    <Result Property="DecisionKey" Column="decision_key" />
+    <Result Property="RequestedVersionTag" Column="requested_version_tag" />
+    <Result Property="ResolvedVersionTag" Column="resolved_version_tag" />
+    <Result Property="BindingMode" Column="binding_mode" />
+    <Result Property="Succeeded" Column="succeeded" />
+    <Result Property="TraceId" Column="trace_id" />
+    <Result Property="Executor" Column="executor" />
+    <Result Property="ErrorMessage" Column="error_message" />
+    <Result Property="MatchedRules" Column="matched_rules" TypeHandler="Json" />
+    <Result Property="InputSnapshot" Column="input_snapshot" TypeHandler="Json" />
+    <Result Property="OutputSnapshot" Column="output_snapshot" TypeHandler="Json" />
+    <Result Property="TraceEntries" Column="trace_entries" TypeHandler="Json" />
+    <Result Property="ExecutedTime" Column="executed_time" />
+    <Result Property="ElapsedMs" Column="elapsed_ms" />
+  </ResultMap>
+
+  <ParameterMap Id="decisionExecutionLogInsertParameterMap">
+    <Parameter Property="matchedRules" TypeHandler="Json" />
+    <Parameter Property="inputSnapshot" TypeHandler="Json" />
+    <Parameter Property="outputSnapshot" TypeHandler="Json" />
+    <Parameter Property="traceEntries" TypeHandler="Json" />
+  </ParameterMap>
+
+  <Statement Id="QueryLogsWhere">
+    <Where>
+      <IsTrue Property="decisionKey != null and decisionKey != ''">
+        decision_key = #{decisionKey}
+      </IsTrue>
+      <IsTrue Property="requestedVersionTag != null and requestedVersionTag != ''">
+        and requested_version_tag = #{requestedVersionTag}
+      </IsTrue>
+      <IsTrue Property="resolvedVersionTag != null and resolvedVersionTag != ''">
+        and resolved_version_tag = #{resolvedVersionTag}
+      </IsTrue>
+      <IsTrue Property="bindingMode != null and bindingMode != ''">
+        and binding_mode = #{bindingMode}
+      </IsTrue>
+      <IsTrue Property="traceId != null and traceId != ''">
+        and trace_id = #{traceId}
+      </IsTrue>
+      <IsTrue Property="executor != null and executor != ''">
+        and executor = #{executor}
+      </IsTrue>
+      <IsTrue Property="succeeded != null">
+        and succeeded = #{succeeded}
+      </IsTrue>
+      <IsTrue Property="startExecutedTime != null">
+        and executed_time &gt;= #{startExecutedTime}
+      </IsTrue>
+      <IsTrue Property="endExecutedTime != null">
+        and executed_time &lt;= #{endExecutedTime}
+      </IsTrue>
+    </Where>
+  </Statement>
+
+  <Select Id="GetByExecutionId" ResultMap="decisionExecutionLogResultMap">
+    select top 1
+      cast(execution_id as nvarchar(36)) as execution_id,
+      decision_key,
+      requested_version_tag,
+      resolved_version_tag,
+      binding_mode,
+      succeeded,
+      trace_id,
+      executor,
+      error_message,
+      matched_rules,
+      input_snapshot,
+      output_snapshot,
+      trace_entries,
+      executed_time,
+      elapsed_ms
+    from decision_execution_log
+    where execution_id = cast(#{executionId} as uniqueidentifier)
+  </Select>
+
+  <Select Id="QueryLogs" ResultMap="decisionExecutionLogResultMap">
+    select
+      cast(execution_id as nvarchar(36)) as execution_id,
+      decision_key,
+      requested_version_tag,
+      resolved_version_tag,
+      binding_mode,
+      succeeded,
+      trace_id,
+      executor,
+      error_message,
+      matched_rules,
+      input_snapshot,
+      output_snapshot,
+      trace_entries,
+      executed_time,
+      elapsed_ms
+    from decision_execution_log
+    <Include RefId="QueryLogsWhere" />
+    order by executed_time desc
+    offset #{offset} rows fetch next #{limit} rows only
+  </Select>
+
+  <Select Id="CountLogs" ResultType="long">
+    select count(1)
+    from decision_execution_log
+    <Include RefId="QueryLogsWhere" />
+  </Select>
+
+  <Insert Id="InsertLog" ParameterMap="decisionExecutionLogInsertParameterMap">
+    insert into decision_execution_log (
+      execution_id,
+      decision_key,
+      requested_version_tag,
+      resolved_version_tag,
+      binding_mode,
+      succeeded,
+      trace_id,
+      executor,
+      error_message,
+      matched_rules,
+      input_snapshot,
+      output_snapshot,
+      trace_entries,
+      executed_time,
+      elapsed_ms
+    )
+    values (
+      cast(#{executionId} as uniqueidentifier),
+      #{decisionKey},
+      #{requestedVersionTag},
+      #{resolvedVersionTag},
+      #{bindingMode},
+      #{succeeded},
+      #{traceId},
+      #{executor},
+      #{errorMessage},
+      #{matchedRules},
+      #{inputSnapshot},
+      #{outputSnapshot},
+      #{traceEntries},
+      #{executedTime},
+      #{elapsedMs}
+    )
+  </Insert>
+</SmartSqlMap>

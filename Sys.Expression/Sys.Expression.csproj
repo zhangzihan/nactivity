@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net4.8</TargetFrameworks>
@@ -10,7 +10,7 @@
     <Product>Sys.Expression</Product>
     <Description>Sys.Expression</Description>
     <PackageId>Sys.Expression</PackageId>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageReleaseNotes>Sys.Expression</PackageReleaseNotes>
     <Version>4.9.3.0</Version>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
@@ -37,8 +37,8 @@
     <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
   </ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="dotnet pack --no-build --include-symbols  $(ProjectPath) -o ../../packages" />
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(PackSysExpressionOnBuild)' == 'true' and '$(TargetFramework)' == 'net4.8'">
+		<Exec Command="dotnet pack --no-build -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg $(ProjectPath) -o ../../packages" />
 	</Target>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -47,8 +47,6 @@ namespace Sys.Workflow.Cloud.Services.Api
                     await HandleExceptionAsync(context, ex).ConfigureAwait(false);
                 }
                 catch { }
-
-                throw;
             }
         }
 
@@ -93,44 +91,51 @@ namespace Sys.Workflow.Cloud.Services.Api
         /// <returns></returns>
         private Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
+            if (context.Response.HasStarted)
+            {
+                return Task.CompletedTask;
+            }
 
-            //if (ex is Http400Exception ex400)
-            //{
-            //    context.Response.ContentType = "application/json";
-            //    context.Response.StatusCode = 400;
+            if (ex is Http400Exception ex400)
+            {
+                WriteBizErrorLogger(ex);
 
-            //    return context.Response.WriteAsync(JsonConvert.SerializeObject(ex400.Http400));
-            //}
-            //else 
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+                return context.Response.WriteAsync(JsonConvert.SerializeObject(ex400.Http400));
+            }
+
             if (ex is ActivitiException actex)
             {
                 WriteBizErrorLogger(ex);
 
-                //context.Response.ContentType = "application/json";
-                //context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-                //return context.Response.WriteAsync(JsonConvert.SerializeObject(new Http400()
-                //{
-                //    Code = actex.Code,
-                //    Message = actex.Message,
-                //    Target = actex.GetType().Name
-                //}));
+                return context.Response.WriteAsync(JsonConvert.SerializeObject(new Http400()
+                {
+                    Code = actex.Code,
+                    Message = actex.Message,
+                    Target = actex.GetType().Name,
+                    OriginError = ex.GetType().Name
+                }));
             }
             else
             {
                 WriteErrorLogger(context, ex);
 
-                //context.Response.ContentType = "application/json";
-                //context.Response.StatusCode = 500;
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-                //return context.Response.WriteAsync(JsonConvert.SerializeObject(new Http500()
-                //{
-                //    Message = ex.Message,
-                //    Target = ex.GetType().Name
-                //}));
+                return context.Response.WriteAsync(JsonConvert.SerializeObject(new Http500()
+                {
+                    Code = "workflow-internal-server-error",
+                    Message = ex.Message,
+                    Target = ex.GetType().Name,
+                    OriginError = ex.GetType().Name
+                }));
             }
-
-            return Task.CompletedTask;
         }
     }
 }

@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Sys.Rules.DmnEngine.Adapter</RootNamespace>
+    <AssemblyName>Sys.Rules.DmnEngine.Adapter</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <OutputPath>bin</OutputPath>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <DocumentationFile>bin\Sys.Rules.DmnEngine.Adapter.xml</DocumentationFile>
+    <Version>$(RuleDecisionPackageVersion)</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>Adapter layer between Sys.Rules.DmnEngine and Sys.Bpm.Rules.API.</Description>
+    <PackageId>Sys.Rules.DmnEngine.Adapter</PackageId>
+    <Company>Sys.Bpm</Company>
+    <Authors>Sys.Bpm</Authors>
+    <PackageTags>workflow;rules;dmn;decision;adapter;nactivity</PackageTags>
+    <PackageReadmeFile>规则决策组件包说明.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Sys.Bpm.Rules.API\Sys.Bpm.Rules.API.csproj" />
+    <ProjectReference Include="..\Sys.Rules.DmnEngine\Sys.Rules.DmnEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\规则决策组件包说明.md" Pack="true" PackagePath="\" Link="规则决策组件包说明.md" />
+  </ItemGroup>
+
+</Project>

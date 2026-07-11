@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMap Scope="Sys.Workflow.Rules.Core.Repositories.DecisionProcessReferenceIndexRepository" xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <ResultMap Id="decisionProcessReferenceIndexEntryResultMap" ResultType="Sys.Workflow.Rules.Models.DecisionProcessReferenceIndexEntryRecord,Sys.Bpm.Rules.API">
+    <Result Property="ReferenceId" Column="reference_id" />
+    <Result Property="DeploymentId" Column="deployment_id" />
+    <Result Property="DeploymentName" Column="deployment_name" />
+    <Result Property="ProcessDefinitionKey" Column="process_definition_key" />
+    <Result Property="ProcessDefinitionName" Column="process_definition_name" />
+    <Result Property="TenantId" Column="tenant_id" />
+    <Result Property="IsDraft" Column="is_draft" />
+    <Result Property="DeployTime" Column="deploy_time" />
+    <Result Property="DecisionKey" Column="decision_key" />
+    <Result Property="TaskId" Column="task_id" />
+    <Result Property="TaskName" Column="task_name" />
+    <Result Property="BindingMode" Column="binding_mode" />
+    <Result Property="VersionTag" Column="version_tag" />
+    <Result Property="IndexedTime" Column="indexed_time" />
+  </ResultMap>
+
+  <Select Id="QueryEntries" ResultMap="decisionProcessReferenceIndexEntryResultMap">
+    select
+      cast(reference_id as text) as reference_id,
+      deployment_id,
+      deployment_name,
+      process_definition_key,
+      process_definition_name,
+      tenant_id,
+      is_draft,
+      deploy_time,
+      decision_key,
+      task_id,
+      task_name,
+      binding_mode,
+      version_tag,
+      indexed_time
+    from process_decision_reference
+    <Where>
+      decision_key = #{decisionKey}
+      <IsTrue Property="tenantId != null and tenantId != ''">
+        and tenant_id = #{tenantId}
+      </IsTrue>
+      <IsFalse Property="includeDrafts">
+        and is_draft = false
+      </IsFalse>
+      <IsTrue Property="deploymentIds != null and deploymentIds.Count > 0">
+        and deployment_id in
+        <For Key="item" Property="deploymentIds" Open="(" Separator="," Close=")">
+          #{item}
+        </For>
+      </IsTrue>
+    </Where>
+    order by is_draft desc, deploy_time desc, deployment_name asc, process_definition_key asc, task_id asc
+  </Select>
+
+  <Select Id="GetIndexedDeploymentIds" ResultType="string">
+    select distinct deployment_id
+    from process_decision_reference
+    where deployment_id in
+    <For Key="item" Property="items" Open="(" Separator="," Close=")">
+      #{item}
+    </For>
+  </Select>
+
+  <Delete Id="DeleteByDeploymentId">
+    delete from process_decision_reference
+    where deployment_id = #{deploymentId}
+  </Delete>
+
+  <Insert Id="InsertEntry">
+    insert into process_decision_reference (
+      reference_id,
+      deployment_id,
+      deployment_name,
+      process_definition_key,
+      process_definition_name,
+      tenant_id,
+      is_draft,
+      deploy_time,
+      decision_key,
+      task_id,
+      task_name,
+      binding_mode,
+      version_tag,
+      indexed_time
+    )
+    values (
+      cast(#{referenceId} as uuid),
+      #{deploymentId},
+      #{deploymentName},
+      #{processDefinitionKey},
+      #{processDefinitionName},
+      #{tenantId},
+      #{isDraft},
+      #{deployTime},
+      #{decisionKey},
+      #{taskId},
+      #{taskName},
+      #{bindingMode},
+      #{versionTag},
+      #{indexedTime}
+    )
+  </Insert>
+</SmartSqlMap>

@@ -48,7 +48,7 @@ namespace Sys.Bpm.Engine.Tests.Fixtures
             {
                 ProcessEngineName = "InProcessEngineTests",
                 AsyncExecutorActivate = false,
-                DatabaseSchemaUpdate = "false",
+                DatabaseSchemaUpdate = ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE,
                 EnableVerboseExecutionTreeLogging = false,
                 History = "audit"
             };

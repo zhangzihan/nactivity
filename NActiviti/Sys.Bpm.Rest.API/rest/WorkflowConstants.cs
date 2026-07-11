@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -58,6 +58,21 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// 流程任务变量路由基地址
         /// </summary>
         public const string TASK_VAR_ROUTER_V1 = "Api/v1/workflow/tasks/{taskId}/variables";
+
+        /// <summary>
+        /// 规则决策治理路由基地址。
+        /// </summary>
+        public const string DECISION_ROUTER_V1 = "Api/v1/workflow/decisions";
+
+        /// <summary>
+        /// 规则治理无效请求错误码。
+        /// </summary>
+        public const string DECISION_GOVERNANCE_INVALID_REQUEST = "decision-governance-invalid-request";
+
+        /// <summary>
+        /// 规则治理非法状态错误码。
+        /// </summary>
+        public const string DECISION_GOVERNANCE_INVALID_STATE = "decision-governance-invalid-state";
 
         /// <summary>
         /// 流程引擎授权策略名

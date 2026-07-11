@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -253,7 +253,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
             }
             else
             {
-                // no default behavior
+                ruleActivity = new DmnBusinessRuleTaskActivityBehavior();
+            }
+
+            if (ruleActivity == null)
+            {
+                throw new ActivitiException("Could not resolve businessRuleTask behavior for task id:" + businessRuleTask.Id);
             }
 
             foreach (string ruleVariableInputObject in businessRuleTask.InputVariables)

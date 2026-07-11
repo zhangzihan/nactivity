@@ -87,6 +87,10 @@ go
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'ACT_IDX_ATHRZ_PROCEDEF') drop index ACT_RU_IDENTITYLINK.ACT_IDX_ATHRZ_PROCEDEF;
 go
     
+if exists (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'process_decision_reference') drop table process_decision_reference;
+if exists (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'decision_execution_log') drop table decision_execution_log;
+if exists (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'decision_version') drop table decision_version;
+if exists (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'decision_definition') drop table decision_definition;
 if exists (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'ACT_GE_PROPERTY') drop table ACT_GE_PROPERTY;
 if exists (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'ACT_GE_BYTEARRAY') drop table ACT_GE_BYTEARRAY;
 if exists (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'ACT_RE_PROCDEF') drop table ACT_RE_PROCDEF;

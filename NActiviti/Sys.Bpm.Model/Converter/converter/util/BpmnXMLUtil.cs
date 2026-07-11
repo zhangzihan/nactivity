@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Constants;
 using Sys.Workflow.Bpmn.Converters.Childs;
 using Sys.Workflow.Bpmn.Models;
 using Sys.Workflow;
@@ -148,7 +148,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
 						extensionElement.AddChildElement(childExtensionElement);
 						xtr.isEmpty = xtr.IsStartElement() && xtr.EndElement;
 						xtr.Next();
-						return childExtensionElement;
+						continue;
 					}
 					else
 					{

@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Sys.Workflow.Rules</RootNamespace>
+    <AssemblyName>Sys.Bpm.Rules.API</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <OutputPath>bin</OutputPath>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <DocumentationFile>bin\Sys.Bpm.Rules.API.xml</DocumentationFile>
+    <Version>$(RuleDecisionPackageVersion)</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>Decision runtime contracts for nactivity.</Description>
+    <PackageId>Sys.Bpm.Rules.API</PackageId>
+    <Company>Sys.Bpm</Company>
+    <Authors>Sys.Bpm</Authors>
+    <PackageTags>workflow;rules;dmn;decision;nactivity</PackageTags>
+    <PackageReadmeFile>规则决策组件包说明.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\规则决策组件包说明.md" Pack="true" PackagePath="\" Link="规则决策组件包说明.md" />
+  </ItemGroup>
+
+</Project>

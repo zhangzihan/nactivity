@@ -243,26 +243,21 @@ namespace Sys.Bpm.Engine.Tests.Tests
         // ==================== DeleteTaskCmd ====================
 
         [Fact]
-        public void DeleteTaskCmd_删除单个任务_任务不再存在()
+        public void DeleteTaskCmd_删除单个任务_运行中流程任务抛出异常()
         {
             var ex = Record.Exception(() =>
             {
                 var (_, processInstance, task) = DeployStartAndGetTask();
 
                 _fixture.CommandExecutor.Execute(new DeleteTaskCmd(task.Id, "测试删除", false));
-
-                var remaining = _fixture.ProcessEngine.TaskService.CreateTaskQuery()
-                    .SetProcessInstanceId(processInstance.Id)
-                    .List();
-
-                Assert.DoesNotContain(remaining, t => t.Id == task.Id);
             });
 
-            Assert.Null(ex);
+            Assert.NotNull(ex);
+            Assert.Contains("The task cannot be deleted because is part of a running process", ex.Message);
         }
 
         [Fact]
-        public void DeleteTaskCmd_批量删除任务_任务全部删除()
+        public void DeleteTaskCmd_批量删除任务_运行中流程任务抛出异常()
         {
             var ex = Record.Exception(() =>
             {
@@ -270,15 +265,10 @@ namespace Sys.Bpm.Engine.Tests.Tests
 
                 _fixture.CommandExecutor.Execute(
                     new DeleteTaskCmd(new List<string> { task.Id }, "批量删除", false));
-
-                var remaining = _fixture.ProcessEngine.TaskService.CreateTaskQuery()
-                    .SetProcessInstanceId(processInstance.Id)
-                    .List();
-
-                Assert.DoesNotContain(remaining, t => t.Id == task.Id);
             });
 
-            Assert.Null(ex);
+            Assert.NotNull(ex);
+            Assert.Contains("The task cannot be deleted because is part of a running process", ex.Message);
         }
 
         [Fact]
@@ -604,7 +594,7 @@ namespace Sys.Bpm.Engine.Tests.Tests
             });
 
             Assert.NotNull(ex);
-            Assert.Contains("No process definition found", ex.Message);
+            Assert.Contains("no deployed process definition found with id", ex.Message);
         }
 
         // ==================== GetTasksCmd ====================

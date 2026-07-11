@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Sys.Workflow.Bpmn.Models;
 using Sys.Workflow.Cloud.Services.Api.Model;
 using Sys.Workflow.Cloud.Services.Rest.Api;
 using Sys.Workflow.Hateoas;
 using Sys.Net.Http;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -52,6 +53,28 @@ namespace Sys.Workflow.Rest.Client.API
             ActionResult<BpmnModel> result = new ObjectResult(model);
 
             return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IReadOnlyList<DecisionProcessReferenceRecord>> QueryDecisionReferences(string decisionKey, string tenantId = null, bool includeDrafts = true)
+        {
+            var queryString = $"?includeDrafts={includeDrafts.ToString().ToLowerInvariant()}";
+            if (!string.IsNullOrWhiteSpace(tenantId))
+            {
+                queryString += $"&tenantId={tenantId}";
+            }
+
+            return await httpProxy
+                .GetAsync<IReadOnlyList<DecisionProcessReferenceRecord>>($"{serviceUrl}/decision-references/{decisionKey}{queryString}")
+                .ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task<DecisionSchemaStatusRecord> GetDecisionSchemaStatus()
+        {
+            return await httpProxy
+                .GetAsync<DecisionSchemaStatusRecord>($"{serviceUrl}/schema-status")
+                .ConfigureAwait(false);
         }
 
         /// <inheritdoc />

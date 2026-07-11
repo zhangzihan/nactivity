@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMap Scope="Sys.Workflow.Rules.Core.Repositories.DecisionDefinitionRepository" xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <ResultMap Id="decisionDefinitionResultMap" ResultType="Sys.Workflow.Rules.Models.DecisionDefinitionRecord,Sys.Bpm.Rules.API">
+    <Result Property="DecisionId" Column="decision_id" />
+    <Result Property="DecisionKey" Column="decision_key" />
+    <Result Property="Name" Column="name" />
+    <Result Property="Category" Column="category" />
+    <Result Property="Description" Column="description" />
+    <Result Property="DecisionType" Column="decision_type" />
+    <Result Property="SourceFormat" Column="source_format" />
+    <Result Property="Status" Column="status" />
+    <Result Property="DraftVersionTag" Column="draft_version_tag" />
+    <Result Property="PublishedVersionTag" Column="published_version_tag" />
+    <Result Property="Tags" Column="tags" TypeHandler="Json" />
+    <Result Property="CreatedBy" Column="created_by" />
+    <Result Property="CreatedTime" Column="created_time" />
+    <Result Property="ModifiedBy" Column="modified_by" />
+    <Result Property="ModifiedTime" Column="modified_time" />
+  </ResultMap>
+
+  <ParameterMap Id="decisionDefinitionParameterMap">
+    <Parameter Property="tags" TypeHandler="Json" />
+  </ParameterMap>
+
+  <Select Id="GetByDecisionId" ResultMap="decisionDefinitionResultMap">
+    select
+      cast(decision_id as text) as decision_id,
+      decision_key,
+      name,
+      category,
+      description,
+      decision_type,
+      source_format,
+      status,
+      draft_version_tag,
+      published_version_tag,
+      tags,
+      created_by,
+      created_time,
+      modified_by,
+      modified_time
+    from decision_definition
+    where decision_id = cast(#{decisionId} as uuid)
+    limit 1
+  </Select>
+
+  <Select Id="GetByDecisionKey" ResultMap="decisionDefinitionResultMap">
+    select
+      cast(decision_id as text) as decision_id,
+      decision_key,
+      name,
+      category,
+      description,
+      decision_type,
+      source_format,
+      status,
+      draft_version_tag,
+      published_version_tag,
+      tags,
+      created_by,
+      created_time,
+      modified_by,
+      modified_time
+    from decision_definition
+    where decision_key = #{decisionKey}
+    limit 1
+  </Select>
+
+  <Select Id="QueryDefinitions" ResultMap="decisionDefinitionResultMap">
+    select
+      cast(decision_id as text) as decision_id,
+      decision_key,
+      name,
+      category,
+      description,
+      decision_type,
+      source_format,
+      status,
+      draft_version_tag,
+      published_version_tag,
+      tags,
+      created_by,
+      created_time,
+      modified_by,
+      modified_time
+    from decision_definition
+    <Where>
+      <IsTrue Property="keyword != null and keyword != ''">
+        (
+          decision_key ilike '%' || #{keyword} || '%'
+          or name ilike '%' || #{keyword} || '%'
+        )
+      </IsTrue>
+      <IsTrue Property="category != null and category != ''">
+        and category = #{category}
+      </IsTrue>
+      <IsTrue Property="decisionType != null and decisionType != ''">
+        and decision_type = #{decisionType}
+      </IsTrue>
+      <IsTrue Property="status != null and status != ''">
+        and status = #{status}
+      </IsTrue>
+    </Where>
+    order by modified_time desc, created_time desc
+    limit #{limit} offset #{offset}
+  </Select>
+
+  <Insert Id="InsertDefinition" ParameterMap="decisionDefinitionParameterMap">
+    insert into decision_definition (
+      decision_id,
+      decision_key,
+      name,
+      category,
+      description,
+      decision_type,
+      source_format,
+      status,
+      draft_version_tag,
+      published_version_tag,
+      tags,
+      created_by,
+      created_time,
+      modified_by,
+      modified_time
+    )
+    values (
+      cast(#{decisionId} as uuid),
+      #{decisionKey},
+      #{name},
+      #{category},
+      #{description},
+      #{decisionType},
+      #{sourceFormat},
+      #{status},
+      #{draftVersionTag},
+      #{publishedVersionTag},
+      cast(#{tags} as jsonb),
+      #{createdBy},
+      #{createdTime},
+      #{modifiedBy},
+      #{modifiedTime}
+    )
+  </Insert>
+
+  <Update Id="UpdateDefinition" ParameterMap="decisionDefinitionParameterMap">
+    update decision_definition
+    <Set>
+      decision_key = #{decisionKey},
+      name = #{name},
+      category = #{category},
+      description = #{description},
+      decision_type = #{decisionType},
+      source_format = #{sourceFormat},
+      status = #{status},
+      draft_version_tag = #{draftVersionTag},
+      published_version_tag = #{publishedVersionTag},
+      tags = cast(#{tags} as jsonb),
+      modified_by = #{modifiedBy},
+      modified_time = #{modifiedTime}
+    </Set>
+    where decision_id = cast(#{decisionId} as uuid)
+  </Update>
+</SmartSqlMap>

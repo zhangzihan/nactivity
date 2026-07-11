@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMap Scope="Sys.Workflow.Rules.Core.Repositories.DecisionVersionRepository" xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <ResultMap Id="decisionVersionResultMap" ResultType="Sys.Workflow.Rules.Models.DecisionVersionRecord,Sys.Bpm.Rules.API">
+    <Result Property="VersionId" Column="version_id" />
+    <Result Property="DecisionId" Column="decision_id" />
+    <Result Property="DecisionKey" Column="decision_key" />
+    <Result Property="VersionNumber" Column="version_number" />
+    <Result Property="VersionTag" Column="version_tag" />
+    <Result Property="IsPublished" Column="is_published" />
+    <Result Property="IsDraft" Column="is_draft" />
+    <Result Property="DefinitionContent" Column="definition_content" />
+    <Result Property="Checksum" Column="checksum" />
+    <Result Property="PublishComment" Column="publish_comment" />
+    <Result Property="PublishedBy" Column="published_by" />
+    <Result Property="PublishedTime" Column="published_time" />
+    <Result Property="CreatedBy" Column="created_by" />
+    <Result Property="CreatedTime" Column="created_time" />
+  </ResultMap>
+
+  <Select Id="GetByVersionTag" ResultMap="decisionVersionResultMap">
+    select
+      cast(version_id as text) as version_id,
+      cast(decision_id as text) as decision_id,
+      decision_key,
+      version_number,
+      version_tag,
+      is_published,
+      is_draft,
+      definition_content,
+      checksum,
+      publish_comment,
+      published_by,
+      published_time,
+      created_by,
+      created_time
+    from decision_version
+    where decision_key = #{decisionKey}
+      and version_tag = #{versionTag}
+    order by version_number desc
+    limit 1
+  </Select>
+
+  <Select Id="GetLatestPublished" ResultMap="decisionVersionResultMap">
+    select
+      cast(version_id as text) as version_id,
+      cast(decision_id as text) as decision_id,
+      decision_key,
+      version_number,
+      version_tag,
+      is_published,
+      is_draft,
+      definition_content,
+      checksum,
+      publish_comment,
+      published_by,
+      published_time,
+      created_by,
+      created_time
+    from decision_version
+    where decision_key = #{decisionKey}
+      and is_published = true
+    order by coalesce(published_time, created_time) desc, version_number desc
+    limit 1
+  </Select>
+
+  <Select Id="GetDraftVersion" ResultMap="decisionVersionResultMap">
+    select
+      cast(version_id as text) as version_id,
+      cast(decision_id as text) as decision_id,
+      decision_key,
+      version_number,
+      version_tag,
+      is_published,
+      is_draft,
+      definition_content,
+      checksum,
+      publish_comment,
+      published_by,
+      published_time,
+      created_by,
+      created_time
+    from decision_version
+    where decision_key = #{decisionKey}
+      and is_draft = true
+    order by created_time desc, version_number desc
+    limit 1
+  </Select>
+
+  <Select Id="QueryByDecisionKey" ResultMap="decisionVersionResultMap">
+    select
+      cast(version_id as text) as version_id,
+      cast(decision_id as text) as decision_id,
+      decision_key,
+      version_number,
+      version_tag,
+      is_published,
+      is_draft,
+      definition_content,
+      checksum,
+      publish_comment,
+      published_by,
+      published_time,
+      created_by,
+      created_time
+    from decision_version
+    where decision_key = #{decisionKey}
+    order by version_number desc, created_time desc
+  </Select>
+
+  <Select Id="GetByVersionId" ResultMap="decisionVersionResultMap">
+    select
+      cast(version_id as text) as version_id,
+      cast(decision_id as text) as decision_id,
+      decision_key,
+      version_number,
+      version_tag,
+      is_published,
+      is_draft,
+      definition_content,
+      checksum,
+      publish_comment,
+      published_by,
+      published_time,
+      created_by,
+      created_time
+    from decision_version
+    where version_id = cast(#{versionId} as uuid)
+    limit 1
+  </Select>
+
+  <Insert Id="InsertVersion">
+    insert into decision_version (
+      version_id,
+      decision_id,
+      decision_key,
+      version_number,
+      version_tag,
+      is_published,
+      is_draft,
+      definition_content,
+      checksum,
+      publish_comment,
+      published_by,
+      published_time,
+      created_by,
+      created_time
+    )
+    values (
+      cast(#{versionId} as uuid),
+      cast(#{decisionId} as uuid),
+      #{decisionKey},
+      #{versionNumber},
+      #{versionTag},
+      #{isPublished},
+      #{isDraft},
+      #{definitionContent},
+      #{checksum},
+      #{publishComment},
+      #{publishedBy},
+      #{publishedTime},
+      #{createdBy},
+      #{createdTime}
+    )
+  </Insert>
+
+  <Update Id="UpdateVersion">
+    update decision_version
+    <Set>
+      decision_id = cast(#{decisionId} as uuid),
+      decision_key = #{decisionKey},
+      version_number = #{versionNumber},
+      version_tag = #{versionTag},
+      is_published = #{isPublished},
+      is_draft = #{isDraft},
+      definition_content = #{definitionContent},
+      checksum = #{checksum},
+      publish_comment = #{publishComment},
+      published_by = #{publishedBy},
+      published_time = #{publishedTime},
+      created_by = #{createdBy},
+      created_time = #{createdTime}
+    </Set>
+    where version_id = cast(#{versionId} as uuid)
+  </Update>
+
+  <Update Id="ClearDraftFlags">
+    update decision_version
+    set is_draft = false
+    where decision_key = #{decisionKey}
+      and version_id &lt;&gt; cast(#{currentVersionId} as uuid)
+      and is_draft = true
+  </Update>
+
+  <Update Id="ClearPublishedFlags">
+    update decision_version
+    set is_published = false
+    where decision_key = #{decisionKey}
+      and version_id &lt;&gt; cast(#{currentVersionId} as uuid)
+      and is_published = true
+  </Update>
+</SmartSqlMap>

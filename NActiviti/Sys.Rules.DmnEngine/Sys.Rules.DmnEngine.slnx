@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Sys.Rules.DmnEngine.Adapter/Sys.Rules.DmnEngine.Adapter.csproj" />
+    <Project Path="src/Sys.Rules.DmnEngine/Sys.Rules.DmnEngine.csproj" />
+  </Folder>
+  <Project Path="../../Smart.Sql/SmartSql.DapperDeserializer/SmartSql.DapperDeserializer.csproj" />
+  <Project Path="../../Smart.Sql/SmartSql.DIExtension/SmartSql.DIExtension.csproj" />
+  <Project Path="../../Smart.Sql/SmartSql.DyRepository/SmartSql.DyRepository.csproj" />
+  <Project Path="../../Smart.Sql/SmartSql.TypeHandler/SmartSql.TypeHandler.csproj" />
+  <Project Path="../../Smart.Sql/SmartSql/SmartSql.csproj" />
+  <Project Path="../../Sys.Expression/Sys.Expression.csproj" />
+  <Project Path="../../Tests/Sys.Rules.DmnEngine.BusinessRuleTaskTests/Sys.Rules.DmnEngine.BusinessRuleTaskTests.csproj" />
+  <Project Path="../../Tests/Sys.Rules.DmnEngine.Tests/Sys.Rules.DmnEngine.Tests.csproj" />
+  <Project Path="../Sys.Bpm.Engine.API/Sys.Bpm.Engine.API.csproj" />
+  <Project Path="../Sys.Bpm.Engine/Sys.Bpm.Engine.csproj" />
+  <Project Path="../Sys.Bpm.Model/Sys.Bpm.Model.csproj" />
+  <Project Path="../Sys.Bpm.ProcessValidation/Sys.Bpm.ProcessValidation.csproj" />
+  <Project Path="../Sys.Bpm.Rules.API/Sys.Bpm.Rules.API.csproj" />
+</Solution>

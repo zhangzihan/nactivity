@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" id="definitions_single_root_v2" name="single-root-v2" namespace="https://sys.workflow/rules/tests">
+  <inputData id="input_age" name="Age" />
+  <decision id="decision_age_plus_twenty" name="Age +20">
+    <variable id="variable_age20" name="Age10" typeRef="integer" />
+    <informationRequirement>
+      <requiredInput href="#input_age" />
+    </informationRequirement>
+    <literalExpression id="expression_age_plus_twenty">
+      <text>Age+20</text>
+    </literalExpression>
+  </decision>
+</definitions>

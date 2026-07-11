@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMapConfig xmlns="http://SmartSql.net/schemas/SmartSqlMapConfig.xsd">
+  <Settings IsWatchConfigFile="false" IgnoreParameterCase="true" IsCacheEnabled="false" />
+  <Database>
+    <DbProvider Name="SqlClientFactory" ParameterPrefix="@" Type="Microsoft.Data.SqlClient.SqlClientFactory,Microsoft.Data.SqlClient" />
+    <Write Name="WriteDB" ConnectionString="Server=localhost;Database=master;Integrated Security=true;TrustServerCertificate=true" />
+    <Read Name="ReadDB-0" ConnectionString="Server=localhost;Database=master;Integrated Security=true;TrustServerCertificate=true" />
+  </Database>
+  <TypeHandlers>
+    <TypeHandler Name="Json" Type="SmartSql.TypeHandler.JsonTypeHandler,SmartSql.TypeHandler" />
+  </TypeHandlers>
+  <SmartSqlMaps>
+    <SmartSqlMap Path="repositories" Type="Directory"></SmartSqlMap>
+  </SmartSqlMaps>
+</SmartSqlMapConfig>

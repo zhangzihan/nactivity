@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Sys.Rules.DmnEngine.Engine.Decisions;
+
+namespace Sys.Rules.DmnEngine.Engine.Definition
+{
+    /// <summary>
+    /// DMN model definition for execution engine - encapsulates Decisions, Variables (incl. Input data)
+    /// </summary>
+    public class DmnDefinition : IDmnDefinition
+    {
+        /// <summary>
+        /// Unique identifier of the definition (set at CTOR)
+        /// </summary>
+        public string Id { get; }
+
+        /// <summary>
+        /// Variables used while executing the DMN model - can be used within the Decision Tables and/or Expressions
+        /// In general, it holds the Input Data of DMN model and outputs from Decision Tables and/or Expressions
+        /// </summary>
+        public IReadOnlyDictionary<string, IDmnVariable> Variables { get; }
+
+        /// <summary>
+        /// Input data interface. Input data are stored as Variables with <see cref="IDmnVariable.IsInputParameter"/> flag,
+        /// complex objects are supported
+        /// </summary>
+        public IReadOnlyDictionary<string, IDmnVariable> InputData =>
+            Variables
+                .Where(v => v.Value.IsInputParameter)
+                .ToDictionary(i => i.Key, i => i.Value);
+
+        /// <summary>
+        /// Dictionary of available decisions by name
+        /// </summary>
+        public IReadOnlyDictionary<string, IDmnDecision> Decisions { get; }
+
+        /// <summary>
+        /// Maps input data variable names to expression variable aliases.
+        /// When a DMN file uses different names in the DRD input data elements
+        /// vs. the decision table input expressions (common in Camunda exports),
+        /// this map tracks the relationship so input parameter values can be
+        /// propagated to the expression variables at execution time.
+        /// Key: input data variable name. Value: list of alias variable names.
+        /// </summary>
+        public IReadOnlyDictionary<string, IReadOnlyList<string>> InputExpressionAliases { get; internal set; }
+            = new Dictionary<string, IReadOnlyList<string>>();
+
+        /// <summary>
+        /// List of extensions that can be used to any related data.
+        /// Engine doesn't neither manage nor touches the extensions
+        /// </summary>
+        public List<object> Extensions { get; } = new List<object>();
+
+        /// <summary>
+        /// CTOR
+        /// </summary>
+        /// <param name="variables">Variables used while executing the DMN model</param>
+        /// <param name="decisions">Dictionary of available decisions by name</param>
+        public DmnDefinition(
+            IReadOnlyDictionary<string, IDmnVariable> variables,
+            IReadOnlyDictionary<string, IDmnDecision> decisions)
+        {
+            Id = Guid.NewGuid().ToString();
+            Variables = variables;
+            Decisions = decisions;
+        }
+    }
+}
+

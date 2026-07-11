@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Sys.Workflow.Bpmn.Models;
 using Sys.Workflow.Cloud.Services.Api.Model;
 using Sys.Workflow.Hateoas;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sys.Workflow.Cloud.Services.Rest.Api
@@ -66,6 +67,21 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <param name="id">流程模型id</param>
         /// <returns></returns>
         Task<ActionResult<BpmnModel>> GetBpmnModel(string id);
+
+        /// <summary>
+        /// 查询指定决策被哪些流程节点引用。
+        /// </summary>
+        /// <param name="decisionKey">决策键。</param>
+        /// <param name="tenantId">租户标识。</param>
+        /// <param name="includeDrafts">是否包含草稿部署。</param>
+        /// <returns>流程引用记录集合。</returns>
+        Task<IReadOnlyList<DecisionProcessReferenceRecord>> QueryDecisionReferences(string decisionKey, string tenantId = null, bool includeDrafts = true);
+
+        /// <summary>
+        /// 查询当前工作流数据库中规则扩展 schema 的状态。
+        /// </summary>
+        /// <returns>规则扩展 schema 状态快照。</returns>
+        Task<DecisionSchemaStatusRecord> GetDecisionSchemaStatus();
 
         /// <summary>
         /// 仅查询草稿,一个流程始终只有一个草稿.

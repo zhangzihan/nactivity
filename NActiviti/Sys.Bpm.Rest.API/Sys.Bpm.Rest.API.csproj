@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -24,6 +24,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Sys.Bpm.Engine.API\Sys.Bpm.Engine.API.csproj" />
+		<ProjectReference Include="..\Sys.Bpm.Rules.API\Sys.Bpm.Rules.API.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

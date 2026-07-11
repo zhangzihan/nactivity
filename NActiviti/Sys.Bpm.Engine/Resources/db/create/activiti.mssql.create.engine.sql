@@ -6,10 +6,10 @@ create table ACT_GE_PROPERTY (
 );
 
 insert into ACT_GE_PROPERTY
-values ('schema.version', '7.0.0.0', 1);
+values ('schema.version', '7.0.0.1', 1);
 
 insert into ACT_GE_PROPERTY
-values ('schema.history', 'create(7.0.0.0)', 1);
+values ('schema.history', 'create(7.0.0.1)', 1);
 
 insert into ACT_GE_PROPERTY
 values ('next.dbid', '1', 1);
@@ -561,3 +561,100 @@ alter table ACT_RU_INTEGRATION
     add constraint ACT_FK_INT_PROC_DEF
     foreign key (PROC_DEF_ID_)
     references ACT_RE_PROCDEF (ID_);
+
+create table decision_definition (
+    decision_id uniqueidentifier not null,
+    decision_key nvarchar(255) not null,
+    name nvarchar(255) not null,
+    category nvarchar(255) null,
+    description nvarchar(max) null,
+    decision_type nvarchar(64) null,
+    source_format nvarchar(32) not null constraint df_decision_definition_source_format default N'DMN',
+    status nvarchar(32) not null constraint df_decision_definition_status default N'Draft',
+    draft_version_tag nvarchar(255) null,
+    published_version_tag nvarchar(255) null,
+    tags nvarchar(max) not null constraint df_decision_definition_tags default N'[]',
+    created_by nvarchar(255) null,
+    created_time datetime2 not null constraint df_decision_definition_created_time default sysutcdatetime(),
+    modified_by nvarchar(255) null,
+    modified_time datetime2 not null constraint df_decision_definition_modified_time default sysutcdatetime(),
+    primary key (decision_id)
+);
+
+create unique index ux_decision_definition_key
+    on decision_definition (decision_key);
+
+create table decision_version (
+    version_id uniqueidentifier not null,
+    decision_id uniqueidentifier not null,
+    decision_key nvarchar(255) not null,
+    version_number bigint not null,
+    version_tag nvarchar(255) not null,
+    is_published bit not null constraint df_decision_version_is_published default 0,
+    is_draft bit not null constraint df_decision_version_is_draft default 0,
+    definition_content nvarchar(max) not null,
+    checksum nvarchar(255) null,
+    publish_comment nvarchar(max) null,
+    published_by nvarchar(255) null,
+    published_time datetime2 null,
+    created_by nvarchar(255) null,
+    created_time datetime2 not null constraint df_decision_version_created_time default sysutcdatetime(),
+    primary key (version_id),
+    constraint fk_decision_version_definition
+        foreign key (decision_id) references decision_definition (decision_id)
+);
+
+create unique index ux_decision_version_key_tag
+    on decision_version (decision_key, version_tag);
+
+create unique index ux_decision_version_key_number
+    on decision_version (decision_key, version_number);
+
+create index ix_decision_version_key_published
+    on decision_version (decision_key, is_published, version_number desc);
+
+create table decision_execution_log (
+    execution_id uniqueidentifier not null,
+    decision_key nvarchar(255) not null,
+    requested_version_tag nvarchar(255) null,
+    resolved_version_tag nvarchar(255) null,
+    binding_mode nvarchar(64) null,
+    succeeded bit not null,
+    trace_id nvarchar(255) null,
+    executor nvarchar(255) null,
+    error_message nvarchar(max) null,
+    matched_rules nvarchar(max) not null constraint df_decision_execution_log_matched_rules default N'[]',
+    input_snapshot nvarchar(max) null,
+    output_snapshot nvarchar(max) null,
+    trace_entries nvarchar(max) not null constraint df_decision_execution_log_trace_entries default N'[]',
+    executed_time datetime2 not null constraint df_decision_execution_log_executed_time default sysutcdatetime(),
+    elapsed_ms int null,
+    primary key (execution_id)
+);
+
+create index ix_decision_execution_log_key_time
+    on decision_execution_log (decision_key, executed_time desc);
+
+create table process_decision_reference (
+    reference_id uniqueidentifier not null,
+    deployment_id nvarchar(255) not null,
+    deployment_name nvarchar(255) not null,
+    process_definition_key nvarchar(255) null,
+    process_definition_name nvarchar(255) null,
+    tenant_id nvarchar(255) null,
+    is_draft bit not null constraint df_process_decision_reference_is_draft default 0,
+    deploy_time datetime2 not null,
+    decision_key nvarchar(255) null,
+    task_id nvarchar(255) null,
+    task_name nvarchar(255) null,
+    binding_mode nvarchar(64) null,
+    version_tag nvarchar(255) null,
+    indexed_time datetime2 not null constraint df_process_decision_reference_indexed_time default sysutcdatetime(),
+    primary key (reference_id)
+);
+
+create index ix_process_decision_reference_key
+    on process_decision_reference (decision_key, is_draft, deploy_time desc);
+
+create index ix_process_decision_reference_deployment
+    on process_decision_reference (deployment_id);

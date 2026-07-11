@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <RuleDecisionPackageVersion Condition="'$(RuleDecisionPackageVersion)' == ''">1.0.0</RuleDecisionPackageVersion>
+  </PropertyGroup>
+</Project>

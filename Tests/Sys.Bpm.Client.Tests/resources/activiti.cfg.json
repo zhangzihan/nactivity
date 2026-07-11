@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "processEngineConfiguration",
   "type": "Sys.Workflow.Engine.Impl.Cfg.StandaloneProcessEngineConfiguration",
   //web主机应用程序名称
@@ -48,7 +48,9 @@
   //启用流程信息缓存
   "enableProcessDefinitionInfoCache": true,
   //当前版本,当数据库变更时,修改版本号,用于变更管理
-  "currentVersion": "7.0.0.0",
+  "currentVersion": "7.0.0.1",
   //历史版本,维护当前流程引擎所有的历史版本号,用于变更管理
-  "historyVersions": []
+  "historyVersions": [
+    "7.0.0.0"
+  ]
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using DatabaseSchemaReader;
 using Microsoft.Extensions.Configuration;
@@ -1143,11 +1143,13 @@ namespace Sys.Workflow.Engine.Impl.DB
 		/// </summary>
 		public virtual void DbSchemaCheckVersion()
 		{
+			string dbVersion = ProcessEngineConstants.VERSION;
 			try
 			{
-				string dbVersion = DbVersion ?? ProcessEngineConstants.VERSION;
+				dbVersion = DbVersion ?? ProcessEngineConstants.VERSION;
 				if (!ProcessEngineConstants.VERSION.Equals(dbVersion))
 				{
+					TryWarnDecisionSchemaState(dbVersion);
 					throw new ActivitiWrongDbException(ProcessEngineConstants.VERSION, dbVersion);
 				}
 
@@ -1178,6 +1180,7 @@ namespace Sys.Workflow.Engine.Impl.DB
 				}
 			}
 
+			TryWarnDecisionSchemaState(dbVersion);
 			log.LogDebug($"activiti db schema check successful");
 		}
 
@@ -1484,6 +1487,53 @@ namespace Sys.Workflow.Engine.Impl.DB
 				return false;
 			}
 			return true;
+		}
+
+		/// <summary>
+		/// 在宿主禁用自动升级时，补充规则扩展表的显式告警，支持 PostgreSQL 与 SQL Server。
+		/// </summary>
+		/// <param name="dbVersion">当前数据库 schema 版本。</param>
+		protected virtual void TryWarnDecisionSchemaState(string dbVersion)
+		{
+			if (!ProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE.Equals(Context.ProcessEngineConfiguration?.DatabaseSchemaUpdate))
+			{
+				return;
+			}
+
+			string databaseType = dbSqlSessionFactory.DatabaseType;
+			if (!DecisionSchemaWarningAdvisor.IsSupportedDatabaseType(databaseType))
+			{
+				return;
+			}
+
+			try
+			{
+				if (!ProcessEngineConstants.VERSION.Equals(dbVersion))
+				{
+					log.LogWarning(
+						DecisionSchemaWarningAdvisor.VersionMismatchEventId,
+						DecisionSchemaWarningAdvisor.BuildVersionMismatchWarning(
+							databaseType,
+							dbVersion,
+							ProcessEngineConstants.VERSION));
+					return;
+				}
+
+				IReadOnlyList<string> missingTables = DecisionSchemaWarningAdvisor.GetMissingTables(IsTablePresent);
+				if (missingTables.Count > 0)
+				{
+					log.LogWarning(
+						DecisionSchemaWarningAdvisor.MissingTablesEventId,
+						DecisionSchemaWarningAdvisor.BuildMissingTablesWarning(
+							databaseType,
+							missingTables,
+							ProcessEngineConstants.VERSION));
+				}
+			}
+			catch (Exception ex)
+			{
+				log.LogDebug(ex, "Failed to inspect decision schema state during startup. databaseType={DatabaseType}", databaseType);
+			}
 		}
 
 		/// <summary>

@@ -1,3 +1,7 @@
+drop table if exists process_decision_reference cascade;
+drop table if exists decision_execution_log cascade;
+drop table if exists decision_version cascade;
+drop table if exists decision_definition cascade;
 drop table if exists ACT_GE_PROPERTY cascade;
 drop table if exists ACT_GE_BYTEARRAY cascade;
 drop table if exists ACT_RE_DEPLOYMENT cascade;
