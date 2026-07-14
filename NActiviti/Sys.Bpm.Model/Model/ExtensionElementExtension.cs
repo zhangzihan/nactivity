@@ -16,23 +16,30 @@ namespace Sys.Workflow.Bpmn.Models
         /// <returns></returns>
         public static ExtensionAttribute GetExtensionElementAttribute(this BaseElement element, string name)
         {
-            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out var pElems))
+            List<ExtensionElement> pElems = new List<ExtensionElement>();
+            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out var iElems))
             {
-                foreach (var extElement in pElems)
-                {
-                    if (extElement.Attributes.TryGetValue(BpmnXMLConstants.ATTRIBUTE_NAME, out IList<ExtensionAttribute> attributes) && attributes.Count > 0)
-                    {
-                        foreach (ExtensionAttribute attribute in attributes)
-                        {
-                            if (string.Compare(attribute.Value, name, true) == 0)
-                            {
-                                if (extElement.Attributes.TryGetValue(BpmnXMLConstants.ELEMENT_VALUE, out IList<ExtensionAttribute> values))
-                                {
-                                    return values.FirstOrDefault();
-                                }
+                pElems.AddRange(iElems);
+            }
+            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTIES, out iElems))
+            {
+                pElems.AddRange(iElems.SelectMany(x => x.ChildElements.Values.SelectMany(x => x)));
+            }
 
-                                return null;
+            foreach (var extElement in pElems)
+            {
+                if (extElement.Attributes.TryGetValue(BpmnXMLConstants.ATTRIBUTE_NAME, out IList<ExtensionAttribute> attributes) && attributes.Count > 0)
+                {
+                    foreach (ExtensionAttribute attribute in attributes)
+                    {
+                        if (string.Compare(attribute.Value, name, true) == 0)
+                        {
+                            if (extElement.Attributes.TryGetValue(BpmnXMLConstants.ELEMENT_VALUE, out IList<ExtensionAttribute> values))
+                            {
+                                return values.FirstOrDefault();
                             }
+
+                            return null;
                         }
                     }
                 }
@@ -48,12 +55,17 @@ namespace Sys.Workflow.Bpmn.Models
         /// <returns></returns>
         public static string GetExtensionElementAttributeValue(this BaseElement element, string name)
         {
-            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out var pElems))
+            List<ExtensionElement> pElems = new List<ExtensionElement>();
+            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out var iElems))
             {
-                return pElems.GetAttributeValue(name);
+                pElems.AddRange(iElems);
+            }
+            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTIES, out iElems))
+            {
+                pElems.AddRange(iElems.SelectMany(x => x.ChildElements.Values.SelectMany(x => x)));
             }
 
-            return null;
+            return pElems.GetAttributeValue(name);
         }
 
         /// <summary>
