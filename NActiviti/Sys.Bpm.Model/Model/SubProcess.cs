@@ -19,7 +19,7 @@ namespace Sys.Workflow.Bpmn.Models
     public class SubProcess : Activity, IFlowElementsContainer
     {
 
-        protected internal IDictionary<string, FlowElement> flowElementMap = new Dictionary<string, FlowElement>();
+        protected internal IDictionary<string, FlowElement> flowElementMap = new Dictionary<string, FlowElement>(StringComparer.OrdinalIgnoreCase);
         protected internal IList<FlowElement> flowElementList = new List<FlowElement>();
         protected internal IList<Artifact> artifactList = new List<Artifact>();
         protected internal IList<ValuedDataObject> dataObjects = new List<ValuedDataObject>();

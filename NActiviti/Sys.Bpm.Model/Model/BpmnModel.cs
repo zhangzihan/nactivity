@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -207,32 +207,15 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual FlowElement GetFlowElement(string id)
         {
+            // flowElementMap 扁平包含全部（含子流程）元素，直接 O(1) 查找，
+            // 无需再对子流程做全树回退扫描
             FlowElement foundFlowElement = null;
             foreach (Process process in processes)
             {
-                foundFlowElement = process.FindFlowElement(id);
+                foundFlowElement = process.GetFlowElement(id, true);
                 if (foundFlowElement is not null)
                 {
                     break;
-                }
-            }
-
-            if (foundFlowElement is null)
-            {
-                foreach (Process process in processes)
-                {
-                    foreach (FlowElement flowElement in process.FindFlowElementsOfType<SubProcess>())
-                    {
-                        foundFlowElement = GetFlowElementInSubProcess(id, (SubProcess)flowElement);
-                        if (foundFlowElement is not null)
-                        {
-                            break;
-                        }
-                    }
-                    if (foundFlowElement is not null)
-                    {
-                        break;
-                    }
                 }
             }
 
@@ -497,7 +480,9 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual MessageFlow GetMessageFlow(string id)
         {
-            return messageFlowMap[id];
+            // key 不存在时返回 null（调用方以 is null 判断），避免索引器抛 KeyNotFoundException
+            messageFlowMap.TryGetValue(id, out MessageFlow messageFlow);
+            return messageFlow;
         }
 
         public virtual bool ContainsMessageFlowId(string messageFlowId)

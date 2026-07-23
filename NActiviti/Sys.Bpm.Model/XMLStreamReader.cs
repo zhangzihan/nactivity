@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Constants;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -15,6 +15,7 @@ namespace Sys.Workflow.Bpmn.Converters
 		protected XmlReader reader = null;
 		protected internal XElement element = null;
 		private XDocument document = null;
+		private Dictionary<long, XElement> elementByPosition = null;
 		internal bool isEmpty;
 
 		class EdgeXElementCompare : EqualityComparer<XElement>
@@ -74,8 +75,6 @@ namespace Sys.Workflow.Bpmn.Converters
 		private void CreateXMLStreamReader(Stream input)
 		{
 			document = XDocument.Load(input, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
-			using var ms = new MemoryStream();
-			input.CopyTo(ms);
 			var edges = document.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_DI_EDGE, BpmnXMLConstants.BPMNDI_NAMESPACE));
 			foreach (var edge in edges)
 			{
@@ -87,10 +86,16 @@ namespace Sys.Workflow.Bpmn.Converters
 					edge.Add(dises);
 				}
 			}
-			ms.SetLength(0);
-			document.Save(ms);
-			ms.Flush();
-			ms.Seek(0, SeekOrigin.Begin);
+
+			// 预建“行号+列号 -> XElement”索引，HasNext 中按 reader 位置 O(1) 定位当前元素，
+			// 避免每读一个元素都 Descendants 全树扫描（整体 O(n²)）
+			elementByPosition = new Dictionary<long, XElement>();
+			foreach (XElement x in document.Root.DescendantsAndSelf())
+			{
+				IXmlLineInfo line = x;
+				elementByPosition[((long)line.LineNumber << 32) | (uint)line.LinePosition] = x;
+			}
+
 			element = document.Root;
 			input.Seek(0, SeekOrigin.Begin);
 			this.reader = element.CreateReader(ReaderOptions.OmitDuplicateNamespaces);
@@ -156,7 +161,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
 		public override string GetAttribute(string name, string namespaceURI)
 		{
-			return reader.GetAttribute(name, NamespaceURI);
+			return reader.GetAttribute(name, namespaceURI);
 		}
 
 		public override string LookupNamespace(string prefix)
@@ -234,12 +239,10 @@ namespace Sys.Workflow.Bpmn.Converters
 
 			if (next && reader.IsStartElement())
 			{
-				string name = reader.LocalName;
-				element = document.Descendants(XName.Get(name, reader.NamespaceURI)).FirstOrDefault(x =>
+				if (elementByPosition.TryGetValue(((long)LineInfo.LineNumber << 32) | (uint)LineInfo.LinePosition, out XElement current))
 				{
-					var eline = x as IXmlLineInfo;
-					return LineInfo.LineNumber == eline.LineNumber && LineInfo.LinePosition == eline.LinePosition;
-				});
+					element = current;
+				}
 			}
 
 			return next;

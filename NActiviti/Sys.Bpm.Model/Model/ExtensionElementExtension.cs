@@ -1,8 +1,7 @@
-﻿using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Constants;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Sys.Workflow.Bpmn.Models
 {
@@ -16,27 +15,17 @@ namespace Sys.Workflow.Bpmn.Models
         /// <returns></returns>
         public static ExtensionAttribute GetExtensionElementAttribute(this BaseElement element, string name)
         {
-            List<ExtensionElement> pElems = new List<ExtensionElement>();
-            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out var iElems))
-            {
-                pElems.AddRange(iElems);
-            }
-            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTIES, out iElems))
-            {
-                pElems.AddRange(iElems.SelectMany(x => x.ChildElements.Values.SelectMany(x => x)));
-            }
-
-            foreach (var extElement in pElems)
+            foreach (ExtensionElement extElement in EnumeratePropertyElements(element))
             {
                 if (extElement.Attributes.TryGetValue(BpmnXMLConstants.ATTRIBUTE_NAME, out IList<ExtensionAttribute> attributes) && attributes.Count > 0)
                 {
                     foreach (ExtensionAttribute attribute in attributes)
                     {
-                        if (string.Compare(attribute.Value, name, true) == 0)
+                        if (string.Equals(attribute.Value, name, StringComparison.OrdinalIgnoreCase))
                         {
-                            if (extElement.Attributes.TryGetValue(BpmnXMLConstants.ELEMENT_VALUE, out IList<ExtensionAttribute> values))
+                            if (extElement.Attributes.TryGetValue(BpmnXMLConstants.ELEMENT_VALUE, out IList<ExtensionAttribute> values) && values.Count > 0)
                             {
-                                return values.FirstOrDefault();
+                                return values[0];
                             }
 
                             return null;
@@ -55,17 +44,44 @@ namespace Sys.Workflow.Bpmn.Models
         /// <returns></returns>
         public static string GetExtensionElementAttributeValue(this BaseElement element, string name)
         {
-            List<ExtensionElement> pElems = new List<ExtensionElement>();
-            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out var iElems))
+            foreach (ExtensionElement extElement in EnumeratePropertyElements(element))
             {
-                pElems.AddRange(iElems);
-            }
-            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTIES, out iElems))
-            {
-                pElems.AddRange(iElems.SelectMany(x => x.ChildElements.Values.SelectMany(x => x)));
+                string ename = extElement.GetAttributeValue(null, "name");
+                if (string.Equals(ename, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return extElement.GetAttributeValue(null, "value");
+                }
             }
 
-            return pElems.GetAttributeValue(name);
+            return null;
+        }
+
+        /// <summary>
+        /// 依次枚举直属 property 扩展元素及 properties 下的子元素，
+        /// 避免每次访问都分配临时 List 与 LINQ 迭代链
+        /// </summary>
+        private static IEnumerable<ExtensionElement> EnumeratePropertyElements(BaseElement element)
+        {
+            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out IList<ExtensionElement> propertyElements))
+            {
+                foreach (ExtensionElement extElement in propertyElements)
+                {
+                    yield return extElement;
+                }
+            }
+            if (element.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTIES, out IList<ExtensionElement> propertiesElements))
+            {
+                foreach (ExtensionElement propertiesElement in propertiesElements)
+                {
+                    foreach (IList<ExtensionElement> childList in propertiesElement.ChildElements.Values)
+                    {
+                        foreach (ExtensionElement child in childList)
+                        {
+                            yield return child;
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

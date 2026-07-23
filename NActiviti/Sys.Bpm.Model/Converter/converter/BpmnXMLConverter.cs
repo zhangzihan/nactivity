@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Sys.Workflow.Bpmn.Constants;
 using Sys.Workflow.Bpmn.Converters.Alfresco;
 using Sys.Workflow.Bpmn.Converters.Childs;
@@ -430,7 +430,11 @@ namespace Sys.Workflow.Bpmn.Converters
 
         public virtual BpmnModel ConvertToBpmnModel(string docfile)
         {
-            return ConvertToBpmnModel(new XMLStreamReader(File.Open(docfile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)));
+            // XMLStreamReader 构造时已将文档完整加载为 DOM，之后不再使用文件流，可立即释放
+            using (FileStream fs = File.Open(docfile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                return ConvertToBpmnModel(new XMLStreamReader(fs));
+            }
         }
 
         protected internal virtual void ProcessFlowElements(ICollection<FlowElement> flowElementList, BaseElement parentScope)
@@ -476,13 +480,14 @@ namespace Sys.Workflow.Bpmn.Converters
             FlowNode flowNode = null;
             if (!string.IsNullOrWhiteSpace(elementId))
             {
-                if (scope is Process)
+                if (scope is Process processScope)
                 {
-                    flowNode = (FlowNode)((Process)scope).FindFlowElement(elementId);
+                    // flowElementMap 扁平包含全部（含子流程）元素，O(1) 查找
+                    flowNode = (FlowNode)processScope.GetFlowElement(elementId, true);
                 }
-                else if (scope is SubProcess)
+                else if (scope is SubProcess subProcessScope)
                 {
-                    flowNode = (FlowNode)((SubProcess)scope).FindFlowElement(elementId);
+                    flowNode = (FlowNode)subProcessScope.FindFlowElement(elementId);
                 }
             }
             return flowNode;

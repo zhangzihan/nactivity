@@ -282,12 +282,12 @@ namespace Sys.Workflow.Bpmn.Converters
                     ExtensionElement childExtensionElement = ParseExtensionElement(xtr);
                     extensionElement.AddChildElement(childExtensionElement);
                 }
-                else if (xtr.EndElement && string.Compare(extensionElement.Name, xtr.LocalName, true) == 0)
+                else if (xtr.EndElement && string.Equals(extensionElement.Name, xtr.LocalName, StringComparison.OrdinalIgnoreCase))
                 {
                     readyWithExtensionElement = true;
                 }
 
-                if (xtr.IsEmptyElement && string.Compare(extensionElement.Name, xtr.LocalName, true) == 0)
+                if (xtr.IsEmptyElement && string.Equals(extensionElement.Name, xtr.LocalName, StringComparison.OrdinalIgnoreCase))
                 {
                     readyWithExtensionElement = true;
                 }

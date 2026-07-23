@@ -68,10 +68,16 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
 
 		public static void ParseChildElements(string elementName, BaseElement parentElement, XMLStreamReader xtr, IDictionary<string, BaseChildElementParser> childParsers, BpmnModel model)
 		{
-			IDictionary<string, BaseChildElementParser> localParserMap = new Dictionary<string, BaseChildElementParser>(genericChildParserMap);
+			// 无附加解析器时直接复用静态通用解析器表（只读），避免每个元素都复制一份字典
+			IDictionary<string, BaseChildElementParser> localParserMap;
 			if (childParsers is object)
 			{
+				localParserMap = new Dictionary<string, BaseChildElementParser>(genericChildParserMap);
 				localParserMap.PutAll(childParsers);
+			}
+			else
+			{
+				localParserMap = genericChildParserMap;
 			}
 
 			bool inExtensionElements = false;
@@ -111,7 +117,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
 					{
 						inExtensionElements = false;
 					}
-					else if (elementName.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+					else if (elementName.Equals(xtr.LocalName, StringComparison.OrdinalIgnoreCase))
 					{
 						readyWithChildElements = true;
 					}
@@ -165,12 +171,12 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
 						extensionElement.AddChildElement(childExtensionElement);
 					}
 				}
-				else if (xtr.EndElement && string.Compare(extensionElement.Name, xtr.LocalName, true) == 0)
+				else if (xtr.EndElement && string.Equals(extensionElement.Name, xtr.LocalName, StringComparison.OrdinalIgnoreCase))
 				{
 					readyWithExtensionElement = true;
 				}
 
-				if (xtr.IsEmptyElement && string.Compare(extensionElement.Name, xtr.LocalName, true) == 0)
+				if (xtr.IsEmptyElement && string.Equals(extensionElement.Name, xtr.LocalName, StringComparison.OrdinalIgnoreCase))
 				{
 					readyWithExtensionElement = true;
 				}

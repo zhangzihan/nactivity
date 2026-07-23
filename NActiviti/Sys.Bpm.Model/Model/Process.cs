@@ -33,7 +33,7 @@ namespace Sys.Workflow.Bpmn.Models
 		protected internal IList<string> candidateStarterUsers = new List<string>();
 		protected internal IList<string> candidateStarterGroups = new List<string>();
 		protected internal IList<EventListener> eventListeners = new List<EventListener>();
-		protected internal IDictionary<string, FlowElement> flowElementMap = new Dictionary<string, FlowElement>();
+		protected internal IDictionary<string, FlowElement> flowElementMap = new Dictionary<string, FlowElement>(StringComparer.OrdinalIgnoreCase);
 
 		// Added during process definition parsing
 		protected internal FlowElement initialFlowElement;
@@ -254,7 +254,7 @@ namespace Sys.Workflow.Bpmn.Models
 		{
 			foreach (FlowElement f in flowElementList)
 			{
-				if (!string.IsNullOrWhiteSpace(f.Id) && string.Compare(f.Id, flowElementId, true) == 0)
+				if (!string.IsNullOrWhiteSpace(f.Id) && string.Equals(f.Id, flowElementId, StringComparison.OrdinalIgnoreCase))
 				{
 					return f;
 				}

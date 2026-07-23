@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ namespace Sys.Workflow.Bpmn.Converters.Parsers
                     readyWithChildElements = true;
                 }
 
-                if (xtr.IsEmptyElement && string.Compare(xtr.LocalName, BpmnXMLConstants.ELEMENT_EXTENSIONS, true) == 0)
+                if (xtr.IsEmptyElement && string.Equals(xtr.LocalName, BpmnXMLConstants.ELEMENT_EXTENSIONS, StringComparison.OrdinalIgnoreCase))
                 {
                     readyWithChildElements = true;
                 }
