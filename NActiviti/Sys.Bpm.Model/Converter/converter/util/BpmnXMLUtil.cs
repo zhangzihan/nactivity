@@ -133,6 +133,15 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
 			{
 				//xtr.next();
 
+				// 进入本方法时若当前元素本身是空元素（如 <camunda:properties />），
+				// 第一次 HasNext() 返回的是该元素模拟的结束事件，此时应直接结束解析，
+				// 否则会把它自身当成子元素并继续吞掉后续所有兄弟元素
+				if (xtr.IsEmptyElement && string.Compare(extensionElement.Name, xtr.LocalName, true) == 0)
+				{
+					readyWithExtensionElement = true;
+					continue;
+				}
+
 				if (xtr.NodeType == XmlNodeType.Text || xtr.NodeType == XmlNodeType.CDATA)
 				{
 					if (!string.IsNullOrWhiteSpace(xtr.Value?.Trim()))

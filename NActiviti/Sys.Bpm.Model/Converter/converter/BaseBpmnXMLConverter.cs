@@ -1,4 +1,4 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -260,6 +260,15 @@ namespace Sys.Workflow.Bpmn.Converters
             while (!readyWithExtensionElement && xtr.HasNext())
             {
                 //xtr.next();
+
+                // 当前元素本身是空元素（如 <camunda:properties />）时，
+                // 第一次 HasNext() 返回的是该元素模拟的结束事件，应直接结束解析，
+                // 否则会递归解析自身并吞掉后续所有兄弟元素
+                if (xtr.IsEmptyElement && string.Compare(extensionElement.Name, xtr.LocalName, true) == 0)
+                {
+                    readyWithExtensionElement = true;
+                    continue;
+                }
 
                 if (xtr.NodeType == XmlNodeType.CDATA)
                 {

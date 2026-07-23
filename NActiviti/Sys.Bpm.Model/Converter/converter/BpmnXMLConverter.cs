@@ -67,11 +67,6 @@ namespace Sys.Workflow.Bpmn.Converters
         protected internal SignalParser signalParser = new SignalParser();
         protected internal SubProcessParser subProcessParser = new SubProcessParser();
 
-        /// <summary>
-        /// 简单结构元素解析器字典，仅需要 (XMLStreamReader, BpmnModel) 参数
-        /// </summary>
-        protected internal IDictionary<string, Action<XMLStreamReader, BpmnModel>> structuralParsers;
-
         static BpmnXMLConverter()
         {
             // events
@@ -122,26 +117,6 @@ namespace Sys.Workflow.Bpmn.Converters
             // Alfresco types
             AddConverter(new AlfrescoStartEventXMLConverter());
             AddConverter(new AlfrescoUserTaskXMLConverter());
-        }
-
-        public BpmnXMLConverter()
-        {
-            // 初始化简单结构元素解析器字典，统一分发 Parse(xtr, model) 调用
-            structuralParsers = new Dictionary<string, Action<XMLStreamReader, BpmnModel>>
-            {
-                { BpmnXMLConstants.ELEMENT_DEFINITIONS, (xtr, model) => definitionsParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_RESOURCE, (xtr, model) => resourceParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_SIGNAL, (xtr, model) => signalParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_MESSAGE, (xtr, model) => messageParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_IMPORT, (xtr, model) => importParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_ITEM_DEFINITION, (xtr, model) => itemDefinitionParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_DATA_STORE, (xtr, model) => dataStoreParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_INTERFACE, (xtr, model) => interfaceParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_PARTICIPANT, (xtr, model) => participantParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_MESSAGE_FLOW, (xtr, model) => messageFlowParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_DI_SHAPE, (xtr, model) => bpmnShapeParser.Parse(xtr, model) },
-                { BpmnXMLConstants.ELEMENT_DI_EDGE, (xtr, model) => bpmnEdgeParser.Parse(xtr, model) },
-            };
         }
 
         public static void AddConverter(BaseBpmnXMLConverter converter)
@@ -257,9 +232,25 @@ namespace Sys.Workflow.Bpmn.Converters
                         }
                     }
 
-                    if (xtr.IsStartElement() && structuralParsers.TryGetValue(xtr.LocalName, out var structuralParser))
+                    if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DEFINITIONS.Equals(xtr.LocalName))
                     {
-                        structuralParser(xtr, model);
+                        definitionsParser.Parse(xtr, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_RESOURCE.Equals(xtr.LocalName))
+                    {
+                        resourceParser.Parse(xtr, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_SIGNAL.Equals(xtr.LocalName))
+                    {
+                        signalParser.Parse(xtr, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_MESSAGE.Equals(xtr.LocalName))
+                    {
+                        messageParser.Parse(xtr, model);
+
                     }
                     else if (BpmnXMLConstants.ELEMENT_ERROR.Equals(xtr.LocalName))
                     {
@@ -270,9 +261,39 @@ namespace Sys.Workflow.Bpmn.Converters
                         }
 
                     }
+                    else if (BpmnXMLConstants.ELEMENT_IMPORT.Equals(xtr.LocalName))
+                    {
+                        importParser.Parse(xtr, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_ITEM_DEFINITION.Equals(xtr.LocalName))
+                    {
+                        itemDefinitionParser.Parse(xtr, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_DATA_STORE.Equals(xtr.LocalName))
+                    {
+                        dataStoreParser.Parse(xtr, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_INTERFACE.Equals(xtr.LocalName))
+                    {
+                        interfaceParser.Parse(xtr, model);
+
+                    }
                     else if (BpmnXMLConstants.ELEMENT_IOSPECIFICATION.Equals(xtr.LocalName))
                     {
                         ioSpecificationParser.ParseChildElement(xtr, activeProcess, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_PARTICIPANT.Equals(xtr.LocalName))
+                    {
+                        participantParser.Parse(xtr, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_MESSAGE_FLOW.Equals(xtr.LocalName))
+                    {
+                        messageFlowParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_PROCESS.Equals(xtr.LocalName))
@@ -346,6 +367,16 @@ namespace Sys.Workflow.Bpmn.Converters
                                 adhocSubProcess.CompletionCondition = xtr.ElementText;
                             }
                         }
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_DI_SHAPE.Equals(xtr.LocalName))
+                    {
+                        bpmnShapeParser.Parse(xtr, model);
+
+                    }
+                    else if (BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName))
+                    {
+                        bpmnEdgeParser.Parse(xtr, model);
 
                     }
                     else
