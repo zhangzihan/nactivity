@@ -60,8 +60,8 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
         [Fact]
         public void Execute_Should_InvokeDecisionRuntime_And_WriteOutputs()
         {
-            var decisionRuntimeService = new StubDecisionRuntimeService();
-            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionRuntimeService);
+            var decisionExecutionService = new StubDecisionExecutionService();
+            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionExecutionService);
 
             var behavior = new TestDmnBusinessRuleTaskActivityBehavior
             {
@@ -86,11 +86,11 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
             behavior.Execute(execution);
 
             Assert.True(behavior.LeaveCalled);
-            Assert.NotNull(decisionRuntimeService.LastRequest);
-            Assert.Equal("single-root-expression", decisionRuntimeService.LastRequest!.DecisionKey);
-            Assert.Equal("Age +10", decisionRuntimeService.LastRequest.Inputs["__decisionName"]);
-            Assert.Equal(32, decisionRuntimeService.LastRequest.Inputs["Age"]);
-            Assert.False(decisionRuntimeService.LastRequest.Inputs.ContainsKey("Ignored"));
+            Assert.NotNull(decisionExecutionService.LastRequest);
+            Assert.Equal("single-root-expression", decisionExecutionService.LastRequest!.DecisionKey);
+            Assert.Equal("Age +10", decisionExecutionService.LastRequest.Inputs["__decisionName"]);
+            Assert.Equal(32, decisionExecutionService.LastRequest.Inputs["Age"]);
+            Assert.False(decisionExecutionService.LastRequest.Inputs.ContainsKey("Ignored"));
             Assert.Equal(42, execution.GetVariable("Age10", false));
 
             var resultPayload = Assert.IsType<Dictionary<string, object>>(execution.GetVariable("dmnResult", false));
@@ -110,8 +110,8 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
         [Fact]
         public void Execute_Should_UseStructuredDecisionBinding_WhenExtensionElementExists()
         {
-            var decisionRuntimeService = new StubDecisionRuntimeService();
-            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionRuntimeService);
+            var decisionExecutionService = new StubDecisionExecutionService();
+            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionExecutionService);
 
             var behavior = new TestDmnBusinessRuleTaskActivityBehavior
             {
@@ -139,12 +139,12 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
             behavior.Execute(execution);
 
             Assert.True(behavior.LeaveCalled);
-            Assert.NotNull(decisionRuntimeService.LastRequest);
-            Assert.Equal("expense.approval", decisionRuntimeService.LastRequest!.DecisionKey);
-            Assert.Equal("v1.2.0", decisionRuntimeService.LastRequest.VersionTag);
-            Assert.Equal("费用审批规则", decisionRuntimeService.LastRequest.Inputs["__decisionName"]);
-            Assert.Equal(6800, decisionRuntimeService.LastRequest.Inputs["amount"]);
-            Assert.False(decisionRuntimeService.LastRequest.Inputs.ContainsKey("LegacyAmount"));
+            Assert.NotNull(decisionExecutionService.LastRequest);
+            Assert.Equal("expense.approval", decisionExecutionService.LastRequest!.DecisionKey);
+            Assert.Equal("v1.2.0", decisionExecutionService.LastRequest.VersionTag);
+            Assert.Equal("费用审批规则", decisionExecutionService.LastRequest.Inputs["__decisionName"]);
+            Assert.Equal(6800, decisionExecutionService.LastRequest.Inputs["amount"]);
+            Assert.False(decisionExecutionService.LastRequest.Inputs.ContainsKey("LegacyAmount"));
             Assert.Equal(true, execution.GetVariable("approved", false));
             Assert.Equal("manager-1", execution.GetVariable("nextAssignee", false));
         }
@@ -180,8 +180,8 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
             var createdBehavior = factory.CreateBusinessRuleTaskActivityBehavior(businessRuleTask);
             Assert.IsType<DmnBusinessRuleTaskActivityBehavior>(createdBehavior);
 
-            var decisionRuntimeService = new StubDecisionRuntimeService();
-            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionRuntimeService);
+            var decisionExecutionService = new StubDecisionExecutionService();
+            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionExecutionService);
 
             var behavior = new TestDmnBusinessRuleTaskActivityBehavior
             {
@@ -206,18 +206,18 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
             behavior.Execute(execution);
 
             Assert.True(behavior.LeaveCalled);
-            Assert.NotNull(decisionRuntimeService.LastRequest);
-            Assert.Equal("expense.approval", decisionRuntimeService.LastRequest!.DecisionKey);
-            Assert.Equal("DecisionTable", decisionRuntimeService.LastRequest.DecisionType);
-            Assert.Equal("FixedVersion", decisionRuntimeService.LastRequest.BindingMode);
-            Assert.Equal("Sync", decisionRuntimeService.LastRequest.ExecutionMode);
-            Assert.True(decisionRuntimeService.LastRequest.TraceEnabled);
-            Assert.Equal(3000, decisionRuntimeService.LastRequest.TimeoutMs);
-            Assert.Equal("v1.2.0", decisionRuntimeService.LastRequest.VersionTag);
-            Assert.Equal("费用审批规则", decisionRuntimeService.LastRequest.Inputs["__decisionName"]);
-            Assert.Equal(6800, decisionRuntimeService.LastRequest.Inputs["amount"]);
-            Assert.Equal("web", decisionRuntimeService.LastRequest.Inputs["channel"]);
-            Assert.Equal("FIN-001", decisionRuntimeService.LastRequest.Inputs["deptId"]);
+            Assert.NotNull(decisionExecutionService.LastRequest);
+            Assert.Equal("expense.approval", decisionExecutionService.LastRequest!.DecisionKey);
+            Assert.Equal("DecisionTable", decisionExecutionService.LastRequest.DecisionType);
+            Assert.Equal("FixedVersion", decisionExecutionService.LastRequest.BindingMode);
+            Assert.Equal("Sync", decisionExecutionService.LastRequest.ExecutionMode);
+            Assert.True(decisionExecutionService.LastRequest.TraceEnabled);
+            Assert.Equal(3000, decisionExecutionService.LastRequest.TimeoutMs);
+            Assert.Equal("v1.2.0", decisionExecutionService.LastRequest.VersionTag);
+            Assert.Equal("费用审批规则", decisionExecutionService.LastRequest.Inputs["__decisionName"]);
+            Assert.Equal(6800, decisionExecutionService.LastRequest.Inputs["amount"]);
+            Assert.Equal("web", decisionExecutionService.LastRequest.Inputs["channel"]);
+            Assert.Equal("FIN-001", decisionExecutionService.LastRequest.Inputs["deptId"]);
             Assert.Equal(true, execution.GetVariable("approved", false));
             Assert.Equal("manager-1", execution.GetVariable("nextAssignee", false));
 
@@ -289,11 +289,11 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
         [Fact]
         public void Execute_Should_SkipTask_WhenFallbackPolicyIsSkipTask_AndDecisionExecutionFails()
         {
-            var decisionRuntimeService = new StubDecisionRuntimeService
+            var decisionExecutionService = new StubDecisionExecutionService
             {
                 ThrowOnExpenseApproval = true
             };
-            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionRuntimeService);
+            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionExecutionService);
 
             var behavior = new TestDmnBusinessRuleTaskActivityBehavior
             {
@@ -326,11 +326,11 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
         [Fact]
         public void Execute_Should_ApplyDefaultOutputs_WhenFallbackPolicyIsUseDefault_AndDecisionExecutionFails()
         {
-            var decisionRuntimeService = new StubDecisionRuntimeService
+            var decisionExecutionService = new StubDecisionExecutionService
             {
                 ThrowOnExpenseApproval = true
             };
-            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionRuntimeService);
+            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionExecutionService);
 
             var behavior = new TestDmnBusinessRuleTaskActivityBehavior
             {
@@ -380,11 +380,11 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
         [Fact]
         public void Execute_Should_WriteManualInterventionContext_AndPropagateBpmnError_WhenFallbackPolicyIsManualIntervention()
         {
-            var decisionRuntimeService = new StubDecisionRuntimeService
+            var decisionExecutionService = new StubDecisionExecutionService
             {
                 ThrowOnExpenseApproval = true
             };
-            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionRuntimeService);
+            using var serviceProviderScope = new ProcessEngineServiceProviderScope(decisionExecutionService);
 
             var behavior = new TestDmnBusinessRuleTaskActivityBehavior
             {
@@ -672,7 +672,7 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
         /// <summary>
         /// 定义用于测试的决策运行时桩实现。
         /// </summary>
-        private sealed class StubDecisionRuntimeService : IDecisionRuntimeService
+        private sealed class StubDecisionExecutionService : IDecisionExecutionService
         {
             /// <summary>
             /// 获取或设置是否在费用审批规则执行时主动抛出异常。
@@ -761,49 +761,6 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
             }
 
             /// <summary>
-            /// 测试桩不提供定义目录查询。
-            /// </summary>
-            /// <param name="query">查询条件。</param>
-            /// <param name="cancellationToken">取消令牌。</param>
-            /// <returns>抛出未实现异常。</returns>
-            public Task<IReadOnlyList<DecisionDefinitionRecord>> QueryDefinitionsAsync(DecisionDefinitionRepositoryQuery query, CancellationToken cancellationToken = default)
-            {
-                throw new NotSupportedException();
-            }
-
-            /// <summary>
-            /// 测试桩不提供版本目录查询。
-            /// </summary>
-            /// <param name="decisionKey">决策键。</param>
-            /// <param name="cancellationToken">取消令牌。</param>
-            /// <returns>抛出未实现异常。</returns>
-            public Task<IReadOnlyList<DecisionVersionRecord>> QueryDecisionVersionsAsync(string decisionKey, CancellationToken cancellationToken = default)
-            {
-                throw new NotSupportedException();
-            }
-
-            /// <summary>
-            /// 测试桩不提供执行日志查询。
-            /// </summary>
-            /// <param name="query">查询条件。</param>
-            /// <param name="cancellationToken">取消令牌。</param>
-            /// <returns>抛出未实现异常。</returns>
-            public Task<IReadOnlyList<DecisionExecutionLogRecord>> QueryExecutionLogsAsync(DecisionExecutionLogQuery query, CancellationToken cancellationToken = default)
-            {
-                throw new NotSupportedException();
-            }
-
-            /// <summary>
-            /// 测试桩不提供执行日志详情查询。
-            /// </summary>
-            /// <param name="executionId">执行记录标识。</param>
-            /// <param name="cancellationToken">取消令牌。</param>
-            /// <returns>抛出未实现异常。</returns>
-            public Task<DecisionExecutionLogRecord?> GetExecutionLogAsync(string executionId, CancellationToken cancellationToken = default)
-            {
-                throw new NotSupportedException();
-            }
-
             /// <summary>
             /// 测试桩不提供解释能力。
             /// </summary>
@@ -827,38 +784,6 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
             }
 
             /// <summary>
-            /// 测试桩不提供导入能力。
-            /// </summary>
-            /// <param name="request">导入请求。</param>
-            /// <param name="cancellationToken">取消令牌。</param>
-            /// <returns>抛出未实现异常。</returns>
-            public Task<DecisionImportResult> ImportAsync(DecisionImportRequest request, CancellationToken cancellationToken = default)
-            {
-                throw new NotSupportedException();
-            }
-
-            /// <summary>
-            /// 测试桩不提供导出能力。
-            /// </summary>
-            /// <param name="request">导出请求。</param>
-            /// <param name="cancellationToken">取消令牌。</param>
-            /// <returns>抛出未实现异常。</returns>
-            public Task<DecisionExportResult> ExportAsync(DecisionExportRequest request, CancellationToken cancellationToken = default)
-            {
-                throw new NotSupportedException();
-            }
-
-            /// <summary>
-            /// 测试桩不提供执行快照查询。
-            /// </summary>
-            /// <param name="executionId">执行记录标识。</param>
-            /// <param name="cancellationToken">取消令牌。</param>
-            /// <returns>抛出未实现异常。</returns>
-            public Task<DecisionExecutionSnapshot?> GetExecutionSnapshotAsync(string executionId, CancellationToken cancellationToken = default)
-            {
-                throw new NotSupportedException();
-            }
-
             /// <summary>
             /// 测试桩不提供缓存失效。
             /// </summary>
@@ -893,11 +818,11 @@ namespace Sys.Rules.DmnEngine.BusinessRuleTaskTests
             /// <summary>
             /// 初始化测试专用服务提供器作用域。
             /// </summary>
-            /// <param name="decisionRuntimeService">决策运行时服务。</param>
-            public ProcessEngineServiceProviderScope(IDecisionRuntimeService decisionRuntimeService)
+            /// <param name="decisionExecutionService">决策执行服务。</param>
+            public ProcessEngineServiceProviderScope(IDecisionExecutionService decisionExecutionService)
             {
                 var services = new ServiceCollection();
-                services.AddSingleton(decisionRuntimeService);
+                services.AddSingleton(decisionExecutionService);
                 services.AddLogging();
 
                 _serviceProviderProperty = typeof(ProcessEngineServiceProvider).GetProperty("ServiceProvider", BindingFlags.Static | BindingFlags.NonPublic)

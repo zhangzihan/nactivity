@@ -25,7 +25,8 @@ namespace Sys.Workflow.Rules.Tests
         public async Task SaveDraft_Should_DelegateToGovernanceService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = CreateExecutionServiceMock();
             var expectedResult = new DecisionDraftSaveResult
             {
                 Definition = new DecisionDefinitionRecord
@@ -45,7 +46,7 @@ namespace Sys.Workflow.Rules.Tests
                 .Setup(service => service.SaveDraftAsync(It.IsAny<DecisionDraftSaveRequest>(), default))
                 .ReturnsAsync(expectedResult);
 
-            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, executionLogRepositoryMock.Object);
+            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, catalogServiceMock.Object, executionServiceMock.Object);
             var result = await controller.SaveDraft(new DecisionDraftSaveRequest
             {
                 DecisionKey = "expense.approval",
@@ -65,7 +66,8 @@ namespace Sys.Workflow.Rules.Tests
         public async Task SaveDraft_Should_PopulateOperatorFromAuthentication_WhenOperatorIsEmpty()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = CreateExecutionServiceMock();
 
             governanceServiceMock
                 .Setup(service => service.SaveDraftAsync(It.Is<DecisionDraftSaveRequest>(request =>
@@ -91,7 +93,7 @@ namespace Sys.Workflow.Rules.Tests
 
             try
             {
-                var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, executionLogRepositoryMock.Object);
+                var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, catalogServiceMock.Object, executionServiceMock.Object);
                 var result = await controller.SaveDraft(new DecisionDraftSaveRequest
                 {
                     DecisionKey = "expense.approval",
@@ -115,13 +117,14 @@ namespace Sys.Workflow.Rules.Tests
         public async Task SaveDraft_Should_ThrowHttp400Exception_WhenGovernanceServiceThrowsArgumentException()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = CreateExecutionServiceMock();
 
             governanceServiceMock
                 .Setup(service => service.SaveDraftAsync(It.IsAny<DecisionDraftSaveRequest>(), default))
                 .ThrowsAsync(new ArgumentException("decisionKey is required"));
 
-            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, executionLogRepositoryMock.Object);
+            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, catalogServiceMock.Object, executionServiceMock.Object);
             var exception = await Assert.ThrowsAsync<Http400Exception>(() => controller.SaveDraft(new DecisionDraftSaveRequest
             {
                 DecisionKey = string.Empty,
@@ -143,7 +146,8 @@ namespace Sys.Workflow.Rules.Tests
         public async Task PublishVersion_Should_DelegateToGovernanceService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = CreateExecutionServiceMock();
             var expectedResult = new DecisionVersionPublishResult
             {
                 Definition = new DecisionDefinitionRecord
@@ -164,7 +168,7 @@ namespace Sys.Workflow.Rules.Tests
                 .Setup(service => service.PublishVersionAsync(It.IsAny<PublishDecisionVersionRequest>(), default))
                 .ReturnsAsync(expectedResult);
 
-            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, executionLogRepositoryMock.Object);
+            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, catalogServiceMock.Object, executionServiceMock.Object);
             var result = await controller.PublishVersion(new PublishDecisionVersionRequest
             {
                 DecisionKey = "expense.approval",
@@ -183,13 +187,14 @@ namespace Sys.Workflow.Rules.Tests
         public async Task PublishVersion_Should_ThrowHttp400Exception_WhenGovernanceServiceThrowsInvalidOperationException()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = CreateExecutionServiceMock();
 
             governanceServiceMock
                 .Setup(service => service.PublishVersionAsync(It.IsAny<PublishDecisionVersionRequest>(), default))
                 .ThrowsAsync(new InvalidOperationException("draft version not found"));
 
-            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, executionLogRepositoryMock.Object);
+            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, catalogServiceMock.Object, executionServiceMock.Object);
             var exception = await Assert.ThrowsAsync<Http400Exception>(() => controller.PublishVersion(new PublishDecisionVersionRequest
             {
                 DecisionKey = "expense.approval",
@@ -207,10 +212,11 @@ namespace Sys.Workflow.Rules.Tests
         /// 验证执行日志查询接口会转发到日志仓储并返回分页结果。
         /// </summary>
         [Fact]
-        public async Task QueryExecutionLogs_Should_DelegateToLogRepository_AndReturnPagedResources()
+        public async Task QueryExecutionLogs_Should_DelegateToCatalogService_AndReturnPagedResources()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
+            var catalogServiceMock = new Mock<IDecisionCatalogService>(MockBehavior.Strict);
+            var executionServiceMock = CreateExecutionServiceMock();
             var expectedLogs = new List<DecisionExecutionLogRecord>
             {
                 new DecisionExecutionLogRecord
@@ -221,14 +227,17 @@ namespace Sys.Workflow.Rules.Tests
                 }
             };
 
-            executionLogRepositoryMock
-                .Setup(repository => repository.QueryAsync(It.IsAny<DecisionExecutionLogQuery>(), default))
-                .ReturnsAsync(expectedLogs);
-            executionLogRepositoryMock
-                .Setup(repository => repository.CountAsync(It.IsAny<DecisionExecutionLogQuery>(), default))
-                .ReturnsAsync(3L);
+            catalogServiceMock
+                .Setup(service => service.QueryExecutionLogsAsync(It.IsAny<DecisionExecutionLogQuery>(), default))
+                .ReturnsAsync(new DecisionCatalogPageResult<DecisionExecutionLogRecord>
+                {
+                    Items = expectedLogs,
+                    TotalCount = 3L,
+                    PageIndex = 2,
+                    PageSize = 1
+                });
 
-            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, executionLogRepositoryMock.Object);
+            var controller = new DecisionGovernanceControllerImpl(governanceServiceMock.Object, catalogServiceMock.Object, executionServiceMock.Object);
             var result = await controller.QueryExecutionLogs(new DecisionExecutionLogQuery
             {
                 DecisionKey = "expense.approval",
@@ -242,7 +251,7 @@ namespace Sys.Workflow.Rules.Tests
             Assert.Equal(3, result.TotalCount);
             Assert.Equal(2, result.PageNo);
             Assert.Equal(1, result.PageSize);
-            executionLogRepositoryMock.VerifyAll();
+            catalogServiceMock.VerifyAll();
         }
 
         /// <summary>
@@ -252,11 +261,13 @@ namespace Sys.Workflow.Rules.Tests
         public async Task GetCollaborationDescriptor_Should_ReturnStableContract()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = CreateExecutionServiceMock();
 
             var controller = new DecisionGovernanceControllerImpl(
                 governanceServiceMock.Object,
-                executionLogRepositoryMock.Object);
+                catalogServiceMock.Object,
+                executionServiceMock.Object);
             var result = await controller.GetCollaborationDescriptor().ConfigureAwait(false);
 
             Assert.Equal("/dmn", result.WorkspaceRoute);
@@ -272,12 +283,11 @@ namespace Sys.Workflow.Rules.Tests
         /// 验证决策定义目录查询接口会转发到定义仓储。
         /// </summary>
         [Fact]
-        public async Task QueryDefinitions_Should_DelegateToDefinitionRepository()
+        public async Task QueryDefinitions_Should_DelegateToCatalogService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
-            var definitionRepositoryMock = new Mock<IDecisionDefinitionRepository>(MockBehavior.Strict);
-            var versionRepositoryMock = new Mock<IDecisionVersionRepository>(MockBehavior.Strict);
+            var catalogServiceMock = new Mock<IDecisionCatalogService>(MockBehavior.Strict);
+            var executionServiceMock = CreateExecutionServiceMock();
             var expectedDefinitions = new List<DecisionDefinitionRecord>
             {
                 new DecisionDefinitionRecord
@@ -288,8 +298,8 @@ namespace Sys.Workflow.Rules.Tests
                 }
             };
 
-            definitionRepositoryMock
-                .Setup(repository => repository.QueryAsync(It.Is<DecisionDefinitionRepositoryQuery>(query =>
+            catalogServiceMock
+                .Setup(service => service.QueryDefinitionsAsync(It.Is<DecisionDefinitionRepositoryQuery>(query =>
                     query.Keyword == "expense" &&
                     query.PageIndex == 1 &&
                     query.PageSize == 20), default))
@@ -297,9 +307,8 @@ namespace Sys.Workflow.Rules.Tests
 
             var controller = new DecisionGovernanceControllerImpl(
                 governanceServiceMock.Object,
-                executionLogRepositoryMock.Object,
-                definitionRepositoryMock.Object,
-                versionRepositoryMock.Object);
+                catalogServiceMock.Object,
+                executionServiceMock.Object);
             var result = await controller.QueryDefinitions(new DecisionDefinitionRepositoryQuery
             {
                 Keyword = "expense",
@@ -309,19 +318,18 @@ namespace Sys.Workflow.Rules.Tests
 
             Assert.Single(result);
             Assert.Equal("expense.approval", result[0].DecisionKey);
-            definitionRepositoryMock.VerifyAll();
+            catalogServiceMock.VerifyAll();
         }
 
         /// <summary>
         /// 验证版本目录查询接口会转发到版本仓储。
         /// </summary>
         [Fact]
-        public async Task QueryDecisionVersions_Should_DelegateToVersionRepository()
+        public async Task QueryDecisionVersions_Should_DelegateToCatalogService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
-            var definitionRepositoryMock = new Mock<IDecisionDefinitionRepository>(MockBehavior.Strict);
-            var versionRepositoryMock = new Mock<IDecisionVersionRepository>(MockBehavior.Strict);
+            var catalogServiceMock = new Mock<IDecisionCatalogService>(MockBehavior.Strict);
+            var executionServiceMock = CreateExecutionServiceMock();
             var expectedVersions = new List<DecisionVersionRecord>
             {
                 new DecisionVersionRecord
@@ -332,35 +340,33 @@ namespace Sys.Workflow.Rules.Tests
                 }
             };
 
-            versionRepositoryMock
-                .Setup(repository => repository.QueryByDecisionKeyAsync("expense.approval", default))
+            catalogServiceMock
+                .Setup(service => service.QueryDecisionVersionsAsync("expense.approval", default))
                 .ReturnsAsync(expectedVersions);
 
             var controller = new DecisionGovernanceControllerImpl(
                 governanceServiceMock.Object,
-                executionLogRepositoryMock.Object,
-                definitionRepositoryMock.Object,
-                versionRepositoryMock.Object);
+                catalogServiceMock.Object,
+                executionServiceMock.Object);
             var result = await controller.QueryDecisionVersions("expense.approval").ConfigureAwait(false);
 
             Assert.Single(result);
             Assert.Equal("v1.0.0", result[0].VersionTag);
-            versionRepositoryMock.VerifyAll();
+            catalogServiceMock.VerifyAll();
         }
 
         /// <summary>
         /// 验证定义详情接口会转发到定义仓储。
         /// </summary>
         [Fact]
-        public async Task GetDefinition_Should_DelegateToDefinitionRepository()
+        public async Task GetDefinition_Should_DelegateToCatalogService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
-            var definitionRepositoryMock = new Mock<IDecisionDefinitionRepository>(MockBehavior.Strict);
-            var versionRepositoryMock = new Mock<IDecisionVersionRepository>(MockBehavior.Strict);
+            var catalogServiceMock = new Mock<IDecisionCatalogService>(MockBehavior.Strict);
+            var executionServiceMock = CreateExecutionServiceMock();
 
-            definitionRepositoryMock
-                .Setup(repository => repository.GetByDecisionKeyAsync("expense.approval", default))
+            catalogServiceMock
+                .Setup(service => service.GetDefinitionAsync("expense.approval", default))
                 .ReturnsAsync(new DecisionDefinitionRecord
                 {
                     DecisionKey = "expense.approval",
@@ -369,27 +375,26 @@ namespace Sys.Workflow.Rules.Tests
 
             var controller = new DecisionGovernanceControllerImpl(
                 governanceServiceMock.Object,
-                executionLogRepositoryMock.Object,
-                definitionRepositoryMock.Object,
-                versionRepositoryMock.Object);
+                catalogServiceMock.Object,
+                executionServiceMock.Object);
             var result = await controller.GetDefinition("expense.approval").ConfigureAwait(false);
 
             Assert.NotNull(result);
             Assert.Equal("费用审批", result!.Name);
-            definitionRepositoryMock.VerifyAll();
+            catalogServiceMock.VerifyAll();
         }
 
         /// <summary>
-        /// 验证导入接口会转发到规则运行时服务。
+        /// 验证导入接口会转发到治理服务。
         /// </summary>
         [Fact]
-        public async Task Import_Should_DelegateToDecisionRuntimeService()
+        public async Task Import_Should_DelegateToGovernanceService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
-            var runtimeServiceMock = new Mock<IDecisionRuntimeService>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = CreateExecutionServiceMock();
 
-            runtimeServiceMock
+            governanceServiceMock
                 .Setup(service => service.ImportAsync(It.Is<DecisionImportRequest>(request =>
                     request.FileName == "expense.approval.dmn" &&
                     request.Operator == "tester"), default))
@@ -404,8 +409,8 @@ namespace Sys.Workflow.Rules.Tests
             {
                 var controller = new DecisionGovernanceControllerImpl(
                     governanceServiceMock.Object,
-                    executionLogRepositoryMock.Object,
-                    decisionRuntimeService: runtimeServiceMock.Object);
+                    catalogServiceMock.Object,
+                    executionServiceMock.Object);
                 var result = await controller.Import(new DecisionImportRequest
                 {
                     FileName = "expense.approval.dmn",
@@ -414,7 +419,7 @@ namespace Sys.Workflow.Rules.Tests
 
                 Assert.True(result.Succeeded);
                 Assert.Contains("expense.approval", result.ImportedDecisionKeys);
-                runtimeServiceMock.VerifyAll();
+                governanceServiceMock.VerifyAll();
             }
             finally
             {
@@ -423,16 +428,16 @@ namespace Sys.Workflow.Rules.Tests
         }
 
         /// <summary>
-        /// 验证缓存状态接口会转发到规则运行时服务。
+        /// 验证缓存状态接口会转发到执行服务。
         /// </summary>
         [Fact]
-        public async Task GetCacheStatus_Should_DelegateToDecisionRuntimeService()
+        public async Task GetCacheStatus_Should_DelegateToDecisionExecutionService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
-            var runtimeServiceMock = new Mock<IDecisionRuntimeService>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = new Mock<IDecisionExecutionService>(MockBehavior.Strict);
 
-            runtimeServiceMock
+            executionServiceMock
                 .Setup(service => service.GetCacheStatusAsync("expense.approval", default))
                 .ReturnsAsync(new DecisionCacheStatusDescriptor
                 {
@@ -443,26 +448,26 @@ namespace Sys.Workflow.Rules.Tests
 
             var controller = new DecisionGovernanceControllerImpl(
                 governanceServiceMock.Object,
-                executionLogRepositoryMock.Object,
-                decisionRuntimeService: runtimeServiceMock.Object);
+                catalogServiceMock.Object,
+                executionServiceMock.Object);
             var result = await controller.GetCacheStatus("expense.approval").ConfigureAwait(false);
 
             Assert.Equal("expense.approval", result.DecisionKey);
             Assert.Contains("v1.0.0", result.CachedVersions);
-            runtimeServiceMock.VerifyAll();
+            executionServiceMock.VerifyAll();
         }
 
         /// <summary>
-        /// 验证解释接口会转发到规则运行时服务。
+        /// 验证解释接口会转发到执行服务。
         /// </summary>
         [Fact]
-        public async Task Explain_Should_DelegateToDecisionRuntimeService()
+        public async Task Explain_Should_DelegateToDecisionExecutionService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
-            var runtimeServiceMock = new Mock<IDecisionRuntimeService>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = new Mock<IDecisionExecutionService>(MockBehavior.Strict);
 
-            runtimeServiceMock
+            executionServiceMock
                 .Setup(service => service.ExplainAsync(It.Is<DecisionExplanationRequest>(request =>
                     request.DecisionKey == "expense.approval"), default))
                 .ReturnsAsync(new DecisionExplanationResult
@@ -474,8 +479,8 @@ namespace Sys.Workflow.Rules.Tests
 
             var controller = new DecisionGovernanceControllerImpl(
                 governanceServiceMock.Object,
-                executionLogRepositoryMock.Object,
-                decisionRuntimeService: runtimeServiceMock.Object);
+                catalogServiceMock.Object,
+                executionServiceMock.Object);
             var result = await controller.Explain(new DecisionExplanationRequest
             {
                 DecisionKey = "expense.approval"
@@ -483,20 +488,20 @@ namespace Sys.Workflow.Rules.Tests
 
             Assert.Equal("expense.approval", result.DecisionKey);
             Assert.Equal("exec-1", result.ExecutionId);
-            runtimeServiceMock.VerifyAll();
+            executionServiceMock.VerifyAll();
         }
 
         /// <summary>
-        /// 验证测试接口会转发到规则运行时服务。
+        /// 验证测试接口会转发到执行服务。
         /// </summary>
         [Fact]
-        public async Task Test_Should_DelegateToDecisionRuntimeService()
+        public async Task Test_Should_DelegateToDecisionExecutionService()
         {
             var governanceServiceMock = new Mock<IDecisionGovernanceService>(MockBehavior.Strict);
-            var executionLogRepositoryMock = new Mock<IDecisionExecutionLogRepository>(MockBehavior.Strict);
-            var runtimeServiceMock = new Mock<IDecisionRuntimeService>(MockBehavior.Strict);
+            var catalogServiceMock = CreateCatalogServiceMock();
+            var executionServiceMock = new Mock<IDecisionExecutionService>(MockBehavior.Strict);
 
-            runtimeServiceMock
+            executionServiceMock
                 .Setup(service => service.TestAsync(It.Is<DecisionTestRequest>(request =>
                     request.DecisionKey == "expense.approval"), default))
                 .ReturnsAsync(new DecisionTestResult
@@ -509,8 +514,8 @@ namespace Sys.Workflow.Rules.Tests
 
             var controller = new DecisionGovernanceControllerImpl(
                 governanceServiceMock.Object,
-                executionLogRepositoryMock.Object,
-                decisionRuntimeService: runtimeServiceMock.Object);
+                catalogServiceMock.Object,
+                executionServiceMock.Object);
             var result = await controller.Test(new DecisionTestRequest
             {
                 DecisionKey = "expense.approval"
@@ -518,7 +523,25 @@ namespace Sys.Workflow.Rules.Tests
 
             Assert.True(result.Passed);
             Assert.Equal(1, result.TotalCases);
-            runtimeServiceMock.VerifyAll();
+            executionServiceMock.VerifyAll();
+        }
+
+        /// <summary>
+        /// 创建默认宽松目录服务 Mock。
+        /// </summary>
+        /// <returns>目录服务 Mock。</returns>
+        private static Mock<IDecisionCatalogService> CreateCatalogServiceMock()
+        {
+            return new Mock<IDecisionCatalogService>(MockBehavior.Loose);
+        }
+
+        /// <summary>
+        /// 创建默认宽松执行服务 Mock。
+        /// </summary>
+        /// <returns>执行服务 Mock。</returns>
+        private static Mock<IDecisionExecutionService> CreateExecutionServiceMock()
+        {
+            return new Mock<IDecisionExecutionService>(MockBehavior.Loose);
         }
     }
 }

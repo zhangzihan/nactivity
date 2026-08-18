@@ -72,7 +72,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             try
             {
-                var decisionRuntimeService = ResolveDecisionRuntimeService();
+                var decisionExecutionService = ResolveDecisionExecutionService();
                 decisionBinding = ResolveDecisionBinding(execution);
                 var inputs = CollectDecisionInputs(execution, decisionBinding);
 
@@ -81,7 +81,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     inputs[ExplicitDecisionNameInputKey] = decisionBinding.DecisionName;
                 }
 
-                var result = decisionRuntimeService.ExecuteAsync(new DecisionExecutionRequest
+                var result = decisionExecutionService.ExecuteAsync(new DecisionExecutionRequest
                 {
                     DecisionKey = decisionBinding.DecisionKey,
                     DecisionType = decisionBinding.DecisionType,
@@ -114,18 +114,18 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         }
 
         /// <summary>
-        /// 解析决策运行时服务。
+        /// 解析决策执行服务。
         /// </summary>
-        /// <returns>决策运行时服务实例。</returns>
-        protected virtual IDecisionRuntimeService ResolveDecisionRuntimeService()
+        /// <returns>决策执行服务实例。</returns>
+        protected virtual IDecisionExecutionService ResolveDecisionExecutionService()
         {
-            var decisionRuntimeService = ProcessEngineServiceProvider.Resolve<IDecisionRuntimeService>();
-            if (decisionRuntimeService == null)
+            var decisionExecutionService = ProcessEngineServiceProvider.Resolve<IDecisionExecutionService>();
+            if (decisionExecutionService == null)
             {
-                throw new ActivitiException("未注册 IDecisionRuntimeService，无法执行 BusinessRuleTask 的 DMN 决策。");
+                throw new ActivitiException("未注册 IDecisionExecutionService，无法执行 BusinessRuleTask 的 DMN 决策。");
             }
 
-            return decisionRuntimeService;
+            return decisionExecutionService;
         }
 
         /// <summary>

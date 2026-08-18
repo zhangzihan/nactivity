@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +19,7 @@ using System.Linq;
 using Sys.Workflow.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Sys.Workflow.Cloud.Services.Rest.Api;
+using Sys.Workflow.Rules;
 
 namespace Sys.Workflow.Services.Rest
 {
@@ -150,6 +151,12 @@ namespace Sys.Workflow.Services.Rest
             });
 
             services.AddScoped<SecurityPoliciesApplicationService>();
+            services.AddTransient<IDecisionProcessReferenceIndexApplicationService>(sp =>
+                new DecisionProcessReferenceIndexApplicationService(
+                    sp.GetRequiredService<IProcessEngine>(),
+                    sp.GetService<IDecisionCatalogService>(),
+                    sp.GetService<IDecisionProcessReferenceIndexRepository>(),
+                    sp.GetRequiredService<ILoggerFactory>()));
 
             services
                 .AddTransient<PageRetriever>()

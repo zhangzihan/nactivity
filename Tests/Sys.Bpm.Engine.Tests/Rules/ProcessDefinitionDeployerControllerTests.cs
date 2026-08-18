@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -33,166 +34,84 @@ namespace Sys.Workflow.Rules.Tests
     /// <summary>
     /// 流程部署控制器中规则决策集成能力的隔离测试。
     /// </summary>
-    public class ProcessDefinitionDeployerControllerTests
+    public class ProcessDefinitionDeployerControllerTests : IDisposable
     {
+        private readonly PropertyInfo _serviceProviderProperty;
+        private readonly IServiceProvider? _originalServiceProvider;
+
         /// <summary>
-        /// 验证控制器可以按决策键扫描已发布与草稿流程引用。
+        /// 初始化测试实例并隔离静态服务提供器。
         /// </summary>
-        [Fact]
-        public async Task QueryDecisionReferences_Should_ReturnPublishedAndDraftReferences()
+        public ProcessDefinitionDeployerControllerTests()
         {
-            var repositoryServiceMock = new Mock<IRepositoryService>(MockBehavior.Strict);
-            var processEngineMock = CreateProcessEngineMock(repositoryServiceMock.Object);
-            var latestQueryMock = new Mock<IDeploymentQuery>(MockBehavior.Strict);
-            var draftQueryMock = new Mock<IDeploymentQuery>(MockBehavior.Strict);
-            var latestDeploymentMock = new Mock<IDeployment>(MockBehavior.Strict);
-            var draftDeploymentMock = new Mock<IDeployment>(MockBehavior.Strict);
+            _serviceProviderProperty = typeof(ProcessEngineServiceProvider).GetProperty(
+                "ServiceProvider",
+                BindingFlags.Static | BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException("未找到 ProcessEngineServiceProvider.ServiceProvider 属性。");
+            _originalServiceProvider = (IServiceProvider?)_serviceProviderProperty.GetValue(null);
 
-            latestDeploymentMock.SetupGet(item => item.Id).Returns("dep-published");
-            latestDeploymentMock.SetupGet(item => item.Name).Returns("Leave Published");
-            latestDeploymentMock.SetupGet(item => item.TenantId).Returns("tenant-a");
-            latestDeploymentMock.SetupGet(item => item.DeploymentTime).Returns(new DateTime(2026, 7, 7, 10, 0, 0, DateTimeKind.Utc));
-            draftDeploymentMock.SetupGet(item => item.Id).Returns("dep-draft");
-            draftDeploymentMock.SetupGet(item => item.Name).Returns("Leave Draft");
-            draftDeploymentMock.SetupGet(item => item.TenantId).Returns("tenant-a");
-            draftDeploymentMock.SetupGet(item => item.DeploymentTime).Returns(new DateTime(2026, 7, 7, 11, 0, 0, DateTimeKind.Utc));
-
-            latestQueryMock.Setup(query => query.SetLatestDeployment()).Returns(latestQueryMock.Object);
-            latestQueryMock.Setup(query => query.List()).Returns(new List<IDeployment> { latestDeploymentMock.Object });
-            draftQueryMock.Setup(query => query.FindDrafts()).Returns(new List<IDeployment> { draftDeploymentMock.Object });
-
-            repositoryServiceMock
-                .SetupSequence(service => service.CreateDeploymentQuery())
-                .Returns(latestQueryMock.Object)
-                .Returns(draftQueryMock.Object);
-            repositoryServiceMock
-                .Setup(service => service.GetDeploymentResourceNames("dep-published"))
-                .Returns(new List<string> { "leave-published.bpmn" });
-            repositoryServiceMock
-                .Setup(service => service.GetDeploymentResourceNames("dep-draft"))
-                .Returns(new List<string> { "leave-draft.bpmn" });
-            repositoryServiceMock
-                .Setup(service => service.GetResourceAsStream("dep-published", "leave-published.bpmn"))
-                .Returns(() => CreateBpmnStream("expense.approval", "v1.0.0"));
-            repositoryServiceMock
-                .Setup(service => service.GetResourceAsStream("dep-draft", "leave-draft.bpmn"))
-                .Returns(() => CreateBpmnStream("expense.approval", "draft-v2"));
-
-            var controller = CreateController(processEngineMock.Object);
-            var result = await controller.QueryDecisionReferences("expense.approval").ConfigureAwait(false);
-
-            Assert.Equal(2, result.Count);
-            Assert.Equal("dep-draft", result[0].DeploymentId);
-            Assert.True(result[0].IsDraft);
-            Assert.Equal("leaveApproval", result[0].ProcessDefinitionKey);
-            Assert.Single(result[0].ReferencedTasks);
-            Assert.Equal("task_rule", result[0].ReferencedTasks[0].TaskId);
-            Assert.Equal("draft-v2", result[0].ReferencedTasks[0].VersionTag);
-            Assert.Equal("dep-published", result[1].DeploymentId);
-            Assert.False(result[1].IsDraft);
-            Assert.Equal("v1.0.0", result[1].ReferencedTasks[0].VersionTag);
-
-            repositoryServiceMock.VerifyAll();
-            processEngineMock.VerifyAll();
+            var services = new ServiceCollection();
+            services.AddLogging();
+            _serviceProviderProperty.SetValue(null, services.BuildServiceProvider());
         }
 
         /// <summary>
-        /// 验证当全部候选部署均已建立索引时，控制器优先从索引返回流程引用。
+        /// 还原测试前的静态服务提供器。
+        /// </summary>
+        public void Dispose()
+        {
+            _serviceProviderProperty.SetValue(null, _originalServiceProvider);
+        }
+
+        /// <summary>
+        /// 验证控制器会通过应用服务返回指定决策的流程引用。
         /// </summary>
         [Fact]
-        public async Task QueryDecisionReferences_Should_ReturnIndexedReferences_WhenCoverageComplete()
+        public async Task QueryDecisionReferences_Should_DelegateToApplicationService()
         {
             var repositoryServiceMock = new Mock<IRepositoryService>(MockBehavior.Strict);
             var processEngineMock = CreateProcessEngineMock(repositoryServiceMock.Object);
-            var latestQueryMock = new Mock<IDeploymentQuery>(MockBehavior.Strict);
-            var draftQueryMock = new Mock<IDeploymentQuery>(MockBehavior.Strict);
-            var latestDeploymentMock = new Mock<IDeployment>(MockBehavior.Strict);
-            var draftDeploymentMock = new Mock<IDeployment>(MockBehavior.Strict);
-            var referenceIndexRepositoryMock = new Mock<IDecisionProcessReferenceIndexRepository>(MockBehavior.Strict);
+            var decisionReferenceIndexAppServiceMock = new Mock<IDecisionProcessReferenceIndexApplicationService>(MockBehavior.Strict);
 
-            latestDeploymentMock.SetupGet(item => item.Id).Returns("dep-published");
-            latestDeploymentMock.SetupGet(item => item.Name).Returns("Leave Published");
-            latestDeploymentMock.SetupGet(item => item.TenantId).Returns("tenant-a");
-            latestDeploymentMock.SetupGet(item => item.DeploymentTime).Returns(new DateTime(2026, 7, 7, 10, 0, 0, DateTimeKind.Utc));
-            draftDeploymentMock.SetupGet(item => item.Id).Returns("dep-draft");
-            draftDeploymentMock.SetupGet(item => item.Name).Returns("Leave Draft");
-            draftDeploymentMock.SetupGet(item => item.TenantId).Returns("tenant-a");
-            draftDeploymentMock.SetupGet(item => item.DeploymentTime).Returns(new DateTime(2026, 7, 7, 11, 0, 0, DateTimeKind.Utc));
-
-            latestQueryMock.Setup(query => query.SetLatestDeployment()).Returns(latestQueryMock.Object);
-            latestQueryMock.Setup(query => query.List()).Returns(new List<IDeployment> { latestDeploymentMock.Object });
-            draftQueryMock.Setup(query => query.FindDrafts()).Returns(new List<IDeployment> { draftDeploymentMock.Object });
-
-            repositoryServiceMock
-                .SetupSequence(service => service.CreateDeploymentQuery())
-                .Returns(latestQueryMock.Object)
-                .Returns(draftQueryMock.Object);
-
-            referenceIndexRepositoryMock
-                .Setup(repository => repository.GetIndexedDeploymentIdsAsync(
-                    It.Is<IReadOnlyCollection<string>>(items => items.Count == 2),
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<string> { "dep-published", "dep-draft" });
-            referenceIndexRepositoryMock
-                .Setup(repository => repository.QueryEntriesAsync(
-                    It.Is<DecisionProcessReferenceIndexQuery>(query =>
-                        query.DecisionKey == "expense.approval" &&
-                        query.IncludeDrafts &&
-                        query.DeploymentIds.Count == 2),
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<DecisionProcessReferenceIndexEntryRecord>
+            decisionReferenceIndexAppServiceMock
+                .Setup(service => service.QueryDecisionReferencesAsync(
+                    "expense.approval",
+                    "tenant-a",
+                    true,
+                    default))
+                .ReturnsAsync(new List<DecisionProcessReferenceRecord>
                 {
-                    new DecisionProcessReferenceIndexEntryRecord
+                    new DecisionProcessReferenceRecord
                     {
-                        ReferenceId = "row-1",
                         DeploymentId = "dep-draft",
                         DeploymentName = "Leave Draft",
                         ProcessDefinitionKey = "leaveApproval",
                         ProcessDefinitionName = "请假审批",
                         TenantId = "tenant-a",
                         IsDraft = true,
-                        DeployTime = new DateTimeOffset(new DateTime(2026, 7, 7, 11, 0, 0, DateTimeKind.Utc)),
-                        DecisionKey = "expense.approval",
-                        TaskId = "task_rule",
-                        TaskName = "规则校验",
-                        BindingMode = "FixedVersion",
-                        VersionTag = "draft-v2",
-                        IndexedTime = DateTimeOffset.UtcNow
-                    },
-                    new DecisionProcessReferenceIndexEntryRecord
-                    {
-                        ReferenceId = "row-2",
-                        DeploymentId = "dep-published",
-                        DeploymentName = "Leave Published",
-                        ProcessDefinitionKey = "leaveApproval",
-                        ProcessDefinitionName = "请假审批",
-                        TenantId = "tenant-a",
-                        IsDraft = false,
-                        DeployTime = new DateTimeOffset(new DateTime(2026, 7, 7, 10, 0, 0, DateTimeKind.Utc)),
-                        DecisionKey = "expense.approval",
-                        TaskId = "task_rule",
-                        TaskName = "规则校验",
-                        BindingMode = "FixedVersion",
-                        VersionTag = "v1.0.0",
-                        IndexedTime = DateTimeOffset.UtcNow
+                        DeployTime = new DateTime(2026, 7, 7, 11, 0, 0, DateTimeKind.Utc),
+                        ReferencedTasks = new List<DecisionProcessReferenceTaskRecord>
+                        {
+                            new DecisionProcessReferenceTaskRecord
+                            {
+                                TaskId = "task_rule",
+                                DecisionKey = "expense.approval",
+                                VersionTag = "draft-v2"
+                            }
+                        }
                     }
                 });
 
             var controller = CreateController(
                 processEngineMock.Object,
-                decisionProcessReferenceIndexRepository: referenceIndexRepositoryMock.Object);
-            var result = await controller.QueryDecisionReferences("expense.approval").ConfigureAwait(false);
+                decisionProcessReferenceIndexApplicationService: decisionReferenceIndexAppServiceMock.Object);
+            var result = await controller.QueryDecisionReferences("expense.approval", "tenant-a").ConfigureAwait(false);
 
-            Assert.Equal(2, result.Count);
+            Assert.Single(result);
             Assert.Equal("dep-draft", result[0].DeploymentId);
             Assert.True(result[0].IsDraft);
             Assert.Equal("draft-v2", result[0].ReferencedTasks[0].VersionTag);
-            Assert.Equal("dep-published", result[1].DeploymentId);
-            Assert.False(result[1].IsDraft);
-
-            repositoryServiceMock.VerifyAll();
-            processEngineMock.VerifyAll();
-            referenceIndexRepositoryMock.VerifyAll();
+            decisionReferenceIndexAppServiceMock.VerifyAll();
         }
 
         /// <summary>
@@ -203,34 +122,19 @@ namespace Sys.Workflow.Rules.Tests
         {
             var repositoryServiceMock = new Mock<IRepositoryService>(MockBehavior.Strict);
             var processEngineMock = CreateProcessEngineMock(repositoryServiceMock.Object);
-            var decisionDefinitionRepositoryMock = new Mock<IDecisionDefinitionRepository>(MockBehavior.Strict);
-            var decisionVersionRepositoryMock = new Mock<IDecisionVersionRepository>(MockBehavior.Strict);
-
-            decisionDefinitionRepositoryMock
-                .Setup(repository => repository.GetByDecisionKeyAsync("expense.approval", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new DecisionDefinitionRecord
-                {
-                    DecisionId = "decision-1",
-                    DecisionKey = "expense.approval",
-                    Name = "费用审批",
-                    PublishedVersionTag = "v1.0.0"
-                });
-            decisionVersionRepositoryMock
-                .Setup(repository => repository.GetByVersionTagAsync("expense.approval", "draft-v2", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new DecisionVersionRecord
-                {
-                    VersionId = "version-2",
-                    DecisionId = "decision-1",
-                    DecisionKey = "expense.approval",
-                    VersionTag = "draft-v2",
-                    IsPublished = false,
-                    IsDraft = true
-                });
+            var decisionCatalogServiceMock = new Mock<IDecisionCatalogService>(MockBehavior.Strict);
+            decisionCatalogServiceMock
+                .Setup(service => service.ValidateDecisionBindingsAsync(
+                    It.Is<DecisionBindingValidationRequest>(request =>
+                        request.Bindings.Count == 1 &&
+                        request.Bindings[0].DecisionKey == "expense.approval" &&
+                        request.Bindings[0].VersionTag == "draft-v2"),
+                    It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new InvalidOperationException("规则任务 task_rule 引用了未发布的决策版本 expense.approval:draft-v2。"));
 
             var controller = CreateController(
                 processEngineMock.Object,
-                decisionDefinitionRepository: decisionDefinitionRepositoryMock.Object,
-                decisionVersionRepository: decisionVersionRepositoryMock.Object);
+                decisionCatalogService: decisionCatalogServiceMock.Object);
 
             var exception = await Assert.ThrowsAsync<Http400Exception>(() => controller.Deploy(new ProcessDefinitionDeployer
             {
@@ -245,8 +149,97 @@ namespace Sys.Workflow.Rules.Tests
             Assert.Contains("未发布的决策版本", exception.Http400.Message);
 
             processEngineMock.VerifyAll();
-            decisionDefinitionRepositoryMock.VerifyAll();
-            decisionVersionRepositoryMock.VerifyAll();
+            decisionCatalogServiceMock.VerifyAll();
+        }
+
+        /// <summary>
+        /// 验证部署成功后会触发决策引用索引同步。
+        /// </summary>
+        [Fact]
+        public async Task Deploy_Should_SyncDecisionReferenceIndex_WhenDeploymentSucceeds()
+        {
+            var repositoryServiceMock = new Mock<IRepositoryService>(MockBehavior.Strict);
+            var processEngineMock = CreateProcessEngineMock(repositoryServiceMock.Object);
+            var deploymentBuilderMock = new Mock<IDeploymentBuilder>(MockBehavior.Strict);
+            var deploymentMock = new Mock<IDeployment>(MockBehavior.Strict);
+            var decisionCatalogServiceMock = new Mock<IDecisionCatalogService>(MockBehavior.Strict);
+            var decisionReferenceIndexAppServiceMock = new Mock<IDecisionProcessReferenceIndexApplicationService>(MockBehavior.Strict);
+
+            deploymentMock.SetupGet(item => item.Id).Returns("dep-1");
+            deploymentMock.SetupGet(item => item.Name).Returns("Leave Approval");
+            deploymentMock.SetupGet(item => item.Category).Returns(string.Empty);
+            deploymentMock.SetupGet(item => item.TenantId).Returns("tenant-a");
+            deploymentMock.SetupGet(item => item.BusinessKey).Returns(string.Empty);
+            deploymentMock.SetupGet(item => item.DeploymentTime).Returns(new DateTime(2026, 7, 7, 10, 0, 0, DateTimeKind.Utc));
+
+            decisionCatalogServiceMock
+                .Setup(service => service.ValidateDecisionBindingsAsync(It.IsAny<DecisionBindingValidationRequest>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+            repositoryServiceMock
+                .Setup(service => service.CreateDeployment())
+                .Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.DisableSchemaValidation()).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.EnableDuplicateFiltering()).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.Name("Leave Approval")).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.Category(null)).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.Key("leaveApproval")).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.TenantId("tenant-a")).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.BusinessKey(null)).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.BusinessPath(null)).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.StartForm(null, It.IsAny<string>())).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.AddString("Leave Approval.bpmn", It.IsAny<string>())).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.Deploy()).Returns(deploymentMock.Object);
+            decisionReferenceIndexAppServiceMock
+                .Setup(service => service.TrySyncDeploymentReferencesAsync(
+                    deploymentMock.Object,
+                    It.Is<string>(xml => xml.Contains("expense.approval")),
+                    false,
+                    default))
+                .Returns(Task.CompletedTask);
+
+            var controller = CreateController(
+                processEngineMock.Object,
+                decisionCatalogService: decisionCatalogServiceMock.Object,
+                decisionProcessReferenceIndexApplicationService: decisionReferenceIndexAppServiceMock.Object);
+            var result = await controller.Deploy(new ProcessDefinitionDeployer
+            {
+                Name = "Leave Approval",
+                Key = "leaveApproval",
+                TenantId = "tenant-a",
+                BpmnXML = CreateBusinessRuleTaskBpmnXml("expense.approval", "v1.0.0")
+            }).ConfigureAwait(false);
+
+            Assert.Equal("dep-1", result.Id);
+            decisionCatalogServiceMock.VerifyAll();
+            repositoryServiceMock.VerifyAll();
+            deploymentBuilderMock.VerifyAll();
+            decisionReferenceIndexAppServiceMock.VerifyAll();
+        }
+
+        /// <summary>
+        /// 验证删除部署前会尝试清理决策引用索引。
+        /// </summary>
+        [Fact]
+        public async Task Remove_Should_DeleteDecisionReferenceIndex_WhenDeploymentExists()
+        {
+            var repositoryServiceMock = new Mock<IRepositoryService>(MockBehavior.Strict);
+            var processEngineMock = CreateProcessEngineMock(repositoryServiceMock.Object);
+            var decisionReferenceIndexAppServiceMock = new Mock<IDecisionProcessReferenceIndexApplicationService>(MockBehavior.Strict);
+
+            decisionReferenceIndexAppServiceMock
+                .Setup(service => service.TryDeleteDeploymentReferencesAsync("dep-1", default))
+                .Returns(Task.CompletedTask);
+            repositoryServiceMock
+                .Setup(service => service.DeleteDeployment("dep-1"));
+
+            var controller = CreateController(
+                processEngineMock.Object,
+                decisionProcessReferenceIndexApplicationService: decisionReferenceIndexAppServiceMock.Object);
+            var result = await controller.Remove("dep-1").ConfigureAwait(false);
+
+            Assert.True(result);
+            repositoryServiceMock.VerifyAll();
+            decisionReferenceIndexAppServiceMock.VerifyAll();
         }
 
         /// <summary>
@@ -397,16 +390,14 @@ namespace Sys.Workflow.Rules.Tests
         /// 创建流程部署控制器测试实例。
         /// </summary>
         /// <param name="processEngine">流程引擎。</param>
-        /// <param name="decisionDefinitionRepository">决策定义仓储。</param>
-        /// <param name="decisionVersionRepository">决策版本仓储。</param>
-        /// <param name="decisionProcessReferenceIndexRepository">决策引用索引仓储。</param>
+        /// <param name="decisionCatalogService">决策目录服务。</param>
+        /// <param name="decisionProcessReferenceIndexApplicationService">决策引用索引应用服务。</param>
         /// <param name="dataSource">工作流数据源。</param>
         /// <param name="databaseReader">数据库元数据读取器。</param>
         private static ProcessDefinitionDeployerController CreateController(
             IProcessEngine processEngine,
-            IDecisionDefinitionRepository decisionDefinitionRepository = null,
-            IDecisionVersionRepository decisionVersionRepository = null,
-            IDecisionProcessReferenceIndexRepository decisionProcessReferenceIndexRepository = null,
+            IDecisionCatalogService decisionCatalogService = null,
+            IDecisionProcessReferenceIndexApplicationService decisionProcessReferenceIndexApplicationService = null,
             IDataSource dataSource = null,
             IDatabaseReader databaseReader = null)
         {
@@ -423,9 +414,8 @@ namespace Sys.Workflow.Rules.Tests
                 pageableRepositoryService,
                 null,
                 LoggerFactory.Create(_ => { }),
-                decisionDefinitionRepository,
-                decisionVersionRepository,
-                decisionProcessReferenceIndexRepository,
+                decisionCatalogService,
+                decisionProcessReferenceIndexApplicationService,
                 dataSource,
                 databaseReader);
         }

@@ -50,11 +50,9 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         private readonly SecurityPoliciesApplicationService securityPoliciesApplicationService;
 
-        private readonly IDecisionDefinitionRepository decisionDefinitionRepository;
+        private readonly IDecisionCatalogService decisionCatalogService;
 
-        private readonly IDecisionVersionRepository decisionVersionRepository;
-
-        private readonly IDecisionProcessReferenceIndexRepository decisionProcessReferenceIndexRepository;
+        private readonly IDecisionProcessReferenceIndexApplicationService decisionProcessReferenceIndexApplicationService;
 
         private readonly ProcessEngineConfigurationImpl processEngineConfiguration;
 
@@ -70,9 +68,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             PageableDeploymentRespositoryService pageableRepositoryService,
             SecurityPoliciesApplicationService securityPoliciesApplicationService,
             ILoggerFactory loggerFactory,
-            IDecisionDefinitionRepository decisionDefinitionRepository = null,
-            IDecisionVersionRepository decisionVersionRepository = null,
-            IDecisionProcessReferenceIndexRepository decisionProcessReferenceIndexRepository = null,
+            IDecisionCatalogService decisionCatalogService = null,
+            IDecisionProcessReferenceIndexApplicationService decisionProcessReferenceIndexApplicationService = null,
             IDataSource dataSource = null,
             IDatabaseReader databaseReader = null)
         {
@@ -80,9 +77,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             this.deploymentConverter = deploymentConverter;
             this.pageableRepositoryService = pageableRepositoryService;
             this.securityPoliciesApplicationService = securityPoliciesApplicationService;
-            this.decisionDefinitionRepository = decisionDefinitionRepository;
-            this.decisionVersionRepository = decisionVersionRepository;
-            this.decisionProcessReferenceIndexRepository = decisionProcessReferenceIndexRepository;
+            this.decisionCatalogService = decisionCatalogService;
+            this.decisionProcessReferenceIndexApplicationService = decisionProcessReferenceIndexApplicationService;
             this.processEngineConfiguration = engine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl;
             this.dataSource = dataSource;
             this.databaseReader = databaseReader;
@@ -300,18 +296,14 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                     throw new ArgumentException("decisionKey is required", nameof(decisionKey));
                 }
 
-                var deployments = LoadReferenceDeployments(tenantId, includeDrafts);
-                var indexedRecords = await TryQueryDecisionReferencesFromIndexAsync(
-                    decisionKey,
-                    tenantId,
-                    includeDrafts,
-                    deployments).ConfigureAwait(false);
-                if (indexedRecords != null)
+                if (decisionProcessReferenceIndexApplicationService == null)
                 {
-                    return indexedRecords;
+                    throw new InvalidOperationException("当前宿主未配置决策流程引用应用服务。");
                 }
 
-                return QueryDecisionReferencesByScanning(decisionKey, deployments);
+                return await decisionProcessReferenceIndexApplicationService
+                    .QueryDecisionReferencesAsync(decisionKey, tenantId, includeDrafts)
+                    .ConfigureAwait(false);
             }
             catch (ArgumentException ex)
             {
@@ -355,59 +347,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                     databaseType,
                     databaseSchemaUpdate,
                     ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 优先通过引用索引查询流程对决策的引用，索引不完整时返回空以便回退扫描。
-        /// </summary>
-        /// <param name="decisionKey">决策键。</param>
-        /// <param name="tenantId">租户标识。</param>
-        /// <param name="includeDrafts">是否包含草稿部署。</param>
-        /// <param name="deployments">候选部署集合。</param>
-        /// <returns>命中的引用记录；索引不可用或不完整时返回空。</returns>
-        private async Task<IReadOnlyList<DecisionProcessReferenceRecord>?> TryQueryDecisionReferencesFromIndexAsync(
-            string decisionKey,
-            string tenantId,
-            bool includeDrafts,
-            IReadOnlyList<(IDeployment Deployment, bool IsDraft)> deployments)
-        {
-            if (decisionProcessReferenceIndexRepository == null)
-            {
-                return null;
-            }
-
-            try
-            {
-                var deploymentIds = deployments
-                    .Select(item => item.Deployment.Id)
-                    .Where(item => !string.IsNullOrWhiteSpace(item))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .ToList();
-
-                var indexedDeploymentIds = await decisionProcessReferenceIndexRepository
-                    .GetIndexedDeploymentIdsAsync(deploymentIds)
-                    .ConfigureAwait(false);
-                if (deploymentIds.Count != indexedDeploymentIds.Count)
-                {
-                    return null;
-                }
-
-                var entries = await decisionProcessReferenceIndexRepository
-                    .QueryEntriesAsync(new DecisionProcessReferenceIndexQuery
-                    {
-                        DecisionKey = decisionKey,
-                        TenantId = tenantId,
-                        IncludeDrafts = includeDrafts,
-                        DeploymentIds = deploymentIds
-                    })
-                    .ConfigureAwait(false);
-                return GroupDecisionReferenceIndexEntries(entries);
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Query decision references from index failed, falling back to BPMN scan. decisionKey={DecisionKey}", decisionKey);
-                return null;
             }
         }
 
@@ -458,358 +397,39 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         }
 
         /// <summary>
-        /// 通过实时扫描 BPMN XML 回退查询流程对决策的引用。
-        /// </summary>
-        /// <param name="decisionKey">决策键。</param>
-        /// <param name="deployments">候选部署集合。</param>
-        /// <returns>命中的引用记录集合。</returns>
-        private IReadOnlyList<DecisionProcessReferenceRecord> QueryDecisionReferencesByScanning(
-            string decisionKey,
-            IReadOnlyList<(IDeployment Deployment, bool IsDraft)> deployments)
-        {
-            var records = new List<DecisionProcessReferenceRecord>();
-            foreach (var deploymentSource in deployments)
-            {
-                var model = ReadBpmnModelFromDeployment(deploymentSource.Deployment);
-                records.AddRange(BuildDecisionReferenceRecords(
-                    model,
-                    deploymentSource.Deployment,
-                    deploymentSource.IsDraft,
-                    decisionKey));
-            }
-
-            return OrderDecisionReferenceRecords(records);
-        }
-
-        /// <summary>
-        /// 读取用于决策引用分析的部署集合。
-        /// </summary>
-        /// <param name="tenantId">租户标识。</param>
-        /// <param name="includeDrafts">是否包含草稿。</param>
-        /// <returns>部署与草稿标记集合。</returns>
-        private IReadOnlyList<(IDeployment Deployment, bool IsDraft)> LoadReferenceDeployments(string tenantId, bool includeDrafts)
-        {
-            var results = new List<(IDeployment Deployment, bool IsDraft)>();
-
-            var latestQuery = repositoryService.CreateDeploymentQuery().SetLatestDeployment();
-            if (!string.IsNullOrWhiteSpace(tenantId))
-            {
-                latestQuery.SetDeploymentTenantId(tenantId);
-            }
-
-            foreach (var deployment in latestQuery.List())
-            {
-                results.Add((deployment, false));
-            }
-
-            if (!includeDrafts)
-            {
-                return results;
-            }
-
-            var draftQuery = repositoryService.CreateDeploymentQuery();
-            if (!string.IsNullOrWhiteSpace(tenantId))
-            {
-                draftQuery.SetDeploymentTenantId(tenantId);
-            }
-
-            foreach (var draftDeployment in draftQuery.FindDrafts())
-            {
-                if (results.Any(item => item.Deployment.Id == draftDeployment.Id))
-                {
-                    continue;
-                }
-
-                results.Add((draftDeployment, true));
-            }
-
-            return results;
-        }
-
-        /// <summary>
-        /// 从部署资源中读取 BPMN 模型。
-        /// </summary>
-        /// <param name="deployment">部署记录。</param>
-        /// <returns>BPMN 模型。</returns>
-        private BpmnModel ReadBpmnModelFromDeployment(IDeployment deployment)
-        {
-            var resourceNames = repositoryService.GetDeploymentResourceNames(deployment.Id);
-            if (resourceNames == null || resourceNames.Count == 0)
-            {
-                throw new InvalidOperationException($"部署 {deployment.Id} 未包含 BPMN 资源。");
-            }
-
-            var resourceName = resourceNames.FirstOrDefault(name =>
-                name.EndsWith(".bpmn", StringComparison.OrdinalIgnoreCase) ||
-                name.EndsWith(".bpmn20.xml", StringComparison.OrdinalIgnoreCase)) ?? resourceNames[0];
-            using var resourceStream = repositoryService.GetResourceAsStream(deployment.Id, resourceName);
-            return new BpmnXMLConverter().ConvertToBpmnModel(new XMLStreamReader(resourceStream));
-        }
-
-        /// <summary>
-        /// 从 BPMN XML 文本读取 BPMN 模型。
-        /// </summary>
-        /// <param name="bpmnXml">BPMN XML 文本。</param>
-        /// <returns>BPMN 模型。</returns>
-        private static BpmnModel ReadBpmnModelFromXml(string bpmnXml)
-        {
-            var xmlBytes = Encoding.UTF8.GetBytes(bpmnXml ?? string.Empty);
-            using var stream = new MemoryStream(xmlBytes, writable: false);
-            return new BpmnXMLConverter().ConvertToBpmnModel(new XMLStreamReader(stream));
-        }
-
-        /// <summary>
-        /// 将 BPMN 模型中的决策绑定转换为流程引用返回模型。
-        /// </summary>
-        /// <param name="model">BPMN 模型。</param>
-        /// <param name="deployment">部署记录。</param>
-        /// <param name="isDraft">是否为草稿。</param>
-        /// <param name="decisionKeyFilter">可选的决策键过滤条件。</param>
-        /// <returns>引用记录集合。</returns>
-        private static IReadOnlyList<DecisionProcessReferenceRecord> BuildDecisionReferenceRecords(
-            BpmnModel model,
-            IDeployment deployment,
-            bool isDraft,
-            string decisionKeyFilter = null)
-        {
-            var records = new List<DecisionProcessReferenceRecord>();
-            foreach (var process in model.Processes)
-            {
-                var referencedTasks = new List<DecisionProcessReferenceTaskRecord>();
-                foreach (var businessRuleTask in process.FindFlowElementsOfType<BusinessRuleTask>(true))
-                {
-                    var decisionBinding = businessRuleTask.GetDecisionBinding();
-                    if (decisionBinding == null || string.IsNullOrWhiteSpace(decisionBinding.DecisionKey))
-                    {
-                        continue;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(decisionKeyFilter) &&
-                        !string.Equals(decisionBinding.DecisionKey, decisionKeyFilter, StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
-
-                    referencedTasks.Add(new DecisionProcessReferenceTaskRecord
-                    {
-                        TaskId = businessRuleTask.Id,
-                        TaskName = businessRuleTask.Name,
-                        DecisionKey = decisionBinding.DecisionKey,
-                        BindingMode = decisionBinding.BindingMode,
-                        VersionTag = decisionBinding.VersionTag
-                    });
-                }
-
-                if (referencedTasks.Count == 0)
-                {
-                    continue;
-                }
-
-                records.Add(new DecisionProcessReferenceRecord
-                {
-                    DeploymentId = deployment.Id,
-                    DeploymentName = deployment.Name,
-                    ProcessDefinitionKey = process.Id,
-                    ProcessDefinitionName = process.Name,
-                    TenantId = deployment.TenantId,
-                    IsDraft = isDraft,
-                    DeployTime = deployment.DeploymentTime,
-                    ReferencedTasks = referencedTasks
-                });
-            }
-
-            return records;
-        }
-
-        /// <summary>
-        /// 将 BPMN 模型中的决策绑定转换为索引快照。
-        /// </summary>
-        /// <param name="model">BPMN 模型。</param>
-        /// <param name="deployment">部署记录。</param>
-        /// <param name="isDraft">是否为草稿。</param>
-        /// <returns>索引快照。</returns>
-        private static DecisionProcessReferenceIndexSnapshot BuildDecisionReferenceIndexSnapshot(
-            BpmnModel model,
-            IDeployment deployment,
-            bool isDraft)
-        {
-            var snapshot = new DecisionProcessReferenceIndexSnapshot
-            {
-                DeploymentId = deployment.Id,
-                DeploymentName = deployment.Name,
-                TenantId = deployment.TenantId,
-                IsDraft = isDraft,
-                DeployTime = NormalizeDeploymentTime(deployment.DeploymentTime)
-            };
-
-            foreach (var process in model.Processes)
-            {
-                var processRecord = new DecisionProcessReferenceIndexProcessRecord
-                {
-                    ProcessDefinitionKey = process.Id,
-                    ProcessDefinitionName = process.Name
-                };
-
-                foreach (var businessRuleTask in process.FindFlowElementsOfType<BusinessRuleTask>(true))
-                {
-                    var decisionBinding = businessRuleTask.GetDecisionBinding();
-                    if (decisionBinding == null || string.IsNullOrWhiteSpace(decisionBinding.DecisionKey))
-                    {
-                        continue;
-                    }
-
-                    processRecord.ReferencedTasks.Add(new DecisionProcessReferenceIndexTaskRecord
-                    {
-                        TaskId = businessRuleTask.Id,
-                        TaskName = businessRuleTask.Name,
-                        DecisionKey = decisionBinding.DecisionKey,
-                        BindingMode = decisionBinding.BindingMode,
-                        VersionTag = decisionBinding.VersionTag
-                    });
-                }
-
-                if (processRecord.ReferencedTasks.Count > 0)
-                {
-                    snapshot.Processes.Add(processRecord);
-                }
-            }
-
-            return snapshot;
-        }
-
-        /// <summary>
-        /// 按既有口径排序引用记录。
-        /// </summary>
-        /// <param name="records">待排序记录集合。</param>
-        /// <returns>排序后的引用记录集合。</returns>
-        private static IReadOnlyList<DecisionProcessReferenceRecord> OrderDecisionReferenceRecords(
-            IEnumerable<DecisionProcessReferenceRecord> records)
-        {
-            return records
-                .OrderByDescending(item => item.IsDraft)
-                .ThenByDescending(item => item.DeployTime)
-                .ToList();
-        }
-
-        /// <summary>
-        /// 将索引明细行分组为流程引用返回模型。
-        /// </summary>
-        /// <param name="entries">索引明细行。</param>
-        /// <returns>分组后的流程引用集合。</returns>
-        private static IReadOnlyList<DecisionProcessReferenceRecord> GroupDecisionReferenceIndexEntries(
-            IReadOnlyList<DecisionProcessReferenceIndexEntryRecord> entries)
-        {
-            var records = entries
-                .Where(item => !string.IsNullOrWhiteSpace(item.DecisionKey) && !string.IsNullOrWhiteSpace(item.TaskId))
-                .GroupBy(item => new
-                {
-                    item.DeploymentId,
-                    item.DeploymentName,
-                    item.ProcessDefinitionKey,
-                    item.ProcessDefinitionName,
-                    item.TenantId,
-                    item.IsDraft,
-                    item.DeployTime
-                })
-                .Select(group => new DecisionProcessReferenceRecord
-                {
-                    DeploymentId = group.Key.DeploymentId,
-                    DeploymentName = group.Key.DeploymentName,
-                    ProcessDefinitionKey = group.Key.ProcessDefinitionKey ?? string.Empty,
-                    ProcessDefinitionName = group.Key.ProcessDefinitionName,
-                    TenantId = group.Key.TenantId,
-                    IsDraft = group.Key.IsDraft,
-                    DeployTime = group.Key.DeployTime.UtcDateTime,
-                    ReferencedTasks = group
-                        .OrderBy(item => item.TaskId)
-                        .Select(item => new DecisionProcessReferenceTaskRecord
-                        {
-                            TaskId = item.TaskId ?? string.Empty,
-                            TaskName = item.TaskName,
-                            DecisionKey = item.DecisionKey ?? string.Empty,
-                            BindingMode = item.BindingMode,
-                            VersionTag = item.VersionTag
-                        })
-                        .ToList()
-                });
-
-            return OrderDecisionReferenceRecords(records);
-        }
-
-        /// <summary>
         /// 尝试将指定部署的决策引用写入索引，不影响主流程保存与部署结果。
         /// </summary>
         /// <param name="deployment">部署记录。</param>
         /// <param name="bpmnXml">BPMN XML 文本。</param>
         /// <param name="isDraft">是否为草稿部署。</param>
-        private async Task TrySyncDecisionReferenceIndexAsync(
+        private Task TrySyncDecisionReferenceIndexAsync(
             IDeployment deployment,
             string bpmnXml,
             bool isDraft)
         {
-            if (decisionProcessReferenceIndexRepository == null ||
-                deployment == null ||
-                string.IsNullOrWhiteSpace(deployment.Id) ||
-                string.IsNullOrWhiteSpace(bpmnXml))
+            if (decisionProcessReferenceIndexApplicationService == null)
             {
-                return;
+                return Task.CompletedTask;
             }
 
-            try
-            {
-                var model = ReadBpmnModelFromXml(bpmnXml);
-                var snapshot = BuildDecisionReferenceIndexSnapshot(model, deployment, isDraft);
-                await decisionProcessReferenceIndexRepository
-                    .ReplaceDeploymentReferencesAsync(snapshot)
-                    .ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Sync decision reference index failed. deploymentId={DeploymentId}", deployment.Id);
-            }
+            return decisionProcessReferenceIndexApplicationService.TrySyncDeploymentReferencesAsync(
+                deployment,
+                bpmnXml,
+                isDraft);
         }
 
         /// <summary>
         /// 尝试删除指定部署的决策引用索引，不影响主流程删除结果。
         /// </summary>
         /// <param name="deploymentId">部署标识。</param>
-        private async Task TryDeleteDecisionReferenceIndexAsync(string deploymentId)
+        private Task TryDeleteDecisionReferenceIndexAsync(string deploymentId)
         {
-            if (decisionProcessReferenceIndexRepository == null || string.IsNullOrWhiteSpace(deploymentId))
+            if (decisionProcessReferenceIndexApplicationService == null)
             {
-                return;
+                return Task.CompletedTask;
             }
 
-            try
-            {
-                await decisionProcessReferenceIndexRepository
-                    .DeleteByDeploymentIdAsync(deploymentId)
-                    .ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Delete decision reference index failed. deploymentId={DeploymentId}", deploymentId);
-            }
-        }
-
-        /// <summary>
-        /// 归一化部署时间，避免默认值写入索引。
-        /// </summary>
-        /// <param name="deploymentTime">原始部署时间。</param>
-        /// <returns>可持久化的部署时间。</returns>
-        private static DateTimeOffset NormalizeDeploymentTime(DateTime deploymentTime)
-        {
-            if (deploymentTime == default)
-            {
-                return DateTimeOffset.UtcNow;
-            }
-
-            if (deploymentTime.Kind == DateTimeKind.Unspecified)
-            {
-                return new DateTimeOffset(DateTime.SpecifyKind(deploymentTime, DateTimeKind.Utc));
-            }
-
-            return new DateTimeOffset(deploymentTime.ToUniversalTime());
+            return decisionProcessReferenceIndexApplicationService.TryDeleteDeploymentReferencesAsync(deploymentId);
         }
 
         /// <summary>
@@ -835,60 +455,30 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         /// <param name="model">BPMN 模型。</param>
         private async Task ValidateDecisionBindingsAsync(BpmnModel model)
         {
-            foreach (var process in model.Processes)
+            if (decisionCatalogService == null)
             {
-                foreach (var businessRuleTask in process.FindFlowElementsOfType<BusinessRuleTask>(true))
-                {
-                    var decisionBinding = businessRuleTask.GetDecisionBinding();
-                    if (decisionBinding == null || string.IsNullOrWhiteSpace(decisionBinding.DecisionKey))
-                    {
-                        throw new ArgumentException($"规则任务 {businessRuleTask.Id} 缺少有效的 decisionKey。", nameof(model));
-                    }
-
-                    if ((string.Equals(decisionBinding.BindingMode, "FixedVersion", StringComparison.OrdinalIgnoreCase) ||
-                         string.Equals(decisionBinding.BindingMode, "VersionTagPreferred", StringComparison.OrdinalIgnoreCase)) &&
-                        string.IsNullOrWhiteSpace(decisionBinding.VersionTag))
-                    {
-                        throw new ArgumentException($"规则任务 {businessRuleTask.Id} 在 {decisionBinding.BindingMode} 模式下必须指定 versionTag。", nameof(model));
-                    }
-
-                    if (decisionDefinitionRepository == null || decisionVersionRepository == null)
-                    {
-                        continue;
-                    }
-
-                    var definitionRecord = await decisionDefinitionRepository
-                        .GetByDecisionKeyAsync(decisionBinding.DecisionKey)
-                        .ConfigureAwait(false);
-                    if (definitionRecord == null)
-                    {
-                        throw new InvalidOperationException($"规则任务 {businessRuleTask.Id} 引用了不存在的决策 {decisionBinding.DecisionKey}。");
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(decisionBinding.VersionTag))
-                    {
-                        var versionRecord = await decisionVersionRepository
-                            .GetByVersionTagAsync(decisionBinding.DecisionKey, decisionBinding.VersionTag)
-                            .ConfigureAwait(false);
-                        if (versionRecord == null)
-                        {
-                            throw new InvalidOperationException($"规则任务 {businessRuleTask.Id} 引用了不存在的决策版本 {decisionBinding.DecisionKey}:{decisionBinding.VersionTag}。");
-                        }
-
-                        if (!versionRecord.IsPublished)
-                        {
-                            throw new InvalidOperationException($"规则任务 {businessRuleTask.Id} 引用了未发布的决策版本 {decisionBinding.DecisionKey}:{decisionBinding.VersionTag}。");
-                        }
-
-                        continue;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(definitionRecord.PublishedVersionTag))
-                    {
-                        throw new InvalidOperationException($"规则任务 {businessRuleTask.Id} 引用的决策 {decisionBinding.DecisionKey} 尚无已发布版本。");
-                    }
-                }
+                return;
             }
+
+            var validationRequest = new DecisionBindingValidationRequest
+            {
+                Bindings = model.Processes
+                    .SelectMany(process => process.FindFlowElementsOfType<BusinessRuleTask>(true))
+                    .Select(businessRuleTask =>
+                    {
+                        var decisionBinding = businessRuleTask.GetDecisionBinding();
+                        return new DecisionBindingReference
+                        {
+                            SourceId = businessRuleTask.Id,
+                            DecisionKey = decisionBinding?.DecisionKey ?? string.Empty,
+                            BindingMode = decisionBinding?.BindingMode,
+                            VersionTag = decisionBinding?.VersionTag
+                        };
+                    })
+                    .ToList()
+            };
+            await decisionCatalogService.ValidateDecisionBindingsAsync(validationRequest).ConfigureAwait(false);
         }
+
     }
 }

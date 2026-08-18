@@ -8,6 +8,7 @@ using SmartSql;
 using SmartSql.Abstractions;
 using SmartSql.Abstractions.DbSession;
 using SmartSql.DbSession;
+using Sys.Rules.DmnEngine;
 using Sys.Workflow.Rules;
 using Sys.Workflow.Rules.Core.Options;
 using Sys.Workflow.Rules.Core.Repositories;
@@ -60,14 +61,21 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<DecisionDefinitionRepository>();
             services.AddSingleton<DecisionExecutionLogRepository>();
             services.AddSingleton<DecisionProcessReferenceIndexRepository>();
+            services.AddSingleton<DecisionCatalogService>(sp => new DecisionCatalogService(
+                sp.GetRequiredService<IDecisionDefinitionRepository>(),
+                sp.GetRequiredService<IDecisionVersionRepository>(),
+                sp.GetRequiredService<IDecisionExecutionLogRepository>(),
+                sp.GetService<IDecisionProcessReferenceIndexRepository>()));
             services.AddSingleton<DecisionGovernanceService>(sp => new DecisionGovernanceService(
                 sp.GetRequiredService<IDecisionDefinitionRepository>(),
                 sp.GetRequiredService<IDecisionVersionRepository>(),
-                sp.GetRequiredService<ISmartSqlMapper>()));
+                sp.GetRequiredService<ISmartSqlMapper>(),
+                sp.GetService<DmnEngineFacade>()));
             services.AddSingleton<IDecisionVersionRepository>(sp => sp.GetRequiredService<DecisionVersionRepository>());
             services.AddSingleton<IDecisionDefinitionRepository>(sp => sp.GetRequiredService<DecisionDefinitionRepository>());
             services.AddSingleton<IDecisionExecutionLogRepository>(sp => sp.GetRequiredService<DecisionExecutionLogRepository>());
             services.AddSingleton<IDecisionProcessReferenceIndexRepository>(sp => sp.GetRequiredService<DecisionProcessReferenceIndexRepository>());
+            services.AddSingleton<IDecisionCatalogService>(sp => sp.GetRequiredService<DecisionCatalogService>());
             services.AddSingleton<IDecisionGovernanceService>(sp => sp.GetRequiredService<DecisionGovernanceService>());
 
             return services;

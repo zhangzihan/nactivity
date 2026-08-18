@@ -17,31 +17,23 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     public class DecisionGovernanceControllerImpl : WorkflowController, IDecisionGovernanceController
     {
         private readonly IDecisionGovernanceService _decisionGovernanceService;
-        private readonly IDecisionExecutionLogRepository _decisionExecutionLogRepository;
-        private readonly IDecisionDefinitionRepository? _decisionDefinitionRepository;
-        private readonly IDecisionVersionRepository? _decisionVersionRepository;
-        private readonly IDecisionRuntimeService? _decisionRuntimeService;
+        private readonly IDecisionCatalogService _decisionCatalogService;
+        private readonly IDecisionExecutionService _decisionExecutionService;
 
         /// <summary>
         /// 初始化规则决策治理控制器。
         /// </summary>
         /// <param name="decisionGovernanceService">规则治理服务。</param>
-        /// <param name="decisionExecutionLogRepository">执行日志仓储。</param>
-        /// <param name="decisionDefinitionRepository">定义仓储。</param>
-        /// <param name="decisionVersionRepository">版本仓储。</param>
-        /// <param name="decisionRuntimeService">规则运行时服务。</param>
+        /// <param name="decisionCatalogService">目录与审计查询服务。</param>
+        /// <param name="decisionExecutionService">规则执行服务。</param>
         public DecisionGovernanceControllerImpl(
             IDecisionGovernanceService decisionGovernanceService,
-            IDecisionExecutionLogRepository decisionExecutionLogRepository,
-            IDecisionDefinitionRepository? decisionDefinitionRepository = null,
-            IDecisionVersionRepository? decisionVersionRepository = null,
-            IDecisionRuntimeService? decisionRuntimeService = null)
+            IDecisionCatalogService decisionCatalogService,
+            IDecisionExecutionService decisionExecutionService)
         {
             _decisionGovernanceService = decisionGovernanceService ?? throw new ArgumentNullException(nameof(decisionGovernanceService));
-            _decisionExecutionLogRepository = decisionExecutionLogRepository ?? throw new ArgumentNullException(nameof(decisionExecutionLogRepository));
-            _decisionDefinitionRepository = decisionDefinitionRepository;
-            _decisionVersionRepository = decisionVersionRepository;
-            _decisionRuntimeService = decisionRuntimeService;
+            _decisionCatalogService = decisionCatalogService ?? throw new ArgumentNullException(nameof(decisionCatalogService));
+            _decisionExecutionService = decisionExecutionService ?? throw new ArgumentNullException(nameof(decisionExecutionService));
         }
 
         /// <summary>
@@ -128,10 +120,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             {
                 ArgumentNullException.ThrowIfNull(query);
 
-                var records = await _decisionExecutionLogRepository.QueryAsync(query).ConfigureAwait(false);
-                var totalCount = await _decisionExecutionLogRepository.CountAsync(query).ConfigureAwait(false);
-
-                return new Resources<DecisionExecutionLogRecord>(records, totalCount, query.PageIndex, query.PageSize);
+                var pageResult = await _decisionCatalogService.QueryExecutionLogsAsync(query).ConfigureAwait(false);
+                return new Resources<DecisionExecutionLogRecord>(pageResult.Items, pageResult.TotalCount, pageResult.PageIndex, pageResult.PageSize);
             }
             catch (ArgumentException ex)
             {
@@ -154,7 +144,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             try
             {
                 ArgumentNullException.ThrowIfNull(query);
-                return await GetDecisionDefinitionRepository().QueryAsync(query).ConfigureAwait(false);
+                return await _decisionCatalogService.QueryDefinitionsAsync(query).ConfigureAwait(false);
             }
             catch (ArgumentException ex)
             {
@@ -181,7 +171,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                     throw new ArgumentException("decisionKey is required", nameof(decisionKey));
                 }
 
-                return await GetDecisionVersionRepository().QueryByDecisionKeyAsync(decisionKey).ConfigureAwait(false);
+                return await _decisionCatalogService.QueryDecisionVersionsAsync(decisionKey).ConfigureAwait(false);
             }
             catch (ArgumentException ex)
             {
@@ -208,7 +198,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                     throw new ArgumentException("decisionKey is required", nameof(decisionKey));
                 }
 
-                return await GetDecisionDefinitionRepository().GetByDecisionKeyAsync(decisionKey).ConfigureAwait(false);
+                return await _decisionCatalogService.GetDefinitionAsync(decisionKey).ConfigureAwait(false);
             }
             catch (ArgumentException ex)
             {
@@ -232,7 +222,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             {
                 ArgumentNullException.ThrowIfNull(request);
                 request.Operator ??= GetAuthenticatedOperatorId();
-                return await GetDecisionRuntimeService().ImportAsync(request).ConfigureAwait(false);
+                return await _decisionGovernanceService.ImportAsync(request).ConfigureAwait(false);
             }
             catch (ArgumentException ex)
             {
@@ -255,7 +245,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             try
             {
                 ArgumentNullException.ThrowIfNull(request);
-                return await GetDecisionRuntimeService().ExportAsync(request).ConfigureAwait(false);
+                return await _decisionGovernanceService.ExportAsync(request).ConfigureAwait(false);
             }
             catch (ArgumentException ex)
             {
@@ -278,7 +268,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             try
             {
                 ArgumentNullException.ThrowIfNull(request);
-                return await GetDecisionRuntimeService().ExplainAsync(request).ConfigureAwait(false);
+                return await _decisionExecutionService.ExplainAsync(request).ConfigureAwait(false);
             }
             catch (ArgumentException ex)
             {
@@ -301,7 +291,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             try
             {
                 ArgumentNullException.ThrowIfNull(request);
-                return await GetDecisionRuntimeService().TestAsync(request).ConfigureAwait(false);
+                return await _decisionExecutionService.TestAsync(request).ConfigureAwait(false);
             }
             catch (ArgumentException ex)
             {
@@ -321,7 +311,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpGet("execution-logs/{executionId}")]
         public Task<DecisionExecutionLogRecord?> GetExecutionLog(string executionId)
         {
-            return _decisionExecutionLogRepository.GetByExecutionIdAsync(executionId);
+            return _decisionCatalogService.GetExecutionLogAsync(executionId);
         }
 
         /// <summary>
@@ -332,7 +322,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpGet("execution-logs/{executionId}/snapshot")]
         public Task<DecisionExecutionSnapshot?> GetExecutionSnapshot(string executionId)
         {
-            return GetDecisionRuntimeService().GetExecutionSnapshotAsync(executionId);
+            return _decisionCatalogService.GetExecutionSnapshotAsync(executionId);
         }
 
         /// <summary>
@@ -342,7 +332,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpPost("cache/invalidate")]
         public Task InvalidateCache([FromBody] DecisionCacheInvalidationRequest request)
         {
-            return GetDecisionRuntimeService().InvalidateCacheAsync(request);
+            return _decisionExecutionService.InvalidateCacheAsync(request);
         }
 
         /// <summary>
@@ -353,7 +343,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpGet("cache-status")]
         public Task<DecisionCacheStatusDescriptor> GetCacheStatus([FromQuery] string? decisionKey)
         {
-            return GetDecisionRuntimeService().GetCacheStatusAsync(decisionKey);
+            return _decisionExecutionService.GetCacheStatusAsync(decisionKey);
         }
 
         /// <summary>
@@ -395,46 +385,5 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             return Task.FromResult(descriptor);
         }
 
-        /// <summary>
-        /// 获取已配置的决策定义仓储。
-        /// </summary>
-        /// <returns>定义仓储实例。</returns>
-        private IDecisionDefinitionRepository GetDecisionDefinitionRepository()
-        {
-            if (_decisionDefinitionRepository == null)
-            {
-                throw new InvalidOperationException("当前宿主未配置决策定义仓储，无法查询决策目录。");
-            }
-
-            return _decisionDefinitionRepository;
-        }
-
-        /// <summary>
-        /// 获取已配置的决策版本仓储。
-        /// </summary>
-        /// <returns>版本仓储实例。</returns>
-        private IDecisionVersionRepository GetDecisionVersionRepository()
-        {
-            if (_decisionVersionRepository == null)
-            {
-                throw new InvalidOperationException("当前宿主未配置决策版本仓储，无法查询版本目录。");
-            }
-
-            return _decisionVersionRepository;
-        }
-
-        /// <summary>
-        /// 获取已配置的规则运行时服务。
-        /// </summary>
-        /// <returns>规则运行时服务实例。</returns>
-        private IDecisionRuntimeService GetDecisionRuntimeService()
-        {
-            if (_decisionRuntimeService == null)
-            {
-                throw new InvalidOperationException("当前宿主未配置规则运行时服务。");
-            }
-
-            return _decisionRuntimeService;
-        }
     }
 }

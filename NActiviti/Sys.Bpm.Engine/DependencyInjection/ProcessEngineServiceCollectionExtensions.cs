@@ -203,7 +203,7 @@ namespace Sys.Workflow
 				});
 			}
 
-			builder.Services.AddDmnDecisionRuntimeService();
+                        builder.Services.AddDmnDecisionExecutionService();
 		}
 
 		/// <summary>

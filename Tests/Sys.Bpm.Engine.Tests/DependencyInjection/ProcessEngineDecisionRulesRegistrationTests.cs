@@ -13,10 +13,10 @@ namespace Sys.Workflow.DependencyInjection
     public class ProcessEngineDecisionRulesRegistrationTests
     {
         /// <summary>
-        /// 验证流程引擎默认会注册 DMN 运行时服务。
+        /// 验证流程引擎默认会注册 DMN 执行与目录服务。
         /// </summary>
         [Fact]
-        public void AddProcessEngine_Should_RegisterDecisionRuntimeService_WhenRulesStoreIsNotConfigured()
+        public void AddProcessEngine_Should_RegisterDecisionServices_WhenRulesStoreIsNotConfigured()
         {
             var services = new ServiceCollection();
             var configuration = BuildConfiguration(new Dictionary<string, string?>
@@ -29,7 +29,8 @@ namespace Sys.Workflow.DependencyInjection
             services.AddLogging();
             services.AddProcessEngine(configuration);
 
-            Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionRuntimeService));
+            Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionExecutionService));
+            Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionCatalogService));
             Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionDefinitionRepository));
             Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionVersionRepository));
             Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionExecutionLogRepository));
@@ -56,7 +57,8 @@ namespace Sys.Workflow.DependencyInjection
             services.AddLogging();
             services.AddProcessEngine(configuration);
 
-            Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionRuntimeService));
+            Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionExecutionService));
+            Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionCatalogService));
             Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionVersionRepository));
             Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionExecutionLogRepository));
             Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDecisionGovernanceService));

@@ -392,5 +392,107 @@ namespace Sys.Workflow.Rules.Tests
             definitionRepositoryMock.Verify(repository => repository.SaveAsync(It.IsAny<DecisionDefinitionRecord>(), default), Times.Never);
             versionRepositoryMock.Verify(repository => repository.SaveAsync(It.IsAny<DecisionVersionRecord>(), default), Times.Never);
         }
+
+        /// <summary>
+        /// 验证导入时会保存为草稿并返回导入结果。
+        /// </summary>
+        [Fact]
+        public async Task ImportAsync_Should_SaveDraftAndReturnImportedDecisionKey()
+        {
+            var definitionRepositoryMock = new Mock<IDecisionDefinitionRepository>(MockBehavior.Strict);
+            var versionRepositoryMock = new Mock<IDecisionVersionRepository>(MockBehavior.Strict);
+
+            definitionRepositoryMock
+                .Setup(repository => repository.GetByDecisionKeyAsync("expense.approval", default))
+                .ReturnsAsync((DecisionDefinitionRecord?)null);
+            definitionRepositoryMock
+                .Setup(repository => repository.SaveAsync(It.IsAny<DecisionDefinitionRecord>(), default))
+                .ReturnsAsync((DecisionDefinitionRecord record, System.Threading.CancellationToken _) => record);
+            versionRepositoryMock
+                .Setup(repository => repository.SaveAsync(It.IsAny<DecisionVersionRecord>(), default))
+                .ReturnsAsync((DecisionVersionRecord record, System.Threading.CancellationToken _) => record);
+
+            var service = new DecisionGovernanceService(definitionRepositoryMock.Object, versionRepositoryMock.Object);
+            var result = await service.ImportAsync(new DecisionImportRequest
+            {
+                DecisionKey = "expense.approval",
+                Name = "费用审批",
+                Content = CreateValidDmnDefinition(),
+                VersionTag = "draft-v1",
+                Operator = "tester"
+            }).ConfigureAwait(false);
+
+            Assert.True(result.Succeeded);
+            Assert.Single(result.ImportedDecisionKeys);
+            Assert.Equal("expense.approval", result.ImportedDecisionKeys[0]);
+            definitionRepositoryMock.Verify(repository => repository.SaveAsync(It.Is<DecisionDefinitionRecord>(record =>
+                record.DecisionKey == "expense.approval" &&
+                record.DraftVersionTag == "draft-v1"), default), Times.AtLeastOnce);
+            versionRepositoryMock.Verify(repository => repository.SaveAsync(It.Is<DecisionVersionRecord>(record =>
+                record.DecisionKey == "expense.approval" &&
+                record.DefinitionContent == CreateValidDmnDefinition()), default), Times.Once);
+        }
+
+        /// <summary>
+        /// 验证导入已存在定义且未允许覆盖时会抛出业务异常。
+        /// </summary>
+        [Fact]
+        public async Task ImportAsync_Should_Throw_WhenDefinitionExistsAndOverwriteDisabled()
+        {
+            var definitionRepositoryMock = new Mock<IDecisionDefinitionRepository>(MockBehavior.Strict);
+            var versionRepositoryMock = new Mock<IDecisionVersionRepository>(MockBehavior.Strict);
+
+            definitionRepositoryMock
+                .Setup(repository => repository.GetByDecisionKeyAsync("expense.approval", default))
+                .ReturnsAsync(new DecisionDefinitionRecord
+                {
+                    DecisionId = "decision-1",
+                    DecisionKey = "expense.approval",
+                    Name = "费用审批"
+                });
+
+            var service = new DecisionGovernanceService(definitionRepositoryMock.Object, versionRepositoryMock.Object);
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ImportAsync(new DecisionImportRequest
+            {
+                DecisionKey = "expense.approval",
+                Content = CreateValidDmnDefinition()
+            })).ConfigureAwait(false);
+
+            Assert.Contains("已存在", exception.Message);
+            definitionRepositoryMock.VerifyAll();
+            versionRepositoryMock.Verify(repository => repository.SaveAsync(It.IsAny<DecisionVersionRecord>(), default), Times.Never);
+        }
+
+        /// <summary>
+        /// 验证未指定版本标签时会导出最新已发布版本。
+        /// </summary>
+        [Fact]
+        public async Task ExportAsync_Should_ReturnLatestPublishedVersion_WhenVersionTagIsEmpty()
+        {
+            var definitionRepositoryMock = new Mock<IDecisionDefinitionRepository>(MockBehavior.Strict);
+            var versionRepositoryMock = new Mock<IDecisionVersionRepository>(MockBehavior.Strict);
+
+            versionRepositoryMock
+                .Setup(repository => repository.GetLatestPublishedAsync("expense.approval", default))
+                .ReturnsAsync(new DecisionVersionRecord
+                {
+                    DecisionKey = "expense.approval",
+                    VersionTag = "v1.0.0",
+                    DefinitionContent = CreateValidDmnDefinition(),
+                    Checksum = "abc123"
+                });
+
+            var service = new DecisionGovernanceService(definitionRepositoryMock.Object, versionRepositoryMock.Object);
+            var result = await service.ExportAsync(new DecisionExportRequest
+            {
+                DecisionKey = "expense.approval"
+            }).ConfigureAwait(false);
+
+            Assert.Equal("expense.approval.v1.0.0.dmn", result.FileName);
+            Assert.Equal("application/xml", result.ContentType);
+            Assert.Equal("abc123", result.Checksum);
+            Assert.Equal(CreateValidDmnDefinition(), result.Content);
+            versionRepositoryMock.VerifyAll();
+        }
     }
 }

@@ -1,9 +1,12 @@
 using SmartSql;
 using SmartSql.Abstractions;
+using Sys.Rules.DmnEngine;
 using Sys.Rules.DmnEngine.Engine.Definition;
 using Sys.Rules.DmnEngine.Parser;
 using Sys.Workflow.Rules.Models;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -18,6 +21,7 @@ namespace Sys.Workflow.Rules.Core.Services
         private readonly IDecisionDefinitionRepository _decisionDefinitionRepository;
         private readonly IDecisionVersionRepository _decisionVersionRepository;
         private readonly ISmartSqlMapper? _sqlMapper;
+        private readonly DmnEngineFacade? _engineFacade;
 
         /// <summary>
         /// 初始化决策治理服务。
@@ -25,14 +29,17 @@ namespace Sys.Workflow.Rules.Core.Services
         /// <param name="decisionDefinitionRepository">决策定义仓储。</param>
         /// <param name="decisionVersionRepository">决策版本仓储。</param>
         /// <param name="sqlMapper">SmartSql 映射器；存在时用于治理事务控制。</param>
+        /// <param name="engineFacade">DMN 执行外观；存在时用于导入后的缓存失效。</param>
         public DecisionGovernanceService(
             IDecisionDefinitionRepository decisionDefinitionRepository,
             IDecisionVersionRepository decisionVersionRepository,
-            ISmartSqlMapper? sqlMapper = null)
+            ISmartSqlMapper? sqlMapper = null,
+            DmnEngineFacade? engineFacade = null)
         {
             _decisionDefinitionRepository = decisionDefinitionRepository ?? throw new ArgumentNullException(nameof(decisionDefinitionRepository));
             _decisionVersionRepository = decisionVersionRepository ?? throw new ArgumentNullException(nameof(decisionVersionRepository));
             _sqlMapper = sqlMapper;
+            _engineFacade = engineFacade;
         }
 
         /// <summary>
@@ -167,6 +174,92 @@ namespace Sys.Workflow.Rules.Core.Services
         }
 
         /// <summary>
+        /// 导入决策定义。
+        /// </summary>
+        /// <param name="request">导入请求。</param>
+        /// <param name="cancellationToken">取消令牌。</param>
+        /// <returns>导入结果。</returns>
+        public async Task<DecisionImportResult> ImportAsync(DecisionImportRequest request, CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(request);
+
+            if (string.IsNullOrWhiteSpace(request.Content))
+            {
+                throw new ArgumentException("导入内容不能为空。", nameof(request));
+            }
+
+            var decisionKey = ResolveImportedDecisionKey(request);
+            var existingDefinition = await _decisionDefinitionRepository
+                .GetByDecisionKeyAsync(decisionKey, cancellationToken)
+                .ConfigureAwait(false);
+            if (existingDefinition != null && !request.OverwriteExisting)
+            {
+                throw new InvalidOperationException($"决策 `{decisionKey}` 已存在，若需覆盖请显式指定 OverwriteExisting=true。");
+            }
+
+            await SaveDraftAsync(new DecisionDraftSaveRequest
+            {
+                DecisionId = existingDefinition?.DecisionId,
+                DecisionKey = decisionKey,
+                Name = string.IsNullOrWhiteSpace(request.Name) ? decisionKey : request.Name!,
+                SourceFormat = string.IsNullOrWhiteSpace(request.Format) ? "DMN" : request.Format,
+                VersionTag = request.VersionTag,
+                DefinitionContent = request.Content,
+                Checksum = DmnEngineFacade.ComputeChecksum(request.Content),
+                Operator = request.Operator
+            }, cancellationToken).ConfigureAwait(false);
+
+            if (_engineFacade != null)
+            {
+                await _engineFacade.InvalidateCacheAsync(new DecisionCacheInvalidationRequest
+                {
+                    DecisionKey = decisionKey
+                }).ConfigureAwait(false);
+            }
+
+            return new DecisionImportResult
+            {
+                Succeeded = true,
+                ImportedDecisionKeys = new List<string> { decisionKey }
+            };
+        }
+
+        /// <summary>
+        /// 导出决策定义。
+        /// </summary>
+        /// <param name="request">导出请求。</param>
+        /// <param name="cancellationToken">取消令牌。</param>
+        /// <returns>导出结果。</returns>
+        public async Task<DecisionExportResult> ExportAsync(DecisionExportRequest request, CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(request);
+
+            if (string.IsNullOrWhiteSpace(request.DecisionKey))
+            {
+                throw new ArgumentException("决策主键不能为空。", nameof(request));
+            }
+
+            var versionRecord = string.IsNullOrWhiteSpace(request.VersionTag)
+                ? await _decisionVersionRepository.GetLatestPublishedAsync(request.DecisionKey, cancellationToken).ConfigureAwait(false)
+                : await _decisionVersionRepository.GetByVersionTagAsync(request.DecisionKey, request.VersionTag, cancellationToken).ConfigureAwait(false);
+            if (versionRecord == null)
+            {
+                throw new InvalidOperationException($"未找到决策 `{request.DecisionKey}` 的可导出版本。");
+            }
+
+            var fileVersionTag = string.IsNullOrWhiteSpace(versionRecord.VersionTag) ? "draft" : versionRecord.VersionTag;
+            return new DecisionExportResult
+            {
+                FileName = $"{request.DecisionKey}.{fileVersionTag}.dmn",
+                ContentType = "application/xml",
+                Content = versionRecord.DefinitionContent,
+                Checksum = string.IsNullOrWhiteSpace(versionRecord.Checksum)
+                    ? DmnEngineFacade.ComputeChecksum(versionRecord.DefinitionContent)
+                    : versionRecord.Checksum
+            };
+        }
+
+        /// <summary>
         /// 在可用时使用 SmartSql 事务包裹治理写操作。
         /// </summary>
         /// <typeparam name="TResult">返回结果类型。</typeparam>
@@ -239,6 +332,26 @@ namespace Sys.Workflow.Rules.Core.Services
             {
                 throw new ArgumentException("目标回滚版本不能为空。", nameof(request));
             }
+        }
+
+        /// <summary>
+        /// 解析导入时使用的决策主键。
+        /// </summary>
+        /// <param name="request">导入请求。</param>
+        /// <returns>决策主键。</returns>
+        private static string ResolveImportedDecisionKey(DecisionImportRequest request)
+        {
+            if (!string.IsNullOrWhiteSpace(request.DecisionKey))
+            {
+                return request.DecisionKey;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.FileName))
+            {
+                return Path.GetFileNameWithoutExtension(request.FileName);
+            }
+
+            throw new ArgumentException("导入请求缺少 DecisionKey 或 FileName，无法推断决策主键。", nameof(request));
         }
 
         /// <summary>

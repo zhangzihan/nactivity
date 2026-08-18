@@ -86,8 +86,8 @@ java -jar "../../../../tools/antlr-4.9.3-complete.jar" -Dlanguage=CSharp -packag
 ```
 
 ## 决策规则仓储配置
-* `AddProcessEngine(configuration)` 现已内建 DMN 决策运行时装配。
-* 宿主总会注册 `IDecisionRuntimeService`。
+ * `AddProcessEngine(configuration)` 现已内建 DMN 决策运行时装配。
+ * 宿主优先通过依赖注入接入 `IDecisionExecutionService`、`IDecisionGovernanceService` 与 `IDecisionCatalogService`。
 * 若配置了 `DecisionRulesStore`，则自动按数据库类型启用规则定义仓储、版本仓储与执行日志仓储。
 * 若未配置 `DecisionRulesStore`，但 `WorkflowDataSource` 已明确为 PostgreSQL 或 SQL Server，则自动复用工作流数据源连接串启用规则仓储。
 * 若以上条件都不满足，则回退为文件系统版 DMN 定义解析模式。

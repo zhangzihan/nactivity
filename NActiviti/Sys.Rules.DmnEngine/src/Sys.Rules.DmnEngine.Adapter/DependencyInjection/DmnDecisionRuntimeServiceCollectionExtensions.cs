@@ -12,12 +12,12 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class DmnDecisionRuntimeServiceCollectionExtensions
     {
         /// <summary>
-        /// 注册基于 Sys.Rules.DmnEngine 的决策运行时服务。
+        /// 注册基于 Sys.Rules.DmnEngine 的决策执行服务。
         /// </summary>
         /// <param name="services">服务集合。</param>
         /// <param name="definitionSearchDirectories">文件系统定义搜索目录。</param>
         /// <returns>服务集合。</returns>
-        public static IServiceCollection AddDmnDecisionRuntimeService(this IServiceCollection services, IEnumerable<string>? definitionSearchDirectories = null)
+        public static IServiceCollection AddDmnDecisionExecutionService(this IServiceCollection services, IEnumerable<string>? definitionSearchDirectories = null)
         {
             ArgumentNullException.ThrowIfNull(services);
 
@@ -30,12 +30,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     ? new DmnEngineFacade(decisionVersionRepository, decisionExecutionLogRepository)
                     : new DmnEngineFacade(definitionSearchDirectories, decisionExecutionLogRepository);
             });
-            services.AddSingleton<IDecisionRuntimeService>(sp => new DmnDecisionRuntimeAdapter(
+            services.AddSingleton<IDecisionExecutionService>(sp => new DmnDecisionExecutionService(
                 sp.GetRequiredService<DmnEngineFacade>(),
-                sp.GetService<IDecisionDefinitionRepository>(),
-                sp.GetService<IDecisionVersionRepository>(),
-                sp.GetService<IDecisionExecutionLogRepository>(),
-                sp.GetService<IDecisionGovernanceService>()));
+                sp.GetService<IDecisionExecutionLogRepository>()));
 
             return services;
         }

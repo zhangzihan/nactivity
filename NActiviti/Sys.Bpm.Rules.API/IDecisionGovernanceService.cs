@@ -32,5 +32,21 @@ namespace Sys.Workflow.Rules
         /// <param name="cancellationToken">取消令牌。</param>
         /// <returns>回滚结果。</returns>
         Task<DecisionVersionPublishResult> RollbackVersionAsync(RollbackDecisionVersionRequest request, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 导入决策定义。
+        /// </summary>
+        /// <param name="request">导入请求。</param>
+        /// <param name="cancellationToken">取消令牌。</param>
+        /// <returns>导入结果。</returns>
+        Task<DecisionImportResult> ImportAsync(DecisionImportRequest request, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 导出决策定义。
+        /// </summary>
+        /// <param name="request">导出请求。</param>
+        /// <param name="cancellationToken">取消令牌。</param>
+        /// <returns>导出结果。</returns>
+        Task<DecisionExportResult> ExportAsync(DecisionExportRequest request, CancellationToken cancellationToken = default);
     }
 }
