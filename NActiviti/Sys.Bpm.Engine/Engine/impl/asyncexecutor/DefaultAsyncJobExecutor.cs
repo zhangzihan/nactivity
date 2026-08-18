@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -103,9 +103,9 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal bool isAutoActivate;
 
         /// <summary>
-        /// 
+        /// 运行标志，由启动/关停线程写入、作业执行线程读取，需 volatile 保证跨线程可见性
         /// </summary>
-        protected internal bool isActive;
+        protected internal volatile bool isActive;
 
         /// <summary>
         /// 
@@ -115,12 +115,12 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// <summary>
         /// 
         /// </summary>
-        protected internal int maxTimerJobsPerAcquisition = 1;
+        protected internal int maxTimerJobsPerAcquisition = 10;
 
         /// <summary>
         /// 
         /// </summary>
-        protected internal int maxAsyncJobsDuePerAcquisition = 1;
+        protected internal int maxAsyncJobsDuePerAcquisition = 10;
 
         /// <summary>
         /// 
@@ -207,7 +207,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 {
                     executorService.Execute(runnable);
                 }
-                catch (Exception e)
+                catch (RejectedExecutionException)
                 {
                     // When a RejectedExecutionException is caught, this means that the queue for holding the jobs 
                     // that are to be executed is full and can't store more.
@@ -390,7 +390,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 logger.LogInformation($"Creating executor service with corePoolSize {corePoolSize}, maxPoolSize {maxPoolSize} and keepAliveTime {keepAliveTime}");
                 //throw new NotImplementedException();
                 //BasicThreadFactory threadFactory = (new BasicThreadFactory.Builder()).namingPattern("activiti-async-job-executor-thread-%d").build();
-                executorService = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, threadPoolQueue);
+                executorService = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, threadPoolQueue, queueSize);
             }
         }
 
@@ -407,7 +407,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 // Waits for 1 minute to finish all currently executing jobs
                 try
                 {
-                    if (!executorService.AwaitTermination(secondsToWaitOnShutdown, TimeSpan.FromSeconds(3000)))
+                    if (!executorService.AwaitTermination(secondsToWaitOnShutdown))
                     {
                         logger.LogWarning($"Timeout during shutdown of async job executor. The current running jobs could not end within {secondsToWaitOnShutdown} seconds after shutdown operation.");
                     }
@@ -452,7 +452,11 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             {
                 try
                 {
-                    asyncJobAcquisitionThread.Join();
+                    // 关停等待加 30 秒超时，避免采集线程无法退出时无限期阻塞引擎关闭
+                    if (!asyncJobAcquisitionThread.Join(TimeSpan.FromSeconds(30)))
+                    {
+                        logger.LogWarning("等待异步作业采集线程退出超时（30 秒），放弃等待并继续关闭流程");
+                    }
                 }
                 catch (ThreadInterruptedException e)
                 {
@@ -471,7 +475,11 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             {
                 try
                 {
-                    timerJobAcquisitionThread.Join();
+                    // 关停等待加 30 秒超时，避免采集线程无法退出时无限期阻塞引擎关闭
+                    if (!timerJobAcquisitionThread.Join(TimeSpan.FromSeconds(30)))
+                    {
+                        logger.LogWarning("等待定时器作业采集线程退出超时（30 秒），放弃等待并继续关闭流程");
+                    }
                 }
                 catch (ThreadInterruptedException e)
                 {
@@ -500,7 +508,11 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             {
                 try
                 {
-                    resetExpiredJobThread.Join();
+                    // 关停等待加 30 秒超时，避免重置线程无法退出时无限期阻塞引擎关闭
+                    if (!resetExpiredJobThread.Join(TimeSpan.FromSeconds(30)))
+                    {
+                        logger.LogWarning("等待过期作业重置线程退出超时（30 秒），放弃等待并继续关闭流程");
+                    }
                 }
                 catch (ThreadInterruptedException e)
                 {

@@ -55,7 +55,7 @@ namespace Spring.Expressions
         private string memberName;
         private IValueAccessor accessor;
 
-        private readonly object syncObject = new();
+        private readonly object syncRoot = new();
 
         /// <summary>
         /// Create a new instance
@@ -109,13 +109,13 @@ namespace Spring.Expressions
                         }
                         else
                         {
-                            accessor = new ExpandoObjectValueAccessor(memberName);
+                            accessor = new ExpandoObjectValueAccessor(memberName, contextType);
                         }
                     }
                     // try to initialize node as DynamicObject value
                     else if (contextType.IsSubclassOf(typeof(DynamicObject)))
                     {
-                        accessor = new DynamicObjectValueAccessor(memberName);
+                        accessor = new DynamicObjectValueAccessor(memberName, contextType);
                     }
                     // try to initialize node as enum value first
                     else if (contextType.IsEnum)
@@ -153,11 +153,11 @@ namespace Spring.Expressions
                     {
                         if (context is IDictionary ctx && ctx.Contains(memberName))
                         {
-                            accessor = new IDictionaryValueAccessor(memberName);
+                            accessor = new IDictionaryValueAccessor(memberName, contextType);
                         }
                         else if (evalContext is not null && evalContext.Variables is object && evalContext.Variables.ContainsKey(memberName))
                         {
-                            accessor = new IDictionaryValueAccessor(memberName);
+                            accessor = new IDictionaryValueAccessor(memberName, contextType);
                         }
                         else if ((contextType?.IsValueType).GetValueOrDefault(false))
                         {
@@ -257,7 +257,7 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            lock (syncObject)
+            lock (syncRoot)
             {
                 this.evalContext = evalContext;
                 InitializeNode(context);
@@ -278,8 +278,6 @@ namespace Spring.Expressions
                 }
             }
         }
-
-        private readonly object syncRoot = new();
 
         /// <summary>
         /// Sets node's value for the given context.
@@ -732,15 +730,22 @@ namespace Spring.Expressions
         private class IDictionaryValueAccessor : BaseValueAccessor
         {
             private readonly string memberName;
+            private readonly Type contextType;
 
-            public IDictionaryValueAccessor(string memberName)
+            public IDictionaryValueAccessor(string memberName, Type contextType)
             {
                 this.memberName = memberName;
+                this.contextType = contextType;
             }
 
             public override object Get(object context)
             {
-                var dictionary = context as IDictionary;
+                // 上下文可能不是字典（例如解析后的表达式节点被进程级缓存复用、上下文类型已变化），
+                // 此时按“成员不存在”返回 null，避免 context as IDictionary 为 null 后再 .Keys 解引用抛 NRE
+                if (context is not IDictionary dictionary)
+                {
+                    return null;
+                }
 
                 foreach (var key in dictionary.Keys)
                 {
@@ -760,6 +765,13 @@ namespace Spring.Expressions
                     dict[memberName] = value;
                 }
             }
+
+            // 该访问器与上下文形态强相关：解析后的表达式节点会被进程级缓存复用，
+            // 上下文类型变化时必须刷新，否则会一直用字典访问器去访问非字典对象
+            public override bool RequiresRefresh(Type contextType)
+            {
+                return contextType is not null && this.contextType != contextType;
+            }
         }
 
         #endregion
@@ -769,17 +781,18 @@ namespace Spring.Expressions
         private class ExpandoObjectValueAccessor : BaseValueAccessor
         {
             private readonly string memberName;
+            private readonly Type contextType;
 
-            public ExpandoObjectValueAccessor(string memberName)
+            public ExpandoObjectValueAccessor(string memberName, Type contextType)
             {
                 this.memberName = memberName;
+                this.contextType = contextType;
             }
 
             public override object Get(object context)
             {
-                var dictionary = context as IDictionary<string, object>;
-
-                if (dictionary.TryGetValue(memberName, out object value))
+                // 上下文类型变化时（缓存节点复用）context 可能不是字典，避免 as 转换为 null 后解引用抛 NRE
+                if (context is IDictionary<string, object> dictionary && dictionary.TryGetValue(memberName, out object value))
                 {
                     return value;
                 }
@@ -790,6 +803,12 @@ namespace Spring.Expressions
             public override void Set(object context, object value)
             {
                 throw new NotSupportedException("Cannot set the value of an expando object.");
+            }
+
+            // 解析后的表达式节点会被进程级缓存复用，上下文类型变化时必须刷新，避免用 Expando 访问器访问非 Expando 对象
+            public override bool RequiresRefresh(Type contextType)
+            {
+                return contextType is not null && this.contextType != contextType;
             }
         }
 
@@ -857,15 +876,24 @@ namespace Spring.Expressions
         private class DynamicObjectValueAccessor : BaseValueAccessor
         {
             private string memberName;
+            private readonly Type contextType;
 
-            public DynamicObjectValueAccessor(string memberName)
+            public DynamicObjectValueAccessor(string memberName, Type contextType)
             {
                 this.memberName = memberName;
+                this.contextType = contextType;
             }
 
             public override object Get(object context)
             {
-                var dynamicObject = context as System.Dynamic.DynamicObject;
+                // 上下文类型变化时（缓存节点复用）context 可能不是 DynamicObject，避免 as 转换为 null 后解引用抛 NRE
+                if (context is not System.Dynamic.DynamicObject dynamicObject)
+                {
+                    throw new InvalidPropertyException(
+                        typeof(System.Dynamic.DynamicObject),
+                        memberName,
+                        "'" + memberName + "' node cannot be resolved for the specified context [" + context + "].");
+                }
 
                 try
                 {
@@ -897,6 +925,12 @@ namespace Spring.Expressions
             public override void Set(object context, object value)
             {
                 throw new NotSupportedException("Cannot set the value of an dynamic object.");
+            }
+
+            // 解析后的表达式节点会被进程级缓存复用，上下文类型变化时必须刷新，避免用动态对象访问器访问非动态对象
+            public override bool RequiresRefresh(Type contextType)
+            {
+                return contextType is not null && this.contextType != contextType;
             }
         }
         #endregion

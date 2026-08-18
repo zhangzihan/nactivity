@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json.Linq;
 using SmartSql.Abstractions;
@@ -11,10 +11,12 @@ using SmartSql.Abstractions.DbSession;
 using SmartSql.Exceptions;
 using SmartSql.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -118,6 +120,39 @@ namespace SmartSql
 			}, context);
 		}
 
+		// 反序列化反射调用缓存：按 (反序列化器运行时类型, 结果类型) 缓存编译后的强类型委托，
+		// 避免每次查询都执行 GetMethod + MakeGenericMethod + MethodInfo.Invoke（含参数装箱数组分配）
+		private static readonly ConcurrentDictionary<(Type DeserializerType, Type ResultType), Func<IDataReaderDeserializer, RequestContext, IDataReader, object>> _toEnumerableDelegateCache
+			= new ConcurrentDictionary<(Type, Type), Func<IDataReaderDeserializer, RequestContext, IDataReader, object>>();
+		private static readonly ConcurrentDictionary<(Type DeserializerType, Type ResultType), Func<IDataReaderDeserializer, RequestContext, IDataReader, object>> _toSingleDelegateCache
+			= new ConcurrentDictionary<(Type, Type), Func<IDataReaderDeserializer, RequestContext, IDataReader, object>>();
+
+		/// <summary>
+		/// 构建调用反序列化器泛型方法（ToEnumerable/ToSingle）的编译委托
+		/// </summary>
+		/// <param name="methodName">方法名：ToEnumerable 或 ToSingle</param>
+		/// <param name="materializeToList">是否在委托内调用 Enumerable.ToList 物化结果（仅 ToEnumerable 使用）</param>
+		private static Func<IDataReaderDeserializer, RequestContext, IDataReader, object> BuildDeserializerDelegate(
+			(Type DeserializerType, Type ResultType) key, string methodName, bool materializeToList)
+		{
+			var deserParam = Expression.Parameter(typeof(IDataReaderDeserializer), "deser");
+			var contextParam = Expression.Parameter(typeof(RequestContext), "context");
+			var readerParam = Expression.Parameter(typeof(IDataReader), "dataReader");
+			var method = key.DeserializerType.GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public);
+			Expression body = Expression.Call(
+				Expression.Convert(deserParam, key.DeserializerType),
+				method.MakeGenericMethod(key.ResultType),
+				contextParam, readerParam);
+			if (materializeToList)
+			{
+				// 在委托内物化为 List<resultType>，结果类型匹配时调用方可直接使用，免去 Cast<T>().ToList() 二次物化
+				body = Expression.Call(typeof(Enumerable), nameof(Enumerable.ToList), new[] { key.ResultType }, body);
+			}
+			body = Expression.Convert(body, typeof(object));
+			return Expression.Lambda<Func<IDataReaderDeserializer, RequestContext, IDataReader, object>>(
+				body, deserParam, contextParam, readerParam).Compile();
+		}
+
 		public IEnumerable<T> Query<T>(RequestContext context)
 		{
 			return ExecuteWrap((dbSession) =>
@@ -129,11 +164,11 @@ namespace SmartSql
 					IList<T> objList = null;
 					if (resultType is not null)
 					{
-						var method = deser.GetType().GetMethod("ToEnumerable", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
-
-						var list = method.MakeGenericMethod(resultType).Invoke(deser, new object[] { context, dataReader });
-
-						objList = (list as System.Collections.IEnumerable).Cast<T>().ToList();
+						var func = _toEnumerableDelegateCache.GetOrAdd((deser.GetType(), resultType),
+							key => BuildDeserializerDelegate(key, "ToEnumerable", true));
+						var list = func(deser, context, dataReader);
+						// 委托内已物化为 List<resultType>，类型匹配时直接复用，否则退回 Cast<T>().ToList()
+						objList = list as IList<T> ?? (list as System.Collections.IEnumerable).Cast<T>().ToList();
 					}
 					else
 					{
@@ -155,9 +190,9 @@ namespace SmartSql
 					T obj = default;
 					if (resultType is not null)
 					{
-						var method = deser.GetType().GetMethod("ToSingle", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
-
-						obj = (T)method.MakeGenericMethod(resultType).Invoke(deser, new object[] { context, dataReader });
+						var func = _toSingleDelegateCache.GetOrAdd((deser.GetType(), resultType),
+							key => BuildDeserializerDelegate(key, "ToSingle", false));
+						obj = (T)func(deser, context, dataReader);
 					}
 					else
 					{
@@ -337,10 +372,10 @@ namespace SmartSql
 			}
 			try
 			{
-				//if (_logger.IsEnabled(LogLevel.Debug))
-				//{
-					_logger.LogError($"【数据提交CommitTransaction DbSession.Id:{session.Id}:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}】");
-				//}
+				if (_logger.IsEnabled(LogLevel.Debug))
+				{
+					_logger.LogDebug($"【数据提交CommitTransaction DbSession.Id:{session.Id}:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}】");
+				}
 				session.CommitTransaction();
 				CacheManager.RequestCommitted(session);
 			}

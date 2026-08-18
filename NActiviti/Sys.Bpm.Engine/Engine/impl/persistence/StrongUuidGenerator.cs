@@ -37,7 +37,9 @@
 
         public virtual string GetNextId()
         {
-            return timeBasedGenerator.ToString();
+            // 原实现把首次生成的 GUID 缓存进 timeBasedGenerator 并反复返回，导致所有主键相同。
+            // MassTransit 的 NewId 本身即线程安全的 ID 生成器，此处每次调用都生成新 GUID。
+            return NewId.NextGuid().ToString();
         }
 
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -293,11 +293,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
             // Remove entries which are already deleted
             if (result.Count > 0)
             {
+                // DbSqlSession 属性每次访问都要走 GetSession 解析，循环外先取一次
+                DbSqlSession dbSqlSession = DbSqlSession;
+
                 var list = new List<EntityImpl>(result);
                 for (var idx = list.Count - 1; idx >= 0; idx--)
                 {
                     var item = list[idx];
-                    if (DbSqlSession.IsEntityToBeDeleted(item))
+                    if (dbSqlSession.IsEntityToBeDeleted(item))
                     {
                         list.RemoveAt(idx);
                     }

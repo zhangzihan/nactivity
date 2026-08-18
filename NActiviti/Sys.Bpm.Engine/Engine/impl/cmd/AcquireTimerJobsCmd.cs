@@ -35,11 +35,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             AcquiredTimerJobEntities acquiredJobs = new AcquiredTimerJobEntities();
 
-            IList<ITimerJobEntity> timerJobs = commandContext.TimerJobEntityManager.FindTimerJobsToExecute(new Page(0, asyncExecutor.MaxAsyncJobsDuePerAcquisition));
+            // 定时器作业应使用定时器专用配置 MaxTimerJobsPerAcquisition，而非异步作业配置
+            IList<ITimerJobEntity> timerJobs = commandContext.TimerJobEntityManager.FindTimerJobsToExecute(new Page(0, asyncExecutor.MaxTimerJobsPerAcquisition));
 
             foreach (ITimerJobEntity job in timerJobs)
             {
-                LockJob(commandContext, job, asyncExecutor.AsyncJobLockTimeInMillis);
+                // 锁定时长应使用定时器专用配置 TimerLockTimeInMillis
+                LockJob(commandContext, job, asyncExecutor.TimerLockTimeInMillis);
                 acquiredJobs.AddJob(job);
             }
 
@@ -53,7 +55,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             var cl = new DateTime(commandContext.ProcessEngineConfiguration.Clock.CurrentTime.Ticks);
 
-            cl.AddMilliseconds(lockTimeInMillis);
+            // DateTime 不可变，AddMilliseconds 返回新实例，必须重新赋值，否则锁立即过期
+            cl = cl.AddMilliseconds(lockTimeInMillis);
 
             job.LockOwner = asyncExecutor.LockOwner;
             job.LockExpirationTime = cl;

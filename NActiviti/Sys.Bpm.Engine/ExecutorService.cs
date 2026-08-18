@@ -19,7 +19,7 @@ namespace Sys.Workflow.Util.Concurrent
             throw new NotImplementedException();
         }
 
-        internal bool AwaitTermination(long secondsToWaitOnShutdown, TimeSpan timeout)
+        internal bool AwaitTermination(long secondsToWaitOnShutdown)
         {
             throw new NotImplementedException();
         }

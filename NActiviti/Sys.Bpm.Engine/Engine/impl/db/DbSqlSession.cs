@@ -117,19 +117,30 @@ namespace Sys.Workflow.Engine.Impl.DB
 		private readonly object syncRoot = new();
 
 		/// <summary>
+		/// ISmartSqlMapper 注册为单例；DbSqlSession 为命令级短生命周期对象，
+		/// 在会话内缓存解析结果与配置属性，避免每次属性访问都走 DI 解析与 GetProperties()。
+		/// </summary>
+		private ISmartSqlMapper _cachedSqlMapper;
+
+		/// <summary>
 		/// 
 		/// </summary>
 		public ISmartSqlMapper SqlMapper
 		{
 			get
 			{
-				ISmartSqlMapper sqlMapper = ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>();
+				if (_cachedSqlMapper is null)
+				{
+					ISmartSqlMapper sqlMapper = ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>();
 
-				var cfg = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
+					var cfg = Context.ProcessEngineConfiguration ?? ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
 
-				sqlMapper.Variables = cfg.GetProperties();
+					sqlMapper.Variables = cfg.GetProperties();
 
-				return sqlMapper;
+					_cachedSqlMapper = sqlMapper;
+				}
+
+				return _cachedSqlMapper;
 			}
 		}
 
@@ -576,12 +587,17 @@ namespace Sys.Workflow.Engine.Impl.DB
 			if (insertedObjects.TryGetValue(typeof(HistoricIdentityLinkEntityImpl), out var hisValues) &&
 				insertedObjects.TryGetValue(typeof(IdentityLinkEntityImpl), out var values))
 			{
-				for (int idx = values.Keys.Count - 1; idx >= 0; idx--)
+				// 预先收集历史身份链接的 Id 集合，避免循环内对 hisValues 做 O(n) 线性查找
+				var hisIds = new HashSet<string>(hisValues.Values.Select(x => x.Id));
+
+				// 先对键做快照再逆序遍历，避免 ConcurrentDictionary 的 ElementAt O(n) 枚举（原写法整体为 O(n²)）
+				var keys = values.Keys.ToList();
+				for (int idx = keys.Count - 1; idx >= 0; idx--)
 				{
-					var key = values.Keys.ElementAt(idx);
+					var key = keys[idx];
 					var val = values[key];
 
-					if (hisValues.Values.Any(x => x.Id == val.Id))
+					if (hisIds.Contains(val.Id))
 					{
 						values.TryRemove(key, out _);
 					}
@@ -604,9 +620,12 @@ namespace Sys.Workflow.Engine.Impl.DB
 				ISet<string> ids = new HashSet<string>();
 
 				deletedObjects.TryGetValue(entityClass, out var entities);
-				for (var idx = entities.Keys.Count - 1; idx >= 0; idx--)
+
+				// 先对键做快照再逆序遍历，避免 ConcurrentDictionary 的 ElementAt O(n) 枚举（原写法整体为 O(n²)）
+				var keys = entities.Keys.ToList();
+				for (var idx = keys.Count - 1; idx >= 0; idx--)
 				{
-					var key = entities.Keys.ElementAt(idx);
+					var key = keys[idx];
 					IEntity entity = entities[key];
 					if (!ids.Contains(entity.Id))
 					{
@@ -652,7 +671,13 @@ namespace Sys.Workflow.Engine.Impl.DB
 					// even when the execution are deleted, as they can change the parent-child relationships.
 					// For the other entities, this is not applicable and an update can be discarded when an update follows.
 
-					if (!IsEntityInserted(cachedEntity) && (cachedEntity.GetType().IsAssignableFrom(typeof(IExecutionEntity)) || !IsEntityToBeDeleted(cachedEntity)) && cachedObject.hasChanged())
+					// hasChanged 无副作用且结果不变时大多数实体为 false，前置以短路掉后续两次字典查找
+					if (!cachedObject.hasChanged())
+					{
+						continue;
+					}
+
+					if (!IsEntityInserted(cachedEntity) && (cachedEntity.GetType().IsAssignableFrom(typeof(IExecutionEntity)) || !IsEntityToBeDeleted(cachedEntity)))
 					{
 						updatedObjects.Add(cachedEntity);
 					}

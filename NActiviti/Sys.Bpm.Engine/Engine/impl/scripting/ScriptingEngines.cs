@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,15 +33,16 @@ namespace Sys.Workflow.Engine.Impl.Scripting
 
         public const string DEFAULT_SCRIPTING_LANGUAGE = "C#";
         protected internal bool cacheScriptingEngines = true;
-        protected static internal ConcurrentDictionary<string, MethodDelegate<object>> cachedEngines;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public ScriptingEngines()
-        {
-            cachedEngines = new ConcurrentDictionary<string, MethodDelegate<object>>();
-        }
+        // 静态缓存只初始化一次；原来在构造函数里重新 new，二次实例化会清空全局缓存。
+        // 值用 Lazy 包装：GetOrAdd 的工厂在并发下可能重入执行多次，
+        // Lazy 保证同一脚本的 Roslyn 编译只发生一次，避免重复编译产生无法卸载的程序集。
+        protected static internal ConcurrentDictionary<string, Lazy<MethodDelegate<object>>> cachedEngines
+            = new ConcurrentDictionary<string, Lazy<MethodDelegate<object>>>();
+
+        // 缓存容量上限：脚本以文本为 key，基数通常有限；
+        // 超过上限后直接每次编译、不再写入缓存，防止缓存无界增长产生大量无法卸载的程序集。
+        private const int MAX_CACHED_SCRIPTS = 1000;
 
         /// <summary>
         /// 
@@ -81,14 +82,13 @@ namespace Sys.Workflow.Engine.Impl.Scripting
             script = $"object Evaluator(Sys.Workflow.Engine.Impl.Persistence.Entity.IExecutionEntity args)" +
             $"{{{script} return true;}}";
             MethodDelegate<object> func;
-            if (CacheScriptingEngines)
+            if (CacheScriptingEngines && cachedEngines.Count < MAX_CACHED_SCRIPTS)
             {
-                func = cachedEngines.GetOrAdd(script, script =>
-                {
-                    return CSScript.Evaluator
+                // Lazy 工厂保证编译只发生一次；取 .Value 触发（或复用已完成的）编译结果
+                func = cachedEngines.GetOrAdd(script, key => new Lazy<MethodDelegate<object>>(() =>
+                    CSScript.Evaluator
                         .ReferenceDomainAssemblies()
-                        .CreateDelegate<object>(script);
-                });
+                        .CreateDelegate<object>(key))).Value;
             }
             else
             {

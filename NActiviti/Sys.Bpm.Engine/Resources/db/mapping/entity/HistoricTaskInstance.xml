@@ -939,7 +939,19 @@
 		from ACT_HI_TASKINST RES
 		<Switch>
 			<Case Property="includeTaskLocalVariables and includeProcessVariables">
-				left outer join ACT_HI_VARINST VAR ON RES.ID_ = VAR.TASK_ID_ or (RES.PROC_INST_ID_ = VAR.EXECUTION_ID_ and VAR.TASK_ID_ is null)
+				<!-- 原 ON 条件为 OR 连接（RES.ID_ = VAR.TASK_ID_ or (RES.PROC_INST_ID_ = VAR.EXECUTION_ID_ and VAR.TASK_ID_ is null)），OR 会使索引失效退化为大表扫描；
+				     改写为对 UNION ALL 子查询的等值连接：分支1按 TASK_ID_ 匹配任务本地变量，分支2按 EXECUTION_ID_ 匹配流程实例变量（TASK_ID_ is null），
+				     两分支天然互斥（TASK_ID_ 非空/为空），并集与原 OR 语义行集完全一致 -->
+				left outer join (
+					select V.*, V.TASK_ID_ as MATCH_TASK_ID_
+					from ACT_HI_VARINST V
+					where V.TASK_ID_ is not null
+					union all
+					select V.*, T.ID_ as MATCH_TASK_ID_
+					from ACT_HI_VARINST V
+					inner join ACT_HI_TASKINST T on T.PROC_INST_ID_ = V.EXECUTION_ID_
+					where V.TASK_ID_ is null
+				) VAR ON VAR.MATCH_TASK_ID_ = RES.ID_
 			</Case>
 			<Default>
 				<IsTrue Property="includeTaskLocalVariables">

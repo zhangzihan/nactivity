@@ -1,4 +1,4 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -42,7 +42,23 @@ namespace Sys.Workflow.Engine.Impl.Variable
                 && !variableInstanceEntity.Deleted)
             {
                 byte[] bytes = type.Serialize(deserializedObject, variableInstanceEntity);
-                if (!StructuralComparisons.StructuralEqualityComparer.Equals(originalBytes, bytes))
+
+                // 性能快筛：长度不等或首字节不同即可判定内容已变更，直接跳过
+                // StructuralEqualityComparer 的逐字节比对进入二次确认；快筛未命中时
+                // 仍走原有精确比对，脏检查语义保持不变
+                bool bytesMaybeChanged;
+                if (originalBytes is null || bytes is null)
+                {
+                    bytesMaybeChanged = !ReferenceEquals(originalBytes, bytes);
+                }
+                else
+                {
+                    bytesMaybeChanged = originalBytes.Length != bytes.Length
+                        || (bytes.Length > 0 && originalBytes[0] != bytes[0])
+                        || !StructuralComparisons.StructuralEqualityComparer.Equals(originalBytes, bytes);
+                }
+
+                if (bytesMaybeChanged)
                 {
 
                     // Add an additional check to prevent byte differences due to JDK changes etc

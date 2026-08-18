@@ -151,7 +151,8 @@ namespace Sys.Workflow
 
 			builder.Services.AddTransient<IServiceWebApiHttpProxy, ServiceWebApiHttpProxy>();
 
-			builder.Services.AddTransient<ISerializableTypeSerializer, DefaultSerializableTypeSerializer>();
+			// 序列化器无状态、可共享，注册为单例避免每次解析都新建实例
+			builder.Services.AddSingleton<ISerializableTypeSerializer, DefaultSerializableTypeSerializer>();
 
 			builder.Services.TryAddSingleton<IExpressionFactory, ExpressionFactory>();
 			builder.Services.TryAddSingleton<IScriptingEngines, ScriptingEngines>();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +44,18 @@ namespace Sys.Workflow.Engine.Impl.EL
         protected internal IDictionary<object, object> beans;
 
         /// <summary>
+        /// 表达式对象缓存（key 为表达式字符串）。
+        /// 表达式对象（<seealso cref="JuelExpression"/> 及其内部的 <seealso cref="IValueExpression"/>）创建后不可变，
+        /// 求值状态均来自运行时传入的 ELContext，可安全地在多线程间共享复用。
+        /// </summary>
+        private readonly ConcurrentDictionary<string, IExpression> expressionCache = new ConcurrentDictionary<string, IExpression>();
+
+        /// <summary>
+        /// 缓存的表达式工厂，避免每次创建表达式都重复解析服务
+        /// </summary>
+        private IExpressionFactory expressionFactory;
+
+        /// <summary>
         /// 
         /// </summary>
         public ExpressionManager() : this(null)
@@ -68,11 +81,13 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// <returns></returns>
         public virtual IExpression CreateExpression(string expression)
         {
-            var expr = expression.Trim();
+            // 相同表达式字符串直接复用缓存的表达式对象，避免热路径上重复创建
+            return expressionCache.GetOrAdd(expression, expr =>
+            {
+                IValueExpression valueExpression = ExpressionFactory.CreateValueExpression(parsingElContext, expr.Trim(), typeof(object));
 
-            IValueExpression valueExpression = ExpressionFactory.CreateValueExpression(parsingElContext, expr, typeof(object));
-
-            return new JuelExpression(valueExpression, expression);
+                return new JuelExpression(valueExpression, expr);
+            });
         }
 
         /// <summary>
@@ -82,7 +97,9 @@ namespace Sys.Workflow.Engine.Impl.EL
         {
             get
             {
-                return ProcessEngineServiceProvider.Resolve<IExpressionFactory>();
+                // 解析结果缓存在实例字段上（ProcessEngineServiceProvider.ServiceProvider 为全局静态，
+                // 但挂实例字段可兼容未来按引擎实例隔离的场景）
+                return expressionFactory ??= ProcessEngineServiceProvider.Resolve<IExpressionFactory>();
             }
         }
 

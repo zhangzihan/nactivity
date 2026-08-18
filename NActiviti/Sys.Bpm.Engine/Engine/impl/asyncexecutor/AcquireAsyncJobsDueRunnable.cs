@@ -43,9 +43,9 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         private readonly object MONITOR = new object();
 
         /// <summary>
-        /// 
+        /// 在 Run 的 finally（锁外）与 Stop（锁内）之间共享，volatile 保证跨线程可见性
         /// </summary>
-        protected internal bool isWaiting = false;// new AtomicBoolean(false);
+        protected internal volatile bool isWaiting = false;// new AtomicBoolean(false);
 
         /// <summary>
         /// 
@@ -126,7 +126,9 @@ You can ignore this message if you indeed have multiple async executor acquisiti
                 }
                 catch (Exception e)
                 {
-                    log.LogDebug($"exception during async job acquisition: {e.Message}");
+                    // 非乐观锁的未预期异常：以 Warning 记录并保留异常对象（含堆栈），
+                    // 便于排查；原实现仅 LogDebug 且只取 Message，会吞掉堆栈
+                    log.LogWarning(e, $"exception during async job acquisition: {e.Message}");
                     millisToWait = asyncExecutor.DefaultAsyncJobAcquireWaitTimeInMillis;
                 }
 

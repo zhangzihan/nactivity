@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Sys.Workflow.Bpmn.Models;
 using System;
 using System.Collections.Generic;
@@ -54,6 +54,18 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// 正则表达式
         /// </summary>
         private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
+
+        /// <summary>
+        /// 外部HTTP调用并发限流信号量（短期方案）：引擎主链路为同步调用（sync-over-async），
+        /// 慢下游会把线程池线程全部占满导致饥饿，这里限制同时在飞的外部请求数，
+        /// 上限取 CPU核数*4 与 16 的较大值
+        /// </summary>
+        private static readonly SemaphoreSlim httpThrottle = new SemaphoreSlim(Math.Max(System.Environment.ProcessorCount * 4, 16));
+
+        /// <summary>
+        /// 等待限流许可的最长时间，超时直接失败，防止请求在信号量上无限排队
+        /// </summary>
+        private static readonly TimeSpan httpThrottleWaitTimeout = TimeSpan.FromSeconds(30);
 
         private readonly ExternalConnectorProvider externalConnector;
 
@@ -127,16 +139,28 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         private async Task SendMessageAsync(IExecutionEntity execution, string msg, string msgServiceUrl)
         {
-
-            var httpProxy = ProcessEngineServiceProvider.Resolve<IServiceWebApiHttpProxy>();
-
-            HttpResponseMessage response = await httpProxy.PostAsync<HttpResponseMessage>(msgServiceUrl, new
+            // 获取限流许可（带超时），超时抛出明确异常，由外层统一转为 BpmnError
+            if (!await httpThrottle.WaitAsync(httpThrottleWaitTimeout).ConfigureAwait(false))
             {
-                MessageId = msg,
-                execution.BusinessKey
-            }, CancellationToken.None).ConfigureAwait(false);
+                throw new TimeoutException($"等待外部HTTP调用限流许可超时({httpThrottleWaitTimeout.TotalSeconds}秒)：并发外部请求已达上限，请检查下游服务响应速度");
+            }
 
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var httpProxy = ProcessEngineServiceProvider.Resolve<IServiceWebApiHttpProxy>();
+
+                HttpResponseMessage response = await httpProxy.PostAsync<HttpResponseMessage>(msgServiceUrl, new
+                {
+                    MessageId = msg,
+                    execution.BusinessKey
+                }, CancellationToken.None).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+            }
+            finally
+            {
+                httpThrottle.Release();
+            }
         }
 
         /// <summary>

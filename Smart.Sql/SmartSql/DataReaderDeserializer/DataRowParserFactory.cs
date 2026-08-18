@@ -23,10 +23,17 @@ namespace SmartSql.DataReaderDeserializer
 
         public Func<IDataReader, RequestContext, object> GetParser(IDataReader dataReader, RequestContext requestContext, Type targetType)
         {
-            string key = $"{requestContext.FullSqlId}_{targetType.GUID:N}";
+            bool isValueType = targetType.IsValueType || targetType == TypeUtils.StringType;
+
+            // 值类型解析器只读取第 0 列，与结果列集无关，键无需包含列集；
+            // 实体解析器按运行时列集（列名/顺序/字段类型）生成 IL，若同一语句的不同动态分支
+            // 产生不同列集，必须把列集签名纳入缓存键，否则会命中为其它列集生成的解析器导致列错位。
+            string key = isValueType
+                ? $"{requestContext.FullSqlId}_{targetType.GUID:N}"
+                : $"{requestContext.FullSqlId}_{targetType.GUID:N}_{BuildColumnSignature(dataReader)}";
             if (_cachedDeserializer.TryGetValue(key, out var deser) == false)
             {
-                if (targetType.IsValueType || targetType == TypeUtils.StringType)
+                if (isValueType)
                 {
                     deser = CreateValueTypeParserImpl(dataReader, requestContext, targetType);
                 }
@@ -37,6 +44,23 @@ namespace SmartSql.DataReaderDeserializer
                 _cachedDeserializer.AddOrUpdate(key, deser, (k, old) => deser);
             }
             return deser;
+        }
+
+        /// <summary>
+        /// 构造结果列集签名（列名 + 字段类型，按列顺序拼接），用于区分同一语句不同动态分支的不同列集
+        /// </summary>
+        private static string BuildColumnSignature(IDataReader dataReader)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < dataReader.FieldCount; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append('|');
+                }
+                sb.Append(dataReader.GetName(i)).Append(':').Append(dataReader.GetFieldType(i).Name);
+            }
+            return sb.ToString();
         }
 
         private MethodInfo GetRealValueMethod(Type valueType)

@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.Concurrent;
+using Sys.Workflow.Concurrent;
 using Microsoft.Extensions.Logging;
 using Sys.Workflow;
 using System.Collections.Concurrent;
@@ -71,7 +71,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 {
                     log.LogInformation($"Creating executor service with corePoolSize {corePoolSize}, maxPoolSize {maxPoolSize} and keepAliveTime {keepAliveTime}");
 
-                    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, threadPoolQueue);
+                    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, threadPoolQueue, queueSize);
                     //threadPoolExecutor.RejectedExecutionHandler = new ThreadPoolExecutor.CallerRunsPolicy();
                     executorService = threadPoolExecutor;
 

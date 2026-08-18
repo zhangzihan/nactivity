@@ -160,7 +160,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
                 else if (exc is not null)
                 {
-                    throw (Exception)exc;
+                    throw;
                 }
             }
         }

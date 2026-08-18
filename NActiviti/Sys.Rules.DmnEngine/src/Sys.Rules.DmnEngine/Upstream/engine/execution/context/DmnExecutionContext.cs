@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +31,11 @@ namespace Sys.Rules.DmnEngine.Engine.Execution.Context
         /// </summary>
         protected static readonly ConcurrentDictionary<string, FeelAstNode> ParsedExpressionsCache =
             new ConcurrentDictionary<string, FeelAstNode>();
+
+        /// <summary>
+        /// 静态解析表达式缓存容量上限；超过上限后直接放弃缓存，避免静态字典无限增长（内存泄漏）
+        /// </summary>
+        private const int ParsedExpressionsCacheMaxSize = 5000;
 
         /// <summary>
         /// Parsed (pre-processed) expressions cache (Context and Execution)
@@ -469,6 +474,10 @@ namespace Sys.Rules.DmnEngine.Engine.Execution.Context
             if (Options.ParsedExpressionCacheScope == ParsedExpressionCacheScopeEnum.Global ||
                 Options.ParsedExpressionCacheScope == ParsedExpressionCacheScopeEnum.Definition)
             {
+                // 超过容量上限时直接放弃缓存（下一次执行重新解析即可），防止静态缓存只增不减
+                if (ParsedExpressionsCache.Count >= ParsedExpressionsCacheMaxSize)
+                    return;
+
                 ParsedExpressionsCache[cacheKey] = parsedExpression;
             }
             else
@@ -499,7 +508,11 @@ namespace Sys.Rules.DmnEngine.Engine.Execution.Context
                     prefix = Id;
                     break;
                 case ParsedExpressionCacheScopeEnum.Definition:
-                    prefix = Definition.Id;
+                    // Definition.Id 在每次解析 DMN 时都会重新生成（Guid.NewGuid），不能作为稳定的缓存键前缀，
+                    // 否则同一规则定义反复解析时旧条目永久失引用、静态缓存只增不减；
+                    // DmnDefinition 上没有 Key/Version 等稳定标识，这里退化为空前缀
+                    // （与 Global 等价，直接按表达式文本+输出类型去重）。
+                    prefix = "";
                     break;
                 case ParsedExpressionCacheScopeEnum.Global:
                     prefix = "";

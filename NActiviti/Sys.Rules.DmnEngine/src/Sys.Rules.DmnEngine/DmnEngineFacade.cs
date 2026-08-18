@@ -28,11 +28,19 @@ namespace Sys.Rules.DmnEngine
     public class DmnEngineFacade
     {
         private const string ExplicitDecisionNameInputKey = "__decisionName";
+
+        /// <summary>
+        /// 版本解析结果短 TTL：发布等治理操作存在最长 30 秒生效窗口，换取每次执行省去 1~2 次版本解析 SQL。
+        /// </summary>
+        private static readonly TimeSpan VersionResolutionCacheTtl = TimeSpan.FromSeconds(30);
+
         private readonly IReadOnlyList<string> _definitionSearchDirectories;
         private readonly IDecisionVersionRepository _decisionVersionRepository;
         private readonly IDecisionExecutionLogRepository? _decisionExecutionLogRepository;
         private readonly ConcurrentDictionary<string, CachedDefinitionEntry> _definitionCache =
             new ConcurrentDictionary<string, CachedDefinitionEntry>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, CachedVersionResolutionEntry> _versionResolutionCache =
+            new ConcurrentDictionary<string, CachedVersionResolutionEntry>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// 初始化 DMN 内核入口。
@@ -188,6 +196,7 @@ namespace Sys.Rules.DmnEngine
             if (string.IsNullOrWhiteSpace(request.DecisionKey))
             {
                 _definitionCache.Clear();
+                _versionResolutionCache.Clear();
                 DmnExecutionContext.PurgeExpressionCacheDefinitionScopeAll();
                 DmnExecutionContext.PurgeExpressionCacheGlobalScope();
                 return Task.CompletedTask;
@@ -201,6 +210,17 @@ namespace Sys.Rules.DmnEngine
             foreach (var matchingKey in matchingKeys)
             {
                 _definitionCache.TryRemove(matchingKey, out _);
+            }
+
+            // 同步清除版本解析短 TTL 缓存，保证治理操作（发布/作废/导入）后立即回源。
+            var resolutionKeys = _versionResolutionCache.Keys
+                .Where(key => key.StartsWith($"{request.DecisionKey}||", StringComparison.OrdinalIgnoreCase))
+                .Where(key => string.IsNullOrWhiteSpace(request.VersionTag) ||
+                    key.EndsWith($"||{request.VersionTag}", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            foreach (var resolutionKey in resolutionKeys)
+            {
+                _versionResolutionCache.TryRemove(resolutionKey, out _);
             }
 
             if (string.Equals(request.Scope, "Global", StringComparison.OrdinalIgnoreCase))
@@ -411,12 +431,30 @@ namespace Sys.Rules.DmnEngine
             string? versionTag,
             CancellationToken cancellationToken)
         {
-            var definitionResolution = await _decisionVersionRepository.ResolveAsync(new DecisionVersionResolutionRequest
+            var resolutionCacheKey = CreateVersionResolutionCacheKey(decisionKey, bindingMode, versionTag);
+
+            DecisionVersionResolutionResult definitionResolution;
+
+            // 先查短 TTL 版本解析缓存：命中且未过期直接复用，避免每次执行都回源版本仓储（1~2 次 SQL）。
+            if (_versionResolutionCache.TryGetValue(resolutionCacheKey, out var cachedResolution) &&
+                cachedResolution.ExpiresAt > DateTimeOffset.UtcNow)
             {
-                DecisionKey = decisionKey,
-                BindingMode = bindingMode,
-                VersionTag = versionTag
-            }, cancellationToken).ConfigureAwait(false);
+                definitionResolution = cachedResolution.Resolution;
+            }
+            else
+            {
+                // 过期或未命中才回源；并发下允许多个线程同时回源一次，简单换取无锁读路径。
+                definitionResolution = await _decisionVersionRepository.ResolveAsync(new DecisionVersionResolutionRequest
+                {
+                    DecisionKey = decisionKey,
+                    BindingMode = bindingMode,
+                    VersionTag = versionTag
+                }, cancellationToken).ConfigureAwait(false);
+
+                _versionResolutionCache[resolutionCacheKey] = new CachedVersionResolutionEntry(
+                    definitionResolution,
+                    DateTimeOffset.UtcNow.Add(VersionResolutionCacheTtl));
+            }
 
             var definitionFilePath = string.IsNullOrWhiteSpace(definitionResolution.DefinitionSource)
                 ? $"{decisionKey}.dmn"
@@ -1100,6 +1138,18 @@ namespace Sys.Rules.DmnEngine
         }
 
         /// <summary>
+        /// 生成版本解析缓存键（与治理清理逻辑的前缀/后缀匹配保持一致）。
+        /// </summary>
+        /// <param name="decisionKey">决策主键。</param>
+        /// <param name="bindingMode">绑定模式。</param>
+        /// <param name="versionTag">版本标签。</param>
+        /// <returns>缓存键。</returns>
+        private static string CreateVersionResolutionCacheKey(string decisionKey, string? bindingMode, string? versionTag)
+        {
+            return string.Join("||", decisionKey ?? string.Empty, bindingMode ?? string.Empty, versionTag ?? string.Empty);
+        }
+
+        /// <summary>
         /// 计算内容 SHA256 摘要。
         /// </summary>
         /// <param name="content">原始内容。</param>
@@ -1198,6 +1248,33 @@ namespace Sys.Rules.DmnEngine
             /// 最近刷新时间。
             /// </summary>
             public DateTimeOffset LastRefreshTime { get; }
+        }
+
+        /// <summary>
+        /// 表示版本解析结果的短 TTL 缓存项。
+        /// </summary>
+        private sealed class CachedVersionResolutionEntry
+        {
+            /// <summary>
+            /// 初始化版本解析缓存项。
+            /// </summary>
+            /// <param name="resolution">已解析的版本结果。</param>
+            /// <param name="expiresAt">缓存过期时间。</param>
+            public CachedVersionResolutionEntry(DecisionVersionResolutionResult resolution, DateTimeOffset expiresAt)
+            {
+                Resolution = resolution;
+                ExpiresAt = expiresAt;
+            }
+
+            /// <summary>
+            /// 已缓存的版本解析结果。
+            /// </summary>
+            public DecisionVersionResolutionResult Resolution { get; }
+
+            /// <summary>
+            /// 缓存过期时间。
+            /// </summary>
+            public DateTimeOffset ExpiresAt { get; }
         }
 
         /// <summary>

@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Memory;
 using Sys.Workflow;
 using Sys.Workflow.Caches;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +27,8 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
     /// </summary>
     public class DefaultDeploymentCache<T> : IDeploymentCache<T>
     {
-        private IMemoryCache cache = null;
+        // volatile：Clear 采用原子替换发布新实例，保证并发读能及时看到
+        private volatile IMemoryCache cache = null;
         private readonly MemoryCacheProvider memoryCacheProvider;
         private readonly int sizeLimit = -1;
 
@@ -58,7 +60,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 
         public virtual void Add(string id, T obj)
         {
-            _ = cache.Set(id, obj);
+            // 配置了上限（SizeLimit>0）时 MemoryCache 强制要求每个缓存项声明 Size，否则抛 InvalidOperationException；
+            // 每个条目按 1 计数，此时上限即最大缓存条目数；无上限时该 Size 不参与统计，无副作用
+            _ = cache.Set(id, obj, new MemoryCacheEntryOptions { Size = 1 });
         }
 
         public virtual void Remove(string id)
@@ -77,8 +81,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 
         public virtual void Clear()
         {
-            cache.Dispose();
-            cache = memoryCacheProvider.Create(sizeLimit);
+            // 原子替换：先构造新实例再一次性换掉引用，避免并发读写拿到已 Dispose 的旧实例；
+            // 旧实例可能有并发读仍在使用，不主动 Dispose，交由 GC 回收
+            _ = Interlocked.Exchange(ref cache, memoryCacheProvider.Create(sizeLimit));
         }
     }
 }

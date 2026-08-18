@@ -1,8 +1,9 @@
-﻿using SmartSql.Abstractions.TypeHandler;
+using SmartSql.Abstractions.TypeHandler;
 using SmartSql.Configuration.Statements;
 using SmartSql.Utils;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -48,6 +49,10 @@ namespace SmartSql.Abstractions
             get => variables;
             set => variables = value ?? throw new ArgumentNullException("variables");
         }
+
+        // ${变量} 占位符正则缓存（键为变量路径），避免每次 SetupSql 逐变量重复构造正则；
+        // 未改成统一正则是因为原实现中路径是“前缀匹配”（如 orderby 可匹配 ${orderbyColumns}），逐变量正则可完全保持该语义
+        private static readonly ConcurrentDictionary<string, Regex> placeholderRegexCache = new();
 
         public object Request
         {
@@ -162,7 +167,8 @@ namespace SmartSql.Abstractions
                 foreach (var prop in vars.Properties())
                 {
                     var path = prop.Path;
-                    var regex = new Regex($@"\$\{{{path}(.*?)\}}", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                    var regex = placeholderRegexCache.GetOrAdd(path, p => new Regex($@"\$\{{{p}(.*?)\}}",
+                        RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled));
                     if (regex.IsMatch(sql) == false)
                     {
                         continue;

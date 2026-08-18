@@ -1,4 +1,4 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -11,6 +11,7 @@
  * limitations under the License.
  */
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 {
@@ -21,6 +22,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         protected internal string id;
         protected internal int revision;
         protected internal JToken infoNode;
+        /// <summary>
+        /// 上次回源校验 revision 的时间（UTC）。默认最小值，保证新建的缓存对象首次访问时必回源校验
+        /// </summary>
+        protected internal DateTime lastRevisionCheckTime = DateTime.MinValue;
 
         public virtual string Id
         {
@@ -57,6 +62,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
             set
             {
                 this.infoNode = value;
+            }
+        }
+
+
+        public virtual DateTime LastRevisionCheckTime
+        {
+            get
+            {
+                return lastRevisionCheckTime;
+            }
+            set
+            {
+                this.lastRevisionCheckTime = value;
             }
         }
 

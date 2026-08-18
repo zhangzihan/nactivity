@@ -52,7 +52,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             var cl = new DateTime(commandContext.ProcessEngineConfiguration.Clock.CurrentTime.Ticks);
 
-            cl.AddMilliseconds(lockTimeInMillis);
+            // DateTime 不可变，AddMilliseconds 返回新实例，必须重新赋值，否则锁立即过期
+            cl = cl.AddMilliseconds(lockTimeInMillis);
 
             job.LockOwner = asyncExecutor.LockOwner;
             job.LockExpirationTime = cl;

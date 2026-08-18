@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -29,6 +30,13 @@ namespace SmartSql.Configuration.Tags
 		public string Close { get => close; set => close = StringUtils.PoolString(value); }
 		public string Key { get => key; set => key = StringUtils.PoolString(value); }
 		public string Index { get => index; set => index = StringUtils.PoolString(value); }
+
+		// 按 item 类型缓存公开实例属性列表，避免对每个 item 重复反射
+		private static readonly ConcurrentDictionary<Type, PropertyInfo[]> itemPropertiesCache = new();
+		// 属性占位符匹配正则全局缓存，正则内容仅由 DbPrefix 与属性名决定，可安全复用（Regex 实例线程安全）
+		private static readonly ConcurrentDictionary<string, Regex> propertyPatternCache = new(StringComparer.OrdinalIgnoreCase);
+		// 属性取值反射器全局缓存（PropertyInfo 已绑定具体类型，可安全复用）
+		private static readonly ConcurrentDictionary<PropertyInfo, PropertyReflector> propertyReflectorCache = new();
 
 		public override bool IsCondition(RequestContext context)
 		{

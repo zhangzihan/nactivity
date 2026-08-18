@@ -1,4 +1,4 @@
-﻿using Ceras;
+using Ceras;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,12 +12,16 @@ namespace Sys.Runtime.Serialization
     /// </summary>
     public class DefaultSerializableTypeSerializer : ISerializableTypeSerializer
     {
-        private CerasSerializer serializer;
+        // Ceras 初始化开销较大，且 JSON 路径用不到，改为延迟构造，仅在泛型序列化路径首次使用时初始化
+        private readonly Lazy<CerasSerializer> serializer = new Lazy<CerasSerializer>(() => new CerasSerializer());
 
-        public DefaultSerializableTypeSerializer()
+        // JSON 序列化配置共享静态实例（运行期不修改，可安全复用）；不再使用 Formatting.Indented 减少输出体积
+        // TypeNameHandling.All 与存量序列化数据（含 $type）兼容，暂保留，后续可评估是否移除
+        private static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
         {
-            serializer = new CerasSerializer();
-        }
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.All
+        };
 
         /// <summary>
         /// 
@@ -28,31 +32,13 @@ namespace Sys.Runtime.Serialization
         {
             string s = Encoding.UTF8.GetString(bytes);
 
-            try
-            {
-                return JsonConvert.DeserializeObject(s, new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    TypeNameHandling = TypeNameHandling.All
-                });
-            }
-            catch (JsonSerializationException e)
-            {
-                if (e.InnerException is FileNotFoundException)
-                {
-                    return JsonConvert.DeserializeObject(s, new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                        TypeNameHandling = TypeNameHandling.All
-                    });
-                }
-                throw e;
-            }
+            // 原实现 catch 后用完全相同的设置重试，必然再次失败，属无意义重试，已删除
+            return JsonConvert.DeserializeObject(s, jsonSettings);
         }
 
         public T Deserialize<T>(byte[] bytes)
         {
-            return serializer.Deserialize<T>(bytes);
+            return serializer.Value.Deserialize<T>(bytes);
         }
 
         /// <summary>
@@ -62,12 +48,7 @@ namespace Sys.Runtime.Serialization
         /// <returns></returns>
         public byte[] Serialize(object value)
         {
-            string s = JsonConvert.SerializeObject(value, new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                TypeNameHandling = TypeNameHandling.All
-            });
+            string s = JsonConvert.SerializeObject(value, jsonSettings);
             return Encoding.UTF8.GetBytes(s);
         }
 
@@ -79,7 +60,7 @@ namespace Sys.Runtime.Serialization
         /// <returns></returns>
         public byte[] Serialize<T>(T value)
         {
-            return serializer.Serialize(value);
+            return serializer.Value.Serialize(value);
         }
     }
 }

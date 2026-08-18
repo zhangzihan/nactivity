@@ -1,0 +1,35 @@
+﻿{
+  "ThresholdRatio": 1.2,
+  "Scenarios": {
+    "单级审批": {
+      "StartAvgMs": 0.0,
+      "CompleteAvgMs": 0.0,
+      "ThroughputPerSec": 0.0,
+      "AllocatedBytesPerIteration": 0
+    },
+    "多级串行审批": {
+      "StartAvgMs": 0.0,
+      "CompleteAvgMs": 0.0,
+      "ThroughputPerSec": 0.0,
+      "AllocatedBytesPerIteration": 0
+    },
+    "并行会签审批": {
+      "StartAvgMs": 0.0,
+      "CompleteAvgMs": 0.0,
+      "ThroughputPerSec": 0.0,
+      "AllocatedBytesPerIteration": 0
+    },
+    "条件分支审批": {
+      "StartAvgMs": 0.0,
+      "CompleteAvgMs": 0.0,
+      "ThroughputPerSec": 0.0,
+      "AllocatedBytesPerIteration": 0
+    },
+    "大规模会签审批": {
+      "StartAvgMs": 2047.352,
+      "CompleteAvgMs": 845.738,
+      "ThroughputPerSec": 0.488,
+      "AllocatedBytesPerIteration": 632243924
+    }
+  }
+}

@@ -9,6 +9,6 @@ namespace Sys.Concurrent
 
         void Shutdown();
 
-        bool AwaitTermination(long secondsToWaitOnShutdown, TimeSpan timeout);
+        bool AwaitTermination(long secondsToWaitOnShutdown);
     }
 }

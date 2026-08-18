@@ -120,7 +120,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
                 else
                 {
-                    throw e;
+                    // 用 throw; 重新抛出，保留原始调用堆栈（throw e; 会重置堆栈起点）
+                    throw;
                 }
             }
             if (noErrors)

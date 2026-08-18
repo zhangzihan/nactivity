@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Sys.Workflow.Bpmn.Models;
 using System;
 using System.Collections.Generic;
@@ -53,6 +53,18 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         private static readonly Regex OBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)", RegexOptions.Compiled);
 
         private readonly static ILogger logger = ProcessEngineServiceProvider.LoggerService<ServiceTaskWebApiActivityBehavior>();
+
+        /// <summary>
+        /// 外部HTTP调用并发限流信号量（短期方案）：引擎主链路为同步调用（sync-over-async），
+        /// 慢下游会把线程池线程全部占满导致饥饿，这里限制同时在飞的外部请求数，
+        /// 上限取 CPU核数*4 与 16 的较大值
+        /// </summary>
+        private static readonly SemaphoreSlim httpThrottle = new SemaphoreSlim(Math.Max(System.Environment.ProcessorCount * 4, 16));
+
+        /// <summary>
+        /// 等待限流许可的最长时间，超时直接失败，防止请求在信号量上无限排队
+        /// </summary>
+        private static readonly TimeSpan httpThrottleWaitTimeout = TimeSpan.FromSeconds(30);
 
 
         public ServiceTaskWebApiActivityBehavior()
@@ -184,18 +196,31 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             url = QueryParameter(execution, url, request, false);
 
-            if (string.IsNullOrWhiteSpace(dataObj))
+            // 获取限流许可（带超时），超时抛出明确异常，由外层统一转为 BpmnError
+            if (!httpThrottle.Wait(httpThrottleWaitTimeout))
             {
-                httpProxy.PostAsync(url, request, CancellationToken.None).GetAwaiter().GetResult();
+                throw new TimeoutException($"等待外部HTTP调用限流许可超时({httpThrottleWaitTimeout.TotalSeconds}秒)：并发外部请求已达上限，请检查下游服务响应速度");
             }
-            else
+
+            try
             {
-                HttpResponseMessage response = httpProxy.PostAsync<HttpResponseMessage>(url, request, CancellationToken.None).GetAwaiter().GetResult();
+                if (string.IsNullOrWhiteSpace(dataObj))
+                {
+                    httpProxy.PostAsync(url, request, CancellationToken.None).GetAwaiter().GetResult();
+                }
+                else
+                {
+                    HttpResponseMessage response = httpProxy.PostAsync<HttpResponseMessage>(url, request, CancellationToken.None).GetAwaiter().GetResult();
 
-                response.EnsureSuccessStatusCode();
-                object data = ToObject(response).GetAwaiter().GetResult();
+                    response.EnsureSuccessStatusCode();
+                    object data = ToObject(response).GetAwaiter().GetResult();
 
-                execution.SetVariable(dataObj, data);
+                    execution.SetVariable(dataObj, data);
+                }
+            }
+            finally
+            {
+                httpThrottle.Release();
             }
         }
 
@@ -203,18 +228,31 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             url = QueryParameter(execution, url, request, true);
 
-            if (string.IsNullOrWhiteSpace(dataObj))
+            // 获取限流许可（带超时），超时抛出明确异常，由外层统一转为 BpmnError
+            if (!httpThrottle.Wait(httpThrottleWaitTimeout))
             {
-                httpProxy.GetAsync(url).GetAwaiter().GetResult();
+                throw new TimeoutException($"等待外部HTTP调用限流许可超时({httpThrottleWaitTimeout.TotalSeconds}秒)：并发外部请求已达上限，请检查下游服务响应速度");
             }
-            else
+
+            try
             {
-                HttpResponseMessage response = httpProxy.GetAsync<HttpResponseMessage>(url, CancellationToken.None).GetAwaiter().GetResult();
+                if (string.IsNullOrWhiteSpace(dataObj))
+                {
+                    httpProxy.GetAsync(url).GetAwaiter().GetResult();
+                }
+                else
+                {
+                    HttpResponseMessage response = httpProxy.GetAsync<HttpResponseMessage>(url, CancellationToken.None).GetAwaiter().GetResult();
 
-                response.EnsureSuccessStatusCode();
-                object data = ToObject(response).GetAwaiter().GetResult();
+                    response.EnsureSuccessStatusCode();
+                    object data = ToObject(response).GetAwaiter().GetResult();
 
-                execution.SetVariable(dataObj, data);
+                    execution.SetVariable(dataObj, data);
+                }
+            }
+            finally
+            {
+                httpThrottle.Release();
             }
         }
 

@@ -395,7 +395,7 @@ namespace Sys.Workflow.Test
 
         public IHttpClientProxy CreateHttpClientProxy(IUserInfo user = null)
         {
-            HttpClient httpClient = Resolve<IHttpClientFactory>().CreateClient(); //TestServer.CreateClient();
+            HttpClient httpClient = TestServer.CreateClient(); //改回 TestServer 内存管道，避免依赖真实 localhost 宿主
             httpClient.Timeout = TimeSpan.FromHours(1);
             httpClient.BaseAddress = new Uri(Configuration.GetValue<string>("BaseUrl"));
 
@@ -416,7 +416,7 @@ namespace Sys.Workflow.Test
                 TenantId = TenantId
             }));
 
-            _httpClient.DefaultRequestHeaders.Add("Evos-Authentication", WebEncoders.Base64UrlEncode(session));
+            httpClient.DefaultRequestHeaders.Add("Evos-Authentication", WebEncoders.Base64UrlEncode(session));
 
             DefaultHttpContext httpContext = new DefaultHttpContext();
 
@@ -429,14 +429,12 @@ namespace Sys.Workflow.Test
                 Resolve<ILoggerFactory>());
         }
 
-        private HttpClient _httpClient;
-
-        private readonly object syncHttp = new object();
-
         public WorkflowHttpClientProxyProvider CreateWorkflowHttpProxy()
         {
-            _httpClient = Resolve<IHttpClientFactory>().CreateClient();//TestServer.CreateClient(); 
-            _httpClient.BaseAddress = new Uri(Configuration.GetValue<string>("BaseUrl"));
+            // 每次调用都使用独立的 HttpClient 局部变量（不再复用共享字段），
+            // 否则并发基准场景下多个线程会争用同一实例，重复向单值 Authorization 头 Add 触发 FormatException
+            HttpClient httpClient = TestServer.CreateClient();//改回 TestServer 内存管道，避免依赖真实 localhost 宿主 
+            httpClient.BaseAddress = new Uri(Configuration.GetValue<string>("BaseUrl"));
 
             string accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(new
             {
@@ -444,10 +442,7 @@ namespace Sys.Workflow.Test
                 FullName = "新用户1",
                 TenantId
             }));
-            if (_httpClient.DefaultRequestHeaders.Any(x => x.Key == "Authorization") == false)
-            {
-                _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
-            }
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
 
             var session = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new
             {
@@ -457,11 +452,12 @@ namespace Sys.Workflow.Test
                 TenantId
             }));
 
-            _httpClient.DefaultRequestHeaders.Add("Evos-Authentication", WebEncoders.Base64UrlEncode(session));
+            httpClient.DefaultRequestHeaders.Add("Evos-Authentication", WebEncoders.Base64UrlEncode(session));
 
+            // IHttpClientProxy 注册为 Transient，每次 Resolve 都是新实例，配合局部 httpClient 保证并发安全
             IHttpClientProxy clientProxy = Resolve<IHttpClientProxy>();
 
-            clientProxy.HttpClient = _httpClient;
+            clientProxy.HttpClient = httpClient;
 
             return new WorkflowHttpClientProxyProvider(clientProxy);
         }

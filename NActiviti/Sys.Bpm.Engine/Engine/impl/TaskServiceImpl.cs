@@ -203,12 +203,12 @@ namespace Sys.Workflow.Engine.Impl
 			{
 				_ = commandExecutor.Execute(new CommandConfig(false), new CompleteTaskCmd(taskId, variables, localScope));
 			}
-			catch (ActivitiObjectNotFoundException ex)
+			catch (ActivitiObjectNotFoundException)
 			{
 				logger.LogError($"【任务{taskId}可能已经终止或无效.】");
 				if (notFoundThrowError)
 				{
-					throw ex;
+					throw;
 				}
 			}
 			catch (Exception ex)

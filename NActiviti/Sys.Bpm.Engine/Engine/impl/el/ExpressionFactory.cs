@@ -1,4 +1,4 @@
-﻿/* Licensed under the Apache License, Version 2.0 (the "License");
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -22,8 +22,9 @@ namespace Sys.Workflow.Engine.Impl.EL
     /// </summary>
     public class ExpressionFactory : IExpressionFactory
     {
-        protected static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
-        protected static readonly Regex RETURN_PATTERN = new Regex(@"^\s*return\s+|;\s*return\s+", RegexOptions.Multiline);
+        // 静态共享并启用 Compiled，避免重复创建正则对象并提升匹配性能
+        protected static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline | RegexOptions.Compiled);
+        protected static readonly Regex RETURN_PATTERN = new Regex(@"^\s*return\s+|;\s*return\s+", RegexOptions.Multiline | RegexOptions.Compiled);
 
         /// <summary>
         /// 

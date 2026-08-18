@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Sys.Workflow.Engine.Delegate;
 using Sys.Workflow.Engine.Impl.Identities;
@@ -17,7 +17,8 @@ namespace Sys.Workflow.Engine.Impl.EL
     /// </summary>
     public class ValueExpression : IValueExpression
     {
-        protected static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
+        // 静态共享并启用 Compiled，避免重复创建正则对象并提升匹配性能
+        protected static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline | RegexOptions.Compiled);
 
         /// <summary>
         /// 
@@ -150,15 +151,19 @@ namespace Sys.Workflow.Engine.Impl.EL
             {
                 ExpandoObject contextObject = new ExpandoObject();
 
-                foreach (string key in execution.Variables.Keys)
+                // Variables 属性每次访问都会全量重建字典（见 VariableScopeImpl.Variables），
+                // 这里在循环前取一次快照复用，避免 Keys、索引取值、传参反复收集
+                IDictionary<string, object> variables = execution.Variables;
+
+                foreach (string key in variables.Keys)
                 {
-                    var value = execution.Variables[key];
+                    var value = variables[key];
                     object obj = ToObject(value);
 
                     (contextObject as IDictionary<string, object>).Add(key, obj);
                 }
 
-                return Sys.Expressions.ExpressionManager.GetValue(contextObject, expstr, execution.Variables);
+                return Sys.Expressions.ExpressionManager.GetValue(contextObject, expstr, variables);
             }
 
             // property resolution (eg. bean.value) will be done by the

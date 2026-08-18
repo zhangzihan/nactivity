@@ -1019,7 +1019,19 @@
 		from ACT_RU_TASK RES
 		<Switch>
 			<Case Test="includeTaskLocalVariables and includeProcessVariables">
-				left outer join ACT_RU_VARIABLE VAR ON RES.ID_ = VAR.TASK_ID_ or RES.PROC_INST_ID_ = VAR.EXECUTION_ID_
+				<!-- 原 ON 条件为 OR 连接（RES.ID_ = VAR.TASK_ID_ or RES.PROC_INST_ID_ = VAR.EXECUTION_ID_），OR 会使索引失效退化为大表扫描；
+				     改写为对 UNION ALL 子查询的等值连接：分支1按 TASK_ID_ 匹配任务本地变量，分支2按 EXECUTION_ID_ 匹配流程实例执行上的变量，
+				     分支2排除已被分支1匹配的行（V.TASK_ID_ = T.ID_），保证与原 OR 语义（两分支并集去重）行集完全一致 -->
+				left outer join (
+					select V.*, V.TASK_ID_ as MATCH_TASK_ID_
+					from ACT_RU_VARIABLE V
+					where V.TASK_ID_ is not null
+					union all
+					select V.*, T.ID_ as MATCH_TASK_ID_
+					from ACT_RU_VARIABLE V
+					inner join ACT_RU_TASK T on T.PROC_INST_ID_ = V.EXECUTION_ID_
+					where V.TASK_ID_ is null or V.TASK_ID_ &lt;&gt; T.ID_
+				) VAR ON VAR.MATCH_TASK_ID_ = RES.ID_
 			</Case>
 			<Default>
 				<IsTrue Property="includeTaskLocalVariables">

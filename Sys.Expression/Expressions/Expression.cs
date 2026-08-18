@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -72,6 +73,25 @@ namespace Spring.Expressions
         }
 
         /// <summary>
+        /// 表达式解析结果缓存，key 为表达式字符串。
+        /// 避免引擎 EL 与 SmartSql 动态 SQL 每次求值都全量 ANTLR 重解析；
+        /// 解析出的 AST 节点的懒缓存（accessor、方法句柄、字面量值等）均有锁保护，
+        /// 求值状态保存在每次求值新建的 <see cref="EvaluationContext"/> 中，可跨线程安全复用。
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, IExpression> parseCache = new();
+
+        /// <summary>
+        /// 缓存键的插入顺序队列，用于容量超限时按 FIFO 逐出，避免运行时拼接的表达式串导致缓存无界增长。
+        /// </summary>
+        private static readonly ConcurrentQueue<string> parseCacheKeys = new();
+
+        /// <summary>
+        /// 解析缓存容量上限。静态表达式（BPMN 条件、SmartSql 标签）总量通常远小于此值，不会触发逐出；
+        /// 仅当表达式文本由运行时变量拼接、基数不断增长时才按 FIFO 逐出以约束内存占用。
+        /// </summary>
+        private const int MaxParseCacheSize = 10000;
+
+        /// <summary>
         /// Helper to parse an expression string using ANTLR4.
         /// </summary>
         private static IExpression ParseWithAntlr4(string expression, Func<ExpressionParser, IParseTree> parseFunc)
@@ -114,14 +134,34 @@ namespace Spring.Expressions
         /// <param name="expression">Expression to parse.</param>
         public static IExpression Parse(string expression)
         {
-            if (StringUtils.HasText(expression))
-            {
-                return ParseWithAntlr4(expression, p => p.expr());
-            }
-            else
+            if (!StringUtils.HasText(expression))
             {
                 return new Expression();
             }
+
+            // 命中缓存时直接复用已解析的表达式对象，跳过 ANTLR 解析
+            if (parseCache.TryGetValue(expression, out var cached))
+            {
+                return cached;
+            }
+
+            // 未命中才解析；并发下允许多个线程各自解析同一串（结果等价），由 TryAdd 决定谁入缓存
+            var parsed = ParseWithAntlr4(expression, p => p.expr());
+            if (parseCache.TryAdd(expression, parsed))
+            {
+                parseCacheKeys.Enqueue(expression);
+
+                // 容量超限时按插入顺序逐出（FIFO 近似，非严格 LRU，足以约束内存上限）
+                while (parseCache.Count > MaxParseCacheSize && parseCacheKeys.TryDequeue(out var oldestKey))
+                {
+                    parseCache.TryRemove(oldestKey, out _);
+                }
+
+                return parsed;
+            }
+
+            // 另一线程已抢先写入，优先复用已缓存实例以最大化共享
+            return parseCache.TryGetValue(expression, out var existing) ? existing : parsed;
         }
 
         /// <summary>

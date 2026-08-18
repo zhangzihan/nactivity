@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using SmartSql.Abstractions;
 using SmartSql.Abstractions.Command;
 using SmartSql.Abstractions.DbSession;
@@ -7,6 +7,7 @@ using SmartSql.Configuration.Maps;
 using Spring.Expressions;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -41,6 +42,12 @@ namespace SmartSql.Command
         }
 
         private static readonly Regex regDbParamName = new(@"(\[(\d+)\])*\.", RegexOptions.Compiled);
+
+        // 判断 #{参数名} 后是否紧跟 ${wildcardEscapeClause} 的静态正则（原实现按参数名逐个 new Regex）
+        private static readonly Regex regWildcardEscape = new(@"\#{([\p{L}\p{N}_]+)}\s*\$\{wildcardEscapeClause\}", RegexOptions.Compiled);
+
+        // 参数定义（ParameterMap）属性匹配正则缓存，避免每次解析参数时重复构造
+        private static readonly ConcurrentDictionary<string, Regex> paramPropertyRegexCache = new();
 
         public IDbCommand Prepare(IDbConnectionSession dbSession, RequestContext context)
         {
@@ -103,7 +110,17 @@ namespace SmartSql.Command
                                 }
                                 else
                                 {
-                                    if (new Regex("\\#{" + dbParamName + "}\\s*\\${wildcardEscapeClause}").IsMatch(context.Sql.ToString()))
+                                    // 用静态正则捕获参数名后与 dbParamName 比较，语义与原按名构造正则一致（区分大小写）
+                                    bool hasWildcardEscape = false;
+                                    foreach (Match escapeMatch in regWildcardEscape.Matches(context.Sql.ToString()))
+                                    {
+                                        if (escapeMatch.Groups[1].Value == dbParamName)
+                                        {
+                                            hasWildcardEscape = true;
+                                            break;
+                                        }
+                                    }
+                                    if (hasWildcardEscape)
                                     {
                                         paramVal = $"%{paramVal}%";
                                     }
@@ -165,7 +182,10 @@ namespace SmartSql.Command
             {
                 return parameters.FirstOrDefault(p =>
                 {
-                    return new Regex(p.Property, RegexOptions.IgnoreCase).IsMatch(paramName);
+                    // 属性正则按配置键缓存复用，匹配行为与原实现一致（忽略大小写）
+                    var propertyRegex = paramPropertyRegexCache.GetOrAdd(p.Property,
+                        property => new Regex(property, RegexOptions.IgnoreCase | RegexOptions.Compiled));
+                    return propertyRegex.IsMatch(paramName);
                 });
             }
 

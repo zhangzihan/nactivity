@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Agenda
@@ -191,7 +191,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             }
             else
             {
-                log.LogDebug($"No activityBehavior on activity '{flowNode.Id}' with execution {execution.Id}");
+                log.LogDebug("No activityBehavior on activity '{FlowNodeId}' with execution {ExecutionId}", flowNode.Id, execution.Id);
                 Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(execution, true);
             }
         }
@@ -248,7 +248,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// <param name="flowNode"></param>
         protected internal virtual void ExecuteActivityBehavior(IActivityBehavior activityBehavior, FlowNode flowNode)
         {
-            log.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
+            log.LogDebug("Executing activityBehavior {ActivityBehaviorType} on activity '{FlowNodeId}' with execution {ExecutionId}", activityBehavior.GetType(), flowNode.Id, execution.Id);
 
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
             if (processEngineConfiguration is not null && processEngineConfiguration.EventDispatcher.Enabled)
@@ -256,14 +256,9 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_STARTED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
             }
 
-            try
-            {
-                activityBehavior.Execute(execution);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"{e.Message}", e);
-            }
+            // 直接执行，异常按原始类型与堆栈向上传播；
+            // 原实现用 new Exception(e.Message, e) 包装会丢失原始异常类型且重置有效堆栈
+            activityBehavior.Execute(execution);
         }
 
         /// <summary>
@@ -303,7 +298,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 FlowElement targetFlowElement = sequenceFlow.TargetFlowElement;
                 execution.CurrentFlowElement = targetFlowElement;
 
-                log.LogDebug($"Sequence flow '{sequenceFlow.Id}' encountered. Continuing process by following it using execution {execution.Id}");
+                log.LogDebug("Sequence flow '{SequenceFlowId}' encountered. Continuing process by following it using execution {ExecutionId}", sequenceFlow.Id, execution.Id);
                 Context.Agenda.PlanContinueProcessOperation(execution);
             }
         }
@@ -332,7 +327,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 childExecutionEntity.IsScope = false;
 
                 IActivityBehavior boundaryEventBehavior = ((IActivityBehavior)boundaryEvent.Behavior);
-                log.LogDebug($"Executing boundary event activityBehavior {boundaryEventBehavior.GetType()} with execution {childExecutionEntity.Id}");
+                log.LogDebug("Executing boundary event activityBehavior {ActivityBehaviorType} with execution {ExecutionId}", boundaryEventBehavior.GetType(), childExecutionEntity.Id);
                 boundaryEventBehavior.Execute(childExecutionEntity);
             }
         }

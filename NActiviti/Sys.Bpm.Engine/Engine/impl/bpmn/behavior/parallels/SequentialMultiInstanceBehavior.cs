@@ -121,11 +121,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                         ExecuteOriginalBehavior(childExecution, loopCounter);
                     }
                 }
-                catch (BpmnError error)
+                catch (BpmnError)
                 {
                     // re-throw business fault so that it can be caught by an Error
                     // Intermediate Event or Error Event Sub-Process in the process
-                    throw error;
+                    throw;
                 }
                 catch (Exception e)
                 {

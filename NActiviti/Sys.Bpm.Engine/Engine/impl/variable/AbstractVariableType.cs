@@ -1,4 +1,4 @@
-﻿using Sys.Runtime.Serialization;
+using Sys.Runtime.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +12,17 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public abstract string TypeName { get; }
         public abstract bool Cachable { get; }
 
+        // 懒加载缓存序列化器，避免每次 GetValue/SetValue 都重复解析服务
+        private ISerializableTypeSerializer serializer;
+
         public ISerializableTypeSerializer Serializer
         {
             get
             {
-                var serializer = ProcessEngineServiceProvider.Resolve<ISerializableTypeSerializer>();
                 if (serializer is null)
                 {
-                    serializer = new DefaultSerializableTypeSerializer();
+                    serializer = ProcessEngineServiceProvider.Resolve<ISerializableTypeSerializer>()
+                        ?? new DefaultSerializableTypeSerializer();
                 }
 
                 return serializer;

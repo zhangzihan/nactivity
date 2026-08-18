@@ -52,9 +52,9 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal readonly object MONITOR = new object();
 
         /// <summary>
-        /// 
+        /// 在 Run 的 finally（锁外）与 Stop（锁内）之间共享，volatile 保证跨线程可见性
         /// </summary>
-        protected internal bool isWaiting = false;// new AtomicBoolean(false);
+        protected internal volatile bool isWaiting = false;// new AtomicBoolean(false);
 
         /// <summary>
         /// 

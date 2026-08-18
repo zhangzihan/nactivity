@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Agenda
 {
@@ -130,7 +130,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// <param name="flowNode"></param>
         protected internal virtual void LeaveFlowNode(FlowNode flowNode)
         {
-            log.LogDebug($"Leaving flow node {flowNode.GetType()} with id '{flowNode.Id}' by following it's {flowNode.OutgoingFlows.Count} outgoing sequenceflow");
+            log.LogDebug("Leaving flow node {FlowNodeType} with id '{FlowNodeId}' by following it's {OutgoingFlowCount} outgoing sequenceflow", flowNode.GetType(), flowNode.Id, flowNode.OutgoingFlows.Count);
 
             // Get default sequence flow (if set)
             string defaultSequenceFlowId = null;
@@ -183,7 +183,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             {
                 if (flowNode.OutgoingFlows is null || flowNode.OutgoingFlows.Count == 0)
                 {
-                    log.LogDebug($"No outgoing sequence flow found for flow node '{flowNode.Id}'.");
+                    log.LogDebug("No outgoing sequence flow found for flow node '{FlowNodeId}'.", flowNode.Id);
                     Context.Agenda.PlanEndExecutionOperation(execution);
                 }
                 else

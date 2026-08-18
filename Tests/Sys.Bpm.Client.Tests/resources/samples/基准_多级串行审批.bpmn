@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="benchmark-serial" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <!-- 基准场景：多级串行审批。三个审批节点顺序流转，每级按 name 集合分配审批人。 -->
+  <bpmn2:process id="Bench_SerialApproval" name="基准_多级串行审批" isExecutable="true">
+    <bpmn2:startEvent id="Start_Serial">
+      <bpmn2:outgoing>Flow_Serial_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="Flow_Serial_1" sourceRef="Start_Serial" targetRef="Task_Serial_L1" />
+    <bpmn2:userTask id="Task_Serial_L1" name="一级审批" camunda:assignee="${approver}">
+      <bpmn2:incoming>Flow_Serial_1</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Serial_2</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${name}" camunda:elementVariable="approver">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="Flow_Serial_2" sourceRef="Task_Serial_L1" targetRef="Task_Serial_L2" />
+    <bpmn2:userTask id="Task_Serial_L2" name="二级审批" camunda:assignee="${approver}">
+      <bpmn2:incoming>Flow_Serial_2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Serial_3</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${name}" camunda:elementVariable="approver">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="Flow_Serial_3" sourceRef="Task_Serial_L2" targetRef="Task_Serial_L3" />
+    <bpmn2:userTask id="Task_Serial_L3" name="三级审批" camunda:assignee="${approver}">
+      <bpmn2:incoming>Flow_Serial_3</bpmn2:incoming>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${name}" camunda:elementVariable="approver">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:userTask>
+  </bpmn2:process>
+</bpmn2:definitions>
