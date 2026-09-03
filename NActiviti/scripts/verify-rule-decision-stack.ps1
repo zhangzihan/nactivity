@@ -73,6 +73,8 @@ function Remove-BuildOutputs {
         (Join-Path $RepositoryRoot "NActiviti\Sys.Bpm.Rules.API\obj"),
         (Join-Path $RepositoryRoot "NActiviti\Sys.Bpm.Rules.Core\bin"),
         (Join-Path $RepositoryRoot "NActiviti\Sys.Bpm.Rules.Core\obj"),
+        (Join-Path $RepositoryRoot "NActiviti\Sys.Bpm.Rules.Hosting\bin"),
+        (Join-Path $RepositoryRoot "NActiviti\Sys.Bpm.Rules.Hosting\obj"),
         (Join-Path $RepositoryRoot "NActiviti\Sys.Bpm.Share\bin"),
         (Join-Path $RepositoryRoot "NActiviti\Sys.Bpm.Share\obj"),
         (Join-Path $RepositoryRoot "NActiviti\Sys.Rules.DmnEngine\src\Sys.Rules.DmnEngine\bin"),
@@ -117,11 +119,15 @@ if ($CleanOnly) {
 }
 
 $rulesCoreProject = Join-Path $nactivitiRoot "Sys.Bpm.Rules.Core\Sys.Bpm.Rules.Core.csproj"
+$rulesHostingProject = Join-Path $nactivitiRoot "Sys.Bpm.Rules.Hosting\Sys.Bpm.Rules.Hosting.csproj"
 $engineProject = Join-Path $nactivitiRoot "Sys.Bpm.Engine\Sys.Bpm.Engine.csproj"
 $testsProject = Join-Path $repositoryRoot "Tests\Sys.Bpm.Engine.Tests\Sys.Bpm.Engine.Tests.csproj"
 
 Write-Step "构建 Sys.Bpm.Rules.Core"
 Invoke-DotNetCommand -Arguments @("build", $rulesCoreProject, "-c", $Configuration)
+
+Write-Step "构建 Sys.Bpm.Rules.Hosting"
+Invoke-DotNetCommand -Arguments @("build", $rulesHostingProject, "-c", $Configuration)
 
 Write-Step "构建 Sys.Bpm.Engine"
 Invoke-DotNetCommand -Arguments @("build", $engineProject, "-c", $Configuration)

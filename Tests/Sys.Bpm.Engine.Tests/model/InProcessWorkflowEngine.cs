@@ -44,7 +44,7 @@ namespace Sys.Workflow
                 {
                 });
 
-            services.AddProcessEngine(Configuration);
+            services.AddProcessEngineWithRules(Configuration);
             services.AddLogging();
 
             ServiceProvider = services.BuildServiceProvider();

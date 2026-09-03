@@ -86,7 +86,8 @@ java -jar "../../../../tools/antlr-4.9.3-complete.jar" -Dlanguage=CSharp -packag
 ```
 
 ## 决策规则仓储配置
- * `AddProcessEngine(configuration)` 现已内建 DMN 决策运行时装配。
+ * `AddProcessEngine(configuration)` 仅装配纯流程引擎。
+ * 如需默认接入规则决策宿主装配，请使用 `AddProcessEngineWithRules(configuration)`；若采用分步装配，则在 `AddProcessEngine(configuration)` 后显式调用 `AddDecisionRulesHosting(...)`。
  * 宿主优先通过依赖注入接入 `IDecisionExecutionService`、`IDecisionGovernanceService` 与 `IDecisionCatalogService`。
 * 若配置了 `DecisionRulesStore`，则自动按数据库类型启用规则定义仓储、版本仓储与执行日志仓储。
 * 若未配置 `DecisionRulesStore`，但 `WorkflowDataSource` 已明确为 PostgreSQL 或 SQL Server，则自动复用工作流数据源连接串启用规则仓储。
@@ -226,7 +227,7 @@ java -jar "../../../../tools/antlr-4.9.3-complete.jar" -Dlanguage=CSharp -packag
       * `recommendedAction`
 * 规则决策主链验证脚本：
   * 路径： `NActiviti\scripts\verify-rule-decision-stack.ps1`
-  * 默认行为：清理规则决策主链相关 `bin/obj/artifacts` 后，依次构建 `Sys.Bpm.Rules.Core`、`Sys.Bpm.Engine` 并执行 `Sys.Bpm.Engine.Tests`
+  * 默认行为：清理规则决策主链相关 `bin/obj/artifacts` 后，依次构建 `Sys.Bpm.Rules.Core`、`Sys.Bpm.Rules.Hosting`、`Sys.Bpm.Engine` 并执行 `Sys.Bpm.Engine.Tests`
   * 示例：
     * `powershell -ExecutionPolicy Bypass -File .\NActiviti\scripts\verify-rule-decision-stack.ps1`
     * `powershell -ExecutionPolicy Bypass -File .\NActiviti\scripts\verify-rule-decision-stack.ps1 -SkipTests`

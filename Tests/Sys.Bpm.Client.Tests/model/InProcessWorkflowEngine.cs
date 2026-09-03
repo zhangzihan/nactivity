@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
@@ -70,7 +70,7 @@ namespace Sys.Workflow
                     builder.Build();
                 });
 
-            services.AddProcessEngine(Configuration);
+            services.AddProcessEngineWithRules(Configuration);
 
             var sd = services.FirstOrDefault(x => x.ServiceType == typeof(IServiceWebApiHttpProxy));
             if (sd is not null)

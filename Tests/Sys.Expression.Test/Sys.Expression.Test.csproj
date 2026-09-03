@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -29,6 +29,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\NActiviti\Sys.Bpm.Engine\Sys.Bpm.Engine.csproj" />
+                <ProjectReference Include="..\..\NActiviti\Sys.Bpm.Rules.Hosting\Sys.Bpm.Rules.Hosting.csproj" />
 		<ProjectReference Include="..\..\NActiviti\Sys.Bpm.Rest.Client\Sys.Bpm.Rest.Client.csproj" />
 		<ProjectReference Include="..\..\NActiviti\Sys.Bpm.Rest\Sys.Bpm.Rest.csproj" />
 		<ProjectReference Include="..\..\Sys.Expression\Sys.Expression.csproj" />

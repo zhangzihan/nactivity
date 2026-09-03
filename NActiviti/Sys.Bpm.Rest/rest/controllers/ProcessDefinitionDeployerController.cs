@@ -50,8 +50,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         private readonly SecurityPoliciesApplicationService securityPoliciesApplicationService;
 
-        private readonly IDecisionCatalogService decisionCatalogService;
-
         private readonly IDecisionProcessReferenceIndexApplicationService decisionProcessReferenceIndexApplicationService;
 
         private readonly ProcessEngineConfigurationImpl processEngineConfiguration;
@@ -68,7 +66,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             PageableDeploymentRespositoryService pageableRepositoryService,
             SecurityPoliciesApplicationService securityPoliciesApplicationService,
             ILoggerFactory loggerFactory,
-            IDecisionCatalogService decisionCatalogService = null,
             IDecisionProcessReferenceIndexApplicationService decisionProcessReferenceIndexApplicationService = null,
             IDataSource dataSource = null,
             IDatabaseReader databaseReader = null)
@@ -77,7 +74,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             this.deploymentConverter = deploymentConverter;
             this.pageableRepositoryService = pageableRepositoryService;
             this.securityPoliciesApplicationService = securityPoliciesApplicationService;
-            this.decisionCatalogService = decisionCatalogService;
             this.decisionProcessReferenceIndexApplicationService = decisionProcessReferenceIndexApplicationService;
             this.processEngineConfiguration = engine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl;
             this.dataSource = dataSource;
@@ -115,7 +111,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             try
             {
                 ArgumentNullException.ThrowIfNull(deployer);
-                await ValidateDecisionBindingsAsync(deployer).ConfigureAwait(false);
 
                 IDeploymentBuilder deployment = this.repositoryService.CreateDeployment();
 
@@ -147,6 +142,10 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             catch (ArgumentException ex)
             {
                 throw CreateHttp400Exception(WorkflowConstants.DECISION_GOVERNANCE_INVALID_REQUEST, ex.Message, nameof(Deploy), ex);
+            }
+            catch (ActivitiValidationException ex)
+            {
+                throw CreateHttp400Exception(WorkflowConstants.DECISION_GOVERNANCE_INVALID_STATE, ex.Message, nameof(Deploy), ex);
             }
             catch (InvalidOperationException ex)
             {
@@ -430,54 +429,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             }
 
             return decisionProcessReferenceIndexApplicationService.TryDeleteDeploymentReferencesAsync(deploymentId);
-        }
-
-        /// <summary>
-        /// 对流程发布请求中的决策绑定执行门禁校验。
-        /// </summary>
-        /// <param name="deployer">发布请求。</param>
-        private async Task ValidateDecisionBindingsAsync(ProcessDefinitionDeployer deployer)
-        {
-            if (string.IsNullOrWhiteSpace(deployer.BpmnXML))
-            {
-                throw new ArgumentException("BpmnXML is required", nameof(deployer));
-            }
-
-            var xmlBytes = Encoding.UTF8.GetBytes(deployer.BpmnXML);
-            using var stream = new MemoryStream(xmlBytes, writable: false);
-            var model = new BpmnXMLConverter().ConvertToBpmnModel(new XMLStreamReader(stream));
-            await ValidateDecisionBindingsAsync(model).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// 对 BPMN 模型中的规则任务决策绑定执行门禁校验。
-        /// </summary>
-        /// <param name="model">BPMN 模型。</param>
-        private async Task ValidateDecisionBindingsAsync(BpmnModel model)
-        {
-            if (decisionCatalogService == null)
-            {
-                return;
-            }
-
-            var validationRequest = new DecisionBindingValidationRequest
-            {
-                Bindings = model.Processes
-                    .SelectMany(process => process.FindFlowElementsOfType<BusinessRuleTask>(true))
-                    .Select(businessRuleTask =>
-                    {
-                        var decisionBinding = businessRuleTask.GetDecisionBinding();
-                        return new DecisionBindingReference
-                        {
-                            SourceId = businessRuleTask.Id,
-                            DecisionKey = decisionBinding?.DecisionKey ?? string.Empty,
-                            BindingMode = decisionBinding?.BindingMode,
-                            VersionTag = decisionBinding?.VersionTag
-                        };
-                    })
-                    .ToList()
-            };
-            await decisionCatalogService.ValidateDecisionBindingsAsync(validationRequest).ConfigureAwait(false);
         }
 
     }

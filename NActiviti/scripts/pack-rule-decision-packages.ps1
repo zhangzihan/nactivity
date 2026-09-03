@@ -21,6 +21,7 @@ $stagingRoot = Join-Path $resolvedOutputPath "_staging"
 $projects = @(
     @{ Project = "Sys.Bpm.Rules.API\Sys.Bpm.Rules.API.csproj"; PackageId = "Sys.Bpm.Rules.API" },
     @{ Project = "Sys.Bpm.Rules.Core\Sys.Bpm.Rules.Core.csproj"; PackageId = "Sys.Bpm.Rules.Core" },
+    @{ Project = "Sys.Bpm.Rules.Hosting\Sys.Bpm.Rules.Hosting.csproj"; PackageId = "Sys.Bpm.Rules.Hosting" },
     @{ Project = "Sys.Rules.DmnEngine\src\Sys.Rules.DmnEngine\Sys.Rules.DmnEngine.csproj"; PackageId = "Sys.Rules.DmnEngine" },
     @{ Project = "Sys.Rules.DmnEngine\src\Sys.Rules.DmnEngine.Adapter\Sys.Rules.DmnEngine.Adapter.csproj"; PackageId = "Sys.Rules.DmnEngine.Adapter" }
 )

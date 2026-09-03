@@ -31,6 +31,7 @@ $manifestPath = Join-Path $resolvedInputPath "rule-decision-packages.manifest.tx
 $packageIds = @(
     "Sys.Bpm.Rules.API",
     "Sys.Bpm.Rules.Core",
+    "Sys.Bpm.Rules.Hosting",
     "Sys.Rules.DmnEngine",
     "Sys.Rules.DmnEngine.Adapter"
 )

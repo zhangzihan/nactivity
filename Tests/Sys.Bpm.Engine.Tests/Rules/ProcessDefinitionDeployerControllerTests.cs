@@ -15,10 +15,11 @@ using Sys.Workflow.Cloud.Services.Rest.Controllers;
 using Sys.Workflow.Engine;
 using Sys.Workflow.Engine.Impl;
 using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Exceptions;
 using Sys.Workflow.Engine.Repository;
 using Sys.Workflow.Exceptions;
 using Sys.Workflow.Rules;
-using Sys.Workflow.Rules.Models;
+using Sys.Workflow.Validation;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -122,19 +123,33 @@ namespace Sys.Workflow.Rules.Tests
         {
             var repositoryServiceMock = new Mock<IRepositoryService>(MockBehavior.Strict);
             var processEngineMock = CreateProcessEngineMock(repositoryServiceMock.Object);
-            var decisionCatalogServiceMock = new Mock<IDecisionCatalogService>(MockBehavior.Strict);
-            decisionCatalogServiceMock
-                .Setup(service => service.ValidateDecisionBindingsAsync(
-                    It.Is<DecisionBindingValidationRequest>(request =>
-                        request.Bindings.Count == 1 &&
-                        request.Bindings[0].DecisionKey == "expense.approval" &&
-                        request.Bindings[0].VersionTag == "draft-v2"),
-                    It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new InvalidOperationException("规则任务 task_rule 引用了未发布的决策版本 expense.approval:draft-v2。"));
+            var deploymentBuilderMock = new Mock<IDeploymentBuilder>(MockBehavior.Strict);
 
-            var controller = CreateController(
-                processEngineMock.Object,
-                decisionCatalogService: decisionCatalogServiceMock.Object);
+            repositoryServiceMock
+                .Setup(service => service.CreateDeployment())
+                .Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.DisableSchemaValidation()).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.EnableDuplicateFiltering()).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.Name("Leave Approval")).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.Category(null)).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.Key("leaveApproval")).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.TenantId("tenant-a")).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.BusinessKey(null)).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.BusinessPath(null)).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.StartForm(null, It.IsAny<string>())).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock.Setup(builder => builder.AddString("Leave Approval.bpmn", It.IsAny<string>())).Returns(deploymentBuilderMock.Object);
+            deploymentBuilderMock
+                .Setup(builder => builder.Deploy())
+                .Throws(new ActivitiValidationException(new List<ValidationError>
+                {
+                    new ValidationError
+                    {
+                        ActivityName = "task_rule",
+                        DefaultDescription = "规则任务 task_rule 引用了未发布的决策版本 expense.approval:draft-v2。"
+                    }
+                }));
+
+            var controller = CreateController(processEngineMock.Object);
 
             var exception = await Assert.ThrowsAsync<Http400Exception>(() => controller.Deploy(new ProcessDefinitionDeployer
             {
@@ -149,7 +164,8 @@ namespace Sys.Workflow.Rules.Tests
             Assert.Contains("未发布的决策版本", exception.Http400.Message);
 
             processEngineMock.VerifyAll();
-            decisionCatalogServiceMock.VerifyAll();
+            repositoryServiceMock.VerifyAll();
+            deploymentBuilderMock.VerifyAll();
         }
 
         /// <summary>
@@ -162,7 +178,6 @@ namespace Sys.Workflow.Rules.Tests
             var processEngineMock = CreateProcessEngineMock(repositoryServiceMock.Object);
             var deploymentBuilderMock = new Mock<IDeploymentBuilder>(MockBehavior.Strict);
             var deploymentMock = new Mock<IDeployment>(MockBehavior.Strict);
-            var decisionCatalogServiceMock = new Mock<IDecisionCatalogService>(MockBehavior.Strict);
             var decisionReferenceIndexAppServiceMock = new Mock<IDecisionProcessReferenceIndexApplicationService>(MockBehavior.Strict);
 
             deploymentMock.SetupGet(item => item.Id).Returns("dep-1");
@@ -172,9 +187,6 @@ namespace Sys.Workflow.Rules.Tests
             deploymentMock.SetupGet(item => item.BusinessKey).Returns(string.Empty);
             deploymentMock.SetupGet(item => item.DeploymentTime).Returns(new DateTime(2026, 7, 7, 10, 0, 0, DateTimeKind.Utc));
 
-            decisionCatalogServiceMock
-                .Setup(service => service.ValidateDecisionBindingsAsync(It.IsAny<DecisionBindingValidationRequest>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
             repositoryServiceMock
                 .Setup(service => service.CreateDeployment())
                 .Returns(deploymentBuilderMock.Object);
@@ -199,7 +211,6 @@ namespace Sys.Workflow.Rules.Tests
 
             var controller = CreateController(
                 processEngineMock.Object,
-                decisionCatalogService: decisionCatalogServiceMock.Object,
                 decisionProcessReferenceIndexApplicationService: decisionReferenceIndexAppServiceMock.Object);
             var result = await controller.Deploy(new ProcessDefinitionDeployer
             {
@@ -210,7 +221,6 @@ namespace Sys.Workflow.Rules.Tests
             }).ConfigureAwait(false);
 
             Assert.Equal("dep-1", result.Id);
-            decisionCatalogServiceMock.VerifyAll();
             repositoryServiceMock.VerifyAll();
             deploymentBuilderMock.VerifyAll();
             decisionReferenceIndexAppServiceMock.VerifyAll();
@@ -390,13 +400,11 @@ namespace Sys.Workflow.Rules.Tests
         /// 创建流程部署控制器测试实例。
         /// </summary>
         /// <param name="processEngine">流程引擎。</param>
-        /// <param name="decisionCatalogService">决策目录服务。</param>
         /// <param name="decisionProcessReferenceIndexApplicationService">决策引用索引应用服务。</param>
         /// <param name="dataSource">工作流数据源。</param>
         /// <param name="databaseReader">数据库元数据读取器。</param>
         private static ProcessDefinitionDeployerController CreateController(
             IProcessEngine processEngine,
-            IDecisionCatalogService decisionCatalogService = null,
             IDecisionProcessReferenceIndexApplicationService decisionProcessReferenceIndexApplicationService = null,
             IDataSource dataSource = null,
             IDatabaseReader databaseReader = null)
@@ -414,7 +422,6 @@ namespace Sys.Workflow.Rules.Tests
                 pageableRepositoryService,
                 null,
                 LoggerFactory.Create(_ => { }),
-                decisionCatalogService,
                 decisionProcessReferenceIndexApplicationService,
                 dataSource,
                 databaseReader);

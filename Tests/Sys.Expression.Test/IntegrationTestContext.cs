@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
@@ -486,7 +486,7 @@ namespace Sys.Workflow.Test
                     builder.Build();
                 });
 
-            services.AddProcessEngine(Configuration);
+            services.AddProcessEngineWithRules(Configuration);
 
             var sd = services.FirstOrDefault(x => x.ServiceType == typeof(IServiceWebApiHttpProxy));
             if (sd is not null)

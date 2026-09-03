@@ -52,12 +52,13 @@ NActiviti.sln                  解决方案（包含全部项目）
 │   ├── Sys.Bpm.ProcessValidation 流程校验
 │   ├── Sys.Bpm.Rules.API      规则决策运行时契约与 DTO（Sys.Workflow.Rules）
 │   ├── Sys.Bpm.Rules.Core     规则定义/版本/执行日志仓储实现
+│   ├── Sys.Bpm.Rules.Hosting  规则宿主装配（默认 DI 入口、部署期绑定校验接线）
 │   ├── Sys.Rules.DmnEngine    DMN 执行内核（Fork 自 ScratchyDisk.DmnEngine）
 │   │   └── src/Sys.Rules.DmnEngine.Adapter  DMN 内核与运行时契约的适配层
 │   ├── BpmnWebTest            Web 测试宿主（当前仅余 bin/obj 构建产物，
 │   │                          源码不在仓库中；Dockerfile 发布的 BpmnWebApiTest.dll 对应它）
 │   ├── scripts/               规则决策相关 PowerShell 脚本（见下文）
-│   └── 规则决策组件包说明.md   规则决策四个包的职责与发布约束
+│   └── 规则决策组件包说明.md   规则决策五个包的职责与发布约束
 ├── Sys.Expression/            Spring.NET 表达式语言移植（含 ANTLR 生成代码）
 ├── Smart.Sql/                 SmartSql ORM 内置源码（SmartSql、DapperDeserializer、
 │                              DIExtension、DyRepository、TypeHandler）
@@ -121,7 +122,7 @@ powershell -ExecutionPolicy Bypass -File .\NActiviti\scripts\test-decision-schem
 - `Sys.Bpm.Engine.csproj` 中存在大量 `<Compile Remove>` + `<None Include>` 对：这些文件（JTA、多租户、流程图绘制等 Java 专属能力）**保留在目录中但不参与编译**，新增文件时注意不要被这些排除规则误伤，也不要随意把它们加回编译。
 - 引擎的 SQL 与 SmartSql 映射在 `NActiviti/Sys.Bpm.Engine/resources/` 下（`db/create`、`db/drop`、`db/upgrade`、`db/mapping`），修改表结构必须同步更新 create/drop/upgrade 脚本及 `docs/` 下的手工升级脚本。
 - 引擎代码中的 `resources/**` 以 `CopyToOutputDirectory=PreserveNewest` 复制到输出目录，宿主通过 `ConfigFile: activiti.cfg.json` 加载引擎配置。
-- 规则决策四个包（`Sys.Bpm.Rules.API`、`Sys.Bpm.Rules.Core`、`Sys.Rules.DmnEngine`、`Sys.Rules.DmnEngine.Adapter`）必须**同版本批次发布**，详见 `NActiviti/规则决策组件包说明.md`。
+- 规则决策五个包（`Sys.Bpm.Rules.API`、`Sys.Bpm.Rules.Core`、`Sys.Bpm.Rules.Hosting`、`Sys.Rules.DmnEngine`、`Sys.Rules.DmnEngine.Adapter`）必须**同版本批次发布**，详见 `NActiviti/规则决策组件包说明.md`。
 - `_upstream/` 是上游原版参考代码，不要修改；对照 DMN 上游可用 `NActiviti/scripts/scan-rule-dmn-upstream.ps1`。
 
 ## ANTLR 表达式语法代码生成

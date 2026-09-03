@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Sys.Workflow.Rules.Hosting</RootNamespace>
+    <AssemblyName>Sys.Bpm.Rules.Hosting</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <OutputPath>bin</OutputPath>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <DocumentationFile>bin\Sys.Bpm.Rules.Hosting.xml</DocumentationFile>
+    <Version>$(RuleDecisionPackageVersion)</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>Hosting composition for integrating NActiviti process engine with decision rules.</Description>
+    <PackageId>Sys.Bpm.Rules.Hosting</PackageId>
+    <Company>Sys.Bpm</Company>
+    <Authors>Sys.Bpm</Authors>
+    <PackageTags>workflow;rules;dmn;decision;hosting;nactivity</PackageTags>
+    <PackageReadmeFile>规则决策组件包说明.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sys.Bpm.Engine\Sys.Bpm.Engine.csproj" />
+    <ProjectReference Include="..\Sys.Bpm.Rules.Core\Sys.Bpm.Rules.Core.csproj" />
+    <ProjectReference Include="..\Sys.Rules.DmnEngine\src\Sys.Rules.DmnEngine.Adapter\Sys.Rules.DmnEngine.Adapter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\规则决策组件包说明.md" Pack="true" PackagePath="\" Link="规则决策组件包说明.md" />
+  </ItemGroup>
+
+</Project>
