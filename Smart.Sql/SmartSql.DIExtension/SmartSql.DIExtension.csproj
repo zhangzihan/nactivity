@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -37,7 +37,7 @@
 		<ProjectReference Include="..\SmartSql\SmartSql.csproj" />
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(NactivitySkipPostBuildPack)' != 'true' and '$(IsPacking)' != 'true'">
 		<Exec Command="dotnet pack --no-build -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -o $(PackageOutputPath)" />
 	</Target>
 

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -50,7 +50,7 @@
 		<PackageReference Update="System.Reflection.Emit.Lightweight" Version="4.7.0" />
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(NactivitySkipPostBuildPack)' != 'true' and '$(IsPacking)' != 'true'">
 		<Exec Command="dotnet pack --no-build -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -o $(PackageOutputPath)" />
 	</Target>
 </Project>
